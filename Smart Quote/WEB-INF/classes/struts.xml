@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<package name="default" extends="struts-default,json-default">
+		
+		<action name="storeLocationDetails" class="action.LocationAction" method="storeLocationDetails">
+			<result type="json">
+				<param name="root">objLocationBean</param>
+			</result>
+		</action>
+		
+		<action name="showMap" class="action.LocationAction" method="showMap">
+			<result type="json">
+				<param name="root">objDisplayLocationBean</param>
+			</result>
+		</action>
+		
+		<action name="getStates" class="action.LocationAction" method="getStates">
+			<result type="json">
+				<param name="root">objResponseBean</param>
+			</result>
+		</action>
+		
+		<action name="getCity" class="action.LocationAction" method="getCity">
+			<result type="json">
+				<param name="root">objResponseBean</param>
+			</result>
+		</action>
+		
+		<action name="getArea" class="action.LocationAction" method="getArea">
+			<result type="json">
+				<param name="root">objResponseBean</param>
+			</result>
+		</action>
+		
+	</package>
+</struts>
