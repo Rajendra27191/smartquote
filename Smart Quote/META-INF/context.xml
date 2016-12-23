@@ -1,6 +1,6 @@
-<Context path="/Cartographer" reloadable="true">
-	<Resource name="jdbc/cr" auth="Container" type="javax.sql.DataSource"
+<Context path="/smartquote" reloadable="true">
+	<Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
 	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
 	driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://janta.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquote?autoReconnect=true"/>
+	url="jdbc:mysql://janta.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/>
 </Context>
