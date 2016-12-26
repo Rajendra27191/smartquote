@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "http://struts.apache.org/dtds/struts-2.1.7.dtd">
 
 <struts>
+	<constant name="struts.custom.i18n.resources" value="global" />
 	<package name="default" extends="struts-default,json-default">
+
+		<action name="login" class="action.LoginAction">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="logout" class="action.LoginAction" method="logout">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="getUserGroups" class="action.UserGroupAction"
 			method="getUserGroups">
@@ -15,7 +31,31 @@
 		<action name="getMenuAndSubmenu" class="action.UserGroupAction"
 			method="getMenuAndSubmenu">
 			<result name="success" type="json">
-				<param name="root"></param>
+				<param name="root">menuResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createUserGroup" class="action.UserGroupAction"
+			method="createUserGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getAssignedAccess" class="action.UserGroupAction"
+			method="getAssignedAccess">
+			<result name="success" type="json">
+				<param name="root">menuResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteUserGroup" class="action.UserGroupAction"
+			method="deleteUserGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
