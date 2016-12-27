@@ -8,7 +8,7 @@
 
 		<action name="login" class="action.LoginAction">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objLoginResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -54,6 +54,14 @@
 
 		<action name="deleteUserGroup" class="action.UserGroupAction"
 			method="deleteUserGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="forgotPassword" class="email.EmailAction"
+			method="sendPassword">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
