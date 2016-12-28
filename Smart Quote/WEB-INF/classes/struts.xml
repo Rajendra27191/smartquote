@@ -59,9 +59,48 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+
+		<action name="forgotPassword" class="email.EmailAction" method="sendPassword">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getUserList" class="action.UserGroupAction"
+			method="getUserList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createUser" class="action.UserGroupAction"
+			method="createUser">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		
-		<action name="forgotPassword" class="email.EmailAction"
-			method="sendPassword">
+		<action name="getUserDetails" class="action.UserGroupAction"
+			method="getUserDetails">
+			<result name="success" type="json">
+				<param name="root">userDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="updateUserDetails" class="action.UserGroupAction"
+			method="updateUserDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="deleteUser" class="action.UserGroupAction"
+			method="deleteUser">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
