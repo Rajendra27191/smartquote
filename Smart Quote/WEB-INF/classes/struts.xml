@@ -43,6 +43,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="updateUserGroup" class="action.UserGroupAction"
+			method="updateUserGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="getAssignedAccess" class="action.UserGroupAction"
 			method="getAssignedAccess">
