@@ -33,7 +33,7 @@ public class EmailAction extends ActionSupport implements ServletRequestAware {
 
 	public String sendPassword() {
 		String email = request.getParameter("email");
-		email = "vidya@giantleapsystems.com";
+		/*email = "vidya@giantleapsystems.com";*/
 		
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		boolean isRegisterdUser = objUserGroupDao.isRegisterdUser(email);

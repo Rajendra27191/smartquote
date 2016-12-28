@@ -149,7 +149,7 @@ public class UserGroupAction extends ActionSupport implements
 	public String getAssignedAccess() {
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		int userGroupId=0;
-		// userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
+		userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));

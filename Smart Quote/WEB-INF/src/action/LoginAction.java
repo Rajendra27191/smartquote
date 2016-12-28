@@ -47,8 +47,8 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		email = "rajendra@giantleapsystems.com";
-		password = "rajendra123";
+		/*email = "rajendra@giantleapsystems.com";
+		password = "rajendra123";*/
 		
 		UserBean objUserBean = null;
 		LoginDao objDao = new LoginDao();
