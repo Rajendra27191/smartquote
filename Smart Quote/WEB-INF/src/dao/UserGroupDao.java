@@ -63,6 +63,7 @@ public class UserGroupDao {
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			rs = pstmt.executeQuery();
+			System.out.println("EXE : "+pstmt);
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setKey(rs.getInt("user_group_id"));
@@ -91,6 +92,7 @@ public class UserGroupDao {
 		try {
 			pstmt = conn.prepareStatement(getMenus);
 			rs = pstmt.executeQuery();
+			System.out.println("EXE MENU  : "+pstmt);
 			while (rs.next()) {
 				objMenuBean = new MenuBean();
 				objMenuBean.setMenuId(rs.getInt("menu_id"));

@@ -105,10 +105,15 @@ public class UserGroupAction extends ActionSupport implements
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("error_creating_user_group"));
 		String userGroupName = request.getParameter("userGroupName");
-		userGroupName = "Sales Person";
+		String allMenuJson = request.getParameter("checkedMenuList");
+		//userGroupName = "Sales Person";
 
+		
 		// Dummy Data
-		String allMenuJson = "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";
+	    /*allMenuJson = "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},"
+				+ "{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},"
+				+ "{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},"
+				+ "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";*/
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
 		menuList = new Gson().fromJson(allMenuJson,
 				new TypeToken<List<MenuBean>>() {
@@ -128,10 +133,35 @@ public class UserGroupAction extends ActionSupport implements
 		return SUCCESS;
 	}
 
+	public String updateUserGroup(){
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("error_creating_user_group"));
+		String userGroupName = request.getParameter("userGroupName");
+		String allMenuJson = request.getParameter("checkedMenuList");
+
+		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
+		menuList = new Gson().fromJson(allMenuJson,
+				new TypeToken<List<MenuBean>>() {
+				}.getType());
+		UserGroupDao objDao = new UserGroupDao();
+		int userGroupId = objDao.createUserGroup(userGroupName);
+		if (userGroupId != 0) {
+			boolean isDeleted = objDao.deleteUserGroupAccess(userGroupId);
+			if (isDeleted) {
+				objDao.logUserGroupAccess(userGroupId, menuList);
+				objEmptyResponse.setCode("success");
+				objEmptyResponse.setMessage(getText("user_group_created"));
+			}
+		}
+		objDao.commit();
+		objDao.closeAll();
+		return SUCCESS;
+	}
+	
 	public String getAssignedAccess() {
 		UserGroupDao objUserGroupDao = new UserGroupDao();
-		int userGroupId = 2;
-		// userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
+		int userGroupId=0;
+		userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));
