@@ -24,6 +24,15 @@ public class UserGroupDao {
 			e.printStackTrace();
 		}
 	}
+	
+	public void commit() {
+		try {
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public void closeAll() {
 		try {
@@ -169,8 +178,7 @@ public class UserGroupDao {
 					pstmt.executeBatch();
 				}
 			}
-			System.out.println("\nQuery2: " + pstmt.toString());
-			pstmt.executeBatch(); // insert remaining records
+			pstmt.executeBatch(); // Insert remaining records
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -198,14 +206,6 @@ public class UserGroupDao {
 			e.printStackTrace();
 		}
 		return isDeleted;
-	}
-
-	public void commit() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public ArrayList<MenuBean> getAssignedAccess(int userGroupId) {
@@ -275,4 +275,42 @@ public class UserGroupDao {
 		return isDeleted;
 	}
 
+	public void changePassword(String email, String newPassword) {
+		try {
+			String updateCustQuery = "UPDATE user_master SET password = ? WHERE email = ?";
+			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
+			pstmt.setString(1, newPassword);
+			pstmt.setString(2, email);
+			System.out.println("Query: " + pstmt.toString());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isRegisterdUser(String email) {
+		boolean isRegisterdUser = false;
+		String getUserGroups = "SELECT email FROM user_master WHERE email = ?";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				isRegisterdUser = true;
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isRegisterdUser;
+	}
 }
