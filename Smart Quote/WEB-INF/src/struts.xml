@@ -43,7 +43,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateUserGroup" class="action.UserGroupAction"
 			method="updateUserGroup">
 			<result name="success" type="json">
@@ -90,7 +90,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getUserDetails" class="action.UserGroupAction"
 			method="getUserDetails">
 			<result name="success" type="json">
@@ -98,7 +98,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateUserDetails" class="action.UserGroupAction"
 			method="updateUserDetails">
 			<result name="success" type="json">
@@ -106,9 +106,49 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="deleteUser" class="action.UserGroupAction"
 			method="deleteUser">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getCustomerList" class="action.CustomerAction"
+			method="getCustomerList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createCustomer" class="action.CustomerAction"
+			method="createCustomer">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="getCustomerDetails" class="action.CustomerAction"
+			method="getCustomerDetails">
+			<result name="success" type="json">
+				<param name="root">customerDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="updateCustomerDetails" class="action.CustomerAction"
+			method="updateCustomerDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="deleteCustomer" class="action.CustomerAction"
+			method="deleteCustomer">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
