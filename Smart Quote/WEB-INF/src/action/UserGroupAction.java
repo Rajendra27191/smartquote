@@ -106,14 +106,16 @@ public class UserGroupAction extends ActionSupport implements
 		objEmptyResponse.setMessage(getText("error_creating_user_group"));
 		String userGroupName = request.getParameter("userGroupName");
 		String allMenuJson = request.getParameter("checkedMenuList");
-		//userGroupName = "Sales Person";
 
-		
-		// Dummy Data
-	    /*allMenuJson = "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},"
-				+ "{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},"
-				+ "{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},"
-				+ "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";*/
+		// allMenuJson =
+		// "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},"
+		// +
+		// "{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},"
+		// +
+		// "{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},"
+		// +
+		// "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";
+
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
 		menuList = new Gson().fromJson(allMenuJson,
 				new TypeToken<List<MenuBean>>() {
@@ -133,34 +135,32 @@ public class UserGroupAction extends ActionSupport implements
 		return SUCCESS;
 	}
 
-	public String updateUserGroup(){
+	public String updateUserGroup() {
 		objEmptyResponse.setCode("error");
-		objEmptyResponse.setMessage(getText("error_creating_user_group"));
-		String userGroupName = request.getParameter("userGroupName");
+		objEmptyResponse.setMessage(getText("common_error"));
+		int userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
 		String allMenuJson = request.getParameter("checkedMenuList");
-
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
 		menuList = new Gson().fromJson(allMenuJson,
 				new TypeToken<List<MenuBean>>() {
 				}.getType());
-		UserGroupDao objDao = new UserGroupDao();
-		int userGroupId = objDao.createUserGroup(userGroupName);
 		if (userGroupId != 0) {
+			UserGroupDao objDao = new UserGroupDao();
 			boolean isDeleted = objDao.deleteUserGroupAccess(userGroupId);
 			if (isDeleted) {
 				objDao.logUserGroupAccess(userGroupId, menuList);
 				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("user_group_created"));
+				objEmptyResponse.setMessage(getText("user_group_updated"));
 			}
+			objDao.commit();
+			objDao.closeAll();
 		}
-		objDao.commit();
-		objDao.closeAll();
 		return SUCCESS;
 	}
-	
+
 	public String getAssignedAccess() {
 		UserGroupDao objUserGroupDao = new UserGroupDao();
-		int userGroupId=0;
+		int userGroupId = 0;
 		userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
 		try {
 			menuResponse.setCode("success");
@@ -214,7 +214,8 @@ public class UserGroupAction extends ActionSupport implements
 
 	public String createUser() {
 		String userDetails = request.getParameter("userDetails");
-		userDetails = "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
+		// userDetails =
+		// "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
 		UserBean objUserBean = new UserBean();
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		objUserBean = gson.fromJson(userDetails, UserBean.class);
@@ -245,9 +246,7 @@ public class UserGroupAction extends ActionSupport implements
 	}
 
 	public String getUserDetails() {
-		// int userId = Integer.parseInt(request.getParameter("userId"));
-		int userId = 3;
-
+		int userId = Integer.parseInt(request.getParameter("userId"));
 		try {
 			userDetailsResponse.setCode("error");
 			userDetailsResponse.setMessage(getText("common_error"));
@@ -268,7 +267,8 @@ public class UserGroupAction extends ActionSupport implements
 
 	public String updateUserDetails() {
 		String userDetails = request.getParameter("userDetails");
-		userDetails = "{\"userId\":\"3\",\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari(cc)\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
+		// userDetails =
+		// "{\"userId\":\"3\",\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari(cc)\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
 		UserBean objUserBean = new UserBean();
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		objUserBean = gson.fromJson(userDetails, UserBean.class);
@@ -289,9 +289,7 @@ public class UserGroupAction extends ActionSupport implements
 	}
 
 	public String deleteUser() {
-		//int userId = Integer.parseInt(request.getParameter("userGroupId"));
-		int userId = 3;
-		
+		int userId = Integer.parseInt(request.getParameter("userId"));
 		UserGroupDao objDao = new UserGroupDao();
 		boolean isDeleted = objDao.deleteUser(userId);
 		objDao.commit();

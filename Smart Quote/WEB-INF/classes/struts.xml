@@ -130,7 +130,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getCustomerDetails" class="action.CustomerAction"
 			method="getCustomerDetails">
 			<result name="success" type="json">
@@ -138,7 +138,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateCustomerDetails" class="action.CustomerAction"
 			method="updateCustomerDetails">
 			<result name="success" type="json">
@@ -146,9 +146,49 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="deleteCustomer" class="action.CustomerAction"
 			method="deleteCustomer">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductGroupList" class="action.ProductGroupAction"
+			method="getProductGroupList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProductGroup" class="action.ProductGroupAction"
+			method="createProductGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductGroupDetails" class="action.ProductGroupAction"
+			method="getProductGroupDetails">
+			<result name="success" type="json">
+				<param name="root">productGroupDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="updateProductGroupDetails" class="action.ProductGroupAction"
+			method="updateProductGroupDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="deleteProductGroup" class="action.ProductGroupAction"
+			method="deleteProductGroup">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>

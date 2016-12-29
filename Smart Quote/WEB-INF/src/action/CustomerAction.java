@@ -69,10 +69,10 @@ public class CustomerAction extends ActionSupport implements
 	}
 
 	public String createCustomer() {
-		String userDetails = request.getParameter("userDetails");
-		userDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		String customerDetails = request.getParameter("customerDetails");
+//		customerDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
 		CustomerBean objBean = new CustomerBean();
-		objBean = new Gson().fromJson(userDetails, CustomerBean.class);
+		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerCreated = false, isCustomerExist = false;
 
 		CustomerDao objDao = new CustomerDao();
@@ -100,8 +100,7 @@ public class CustomerAction extends ActionSupport implements
 
 	public String getCustomerDetails() {
 		String customerCode = request.getParameter("customerCode");
-		customerCode = "GLS123PUNE";
-
+//		customerCode = "GLS123PUNE";
 		try {
 			customerDetailsResponse.setCode("error");
 			customerDetailsResponse.setMessage(getText("common_error"));
@@ -124,10 +123,10 @@ public class CustomerAction extends ActionSupport implements
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("error_creating_user_group"));
 
-		String userDetails = request.getParameter("userDetails");
-		userDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems PVT. LTD.\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		String customerDetails = request.getParameter("customerDetails");
+//		customerDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems PVT. LTD.\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
 		CustomerBean objBean = new CustomerBean();
-		objBean = new Gson().fromJson(userDetails, CustomerBean.class);
+		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerUpdated = false;
 
 		CustomerDao objDao1 = new CustomerDao();
@@ -136,7 +135,7 @@ public class CustomerAction extends ActionSupport implements
 		objDao1.closeAll();
 		if (isCustomerUpdated) {
 			objEmptyResponse.setCode("success");
-			objEmptyResponse.setMessage(getText("Customer_updated"));
+			objEmptyResponse.setMessage(getText("customer_updated"));
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
@@ -146,7 +145,7 @@ public class CustomerAction extends ActionSupport implements
 
 	public String deleteCustomer() {
 		String customerCode = request.getParameter("customerCode");
-		customerCode = "SHR6799AUN";
+//		customerCode = "SHR6799AUN";
 		CustomerDao objDao = new CustomerDao();
 		boolean isDeleted = objDao.deleteUser(customerCode);
 		objDao.commit();
