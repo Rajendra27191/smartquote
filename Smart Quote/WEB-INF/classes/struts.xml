@@ -178,7 +178,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateProductGroupDetails" class="action.ProductGroupAction"
 			method="updateProductGroupDetails">
 			<result name="success" type="json">
@@ -186,9 +186,49 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="deleteProductGroup" class="action.ProductGroupAction"
 			method="deleteProductGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductList" class="action.ProductAction"
+			method="getProductList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProduct" class="action.ProductAction"
+			method="createProduct">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductDetails" class="action.ProductAction"
+			method="getProductDetails">
+			<result name="success" type="json">
+				<param name="root">productDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="updateProductDetails" class="action.ProductAction"
+			method="updateProductDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteProduct" class="action.ProductAction"
+			method="deleteProduct">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>

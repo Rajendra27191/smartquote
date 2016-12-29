@@ -166,7 +166,7 @@ public class ProductGroupDao {
 			String deleteGroupQuery = "DELETE FROM product_group WHERE product_group_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
 			pstmt.setString(1, productGroupCode);
-//			pstmt.executeUpdate();
+			pstmt.executeUpdate();
 			isDeleted = true;
 		} catch (Exception e) {
 			try {
