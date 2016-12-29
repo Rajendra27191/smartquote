@@ -15,7 +15,7 @@ import responseBeans.UserGroupResponse;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 
-import dao.ProductDao;
+import dao.ProductGroupDao;
 
 @SuppressWarnings("serial")
 public class ProductGroupAction extends ActionSupport implements
@@ -53,7 +53,7 @@ public class ProductGroupAction extends ActionSupport implements
 	public String getProductGroupList() {
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		try {
-			ProductDao objDao = new ProductDao();
+			ProductGroupDao objDao = new ProductGroupDao();
 			valuePairBeans = objDao.getProductList();
 			objDao.commit();
 			objDao.closeAll();
@@ -76,12 +76,12 @@ public class ProductGroupAction extends ActionSupport implements
 		objBean = new Gson().fromJson(productDetails, ProductGroupBean.class);
 		boolean isProductCreated = false, isProductExist = false;
 
-		ProductDao objDao = new ProductDao();
+		ProductGroupDao objDao = new ProductGroupDao();
 		isProductExist = objDao.isProductExist(objBean.getProductCode());
 		objDao.commit();
 		objDao.closeAll();
 		if (!isProductExist) {
-			ProductDao objDao1 = new ProductDao();
+			ProductGroupDao objDao1 = new ProductGroupDao();
 			isProductCreated = objDao1.saveProduct(objBean);
 			objDao1.commit();
 			objDao1.closeAll();
@@ -105,7 +105,7 @@ public class ProductGroupAction extends ActionSupport implements
 		try {
 			productGroupDetailsResponse.setCode("error");
 			productGroupDetailsResponse.setMessage(getText("common_error"));
-			ProductDao objDao = new ProductDao();
+			ProductGroupDao objDao = new ProductGroupDao();
 			ProductGroupBean objBean = objDao
 					.getCustomerDetails(productGroupCode);
 			objDao.commit();
@@ -130,7 +130,7 @@ public class ProductGroupAction extends ActionSupport implements
 		objBean = new Gson().fromJson(productDetails, ProductGroupBean.class);
 		boolean isProductGroupUpdated = false;
 
-		ProductDao objDao1 = new ProductDao();
+		ProductGroupDao objDao1 = new ProductGroupDao();
 		isProductGroupUpdated = objDao1.updateProduct(objBean);
 		objDao1.commit();
 		objDao1.closeAll();
@@ -147,7 +147,7 @@ public class ProductGroupAction extends ActionSupport implements
 	public String deleteProductGroup() {
 		String productGroupCode = request.getParameter("productGroupCode");
 		// productGroupCode = "pro242Ink";
-		ProductDao objDao = new ProductDao();
+		ProductGroupDao objDao = new ProductGroupDao();
 		boolean isDeleted = objDao.deleteProductGroup(productGroupCode);
 		objDao.commit();
 		objDao.closeAll();

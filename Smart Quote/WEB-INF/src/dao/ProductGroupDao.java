@@ -10,12 +10,12 @@ import pojo.KeyValuePairBean;
 import pojo.ProductGroupBean;
 import connection.ConnectionFactory;
 
-public class ProductDao {
+public class ProductGroupDao {
 	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement pstmt = null;
 
-	public ProductDao() {
+	public ProductGroupDao() {
 		conn = new ConnectionFactory().getConnection();
 		try {
 			conn.setAutoCommit(false);
