@@ -18,7 +18,8 @@ import com.opensymphony.xwork2.ActionSupport;
 import dao.ProductDao;
 
 @SuppressWarnings("serial")
-public class ProductGroupAction extends ActionSupport implements ServletRequestAware {
+public class ProductGroupAction extends ActionSupport implements
+		ServletRequestAware {
 	private HttpServletRequest request;
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
@@ -86,14 +87,14 @@ public class ProductGroupAction extends ActionSupport implements ServletRequestA
 			objDao1.closeAll();
 			if (isProductCreated) {
 				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("product_created"));
+				objEmptyResponse.setMessage(getText("product_group_created"));
 			} else {
 				objEmptyResponse.setCode("error");
 				objEmptyResponse.setMessage(getText("common_error"));
 			}
 		} else {
 			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("error_product_exist"));
+			objEmptyResponse.setMessage(getText("error_product_group_exist"));
 		}
 		return SUCCESS;
 	}
@@ -122,11 +123,9 @@ public class ProductGroupAction extends ActionSupport implements ServletRequestA
 	}
 
 	public String updateProductGroupDetails() {
-		objEmptyResponse.setCode("error");
-		objEmptyResponse.setMessage(getText("error_creating_user_group"));
-
 		String productDetails = request.getParameter("productDetails");
-//		productDetails = "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel\",\"catalogueNo\":\"\"}";
+		// productDetails =
+		// "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel\",\"catalogueNo\":\"\"}";
 		ProductGroupBean objBean = new ProductGroupBean();
 		objBean = new Gson().fromJson(productDetails, ProductGroupBean.class);
 		boolean isProductGroupUpdated = false;
@@ -137,7 +136,7 @@ public class ProductGroupAction extends ActionSupport implements ServletRequestA
 		objDao1.closeAll();
 		if (isProductGroupUpdated) {
 			objEmptyResponse.setCode("success");
-			objEmptyResponse.setMessage(getText("product_updated"));
+			objEmptyResponse.setMessage(getText("product_group_updated"));
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
@@ -147,14 +146,14 @@ public class ProductGroupAction extends ActionSupport implements ServletRequestA
 
 	public String deleteProductGroup() {
 		String productGroupCode = request.getParameter("productGroupCode");
-//		productGroupCode = "pro242Ink";
+		// productGroupCode = "pro242Ink";
 		ProductDao objDao = new ProductDao();
 		boolean isDeleted = objDao.deleteProductGroup(productGroupCode);
 		objDao.commit();
 		objDao.closeAll();
 		if (isDeleted) {
 			objEmptyResponse.setCode("success");
-			objEmptyResponse.setMessage(getText("product_deleted"));
+			objEmptyResponse.setMessage(getText("product_group_deleted"));
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
