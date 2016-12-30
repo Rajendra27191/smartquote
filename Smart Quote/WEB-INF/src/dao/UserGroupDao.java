@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import pojo.KeyValuePairBean;
 import pojo.MenuBean;
 import pojo.SubMenuBean;
+import pojo.UserBean;
 import connection.ConnectionFactory;
 
 public class UserGroupDao {
@@ -20,6 +21,14 @@ public class UserGroupDao {
 		conn = new ConnectionFactory().getConnection();
 		try {
 			conn.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void commit() {
+		try {
+			conn.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -54,6 +63,7 @@ public class UserGroupDao {
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			rs = pstmt.executeQuery();
+			System.out.println("EXE : "+pstmt);
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setKey(rs.getInt("user_group_id"));
@@ -82,6 +92,7 @@ public class UserGroupDao {
 		try {
 			pstmt = conn.prepareStatement(getMenus);
 			rs = pstmt.executeQuery();
+			System.out.println("EXE MENU  : "+pstmt);
 			while (rs.next()) {
 				objMenuBean = new MenuBean();
 				objMenuBean.setMenuId(rs.getInt("menu_id"));
@@ -167,8 +178,7 @@ public class UserGroupDao {
 					pstmt.executeBatch();
 				}
 			}
-			System.out.println("\nQuery2: " + pstmt.toString());
-			pstmt.executeBatch(); // insert remaining records
+			pstmt.executeBatch(); // Insert remaining records
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -196,14 +206,6 @@ public class UserGroupDao {
 			e.printStackTrace();
 		}
 		return isDeleted;
-	}
-
-	public void commit() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public ArrayList<MenuBean> getAssignedAccess(int userGroupId) {
@@ -273,4 +275,172 @@ public class UserGroupDao {
 		return isDeleted;
 	}
 
+	public void changePassword(String email, String newPassword) {
+		try {
+			String updateCustQuery = "UPDATE user_master SET password = ? WHERE email = ?";
+			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
+			pstmt.setString(1, newPassword);
+			pstmt.setString(2, email);
+			System.out.println("Query: " + pstmt.toString());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isRegisterdUser(String email) {
+		boolean isRegisterdUser = false;
+		String getUserGroups = "SELECT email FROM user_master WHERE email = ?";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			pstmt.setString(1, email);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				isRegisterdUser = true;
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isRegisterdUser;
+	}
+
+	public ArrayList<KeyValuePairBean> getUserList() {
+		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
+		KeyValuePairBean objKeyValuePairBean = null;
+		String getUserGroups = "SELECT user_id, user_name FROM user_master";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objKeyValuePairBean = new KeyValuePairBean();
+				objKeyValuePairBean.setKey(rs.getInt("user_id"));
+				objKeyValuePairBean.setValue(rs.getString("user_name"));
+				pairBeans.add(objKeyValuePairBean);
+			}
+
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return pairBeans;
+	}
+
+	public boolean saveUser(UserBean objUserBean) {
+		boolean isUserCreated = false;
+		try {
+			String createUserQuery = "INSERT IGNORE INTO user_master (user_group_id, user_name, email, password, contact, valid_from, valid_to) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement pstmt = conn.prepareStatement(createUserQuery);
+			pstmt.setInt(1, objUserBean.getUserGroupId());
+			pstmt.setString(2, objUserBean.getUserName());
+			pstmt.setString(3, objUserBean.getEmailId());
+			pstmt.setString(4, objUserBean.getPassword());
+			pstmt.setString(5, objUserBean.getContact());
+			pstmt.setDate(6, objUserBean.getValidFrom());
+			pstmt.setDate(7, objUserBean.getValidTo());
+			pstmt.executeUpdate();
+			isUserCreated = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUserCreated;
+	}
+
+	public UserBean getUserDetails(int userId) {
+		UserBean objBean = null;
+		String getUserGroups = "SELECT user_id, user_group_id, user_name, email, password, contact, "
+				+ " valid_from, valid_to "
+				+ " FROM user_master WHERE user_id = ?";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new UserBean();
+				objBean.setUserId(rs.getInt("user_id"));
+				objBean.setUserGroupId(rs.getInt("user_group_id"));
+				objBean.setUserName(rs.getString("user_name"));
+				objBean.setEmailId(rs.getString("email"));
+				objBean.setPassword(rs.getString("password"));
+				objBean.setContact(rs.getString("contact"));
+				objBean.setValidFrom(rs.getDate("valid_from"));
+				objBean.setValidTo(rs.getDate("valid_to"));
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objBean;
+	}
+
+	public boolean updateUser(UserBean objUserBean) {
+		boolean isUserUpdated = false;
+		try {
+			String updateCustQuery = "UPDATE user_master SET user_group_id = ?, user_name = ?, email = ?, password= ?, "
+					+ " contact = ?, valid_from = ?, valid_to = ? "
+					+ " WHERE user_id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
+			pstmt.setInt(1, objUserBean.getUserGroupId());
+			pstmt.setString(2, objUserBean.getUserName());
+			pstmt.setString(3, objUserBean.getEmailId());
+			pstmt.setString(4, objUserBean.getPassword());
+			pstmt.setString(5, objUserBean.getContact());
+			pstmt.setDate(6, objUserBean.getValidFrom());
+			pstmt.setDate(7, objUserBean.getValidTo());
+			pstmt.setInt(8, objUserBean.getUserId());
+			System.out.println("Query: " + pstmt.toString());
+			pstmt.executeUpdate();
+			isUserUpdated = true;
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUserUpdated;
+	}
+
+	public boolean deleteUser(int userId) {
+		boolean isDeleted = false;
+		try {
+			String deleteGroupQuery = "DELETE FROM user_master WHERE user_group_id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.setInt(1, userId);
+			pstmt.executeUpdate();
+			isDeleted = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDeleted;
+	}
 }
