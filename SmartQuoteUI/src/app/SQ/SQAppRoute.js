@@ -26,9 +26,13 @@ angular.module('sq.SmartQuoteDesktop')
         }
       }
     })
-   .state('usergroup', {
+   .state('manageusergroup', {
       controller:'SQManageUserGroupController',
       templateUrl: 'SQ/UserHome/views/sq.manage_user_group.view.html',
+    })
+   .state('manageuser', {
+      controller:'SQManageUserController',
+      templateUrl: 'SQ/UserHome/views/sq.manage_user.view.html',
     });
 
 }]);

@@ -1,4 +1,8 @@
 var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','angularLocalStorage','uiSwitch'])
+.config(function($logProvider){
+    $logProvider.debugEnabled(true);
+    
+  })
 .run(['$rootScope','$window','storage',function($rootScope,$window,storage){
    if(storage.get('user')==null || storage.get('user')==''){
       $rootScope.user={};
@@ -30,6 +34,7 @@ $window.pageYOffset;
     $rootScope.userSession=false;
       $state.transitionTo('home.start');  
   };
+ // $rootScope.showSpinner();
   SQHomeServices.GetUserGroupInfo();
   SQHomeServices.GetUserGroupMenu();
 
@@ -48,7 +53,7 @@ $window.pageYOffset;
       	$rootScope.userGroups={"result":data.result};
     }
 	}
-  $rootScope.hideSpinner();
+  //$rootScope.hideSpinner();
   };
 
   var cleanupEventGetUserGroupInfoDone = $scope.$on("GetUserGroupInfoDone", function(event, message){
@@ -85,7 +90,7 @@ $window.pageYOffset;
   };
 
   var cleanupEventGetUserGroupMenuDone = $scope.$on("GetUserGroupMenuDone", function(event, message){
-    //console.log("GetUserGroupMenuDone");
+    console.log("GetUserGroupMenuDone");
     $scope.handleGetUserGroupMenuDoneResponse(message);      
   });
 
@@ -128,27 +133,3 @@ $scope.$on('$destroy', function(event, message) {
 });
 
 }])
-.directive('sqSpinner', [
-'$timeout',
-function ($timeout) {
-  return {
-    restrict: 'EA',
-    replace: true,
-    template: '<div style="position:fixed;z-index:100;left:0;right:0;width:100%;height:100%;margin:auto;background:#ffffff;opacity:.4;" ng-show="spinner.isShown">' + '<center>' + '<i style="margin:250px auto;" class="fa fa-spinner fa-spin fa-3x">' + '</i>' + '</center>' + '</div>',
-    controller: [
-      '$scope',
-      '$rootScope',
-      function ($scope, $rootScope) {
-        $scope.spinner = { isShown: false };
-        $rootScope.showSpinner = function () {
-          $scope.spinner.isShown = true;
-        };
-        $rootScope.hideSpinner = function () {
-          $scope.spinner.isShown = false;
-        };
-      }
-    ]
-  };
-}
-]);
-

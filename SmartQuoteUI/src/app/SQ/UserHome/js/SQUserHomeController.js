@@ -5,7 +5,10 @@ console.log('initialise SQUserHomeController controller');
 $rootScope.subMenuClicked=function(subMenuName){
 	console.log(subMenuName);
 	if(subMenuName==='Manage User Group'){
-	$state.transitionTo('usergroup');		
+	$state.transitionTo('manageusergroup');		
+	}
+	if(subMenuName==='Manage User'){
+	$state.transitionTo('manageuser');		
 	}
 	if(subMenuName==='Logout'){
 	$rootScope.userSignout();	

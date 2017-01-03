@@ -270,6 +270,8 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventAddUserGroupNotDone();
 	cleanupEventEditUserGroupDone();
 	cleanupEventEditUserGroupNotDone();
+	cleanupEventDeleteUserGroupDone();
+	cleanupEventDeleteUserGroupNotDone();
 
 });
 

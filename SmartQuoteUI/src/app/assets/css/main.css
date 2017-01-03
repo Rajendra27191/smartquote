@@ -47,7 +47,8 @@ min-height:600px;
   border-radius: 0px;
 }
 .navbar-inverse {
-  background-color: #113654;
+  background: #113654; /* For browsers that do not support gradients */
+  /*background: -webkit-linear-gradient(top, rgba(17, 54, 84, 0.9), #5f5f5f);*/
   /*background-color: #0d3c61;*/
   border-color: #0d3c61;
   border-bottom:1px solid #dddddd;
@@ -266,4 +267,9 @@ background-color:transparent;
     transform: rotate(135deg);
     right: 12px;
 }
+.sweet-alert .sa-icon.sa-success .sa-fix {
+    height: 65px;}
 /*SWEET ALERT CSS ENDS*/
+.invalid-control{
+  color:red;font-size:14px;word-break:break-all;
+}
