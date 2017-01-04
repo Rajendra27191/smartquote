@@ -210,6 +210,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			System.out.println("Codes to Delete: "+ productCodeString);
 			
 			ProductDao objProductDao = new ProductDao();
+			@SuppressWarnings("unused")
 			boolean isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
 			boolean isFileUploaded = objProductDao
 					.uploadProductFile(productList);
