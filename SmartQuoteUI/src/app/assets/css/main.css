@@ -1,0 +1,275 @@
+body{
+position: relative;  
+background: url(../img/bg.jpg) no-repeat center center;
+
+}
+.overlay {
+background:rgba(255, 255, 255,0.3);        
+min-height:600px;
+}
+/*FOOTER START*/
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background: #D6D6D0;
+  text-align: center;
+}
+/*FOOTER END*/
+/*BUTTON*/
+.button-delete{
+  color: #fff;
+  background:rgba(237, 20, 61, 0.7);
+  border-color: rgba(237, 20, 61, 0.7);
+}
+.button-delete:hover,.button-delete:focus{
+  color: #fff;
+  background:rgba(237, 20, 61, 0.7);border-color: crimson;
+}
+.button-ok{
+  color: #fff;
+  background: rgb(100, 189, 99);
+  border-color: rgb(100, 189, 99);
+  /*background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);;*/
+}
+.button-ok:hover,.button-ok:focus{
+  color: #fff;
+  background: rgb(100, 189, 99);
+  border-color: rgb(0, 128, 0);
+  /*border-color: rgb(100, 189, 99);*/
+  /*background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);;*/
+}
+
+/*============NAVBAR STARTS====================*/
+.navbar {
+  border-radius: 0px;
+}
+.navbar-inverse {
+  background: #113654; /* For browsers that do not support gradients */
+  /*background: -webkit-linear-gradient(top, rgba(17, 54, 84, 0.9), #5f5f5f);*/
+  /*background-color: #0d3c61;*/
+  border-color: #0d3c61;
+  border-bottom:1px solid #dddddd;
+  box-shadow:0 4px 5px -3px #ececec;
+  position:relative;
+}
+/*.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
+    color: #fff;
+    background-color: #03AFF7;
+}*/
+.navbar-inverse .navbar-nav>li>a {
+    color: #fff;
+   
+}
+.navbar-inverse .navbar-nav>li>a:hover,.navbar-inverse .navbar-nav>li>a:focus {
+    color: #fff;
+    background-color: rgb(1, 175, 246);
+    /*margin: 0px 0px;*/
+    /*padding-top: 10px;
+    padding-bottom: 10px;*/
+}
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+    color: #fff;
+    background-color: rgb(1, 175, 246);
+    /*background-color: rgba(255, 255, 255, 0.5);;*/
+}
+.navbar-nav>li>.dropdown-menu {
+  /*background:rgba(237, 20, 61, 0.7);border-color: crimson;*/
+    color: #fff;
+    /*background-color: rgba(1, 175, 246, 0.5);*/
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.navbar-inverse .navbar-toggle {
+    border-color: #fff;
+}
+/*============NAVBAR ENDS====================*/
+/*=====================================
+ HOME SECTION
+    ===================================*/
+#signin{
+/*background: url(../img/bg.jpg) no-repeat center center;*/
+/*background: #ffffff;*/
+padding: 0;
+-webkit-background-size: cover;
+background-size: cover;
+}
+#signin h1 {
+padding:150px 20px 20px 0px;
+color:#ff0000;
+font-size:40px;
+font-weight:900;
+
+}
+#signin .head-text span {
+display: block; 
+font-size: 25px; 
+color: #fff; 
+margin-bottom: 25px;
+}
+#signin .head-text span >i {
+margin-right: 10px; 
+color: #159238;
+}
+#signin p {
+padding:10px 20px 20px 20px;
+color:#fff;
+font-size:16px;
+line-height:20px;
+font-weight:800;       
+text-align:center;
+}
+#signin h3 {
+color:#fff;
+}
+.div-trans {
+padding-top: 5px;
+background-color: rgba(0, 0, 0, 0.5);
+min-height: 250px;
+margin-top: 150px;
+color: #fff;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+margin-bottom: 30px;
+}
+.div-trans .form-group input{
+  color: #fff;
+}
+.div-trans .form-group input::-webkit-input-placeholder{
+color: #fff;
+}
+.div-trans .form-group input::-moz-placeholder{
+color: #fff;
+}
+.div-trans i {
+margin-left: 10px; 
+margin-right: 10px; 
+color: #159238;
+}
+.div-trans span {
+color: #ff0000;
+}
+#signin .form-control {
+background-color:transparent;
+}
+/*=========================================*/
+/*USER HOME CSS STARTS*/
+.main-label{
+  text-transform: uppercase;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: medium;
+  color: crimson;
+  margin: 5px 5px 15px 5px;
+
+}
+.sub-label{
+  text-transform: capitalize;
+  color: #777575;
+  font-size: medium;
+}
+.container-box{
+    /*border: 1px solid #c3b9b9;*/
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: 0px 2px 10px 2px lightgrey;
+}
+.container-fluid{padding: 0px;margin: 0px;}
+.main-nav li a{margin:5px 32px; }
+.panel-default>.panel-heading {
+    color: #fff;
+    background-color: #113654;
+    /*rgb(146, 148, 150);*/
+    border-color: rgb(13, 60, 97);;
+}
+.panel-group {
+     margin-bottom: 5px; 
+}
+.switch {
+  border-radius: 3px;
+  width: 50px;
+    height: 20px;
+    top:5px;
+}
+.switch small{
+  border-radius: 2px;
+  width: 20px;
+    height: 20px;
+}
+.switch.checked small {
+    left: 30px;
+}
+.switch .on {
+  top:5%;
+}
+.switch .off {
+  top:5%;
+}
+/*USER HOME CSS ENDS*/
+/*SWEET ALERT CSS STARTS*/
+.sweet-alert {
+      width: 425px;
+      left: 53%;
+}
+.sweet-alert .sa-icon {
+  margin:0px auto;
+}
+.sweet-alert .sa-icon {
+    width: 60px;
+    height: 60px;
+}
+.sweet-alert h2 {
+  margin: 0px 0;
+}
+.sweet-alert .sa-icon.sa-success .sa-placeholder {
+  left: 3px;
+    top: 3px;
+    width: 60px;
+    height: 60px;
+}
+.sweet-alert .sa-icon.sa-success .sa-line.sa-tip {
+    width: 22px;
+    left: 14px;
+    top: 46px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.sweet-alert .sa-icon.sa-success .sa-line.sa-long {
+    width: 40px;
+    right: -5px;
+    top: 38px;
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.sweet-alert .sa-icon.sa-success::before, .sweet-alert .sa-icon.sa-success::after {
+  width: 67px;
+}
+
+.sweet-alert .sa-icon.sa-error .sa-line.sa-left {
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: 12px;
+}
+.sweet-alert .sa-icon.sa-error .sa-line {
+    position: absolute;
+    height: 5px;
+    width: 40px;
+    background-color: #F27474;
+    display: block;
+    top: 29px;
+    border-radius: 2px;
+}
+.sweet-alert .sa-icon.sa-error .sa-line.sa-right {
+    -webkit-transform: rotate(135deg);
+    transform: rotate(135deg);
+    right: 12px;
+}
+.sweet-alert .sa-icon.sa-success .sa-fix {
+    height: 65px;}
+/*SWEET ALERT CSS ENDS*/
+.invalid-control{
+  color:red;font-size:14px;word-break:break-all;
+}
