@@ -352,6 +352,7 @@ public class UserGroupDao {
 			pstmt.setString(5, objUserBean.getContact());
 			pstmt.setDate(6, objUserBean.getValidFrom());
 			pstmt.setDate(7, objUserBean.getValidTo());
+			System.out.println("Create User Query: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isUserCreated = true;
 		} catch (Exception e) {

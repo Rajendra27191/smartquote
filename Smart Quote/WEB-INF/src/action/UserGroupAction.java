@@ -213,34 +213,41 @@ public class UserGroupAction extends ActionSupport implements
 	}
 
 	public String createUser() {
-		String userDetails = request.getParameter("userDetails");
-		// userDetails =
-		// "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
-		UserBean objUserBean = new UserBean();
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		objUserBean = gson.fromJson(userDetails, UserBean.class);
-		boolean isUserCreated = false, isUserAlreadyRegistered = false;
+		try {
+			String userDetails = request.getParameter("userDetails");
+			// userDetails =
+			// "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
+			
+			System.out.println("userDetails: "+ userDetails);
+			UserBean objUserBean = new UserBean();
+			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+			objUserBean = gson.fromJson(userDetails, UserBean.class);
+			boolean isUserCreated = false, isUserAlreadyRegistered = false;
 
-		UserGroupDao objUserDao = new UserGroupDao();
-		isUserAlreadyRegistered = objUserDao.isRegisterdUser(objUserBean
-				.getEmailId());
-		objUserDao.commit();
-		objUserDao.closeAll();
-		if (!isUserAlreadyRegistered) {
-			UserGroupDao objUserGroupDao = new UserGroupDao();
-			isUserCreated = objUserGroupDao.saveUser(objUserBean);
-			objUserGroupDao.commit();
-			objUserGroupDao.closeAll();
-			if (isUserCreated) {
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("user_created"));
+			UserGroupDao objUserDao = new UserGroupDao();
+			isUserAlreadyRegistered = objUserDao.isRegisterdUser(objUserBean
+					.getEmailId());
+			objUserDao.commit();
+			objUserDao.closeAll();
+			System.out.println("isUserAlreadyRegistered: "+ isUserAlreadyRegistered);
+			if (!isUserAlreadyRegistered) {
+				UserGroupDao objUserGroupDao = new UserGroupDao();
+				isUserCreated = objUserGroupDao.saveUser(objUserBean);
+				objUserGroupDao.commit();
+				objUserGroupDao.closeAll();
+				if (isUserCreated) {
+					objEmptyResponse.setCode("success");
+					objEmptyResponse.setMessage(getText("user_created"));
+				} else {
+					objEmptyResponse.setCode("error");
+					objEmptyResponse.setMessage(getText("error_user_create"));
+				}
 			} else {
 				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("error_user_create"));
+				objEmptyResponse.setMessage(getText("error_user_exist"));
 			}
-		} else {
-			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("error_user_exist"));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return SUCCESS;
 	}

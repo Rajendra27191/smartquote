@@ -1,18 +1,28 @@
 package action;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import pojo.ProductFileBean;
 import responseBeans.ProductResponseBean;
 import responseBeans.UserGroupResponse;
+import test.GlsFileReader;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
 
 import dao.ProductDao;
@@ -23,6 +33,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
+	private File productFile;
 
 	public UserGroupResponse getData() {
 		return data;
@@ -47,6 +58,14 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public void setProductDetailsResponse(
 			ProductResponseBean productDetailsResponse) {
 		this.productDetailsResponse = productDetailsResponse;
+	}
+
+	public File getProductFile() {
+		return productFile;
+	}
+
+	public void setProductFile(File productFile) {
+		this.productFile = productFile;
 	}
 
 	public String getProductList() {
@@ -146,7 +165,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 	public String deleteProduct() {
 		String productCode = request.getParameter("productCode");
-//		productCode = "1";
+		// productCode = "1";
 		ProductDao objDao = new ProductDao();
 		boolean isDeleted = objDao.deleteProduct(productCode);
 		objDao.commit();
@@ -161,9 +180,65 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		return SUCCESS;
 	}
 
+	public String uploadProductByXlsx() {
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+
+		GlsFileReader objFileReader = new test.FileReader();
+//		productFile = new File(
+//				"/home/raj/git/smartquote/Smart Quote/file/ProductTemplate.xlsx");
+		try {
+			JSONArray fileString = objFileReader.readFile(String
+					.valueOf(productFile));
+			System.out.println("File Content: " + fileString);
+
+			ArrayList<ProductFileBean> productList = new ArrayList<ProductFileBean>();
+			productList = new Gson().fromJson(fileString.toString(),
+					new TypeToken<List<ProductFileBean>>() {
+					}.getType());
+			System.out.println("Total Products: " + productList.size());
+
+			String productCodeString = "";
+			for (int i = 0; i < productList.size(); i++) {
+				if (i == 0) {
+					productCodeString = "'" + productList.get(i).getProductCode().trim() + "'";
+				} else {
+					productCodeString = productCodeString + ", '" + productList.get(i).getProductCode().trim() + "'";
+				}
+			}
+			
+			System.out.println("Codes to Delete: "+ productCodeString);
+			
+			ProductDao objProductDao = new ProductDao();
+			boolean isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
+			boolean isFileUploaded = objProductDao
+					.uploadProductFile(productList);
+			objProductDao.commit();
+			objProductDao.closeAll();
+			if (isFileUploaded) {
+				objEmptyResponse.setCode("success");
+				objEmptyResponse.setMessage(getText("product_file_uploaded"));
+			}
+		} catch (FileNotFoundException e) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("product_file_not_found"));
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("error_file_parse"));
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-
 }

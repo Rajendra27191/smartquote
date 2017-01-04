@@ -235,5 +235,13 @@
 			</result>
 		</action>
 
+		<action name="uploadProductByXlsx" class="action.ProductAction"
+			method="uploadProductByXlsx">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
 	</package>
 </struts>

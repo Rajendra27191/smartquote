@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import pojo.ProductFileBean;
 import connection.ConnectionFactory;
 
 public class ProductDao {
@@ -194,6 +195,68 @@ public class ProductDao {
 			String deleteGroupQuery = "DELETE FROM product_master WHERE product_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
 			pstmt.setString(1, productCode);
+			pstmt.executeUpdate();
+			isDeleted = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDeleted;
+	}
+
+	public boolean uploadProductFile(ArrayList<ProductFileBean> productList) {
+		boolean isFileUploaded = false;
+		try {
+			String productQuery = "REPLACE INTO product_master (product_code, product_name, product_group_id, "
+					+ " unit, selling_price1, selling_price2, selling_price3, selling_price4, cost, gst_flag, created_by) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+			pstmt = conn.prepareStatement(productQuery);
+			final int batchSize = 10;
+			int count = 0;
+
+			for (int i = 0; i < productList.size(); i++) {
+				pstmt.setString(1, productList.get(i).getProductCode());
+				pstmt.setString(2, productList.get(i)
+						.getProductDescriptionLine1());
+				pstmt.setString(3, productList.get(i).getGroupCode());
+				pstmt.setString(4, productList.get(i).getUnit());
+				pstmt.setDouble(5, productList.get(i).getPriceLev1());
+				pstmt.setDouble(6, productList.get(i).getPriceLev2());
+				pstmt.setDouble(7, productList.get(i).getPriceLev3());
+				pstmt.setDouble(8, productList.get(i).getPriceLev4());
+				pstmt.setDouble(9, productList.get(i).getCost());
+				pstmt.setString(10, productList.get(i).getgSTCode());
+				pstmt.addBatch();
+
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+			System.out.println("Remaining Executed...!");
+			isFileUploaded = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
+	public boolean deletedPreviousProduct(String productCodeString) {
+		boolean isDeleted = false;
+		try {
+			String deleteGroupQuery = "DELETE FROM product_master WHERE product_code in(?)";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.setString(1, productCodeString);
 			pstmt.executeUpdate();
 			isDeleted = true;
 		} catch (Exception e) {

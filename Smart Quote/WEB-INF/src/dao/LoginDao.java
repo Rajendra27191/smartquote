@@ -56,6 +56,7 @@ public class LoginDao {
 			PreparedStatement pstmt = conn.prepareStatement(isUserPresentQuery);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
+			System.out.println("Login Query: "+ pstmt.toString());
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				objBean = new UserBean();
