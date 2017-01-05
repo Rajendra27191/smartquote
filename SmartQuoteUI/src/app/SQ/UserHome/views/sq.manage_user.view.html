@@ -1,8 +1,3 @@
-<style type="text/css">
-	.row-control{
-	margin-bottom: 5px;
-	}
-</style>
 <div class="container">
 <form name="form.userManageUser" novalidate>
 <div class="row">
@@ -25,9 +20,9 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">User Type</label></div>
 	<div class="col-md-8">
-	<select type="text" name="userGroupName" class="form-control" ng-options="usergroup as usergroup.value for usergroup in userGroups.result" ng-model="manageUser.userType" ng-change="userTypeChanged(manageUser.userType)" required>
+	<select type="text" name="userGroupName" class="form-control" ng-options="usergroup as usergroup.value for usergroup in userGroups" ng-model="manageUser.userType" ng-change="userTypeChanged(manageUser.userType)" required>
 	</select>
-	<!-- <input type = 'text' name="userGroupName" class = 'form-control' ng-model = 'manageUser.userType' uib-typeahead = 'usergroup as usergroup.value for usergroup in userGroups.result | filter:$viewValue' typeahead-on-select="userTypeChanged(manageUser.userType)"  autocomplete="off" required> -->
+	<!-- <input type = 'text' name="userGroupName" class = 'form-control' ng-model = 'manageUser.userType' uib-typeahead = 'usergroup as usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="userTypeChanged(manageUser.userType)"  autocomplete="off" required> -->
 	<span ng-show="((form.userManageUser.userGroupName.$dirty && form.userManageUser.userGroupName.$invalid) || (form.userManageUser.userGroupName.$invalid && form.userManageUser.submitted))" class="invalid-control">
 	<small>*Please select user type.</small>
 	</span>
@@ -67,7 +62,7 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Contact No</label></div>
 	<div class="col-md-8">
-	<input type="" class = 'form-control' name="userContactNo" ng-model="manageUser.userContactNo" ng-pattern="/^[0-9]{1,12}$/" required>
+	<input type="" class = 'form-control' name="userContactNo" ng-model="manageUser.userContactNo" ng-pattern="/^[0-9]{10,12}$/" required>
 	<span ng-show="((form.userManageUser.userContactNo.$dirty && form.userManageUser.userContactNo.$invalid) || (form.userManageUser.userContactNo.$invalid && form.userManageUser.submitted))" class="invalid-control">
 		<small ng-show="form.userManageUser.userContactNo.$error.required">*Please enter contact no.</small>
 		<small ng-show="form.userManageUser.userContactNo.$error.pattern">*Please enter valid contact no.</small>

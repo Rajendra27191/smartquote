@@ -6,16 +6,19 @@ $scope.form={};
 $scope.isOpen=false;
 $scope.buttonstatus='add';
 
+
+
+
 $scope.resetView=function(){
 $scope.user={};
-$scope.form.userManageUserGroup.userGroupName.$dirty=false;
+$scope.buttonstatus='add';
 $scope.form.userManageUserGroup.submitted=false;
+$scope.form.userManageUserGroup.$setPristine();
 $rootScope.showSpinner();
 SQHomeServices.GetUserGroupInfo();
 SQHomeServices.GetUserGroupMenu();
 };
-
-
+//$scope.resetView();
 $scope.handlesetUserGroupResponse=function(data){
 console.log(data);
 var selectedsubmenukeepGoing = true;	
@@ -68,7 +71,7 @@ $rootScope.hideSpinner();
 
 $scope.getUserGroupId=function(userGroup){
 var userGroupId;
-$rootScope.userGroups.result.forEach(function(userGroupElement,index){
+$rootScope.userGroups.forEach(function(userGroupElement,index){
 	  var user=userGroupElement;
 	  var userGroupName=userGroup.userGroup;
 	if (user.value==userGroupName) {
@@ -158,8 +161,22 @@ if($scope.form.userManageUserGroup.$valid){
 if($scope.menuselected>0&&userGroupName!==''&&userGroupName!==undefined){
 	if ($scope.buttonstatus=='add') {
 	//console.log("ADD");	
-	$rootScope.showSpinner();
-	SQUserHomeServices.saveUserGroup(userGroupName,checkedMenuList);	
+	//console.log($rootScope.userGroups);
+	var userGroupExist=false;
+	$rootScope.userGroups.forEach(function(element,index){
+	 console.log(element.value,userGroupName);
+	 if(element.value.toLowerCase()==userGroupName.toLowerCase()){
+	 	//console.log(element.value,userGroupName);
+	 	userGroupExist=true;
+	 }	
+	});
+	if (userGroupExist) {
+	 	$rootScope.alertError("User Group already exist");
+	}else{
+		$rootScope.showSpinner();
+		SQUserHomeServices.saveUserGroup(userGroupName,checkedMenuList);
+	}
+		
 	}else if($scope.buttonstatus=='edit'){
 	//console.log("EDIT");
 	$rootScope.showSpinner();
@@ -185,6 +202,8 @@ if(data){
 	$rootScope.alertSuccess("Successfully added user group");
 	$scope.resetView();
 	 
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();
@@ -205,6 +224,8 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$rootScope.alertSuccess("Successfully updated user group");
 	$scope.resetView();
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();
@@ -236,6 +257,8 @@ if(data){
 	$rootScope.alertSuccess("Successfully deleted user group");
 	$scope.resetView();
 	
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();

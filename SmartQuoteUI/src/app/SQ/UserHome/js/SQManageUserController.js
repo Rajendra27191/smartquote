@@ -5,13 +5,16 @@ console.log('initialise SQManageUserController controller');
 $scope.form={};
 $scope.manageUser={};
 
-
 $scope.today = function() {
     $scope.dt = new Date();
     return $scope.dt;
 };
 
 
+$scope.init=function(){
+$rootScope.showSpinner();
+SQUserHomeServices.GetUserList();
+};
 
 $scope.reset=function(){
 $scope.manageUser={};
@@ -27,11 +30,10 @@ showWeeks: false
 };
 $scope.dateValid=true;
 $scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.today()};
-$rootScope.showSpinner();
-SQUserHomeServices.GetUserList();
 };
 
 $scope.reset();
+$scope.init();
 //$scope.today();
 $scope.open1 = function() {
 $scope.popup1.opened = true;
@@ -112,7 +114,7 @@ $scope.saveUser=function(userType){
 			//console.log("UPDATE")
 			// if($scope.manageUser.userType.value){
 			// }else{
-			// 	$rootScope.userGroups.result.forEach(function(element,index){
+			// 	$rootScope.userGroups.forEach(function(element,index){
 			// 		if($scope.manageUser.userType==element.value){
 			// 			$scope.manageUser.userType=element;
 			// 		}
@@ -146,8 +148,11 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.reset();
 	$scope.resetForm();
+	$scope.init();
 	//console.log($scope.form.userManageUser);
 	$rootScope.alertSuccess("Successfully saved user");
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();
@@ -167,8 +172,11 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.reset();
 	$scope.resetForm();
+	$scope.init();
 	//console.log($scope.form.userManageUser);
 	$rootScope.alertSuccess("Successfully updated user");
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();
@@ -235,12 +243,13 @@ var toYear  = moment(tempTo).format('YYYY');
 validTo=$scope.setDate(toYear,toMonth,toDay);
 
 var userType='';
-
-$rootScope.userGroups.result.forEach(function(element,index){
+console.log($rootScope.userGroups)
+$rootScope.userGroups.forEach(function(element,index){
 	if(element.key==userdata.userGroupId){
 		userType=element;
 	}
 });
+
 console.log("userType")
 console.log(userType)
 $scope.manageUser={
@@ -287,8 +296,11 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.reset();
 	$scope.resetForm();
+	$scope.init();
 	console.log(data)
 	$rootScope.alertSuccess("Successfully deleted user");
+}else{
+	$rootScope.alertError(data.message);
 }
 }
 $rootScope.hideSpinner();

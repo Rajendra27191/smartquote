@@ -21,7 +21,7 @@ angular.module('sq.SmartQuoteDesktop')
       //   //$rootScope.$broadcast('CreateUserGroupNotDone', error.status);
       // });
     };
-
+/*===============Manage User Group====================*/
     userhome.setUserGroup = function (userGroupId){
       $http({
       method: "GET",
@@ -41,7 +41,6 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/createUserGroup?userGroupName="+userGroupName+"&checkedMenuList="+checkedMenuList,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('AddUserGroupDone', data);    
@@ -55,10 +54,7 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/updateUserGroup?userGroupId="+userGroupId+"&checkedMenuList="+checkedMenuList,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("Edit success");
-        //console.log(data);
         $rootScope.$broadcast('EditUserGroupDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -70,26 +66,20 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/deleteUserGroup?userGroupId="+userGroupId,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("delete success");
-        //console.log(data);
         $rootScope.$broadcast('DeleteUserGroupDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteUserGroupNotDone', data);
       });
     };
-/*===================Create USer Starts====================*/
+/*===================Manage USer Starts====================*/
     userhome.SaveUser = function (userDetails){
       console.log(userDetails)
       $http({
       method: "POST",
       url: "/smartquote/createUser?userDetails="+userDetails,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        console.log("saveUser success");
-        console.log(data);
         $rootScope.$broadcast('SaveUserDone', data); 
       }).error(function(data, status, header, config){
         console.log(data);
@@ -101,10 +91,7 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/getUserList",
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("saveUser success");
-        //console.log(data);
         $rootScope.$broadcast('GetUserListDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -117,10 +104,7 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/getUserDetails?userId="+userId,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("GetUserDetails success");
-        //console.log(data);
         $rootScope.$broadcast('GetUserDetailsDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -129,14 +113,10 @@ angular.module('sq.SmartQuoteDesktop')
     };
 
     userhome.UpdateUserDetails = function (userDetails){
-      //console.log(userDetails)
       $http({
       method: "POST",
       url: "/smartquote/updateUserDetails?userDetails="+userDetails,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("EditUser success");
-        //console.log(data);
         $rootScope.$broadcast('UpdateUserDetailsDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -148,16 +128,77 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/deleteUser?userId="+userId,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log("delete success");
-        //console.log(data);
         $rootScope.$broadcast('DeleteUserDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteUserNotDone', data);
       });
     };
+/*===============Manage Customer====================*/
+    userhome.GetCustomerList = function (userId){
+      $http({
+      method: "POST",
+      url: "/smartquote/getCustomerList",
+      }).success(function(data, status, header, config){
+        $rootScope.$broadcast('GetCustomerListDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetCustomerListNotDone', data);
+      });
+    };
+
+    userhome.GetCustomerDetails = function (customerCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/getCustomerDetails?customerCode="+customerCode,
+      }).success(function(data, status, header, config){
+        $rootScope.$broadcast('GetCustomerDetailsDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetCustomerDetailsNotDone', data);
+      });
+    };
+
+    userhome.CreateCustomer = function (customerDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/createCustomer?customerDetails="+customerDetails,
+      }).success(function(data, status, header, config){
+        console.log(data)
+        $rootScope.$broadcast('CreateCustomerDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('CreateCustomerNotDone', data);
+      });
+    };
+    
+    userhome.UpdateCustomer = function (customerDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/updateCustomerDetails?customerDetails="+customerDetails,
+      }).success(function(data, status, header, config){
+        console.log(data)
+        $rootScope.$broadcast('UpdateCustomerDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('UpdateCustomerNotDone', data);
+      });
+    };
+    userhome.DeleteCustomer = function (customerCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/deleteCustomer?customerCode="+customerCode,
+      }).success(function(data, status, header, config){
+        console.log(data)
+        $rootScope.$broadcast('DeleteCustomerDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('DeleteCustomerNotDone', data);
+      });
+    };
+
+    
 
 
     return userhome;

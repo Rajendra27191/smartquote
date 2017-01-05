@@ -22,7 +22,7 @@
 </head>
 <body ng-controller="SmartQuoteDesktopController"> 
 <!-- ==========================Start Top Navigation======================== -->
-  <nav class="navbar navbar-inverse" ng-show="userSession">
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-show="userSession">
         <div class="container-fluid">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -33,9 +33,9 @@
             </button>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav" ng-repeat="menu in userMenu">
+            <ul class="nav navbar-nav" ng-repeat="menu in userNavMenu">
               <li ng-if="!(menu.subMenuBeans.length>0)"><a href="#"><span data-ng-bind="menu.menuName"></span></a></li>
-              <li ng-if="menu.subMenuBeans.length>0" class="dropdown">
+              <li ng-if="menu.subMenuBeans.length>0 && menu.menuName!=='Profile'" class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a>
                 <ul class="dropdown-menu" >
                   <li ng-repeat="submenu in menu.subMenuBeans">
@@ -49,22 +49,24 @@
                 </ul>
               </li>
             </ul>
-            <!-- <ul class="nav navbar-nav navbar-right ">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Profile <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Edit Profile</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#" ng-click="userSignout()"><i class="glyphicon glyphicon-off"></i> logout</a></li>
+            <ul class="nav navbar-nav navbar-right" ng-repeat="menu in userNavMenu">
+               <li ng-if="menu.subMenuBeans.length>0 && menu.menuName=='Profile'" class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a>
+                <ul class="dropdown-menu" >
+                  <li ng-repeat="submenu in menu.subMenuBeans">
+                  <a href="#" ng-click="subMenuClicked(submenu.subMenuName)">
+                  <i class="fa fa-sign-out" aria-hidden="true" ng-if="submenu.subMenuName=='Logout'"></i>
+                  <span data-ng-bind="submenu.subMenuName"></span></a>
+                  </li>
                 </ul>
               </li>
-            </ul> -->
+            </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
   </nav>
 <!-- ==========================End Top Navigation======================== -->
 <!-- ====DIV UI STARTS-->
-<div style="min-height:100%; margin-bottom: 100px;">
+<div style="min-height:100%;margin-top:55px;margin-bottom: 100px;">
 <div sq-spinner></div>
 <div ui-view></div>
 </div>
@@ -84,13 +86,14 @@
  
   <script type="text/javascript" src="SQ/SQApp.js"></script>
   <script type="text/javascript" src="SQ/SQAppRoute.js"></script>
-  <script type="text/javascript" src="common/SQDirectives.js"></script>
   <script type="text/javascript" src="SQ/Home/js/SQHomeController.js"></script>
   <script type="text/javascript" src="SQ/Home/js/SQHomeServices.js"></script>
+  <script type="text/javascript" src="common/SQDirectives.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQUserHomeController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQUserHomeServices.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQManageUserGroupController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQManageUserController.js"></script>
+  <script type="text/javascript" src="SQ/UserHome/js/SQManageCustomerController.js"></script>
 
  
   <script type="text/javascript" src="assets/notification/js/angular_notify.js"></script>

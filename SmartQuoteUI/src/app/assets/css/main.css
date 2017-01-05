@@ -1,12 +1,24 @@
 body{
 position: relative;  
 background: url(../img/bg.jpg) no-repeat center center;
-
 }
 .overlay {
 background:rgba(255, 255, 255,0.3);        
 min-height:600px;
 }
+/*::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 0px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}*/
 /*FOOTER START*/
 .footer {
   position: absolute;
@@ -19,33 +31,76 @@ min-height:600px;
 }
 /*FOOTER END*/
 /*BUTTON*/
+.button-login{
+  color: #fff;
+  background:rgba(237, 20, 61, 0.7);
+  border-color: rgba(237, 20, 61, 0.7);
+}
+.button-login:hover{
+  color:#fff;
+  font-size: 20px;
+  background:rgba(237, 20, 61, 0.7);
+  border-color: crimson;
+}
+.button-login:focus,.button-login:active{
+  color:#fff;
+  background:rgba(237, 20, 61, 0.7);
+  border-color: crimson;
+}
 .button-delete{
   color: #fff;
   background:rgba(237, 20, 61, 0.7);
   border-color: rgba(237, 20, 61, 0.7);
 }
-.button-delete:hover,.button-delete:focus{
+.button-delete:hover{
+  color:rgba(237, 20, 61, 1);
+  font-size: 16px;
+  background:transparent;
+  /*background:rgba(237, 20, 61, 0.7);*/
+  border-color: crimson;
+}
+.button-delete:focus,.button-delete:active{
   color: #fff;
   background:rgba(237, 20, 61, 0.7);border-color: crimson;
 }
 .button-ok{
   color: #fff;
-  background: rgb(100, 189, 99);
+  /*background: rgb(100, 189, 99);*/
   border-color: rgb(100, 189, 99);
+  background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);
+}
+.button-ok:hover{
+  /*color: #fff;*/
+  font-size: 16px;
+  color: rgba(17, 54, 84, 1);
+  background:transparent;
+  /*background: rgb(100, 189, 99);*/
+  /*border-color: rgb(0, 128, 0);*/
+  border-color: rgba(17, 54, 84, 1);
   /*background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);;*/
 }
-.button-ok:hover,.button-ok:focus{
+.button-ok:focus,.button-ok:active{
   color: #fff;
-  background: rgb(100, 189, 99);
-  border-color: rgb(0, 128, 0);
-  /*border-color: rgb(100, 189, 99);*/
-  /*background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);;*/
+  border-color: rgb(100, 189, 99);
+  background:rgba(17, 54, 84, 0.7);border-color: rgba(17, 54, 84, 1);
 }
-
+.link-forgot{
+  color:#fff;
+  float: right;
+  text-decoration: none;
+}
+.link-forgot:hover,.link-forgot:active,.link-forgot:focus{
+  color:rgb(1, 175, 246);
+  float: right;
+  text-decoration: none;
+}
 /*============NAVBAR STARTS====================*/
 .navbar {
   border-radius: 0px;
 }
+/*.navbar-nav{
+      margin: 7.5px 5px;
+}*/
 .navbar-inverse {
   background: #113654; /* For browsers that do not support gradients */
   /*background: -webkit-linear-gradient(top, rgba(17, 54, 84, 0.9), #5f5f5f);*/
@@ -53,32 +108,23 @@ min-height:600px;
   border-color: #0d3c61;
   border-bottom:1px solid #dddddd;
   box-shadow:0 4px 5px -3px #ececec;
-  position:relative;
+  /*position:fixed;*/
 }
-/*.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:focus, .navbar-inverse .navbar-nav>.active>a:hover {
-    color: #fff;
-    background-color: #03AFF7;
-}*/
 .navbar-inverse .navbar-nav>li>a {
     color: #fff;
-   
 }
 .navbar-inverse .navbar-nav>li>a:hover,.navbar-inverse .navbar-nav>li>a:focus {
     color: #fff;
-    background-color: rgb(1, 175, 246);
-    /*margin: 0px 0px;*/
-    /*padding-top: 10px;
-    padding-bottom: 10px;*/
+    font-size: 16px;
+    /*background-color: rgb(1, 175, 246);*/
 }
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
     color: #fff;
+    /*font-size: 14px;*/
     background-color: rgb(1, 175, 246);
-    /*background-color: rgba(255, 255, 255, 0.5);;*/
 }
 .navbar-nav>li>.dropdown-menu {
-  /*background:rgba(237, 20, 61, 0.7);border-color: crimson;*/
     color: #fff;
-    /*background-color: rgba(1, 175, 246, 0.5);*/
     margin-top: 0;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -86,13 +132,13 @@ min-height:600px;
 .navbar-inverse .navbar-toggle {
     border-color: #fff;
 }
+.navbar-collapse {
+     padding-right: 0px; 
+     padding-left: 0px; 
+  }
 /*============NAVBAR ENDS====================*/
-/*=====================================
- HOME SECTION
-    ===================================*/
+/*======= HOME SECTION ============*/
 #signin{
-/*background: url(../img/bg.jpg) no-repeat center center;*/
-/*background: #ffffff;*/
 padding: 0;
 -webkit-background-size: cover;
 background-size: cover;
@@ -102,7 +148,6 @@ padding:150px 20px 20px 0px;
 color:#ff0000;
 font-size:40px;
 font-weight:900;
-
 }
 #signin .head-text span {
 display: block; 
@@ -148,13 +193,25 @@ color: #fff;
 .div-trans i {
 margin-left: 10px; 
 margin-right: 10px; 
-color: #159238;
+color: #fff;
 }
-.div-trans span {
+/*.div-trans span {
 color: #ff0000;
-}
+}*/
 #signin .form-control {
 background-color:transparent;
+}
+.fade-scale {
+  transform: scale(0);
+  opacity: 0;
+  -webkit-transition: all .25s linear;
+  -o-transition: all .25s linear;
+  transition: all .25s linear;
+}
+
+.fade-scale.in {
+  opacity: 1;
+  transform: scale(1);
 }
 /*=========================================*/
 /*USER HOME CSS STARTS*/
@@ -272,4 +329,8 @@ background-color:transparent;
 /*SWEET ALERT CSS ENDS*/
 .invalid-control{
   color:red;font-size:14px;word-break:break-all;
+}
+/*USERHOME CSS*/
+.row-control{
+  margin-bottom: 5px;
 }

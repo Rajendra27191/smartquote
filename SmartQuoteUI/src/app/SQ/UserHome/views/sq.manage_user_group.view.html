@@ -9,7 +9,7 @@
 	<div class="row">
 	<div class="col-md-4" style="padding-right: 0px;"><label class="sub-label">User Group</label></div>
 	<div class="col-md-8" style="padding-left: 0px;">
-	<input type = 'text' name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups.result | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)" required>
+	<input type = 'text' name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)" autocomplete="off"required>
 	<span ng-show="((form.userManageUserGroup.userGroupName.$dirty && form.userManageUserGroup.userGroupName.$invalid) || (form.userManageUserGroup.userGroupName.$invalid && form.userManageUserGroup.submitted))" style="color:red;font-size:14px;word-break:break-all;">
 	<small>*Please enter user group name.</small>
 	</span>
