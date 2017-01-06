@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
-import pojo.ProductFileBean;
 import connection.ConnectionFactory;
 
 public class ProductDao {
@@ -49,8 +48,8 @@ public class ProductDao {
 	public ArrayList<KeyValuePairBean> getProductList(String productLike) {
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
-		String getProdustList = "SELECT product_code, product_name FROM product_master "
-				+ " WHERE product_code like ? OR product_name like ?";
+		String getProdustList = "SELECT item_code, item_description FROM product_master "
+				+ " WHERE item_code like ? OR item_description like ?";
 		try {
 			pstmt = conn.prepareStatement(getProdustList);
 			pstmt.setString(1, productLike);
@@ -58,8 +57,8 @@ public class ProductDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
-				objKeyValuePairBean.setCode(rs.getString("product_code"));
-				objKeyValuePairBean.setValue(rs.getString("product_name"));
+				objKeyValuePairBean.setCode(rs.getString("item_code"));
+				objKeyValuePairBean.setValue(rs.getString("item_code") + " (" + rs.getString("item_description")+")");
 				pairBeans.add(objKeyValuePairBean);
 			}
 		} catch (Exception e) {
@@ -75,7 +74,7 @@ public class ProductDao {
 
 	public boolean isProductExist(String productCode) {
 		boolean isProductExist = false;
-		String getUserGroups = "SELECT product_code FROM product_master WHERE product_code = ?";
+		String getUserGroups = "SELECT item_code FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			pstmt.setString(1, productCode);
@@ -97,20 +96,27 @@ public class ProductDao {
 	public boolean saveProduct(ProductBean objBean) {
 		boolean isProductCreated = false;
 		try {
-			String createUserQuery = "INSERT IGNORE INTO product_master (product_code, product_name, product_group_id, "
-					+ " unit, selling_price1, selling_price2, selling_price3, selling_price4, cost, gst_flag, created_by) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
+					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
 			pstmt = conn.prepareStatement(createUserQuery);
-			pstmt.setString(1, objBean.getProductCode());
-			pstmt.setString(2, objBean.getProductName());
-			pstmt.setInt(3, objBean.getProductGroupId());
-			pstmt.setString(4, objBean.getUnit());
-			pstmt.setDouble(5, objBean.getSelligPrice1());
-			pstmt.setDouble(6, objBean.getSelligPrice2());
-			pstmt.setDouble(7, objBean.getSelligPrice3());
-			pstmt.setDouble(8, objBean.getSelligPrice4());
-			pstmt.setDouble(9, objBean.getCost());
-			pstmt.setString(10, objBean.getGstFlag());
+			pstmt.setString(1, objBean.getItemCode());
+			pstmt.setString(2, objBean.getItemDescription());
+			pstmt.setString(3, objBean.getDescription2());
+			pstmt.setString(4, objBean.getDescription3());
+			pstmt.setString(5, objBean.getUnit());
+			pstmt.setDouble(6, objBean.getPrice0exGST());
+			pstmt.setDouble(7, objBean.getQtyBreak1());
+			pstmt.setDouble(8, objBean.getPrice1exGST());
+			pstmt.setDouble(9, objBean.getQtyBreak2());
+			pstmt.setDouble(10, objBean.getPrice2exGST());
+			pstmt.setDouble(11, objBean.getQtyBreak3());
+			pstmt.setDouble(12, objBean.getPrice3exGST());
+			pstmt.setDouble(13, objBean.getQtyBreak4());
+			pstmt.setDouble(14, objBean.getPrice4exGST());
+			pstmt.setDouble(15, objBean.getAvgcost());
+			pstmt.setString(16, objBean.getTaxCode());
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
@@ -124,28 +130,35 @@ public class ProductDao {
 		return isProductCreated;
 	}
 
-	public ProductBean getCustomerDetails(String productCode) {
+	public ProductBean getProductDetails(String productCode) {
 		ProductBean objBean = null;
-		String getUserGroups = "SELECT product_code, product_name, product_group_id, unit, selling_price1, "
-				+ " selling_price2, selling_price3, selling_price4, cost, gst_flag, created_by "
-				+ " FROM product_master WHERE product_code = ?";
+		String getUserGroups = "SELECT item_code, item_description, description2, "
+				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by "
+				+ " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			pstmt.setString(1, productCode);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objBean = new ProductBean();
-				objBean.setProductCode(rs.getString("product_code"));
-				objBean.setProductName(rs.getString("product_name"));
-				objBean.setProductGroupId(rs.getInt("product_group_id"));
+				objBean.setItemCode(rs.getString("item_code"));
+				objBean.setItemDescription(rs.getString("item_description"));
+				objBean.setDescription2(rs.getString("description2"));
+				objBean.setDescription3(rs.getString("description3"));
 				objBean.setUnit(rs.getString("unit"));
-				objBean.setSelligPrice1(rs.getDouble("selling_price1"));
-				objBean.setSelligPrice2(rs.getDouble("selling_price2"));
-				objBean.setSelligPrice3(rs.getDouble("selling_price3"));
-				objBean.setSelligPrice4(rs.getDouble("selling_price4"));
-				objBean.setCost(rs.getDouble("cost"));
-				objBean.setGstFlag(rs.getString("gst_flag"));
-				objBean.setCreatedBy(rs.getString("created_by"));
+				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
+				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
+				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
+				objBean.setQtyBreak2(rs.getDouble("qty_break2"));
+				objBean.setPrice2exGST(rs.getDouble("price2exGST"));
+				objBean.setQtyBreak3(rs.getDouble("qty_break3"));
+				objBean.setPrice3exGST(rs.getDouble("price3exGST"));
+				objBean.setQtyBreak4(rs.getDouble("qty_break4"));
+				objBean.setPrice4exGST(rs.getDouble("price4exGST"));
+				objBean.setAvgcost(rs.getDouble("avg_cost"));
+				objBean.setTaxCode(rs.getString("tax_code"));
+				objBean.setCreated_by(rs.getString("created_by"));
 			}
 		} catch (Exception e) {
 			try {
@@ -161,21 +174,29 @@ public class ProductDao {
 	public boolean updateProduct(ProductBean objBean) {
 		boolean isCustomerUpdated = false;
 		try {
-			String updateCustQuery = "UPDATE product_master SET product_name = ?, product_group_id = ?, unit = ?, "
-					+ "selling_price1 = ?, selling_price2 = ?, selling_price3 = ?, selling_price4 = ?, cost = ?, "
-					+ " gst_flag = ?, created_by = 0"
-					+ " WHERE product_code = ?";
+			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
+					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
+					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
+					+ " tax_code = ?, created_by = 0"
+					+ " WHERE item_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
-			pstmt.setString(1, objBean.getProductName());
-			pstmt.setInt(2, objBean.getProductGroupId());
-			pstmt.setString(3, objBean.getUnit());
-			pstmt.setDouble(4, objBean.getSelligPrice1());
-			pstmt.setDouble(5, objBean.getSelligPrice2());
-			pstmt.setDouble(6, objBean.getSelligPrice3());
-			pstmt.setDouble(7, objBean.getSelligPrice4());
-			pstmt.setDouble(8, objBean.getCost());
-			pstmt.setString(9, objBean.getGstFlag());
-			pstmt.setString(10, objBean.getProductCode());
+			pstmt.setString(1, objBean.getItemCode());
+			pstmt.setString(2, objBean.getItemDescription());
+			pstmt.setString(3, objBean.getDescription2());
+			pstmt.setString(4, objBean.getDescription3());
+			pstmt.setString(5, objBean.getUnit());
+			pstmt.setDouble(6, objBean.getPrice0exGST());
+			pstmt.setDouble(7, objBean.getQtyBreak1());
+			pstmt.setDouble(8, objBean.getPrice1exGST());
+			pstmt.setDouble(9, objBean.getQtyBreak2());
+			pstmt.setDouble(10, objBean.getPrice2exGST());
+			pstmt.setDouble(11, objBean.getQtyBreak3());
+			pstmt.setDouble(12, objBean.getPrice3exGST());
+			pstmt.setDouble(13, objBean.getQtyBreak4());
+			pstmt.setDouble(14, objBean.getPrice4exGST());
+			pstmt.setDouble(15, objBean.getAvgcost());
+			pstmt.setString(16, objBean.getTaxCode());
+			pstmt.setString(17, objBean.getItemCode());
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
 		} catch (SQLException e) {
@@ -192,7 +213,7 @@ public class ProductDao {
 	public boolean deleteProduct(String productCode) {
 		boolean isDeleted = false;
 		try {
-			String deleteGroupQuery = "DELETE FROM product_master WHERE product_code = ?";
+			String deleteGroupQuery = "DELETE FROM product_master WHERE item_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
 			pstmt.setString(1, productCode);
 			pstmt.executeUpdate();
@@ -208,28 +229,34 @@ public class ProductDao {
 		return isDeleted;
 	}
 
-	public boolean uploadProductFile(ArrayList<ProductFileBean> productList) {
+	public boolean uploadProductFile(ArrayList<ProductBean> productList) {
 		boolean isFileUploaded = false;
 		try {
-			String productQuery = "REPLACE INTO product_master (product_code, product_name, product_group_id, "
-					+ " unit, selling_price1, selling_price2, selling_price3, selling_price4, cost, gst_flag, created_by) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+			String productQuery = "REPLACE INTO product_master (item_code, item_description, description2, "
+					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
 			pstmt = conn.prepareStatement(productQuery);
 			final int batchSize = 10;
 			int count = 0;
 
 			for (int i = 0; i < productList.size(); i++) {
-				pstmt.setString(1, productList.get(i).getProductCode());
-				pstmt.setString(2, productList.get(i)
-						.getProductDescriptionLine1());
-				pstmt.setString(3, productList.get(i).getGroupCode());
-				pstmt.setString(4, productList.get(i).getUnit());
-				pstmt.setDouble(5, productList.get(i).getPriceLev1());
-				pstmt.setDouble(6, productList.get(i).getPriceLev2());
-				pstmt.setDouble(7, productList.get(i).getPriceLev3());
-				pstmt.setDouble(8, productList.get(i).getPriceLev4());
-				pstmt.setDouble(9, productList.get(i).getCost());
-				pstmt.setString(10, productList.get(i).getgSTCode());
+				pstmt.setString(1, productList.get(i).getItemCode());
+				pstmt.setString(2, productList.get(i).getItemDescription());
+				pstmt.setString(3, productList.get(i).getDescription2());
+				pstmt.setString(4, productList.get(i).getDescription3());
+				pstmt.setString(5, productList.get(i).getUnit());
+				pstmt.setDouble(6, productList.get(i).getPrice0exGST());
+				pstmt.setDouble(7, productList.get(i).getQtyBreak1());
+				pstmt.setDouble(8, productList.get(i).getPrice1exGST());
+				pstmt.setDouble(9, productList.get(i).getQtyBreak2());
+				pstmt.setDouble(10, productList.get(i).getPrice2exGST());
+				pstmt.setDouble(11, productList.get(i).getQtyBreak3());
+				pstmt.setDouble(12, productList.get(i).getPrice3exGST());
+				pstmt.setDouble(13, productList.get(i).getQtyBreak4());
+				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
+				pstmt.setDouble(15, productList.get(i).getAvgcost());
+				pstmt.setString(16, productList.get(i).getTaxCode());
 				pstmt.addBatch();
 
 				if (++count % batchSize == 0) {
@@ -254,7 +281,7 @@ public class ProductDao {
 	public boolean deletedPreviousProduct(String productCodeString) {
 		boolean isDeleted = false;
 		try {
-			String deleteGroupQuery = "DELETE FROM product_master WHERE product_code in(?)";
+			String deleteGroupQuery = "DELETE FROM product_master WHERE item_code in(?)";
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
 			pstmt.setString(1, productCodeString);
 			pstmt.executeUpdate();

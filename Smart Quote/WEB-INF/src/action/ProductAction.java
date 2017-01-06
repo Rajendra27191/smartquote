@@ -16,7 +16,6 @@ import org.json.JSONException;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
-import pojo.ProductFileBean;
 import responseBeans.ProductResponseBean;
 import responseBeans.UserGroupResponse;
 import test.GlsFileReader;
@@ -91,14 +90,13 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 	public String createProduct() {
 		String productDetails = request.getParameter("productDetails");
-		// productDetails =
-		// "{\"productCode\":\"PROD342PEN\",\"productName\":\"BALL PEN\",\"productGroupId\":1,\"unit\":\"Piece\",\"selligPrice1\":\"15\",\"selligPrice2\":\"16\",\"selligPrice3\":\"17\",\"selligPrice4\":\"18\",\"cost\":\"16\",\"gstFlag\":\"Y\",\"createdBy\":\"0\"}";
+//		productDetails = "{\"description3\":\"POSITION: LHS CHEST\",\"description2\":\"EDI INTERNATIONAL\",\"price2exGST\":\"3.5\",\"price4exGST\":\"3.5\",\"unit\":\"EACH\",\"itemDescription\":\"EMBROIDERY BLACK TEXT\",\"price1exGST\":\"3.5\",\"price3exGST\":\"3.5\",\"avgcost\":\"3\",\"price0exGST\":\"3.5\",\"qtyBreak1\":\"9999\",\"qtyBreak2\":\"99999999\",\"qtyBreak3\":\"99999999\",\"qtyBreak4\":\"99999999\",\"itemCode\":\"3DE-EDICUSEMB1\"}";
 		ProductBean objBean = new ProductBean();
 		objBean = new Gson().fromJson(productDetails, ProductBean.class);
 		boolean isProductCreated = false, isProductExist = false;
 
 		ProductDao objDao = new ProductDao();
-		isProductExist = objDao.isProductExist(objBean.getProductCode());
+		isProductExist = objDao.isProductExist(objBean.getItemCode());
 		objDao.commit();
 		objDao.closeAll();
 		if (!isProductExist) {
@@ -121,13 +119,13 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	}
 
 	public String getProductDetails() {
-		String productCode = request.getParameter("productGroupCode");
-		// productCode = "1";
+		String productCode = request.getParameter("productCode");
+//		 productCode = "3DE-EDICUSEMB1";
 		try {
 			productDetailsResponse.setCode("error");
 			productDetailsResponse.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
-			ProductBean objBean = objDao.getCustomerDetails(productCode);
+			ProductBean objBean = objDao.getProductDetails(productCode);
 			objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
@@ -192,26 +190,29 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					.valueOf(productFile));
 			System.out.println("File Content: " + fileString);
 
-			ArrayList<ProductFileBean> productList = new ArrayList<ProductFileBean>();
+			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 			productList = new Gson().fromJson(fileString.toString(),
-					new TypeToken<List<ProductFileBean>>() {
+					new TypeToken<List<ProductBean>>() {
 					}.getType());
 			System.out.println("Total Products: " + productList.size());
 
 			String productCodeString = "";
 			for (int i = 0; i < productList.size(); i++) {
 				if (i == 0) {
-					productCodeString = "'" + productList.get(i).getProductCode().trim() + "'";
+					productCodeString = "'"
+							+ productList.get(i).getItemCode().trim() + "'";
 				} else {
-					productCodeString = productCodeString + ", '" + productList.get(i).getProductCode().trim() + "'";
+					productCodeString = productCodeString + ", '"
+							+ productList.get(i).getItemCode().trim() + "'";
 				}
 			}
-			
-			System.out.println("Codes to Delete: "+ productCodeString);
-			
+
+			System.out.println("Codes to Delete: " + productCodeString);
+
 			ProductDao objProductDao = new ProductDao();
 			@SuppressWarnings("unused")
-			boolean isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
+			boolean isDeleted = objProductDao
+					.deletedPreviousProduct(productCodeString);
 			boolean isFileUploaded = objProductDao
 					.uploadProductFile(productList);
 			objProductDao.commit();
@@ -225,12 +226,18 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
 			e.printStackTrace();
 		} catch (InvalidFormatException e) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("error_file_format"));
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("error_file_parse"));
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("error_numeric_cell"));
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();

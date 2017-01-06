@@ -70,8 +70,7 @@ public class ProductGroupAction extends ActionSupport implements
 
 	public String createProductGroup() {
 		String productDetails = request.getParameter("productDetails");
-		// productDetails =
-		// "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel Ink\",\"catalogueNo\":\"\"}";
+		// productDetails = "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel Ink\",\"catalogueNo\":\"\"}";
 		ProductGroupBean objBean = new ProductGroupBean();
 		objBean = new Gson().fromJson(productDetails, ProductGroupBean.class);
 		boolean isProductCreated = false, isProductExist = false;
@@ -124,8 +123,7 @@ public class ProductGroupAction extends ActionSupport implements
 
 	public String updateProductGroupDetails() {
 		String productDetails = request.getParameter("productDetails");
-		// productDetails =
-		// "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel\",\"catalogueNo\":\"\"}";
+		// productDetails = "{\"productCode\":\"pro242Ink\",\"productName\":\"Gel\",\"catalogueNo\":\"\"}";
 		ProductGroupBean objBean = new ProductGroupBean();
 		objBean = new Gson().fromJson(productDetails, ProductGroupBean.class);
 		boolean isProductGroupUpdated = false;

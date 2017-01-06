@@ -55,7 +55,7 @@ public class CustomerDao {
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("customer_Code"));
-				objKeyValuePairBean.setValue(rs.getString("customer_name"));
+				objKeyValuePairBean.setValue(rs.getString("customer_Code") + " ("+ rs.getString("customer_name")+")");
 				pairBeans.add(objKeyValuePairBean);
 			}
 		} catch (Exception e) {
