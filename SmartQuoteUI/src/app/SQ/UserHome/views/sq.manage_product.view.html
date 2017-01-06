@@ -11,7 +11,7 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Item Code</label></div>
 	<div class="col-md-8">
-	<input type = 'text' name="itemCode" class = 'form-control' ng-model = 'manageProduct.itemCode'  uib-typeahead = 'productList as productList.value for productList in productList | filter:$viewValue' typeahead-on-select="getProductDetails(manageProduct.itemCode)" ng-keydown="resetOnBackspace($event)"  ng-change="itemCodeChanged($event)" autocomplete="off" required>
+	<input type = 'text' name="itemCode" class = 'form-control' ng-model = 'manageProduct.itemCode'  uib-typeahead = 'productList as productList.value for productList in productList | filter:$viewValue' typeahead-on-select="getProductDetails(manageProduct.itemCode)" ng-keyup="resetOnBackspace($event)" autocomplete="off" required>
 	<span ng-show="((form.manageProduct.itemCode.$dirty && form.manageProduct.itemCode.$invalid) 
 	|| (form.manageProduct.itemCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
 	<small>*Please select product code.</small>

@@ -9,12 +9,11 @@ $scope.buttonstatus='add';
 $scope.productGroupList=[];
 $scope.isProductSelected=false;
 
-$scope.init=function(){
+$scope.init=function(prodLike){
 $rootScope.showSpinner();
-SQUserHomeServices.GetProductList();
+SQUserHomeServices.GetProductList(prodLike);
 };
 
-$scope.init();
 
 $scope.reset=function(){
 $scope.manageProduct={};
@@ -27,11 +26,19 @@ $scope.form.manageProduct.$setPristine();
 };
 
 $scope.resetOnBackspace = function (event) {
-    if (event.keyCode === 8) {
+	console.log("resetOnBackspace");
+	console.log(event);
+    if (event.keyCode === 8 || event.key==='Backspace') {
 		$scope.reset();
 		$scope.resetForm();
+    }else{
+    	if($scope.manageProduct.itemCode) {	
+    	if ($scope.manageProduct.itemCode.length>0) {
+    	var prodLike=$scope.manageProduct.itemCode;
+    	$scope.init(prodLike);
+    	}
+    	}
     }
-
 };
 $scope.itemCodeChanged=function(event){
 console.log("itemCodeChanged");
