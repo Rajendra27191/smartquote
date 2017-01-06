@@ -1,0 +1,61 @@
+<div class="container">
+<form name="form.manageProductGroup" novalidate>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage Product Group</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Group Code</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = 'productGroup as productGroup.code for productGroup in productGroupList | filter:$viewValue' typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" required>
+	<!--  -->
+	<span ng-show="((form.manageProductGroup.productCode.$dirty && form.manageProductGroup.productCode.$invalid) || (form.manageProductGroup.productCode.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter group code.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Group Desc</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="productName" class = 'form-control' ng-model = 'manageProductGroup.productName'  required>
+	<span ng-show="((form.manageProductGroup.productName.$dirty && form.manageProductGroup.productName.$invalid) || (form.manageProductGroup.productName.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter group desc.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Catalog No</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="catalogueNo" class = 'form-control' ng-model = 'manageProductGroup.catalogueNo'  required>
+	<span ng-show="((form.manageProductGroup.catalogueNo.$dirty && form.manageProductGroup.catalogueNo.$invalid) || (form.manageProductGroup.catalogueNo.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter catalog no.</small>
+	</span>
+	</div>
+	</div>
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-3">
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteProductGroup()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	</div>
+		<div class="col-md-3">
+		<button id="create" ng-click="saveProductGroupDetails()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+</div>
+
+

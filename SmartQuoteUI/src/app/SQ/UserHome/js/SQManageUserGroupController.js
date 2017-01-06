@@ -4,19 +4,39 @@ console.log('initialise SQManageUserGroupController controller');
 $scope.user={};
 $scope.form={};
 $scope.isOpen=false;
+$scope.isUserGroupSelected=false;
 $scope.buttonstatus='add';
 
 
 
 
 $scope.resetView=function(){
+$rootScope.showSpinner();
+SQHomeServices.GetUserGroupInfo();
+SQHomeServices.GetUserGroupMenu();
+};
+$scope.resetForm=function(){
 $scope.user={};
 $scope.buttonstatus='add';
 $scope.form.userManageUserGroup.submitted=false;
 $scope.form.userManageUserGroup.$setPristine();
-$rootScope.showSpinner();
-SQHomeServices.GetUserGroupInfo();
-SQHomeServices.GetUserGroupMenu();
+}
+
+$scope.resetOnBackspace = function (event) {
+    if (event.keyCode === 8) {
+        $scope.resetView();
+        $scope.resetForm();
+		$scope.buttonstatus='add';
+    }
+};
+$scope.userGroupChanged = function (event) {
+console.log("userGroupChanged")
+if ($scope.isUserGroupSelected) {
+$scope.buttonstatus='add';
+var tempcode=$scope.user.userGroup;
+$scope.resetForm();
+$scope.user.userGroup = tempcode;
+}
 };
 //$scope.resetView();
 $scope.handlesetUserGroupResponse=function(data){
@@ -55,6 +75,7 @@ if (data) {
 
 		$scope.isOpen=true;
 		$scope.buttonstatus='edit';
+		$scope.isUserGroupSelected=true;
 		$rootScope.hideSpinner();
 
 	}
@@ -200,7 +221,9 @@ console.log(data)	;
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){  
 	$rootScope.alertSuccess("Successfully added user group");
+	$scope.isUserGroupSelected=false;
 	$scope.resetView();
+	$scope.resetForm();
 	 
 }else{
 	$rootScope.alertError(data.message);
@@ -224,6 +247,7 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$rootScope.alertSuccess("Successfully updated user group");
 	$scope.resetView();
+	$scope.resetForm();
 }else{
 	$rootScope.alertError(data.message);
 }
@@ -256,6 +280,7 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$rootScope.alertSuccess("Successfully deleted user group");
 	$scope.resetView();
+	$scope.resetForm();
 	
 }else{
 	$rootScope.alertError(data.message);
@@ -276,15 +301,6 @@ $rootScope.hideSpinner();
 
 
 
-$scope.resetOnBackspace = function (event) {
-    if (event.keyCode === 8) {
-        //console.log('here!');
-        $scope.resetView();
-        // $scope.isOpen=false;
-		$scope.buttonstatus='add';
-    }
-
-};
 
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventSetUserGroupDone();

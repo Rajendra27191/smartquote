@@ -37,6 +37,14 @@ angular.module('sq.SmartQuoteDesktop')
    .state('managecustomer', {
       controller:'SQManageCustomerController',
       templateUrl: 'SQ/UserHome/views/sq.manage_customer.view.html',
+    })
+   .state('manageproductgroup', {
+      controller:'SQManageProductGroupController',
+      templateUrl: 'SQ/UserHome/views/sq.manage_product_group.view.html',
+    })
+   .state('manageproduct', {
+      controller:'SQManageProductController',
+      templateUrl: 'SQ/UserHome/views/sq.manage_product.view.html',
     });
 
 }]);

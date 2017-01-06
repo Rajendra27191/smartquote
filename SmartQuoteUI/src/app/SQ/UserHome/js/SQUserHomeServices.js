@@ -165,7 +165,7 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/createCustomer?customerDetails="+customerDetails,
       }).success(function(data, status, header, config){
-        console.log(data)
+        //console.log(data)
         $rootScope.$broadcast('CreateCustomerDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -178,7 +178,7 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/updateCustomerDetails?customerDetails="+customerDetails,
       }).success(function(data, status, header, config){
-        console.log(data)
+        //console.log(data)
         $rootScope.$broadcast('UpdateCustomerDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -190,16 +190,142 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/deleteCustomer?customerCode="+customerCode,
       }).success(function(data, status, header, config){
-        console.log(data)
+        //console.log(data)
         $rootScope.$broadcast('DeleteCustomerDone', data); 
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteCustomerNotDone', data);
       });
     };
+/*=================MANAGE PRODUCT GROUP==================*/
+  userhome.GetProductGroupList = function (){
+      $http({
+      method: "POST",
+      url: "/smartquote/getProductGroupList",
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('GetProductGroupListDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductGroupListNotDone', data);
+      });
+    };
 
+    userhome.GetProductGroupDetails = function (productGroupCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/getProductGroupDetails?productGroupCode="+productGroupCode,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('GetProductGroupDetailsDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductGroupDetailsNotDone', data);
+      });
+    };
+
+    userhome.CreateProductGroup = function (productDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/createProductGroup?productDetails="+productDetails,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('CreateProductGroupDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('CreateProductGroupNotDone', data);
+      });
+    };
     
+    userhome.UpdateProductGroupDetails = function (productDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/updateProductGroupDetails?productDetails="+productDetails,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('UpdateProductGroupDetailsDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('UpdateProductGroupDetailsNotDone', data);
+      });
+    };
 
+    userhome.DeleteProductGroup = function (productGroupCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/deleteProductGroup?productGroupCode="+productGroupCode,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('DeleteProductGroupDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('DeleteProductGroupNotDone', data);
+      });
+    };
+/*========================MANAGE PRODUCT==============================*/
+  userhome.GetProductList = function (prodLike){
+      $http({
+      method: "POST",
+      url: "/smartquote/getProductList?prodLike="+"",
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('GetProductListDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductListNotDone', data);
+      });
+    };
+ userhome.GetProductDetails = function (productCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/getProductDetails?productCode="+productCode,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('GetProductDetailsDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductDetailsNotDone', data);
+      });
+    };
+
+    userhome.CreateProduct = function (productDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/createProduct?productDetails="+productDetails,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('CreateProductDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('CreateProductNotDone', data);
+      });
+    };
+    
+     userhome.UpdateProductDetails = function (productDetails){
+      $http({
+      method: "POST",
+      url: "/smartquote/updateProductDetails?productDetails="+productDetails,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('UpdateProductDetailsDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('UpdateProductDetailsNotDone', data);
+      });
+    };
+
+    userhome.DeleteProduct = function (productCode){
+      $http({
+      method: "POST",
+      url: "/smartquote/deleteProduct?productCode="+productCode,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('DeleteProductDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('DeleteProductNotDone', data);
+      });
+    };
 
     return userhome;
   }

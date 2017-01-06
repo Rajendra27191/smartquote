@@ -10,7 +10,7 @@
 	<div class="col-md-4"><label class="sub-label">User Name</label></div>
 	<div class="col-md-8">
 	<!-- <input type="text" class = 'form-control' name="userName" ng-model="manageUser.userName" required> -->
-	<input type = 'text' name="userName" class = 'form-control' ng-model = 'manageUser.userName' uib-typeahead = 'userList as userList.value for userList in userList | filter:$viewValue' typeahead-on-select="userNameChanged(manageUser.userName)" ng-keydown="resetOnBackspace($event)"  autocomplete="off" required>
+	<input type = 'text' name="userName" class = 'form-control' ng-model = 'manageUser.userName' uib-typeahead = 'userList as userList.value for userList in userList | filter:$viewValue' typeahead-on-select="userNameChanged(manageUser.userName)" ng-keydown="resetOnBackspace($event)"  ng-change="userNameSelected()"autocomplete="off" required>
 
 	<span ng-show="((form.userManageUser.userName.$dirty && form.userManageUser.userName.$invalid) || (form.userManageUser.userName.$invalid && form.userManageUser.submitted))" class="invalid-control">
 	<small>*Please enter user name.</small>

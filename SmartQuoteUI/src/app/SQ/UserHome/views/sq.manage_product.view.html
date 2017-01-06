@@ -1,0 +1,217 @@
+<div class="container">
+<form name="form.manageProduct" novalidate>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage Product</label></center></div>
+	</div>
+	<br>
+	
+	<!-- Product Group -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Item Code</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="itemCode" class = 'form-control' ng-model = 'manageProduct.itemCode'  uib-typeahead = 'productList as productList.value for productList in productList | filter:$viewValue' typeahead-on-select="getProductDetails(manageProduct.itemCode)" ng-keydown="resetOnBackspace($event)"  ng-change="itemCodeChanged($event)" autocomplete="off" required>
+	<span ng-show="((form.manageProduct.itemCode.$dirty && form.manageProduct.itemCode.$invalid) 
+	|| (form.manageProduct.itemCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
+	<small>*Please select product code.</small>
+	</span>
+    </div>
+	</div>
+	
+	<!-- Item Description -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Item Description</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'manageProduct.itemDescription' autocomplete="off" required>
+	<span ng-show="((form.manageProduct.itemDescription.$dirty&&form.manageProduct.itemDescription.$invalid) 
+		  || (form.manageProduct.itemDescription.$invalid && form.manageProduct.submitted))" class="invalid-control">
+	<small>*Please enter item description.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Description 2 -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Description 2</label></div>
+	<div class="col-md-8">
+	<input type="text"  class = 'form-control' name="description2" ng-model="manageProduct.description2">
+	<span ng-show="((form.manageProduct.description2.$dirty && form.manageProduct.description2.$invalid) 
+		  || (form.manageProduct.description2.$invalid && form.description2.submitted))" class="invalid-control">
+	<small></small> <!-- Not mandatory -->
+	</span>
+	</div>
+	</div>
+	
+	<!-- Description 3 -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Description 3</label></div>
+	<div class="col-md-8">
+	<input type="text"  class = 'form-control' name="description3" ng-model="manageProduct.description3">
+	<span ng-show="((form.manageProduct.description3.$dirty && form.manageProduct.description3.$invalid) 
+		  || (form.manageProduct.description3.$invalid && form.description3.submitted))" class="invalid-control">
+		<small></small> <!-- Not mandatory -->
+	</span>
+	</div>
+	</div>
+	
+	<!-- Unit -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Unit</label></div>
+	<div class="col-md-8"><input type="text" class = 'form-control' name="unit" ng-model="manageProduct.unit"  required>
+	<span ng-show="((form.manageProduct.unit.$dirty && form.manageProduct.unit.$invalid) 
+		  || (form.manageProduct.unit.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.unit.$error.required">*Please enter unit.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Price 0  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 0(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class='form-control' name="price0exGST" ng-model="manageProduct.price0exGST" required>
+	<span ng-show="((form.manageProduct.price0exGST.$dirty && form.manageProduct.price0exGST.$invalid) 
+		  || (form.manageProduct.price0exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price0exGST.$error.required">*Please enter price 0.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Qty Break 1  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 1</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak1" ng-model="manageProduct.qtyBreak1" required>
+	<span ng-show="((form.manageProduct.qtyBreak1.$dirty && form.manageProduct.qtyBreak1.$invalid) 
+		  || (form.manageProduct.qtyBreak1.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak1.$error.required">*Please enter qty break 1.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Price 1  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 1(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price1exGST" ng-model="manageProduct.price1exGST" required>
+	<span ng-show="((form.manageProduct.price1exGST.$dirty && form.manageProduct.price1exGST.$invalid) 
+		  || (form.manageProduct.price1exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price1exGST.$error.required">*Please enter price 1.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Qty Break 2  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 2</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak2" ng-model="manageProduct.qtyBreak2" required>
+	<span ng-show="((form.manageProduct.qtyBreak2.$dirty && form.manageProduct.qtyBreak2.$invalid) 
+		  || (form.manageProduct.qtyBreak2.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak2.$error.required">*Please enter qty break 2.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Price 2  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 2</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price2exGST" ng-model="manageProduct.price2exGST" required>
+	<span ng-show="((form.manageProduct.price2exGST.$dirty && form.manageProduct.price2exGST.$invalid) 
+		  || (form.manageProduct.price2exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price2exGST.$error.required">*Please enter price 2.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Qty Break 3  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 3</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak3" ng-model="manageProduct.qtyBreak3" required>
+	<span ng-show="((form.manageProduct.qtyBreak3.$dirty && form.manageProduct.qtyBreak3.$invalid) 
+		  || (form.manageProduct.qtyBreak3.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak3.$error.required">*Please enter qty break 3.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Price 3  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 3(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price3exGST" ng-model="manageProduct.price3exGST" required>
+	<span ng-show="((form.manageProduct.price3exGST.$dirty && form.manageProduct.price3exGST.$invalid) 
+		  || (form.manageProduct.price3exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price3exGST.$error.required">*Please enter price 3.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Qty Break 4  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 4</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak4" ng-model="manageProduct.qtyBreak4" required>
+	<span ng-show="((form.manageProduct.qtyBreak4.$dirty && form.manageProduct.qtyBreak4.$invalid) 
+		  || (form.manageProduct.qtyBreak4.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak4.$error.required">*Please enter qty break 4.</small>
+	</span>
+	</div>
+	</div>
+	
+	<!-- Price 4  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 4</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name=" price4exGST" ng-model="manageProduct. price4exGST" required>
+	<span ng-show="((form.manageProduct. price4exGST.$dirty && form.manageProduct. price4exGST.$invalid) 
+		  || (form.manageProduct. price4exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct. price4exGST.$error.required">*Please enter price 4.</small>
+	</span>
+	</div>
+	</div>
+
+	<!-- Avg Cost  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Avg Cost</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="avgcost" ng-model="manageProduct.avgcost" required>
+	<span ng-show="((form.manageProduct.avgcost.$dirty && form.manageProduct.avgcost.$invalid) 
+		  || (form.manageProduct.avgcost.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.avgcost.$error.required">*Please enter average cost.</small>
+	</span>
+	</div>
+	</div>
+
+	<!-- Tax Code  -->
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Tax Code</label></div>
+	<div class="col-md-8">
+	<input type="text" class = 'form-control' name="taxCode" ng-model="manageProduct.taxCode" required>
+	<span ng-show="((form.manageProduct.taxCode.$dirty && form.manageProduct.taxCode.$invalid) 
+		  || (form.manageProduct.taxCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.taxCode.$error.required">*Please enter tax code.</small>
+	</span>
+	</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-3">
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteProduct()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	</div>
+		<div class="col-md-3">
+		<button id="create" ng-click="saveProductDetails()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+</div>

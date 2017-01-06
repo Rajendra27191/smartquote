@@ -4,6 +4,7 @@ angular.module('sq.SmartQuoteDesktop')
 console.log('initialise SQManageUserController controller');
 $scope.form={};
 $scope.manageUser={};
+$scope.isUserNameSelected=false;
 
 $scope.today = function() {
     $scope.dt = new Date();
@@ -32,8 +33,31 @@ $scope.dateValid=true;
 $scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.today()};
 };
 
+$scope.resetForm=function(){
+	$scope.form.userManageUser.submitted=false;
+	$scope.form.userManageUser.$setPristine();
+};
+
 $scope.reset();
 $scope.init();
+
+$scope.resetOnBackspace = function (event) {
+    if (event.keyCode === 8) {
+        $scope.reset();
+        $scope.resetForm();
+    }
+
+};
+$scope.userNameSelected=function(){
+console.log("userNameSelected")
+if ($scope.isUserNameSelected) {
+$scope.buttonstatus='add';
+var tempcode=$scope.manageUser.userName;
+$scope.reset();
+$scope.resetForm();
+$scope.manageUser.userName = tempcode;
+}
+};
 //$scope.today();
 $scope.open1 = function() {
 $scope.popup1.opened = true;
@@ -137,15 +161,11 @@ $scope.saveUser=function(userType){
 	
 };
 
-$scope.resetForm=function(){
-	$scope.form.userManageUser.submitted=false;
-	$scope.form.userManageUser.$setPristine();
-};
-
 $scope.handleSaveUserDoneResponse=function(data){
 //console.log(data)	;
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
+	$scope.isUserNameSelected=false;
 	$scope.reset();
 	$scope.resetForm();
 	$scope.init();
@@ -202,11 +222,11 @@ if(data){
 $rootScope.hideSpinner();
 };
 
-var cleanupEventSaveUserDone = $scope.$on("GetUserListDone", function(event, message){
+var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
 $scope.handleGetUserListDoneResponse(message);      
 });
 
-var cleanupEventSaveUserNotDone = $scope.$on("GetUserListNotDone", function(event, message){
+var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
@@ -269,6 +289,7 @@ if(data){
 	console.log(data);
 	$scope.setUserDetails(data.objUserBean);
 	$scope.buttonstatus='edit';
+	$scope.isUserNameSelected=true;
 }
 }
 $rootScope.hideSpinner();
@@ -316,18 +337,18 @@ $rootScope.hideSpinner();
 });
 /*=============================================*/
 
-$scope.resetOnBackspace = function (event) {
-    if (event.keyCode === 8) {
-        $scope.reset();
-        $scope.resetForm();
-    }
-
-};
-
 
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventSaveUserDone();
 	cleanupEventSaveUserNotDone();
+	cleanupEventUpdateUserDetailsDone();
+	cleanupEventUpdateUserDetailsNotDone();
+	cleanupEventDeleteUserDone();
+	cleanupEventDeleteUserNotDone();
+	cleanupEventGetUserDetailsDone();
+	cleanupEventGetUserDetailsNotDone();
+	cleanupEventGetUserListDone();
+	cleanupEventGetUserListNotDone();
 
 });
 

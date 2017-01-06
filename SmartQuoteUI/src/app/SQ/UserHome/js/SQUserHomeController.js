@@ -17,8 +17,13 @@ $rootScope.subMenuClicked=function(subMenuName){
 	$state.transitionTo('manageuser');		
 	}
   if(subMenuName.toLowerCase()==='manage customer'){
-    //console.log("mmmmmmmmmmmmmmmmmm")
   $state.transitionTo('managecustomer');    
+  }
+  if(subMenuName.toLowerCase()==='manage product group'){
+  $state.transitionTo('manageproductgroup');    
+  }
+  if(subMenuName.toLowerCase()==='manage product'){
+  $state.transitionTo('manageproduct');    
   }
 	if(subMenuName==='Logout'){
 	$rootScope.userSignout();	

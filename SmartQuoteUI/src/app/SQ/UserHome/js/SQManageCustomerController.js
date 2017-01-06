@@ -8,6 +8,7 @@ $scope.address='';
 $scope.isAddress=false;
 $scope.isCollapsed = true;
 $scope.customerList=[];
+$scope.iscustomerCodeSelected=false;
 
 $scope.collapseDiv=function(){
 $scope.isCollapsed = !$scope.isCollapsed;
@@ -29,15 +30,33 @@ $scope.address='';
 };
 
 $scope.resetForm=function(){
+$scope.form.manageCustomer.submitted=false;
 $scope.form.manageCustomer.$setPristine();
 };
+$scope.resetOnBackspace = function (event) {
+    if (event.keyCode === 8) {
+		$scope.reset();
+		$scope.resetForm();
+    }
 
+};
+
+$scope.customerCodeChanged=function(){
+console.log("customerCodeChanged")
+if ($scope.iscustomerCodeSelected) {
+$scope.buttonstatus='add';
+var tempcode=$scope.manageCustomer.customerCode;
+$scope.reset();
+$scope.resetForm();
+$scope.manageCustomer.customerCode = tempcode;	
+}
+};
 /*=============GET CUSTOMER LIST==================*/
 $scope.handleGetCustomerListDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
   $scope.customerList=data.result;
-
+  console.log($scope.customerList)
 }
 }
 $rootScope.hideSpinner();
@@ -66,6 +85,7 @@ if(data){
   	console.log(data);
   	$scope.manageCustomer=data.objResponseBean;
   	$scope.buttonstatus='edit';
+  	$scope.iscustomerCodeSelected=true;
   	if ($scope.manageCustomer.address1!=='') {
   		console.log("collapseDiv")
   		$scope.collapseDiv();
@@ -83,15 +103,7 @@ var cleanupEventGetCustomerDetailsNotDone = $scope.$on("GetCustomerDetailsNotDon
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
-/*====================OTHER METHODS================================*/
 
-$scope.resetOnBackspace = function (event) {
-    if (event.keyCode === 8) {
-		$scope.reset();
-		$scope.resetForm();
-    }
-
-};
 /*===============CREATE CUSTOMER==================*/
 $scope.jsonToSaveCustomer=function(){
 	var customer={

@@ -17,7 +17,7 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Customer Code</label></div>
 	<div class="col-md-8">
-	<input type = 'text' name="customerCode" class = 'form-control' ng-model = 'manageCustomer.customerCode'  uib-typeahead = 'customerList as customerList.code for customerList in customerList | filter:$viewValue' typeahead-on-select="getCustomerDetails(manageCustomer.customerCode)" ng-keydown="resetOnBackspace($event)"  autocomplete="off" required>
+	<input type = 'text' name="customerCode" class = 'form-control' ng-model = 'manageCustomer.customerCode'  uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="getCustomerDetails(manageCustomer.customerCode)" ng-keydown="resetOnBackspace($event)"  ng-change="customerCodeChanged()" autocomplete="off" required>
 	<!--  -->
 	<span ng-show="((form.manageCustomer.customerCode.$dirty && form.manageCustomer.customerCode.$invalid) || (form.manageCustomer.customerCode.$invalid && form.manageCustomer.submitted))" class="invalid-control">
 	<small>*Please enter customer code.</small>
