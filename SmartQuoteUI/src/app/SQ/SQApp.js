@@ -1,4 +1,4 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','angularLocalStorage','uiSwitch'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','angularLocalStorage','uiSwitch','ngFileUpload'])
 .config(function($logProvider){
     $logProvider.debugEnabled(true);
     
@@ -23,6 +23,12 @@ $scope.errormsg='';
 $rootScope.isAdmin=false;
  // $rootScope.showSpinner();
  if ($rootScope.userSession) {
+  if ($rootScope.isAdmin) {
+  console.log("isAdmin");
+  $rootScope.userNavMenu=$rootScope.userMenu;
+  }else{
+
+  }
  $state.transitionTo('userhome.start');
  }else{
  $state.transitionTo('home.start');

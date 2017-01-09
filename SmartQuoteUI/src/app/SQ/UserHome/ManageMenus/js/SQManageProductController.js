@@ -162,7 +162,7 @@ if(data){
   	$rootScope.alertSuccess("Successfully saved product");
   	$scope.reset();
   	$scope.resetForm();
-  	$scope.init();
+  	//$scope.init();
 	}else{
 	$rootScope.alertError(data.message);
 	}
@@ -187,7 +187,7 @@ if(data){
   	$rootScope.alertSuccess("Successfully updated product");
   	$scope.reset();
 	$scope.resetForm();
-	$scope.init();
+	//$scope.init();
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -220,7 +220,7 @@ if(data){
   	$rootScope.alertSuccess("Successfully deleted product");
   	$scope.reset();
 	$scope.resetForm();
-	$scope.init();
+	//$scope.init();
 	}else{
 		$rootScope.alertError(data.message);
 	}

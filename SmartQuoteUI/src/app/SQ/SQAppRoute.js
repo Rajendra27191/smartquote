@@ -28,23 +28,27 @@ angular.module('sq.SmartQuoteDesktop')
     })
    .state('manageusergroup', {
       controller:'SQManageUserGroupController',
-      templateUrl: 'SQ/UserHome/views/sq.manage_user_group.view.html',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_user_group.view.html',
     })
    .state('manageuser', {
       controller:'SQManageUserController',
-      templateUrl: 'SQ/UserHome/views/sq.manage_user.view.html',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_user.view.html',
     })
    .state('managecustomer', {
       controller:'SQManageCustomerController',
-      templateUrl: 'SQ/UserHome/views/sq.manage_customer.view.html',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_customer.view.html',
     })
    .state('manageproductgroup', {
       controller:'SQManageProductGroupController',
-      templateUrl: 'SQ/UserHome/views/sq.manage_product_group.view.html',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_product_group.view.html',
     })
    .state('manageproduct', {
       controller:'SQManageProductController',
-      templateUrl: 'SQ/UserHome/views/sq.manage_product.view.html',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_product.view.html',
+    })
+   .state('uploadproductfile', {
+      controller:'SQUploadProductFileController',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.upload_product_file.view.html',
     });
 
 }]);

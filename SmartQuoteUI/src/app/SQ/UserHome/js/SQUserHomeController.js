@@ -24,19 +24,16 @@ $rootScope.subMenuClicked=function(subMenuName){
   }
   if(subMenuName.toLowerCase()==='manage product'){
   $state.transitionTo('manageproduct');    
+  } 
+  if(subMenuName.toLowerCase()==='upload product file'){
+  $state.transitionTo('uploadproductfile');    
   }
 	if(subMenuName==='Logout'){
 	$rootScope.userSignout();	
 	}
 };
 
-if ($rootScope.isAdmin) {
-	
-  console.log("isAdmin")
-	$rootScope.userNavMenu=$rootScope.userMenu;
-}else{
-	
-}
+
 
   // $scope.handleGetUserGroupInfoDoneResponse=function(data){
   //   if(data){

@@ -1,0 +1,38 @@
+
+
+<div class="container" onload=""> 
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<!-- <form name="form.myForm" method="POST" enctype="multipart/form-data" action="http://192.169.1.118:8080/smartquote/uploadProductByXlsx" novalidate> -->
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage User</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'file' class = 'form-control' ngf-select = "onExcelSelect($files)" id = 'fileTypeExcelHost' name="productFile" required>
+	<span class="invalid-control">
+	<small ng-show="isRequired" style="color: red;">*Please select file to upload.</small>
+	<small ng-show="isValid" style="color: red;">*Please select valid file (only .xlsx).</small>
+	</span>
+	</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-9"></div>
+		<div class="col-md-3">
+		<button id="create" ng-click="addExcelToServer()" class="btn btn-default btn-block button-ok">Save</button>	
+		<!-- <input type="submit" class="btn btn-primary" value="Submit"
+							style="width: 100px;"> -->
+		</div>
+	</div>
+
+<!-- </form> -->
+</div>
+<div class="col-md-3"></div>
+</div>
+</div>
+
+
+

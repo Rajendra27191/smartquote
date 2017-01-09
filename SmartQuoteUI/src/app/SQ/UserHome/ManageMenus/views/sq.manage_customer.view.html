@@ -15,7 +15,7 @@
 	</div>
 
 	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Customer Code</label></div>
+	<div class="col-md-4"><label class="sub-label">Customer Code</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
 	<input type = 'text' name="customerCode" class = 'form-control' ng-model = 'manageCustomer.customerCode'  uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="getCustomerDetails(manageCustomer.customerCode)" ng-keydown="resetOnBackspace($event)"  ng-change="customerCodeChanged()" autocomplete="off" required>
 	<!--  -->
@@ -26,7 +26,7 @@
 	</div>
 
 	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Customer Name</label></div>
+	<div class="col-md-4"><label class="sub-label">Customer Name</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
 	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'manageCustomer.customerName'  required>
 	<span ng-show="((form.manageCustomer.customerName.$dirty && form.manageCustomer.customerName.$invalid) || (form.manageCustomer.customerName.$invalid && form.manageCustomer.submitted))" class="invalid-control">
@@ -56,69 +56,47 @@
 	</span>
 	</div>
 	</div>
+
 	<div class="row row-control">
 	<div class="col-md-4">
-	<label class="sub-label">Address</label>
+	<label class="sub-label">Address 1</label>
 	</div>
 	<div class="col-md-8">
-	<div class="row-control">
-	<input type = 'text' name="address1" class = 'form-control' ng-model = 'manageCustomer.address1' placeholder="{{address}}" ng-click="collapseDiv()" ng-focus="collapseDiv()"><!-- data-toggle="collapse" data-target="#addressDiv" ng-focus="addressClicked()" -->
+	<input type = 'text' name="address1" class = 'form-control' ng-model = 'manageCustomer.address1' ng-click="collapseDiv()" ng-focus="collapseDiv()">
 	</div>
-	<div id="addressDiv"  uib-collapse="isCollapsed"><!-- class="collapse" -->
-	<div class="row-control">
-	<input type = 'text' name="address2" class = 'form-control' ng-model = 'manageCustomer.address2' placeholder="address2">
 	</div>
-	<div class="row-control">
-	<input type = 'text' name="state" class = 'form-control' ng-model = 'manageCustomer.state' placeholder="state">	
+		
+	<div uib-collapse="isCollapsed">
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Address 2</label>
 	</div>
-	<div class="row-control">
-	<input type = 'text' name="postcode" class = 'form-control' ng-model = 'manageCustomer.postalCode' placeholder="postcode" ng-pattern="/^[0-9-]*$/">
+	<div class="col-md-8">
+	<input type = 'text' name="address2" class = 'form-control' ng-model = 'manageCustomer.address2'>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">State</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="state" class = 'form-control' ng-model = 'manageCustomer.state'>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Postal Code</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="postcode" class = 'form-control' ng-model = 'manageCustomer.postalCode' ng-pattern="/^[0-9-]*$/">
 	<span ng-show="((form.manageCustomer.postcode.$dirty && form.manageCustomer.postcode.$invalid) || (form.manageCustomer.postcode.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small>*Please valid postcode.</small></span>
-	</div>
-	</div>
-	</div>
-	</div>
-
-	<!--< div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Address 1</label></div>
-	<div class="col-md-8">
-	<input type = 'text' name="address1" class = 'form-control' ng-model = 'manageCustomer.address1' >
-	<span ng-show="((form.manageCustomer.address1.$dirty && form.manageCustomer.address1.$invalid) || (form.manageCustomer.address1.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small>*Please enter address 1.</small>
-	</span>
+	<small>*Please valid postal code.</small></span>
 	</div>
 	</div>
 
-	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Address 2</label></div>
-	<div class="col-md-8">
-	<input type = 'text' name="address2" class = 'form-control' ng-model = 'manageCustomer.address2' >
-	<span ng-show="((form.manageCustomer.address2.$dirty && form.manageCustomer.address2.$invalid) || (form.manageCustomer.address2.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small>*Please enter address 2.</small>
-	</span>
 	</div>
-	</div>
-
-	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">State</label></div>
-	<div class="col-md-8">
-	<input type = 'text' name="state" class = 'form-control' ng-model = 'manageCustomer.state' >
-	<span ng-show="((form.manageCustomer.state.$dirty && form.manageCustomer.state.$invalid) || (form.manageCustomer.state.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small>*Please enter state.</small>
-	</span>
-	</div>
-	</div>
-
-	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Post Code</label></div>
-	<div class="col-md-8">
-	<input type = 'text' name="postCode" class = 'form-control' ng-model = 'manageCustomer.postCode' >
-	<span ng-show="((form.manageCustomer.postCode.$dirty && form.manageCustomer.postCode.$invalid) || (form.manageCustomer.postCode.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small>*Please enter post code.</small>
-	</span>
-	</div>
-	</div> -->
 
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Fax No</label></div>
@@ -131,7 +109,7 @@
 	</div>
 
 	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Email</label></div>
+	<div class="col-md-4"><label class="sub-label">Email</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
 	<input type = 'text' name="email" class = 'form-control' ng-model = 'manageCustomer.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
 	<span ng-show="((form.manageCustomer.email.$dirty && form.manageCustomer.email.$invalid) || (form.manageCustomer.email.$invalid && form.manageCustomer.submitted))" class="invalid-control">

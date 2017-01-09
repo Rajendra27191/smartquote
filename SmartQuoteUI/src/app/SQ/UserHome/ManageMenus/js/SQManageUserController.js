@@ -124,33 +124,31 @@ $scope.jsonToCreateUser=function(){
 
 $scope.saveUser=function(userType){
 	console.log("saveUser");
+	$scope.onlyspaceError=false;
 	if($scope.form.userManageUser.$valid){
 		console.log("Form valid");
+		if($scope.manageUser.userPassword.trim()!==''){
 		$scope.validateDate($scope.manageUser.userValidFrom,$scope.manageUser.userValidTo);
-		// console.log($scope.dateValid);
-		//console.log($scope.manageUser.userType)
 		if($scope.dateValid){
-		if ($scope.buttonstatus=='add') {
-		var	userDetails=$scope.jsonToCreateUser();
-		$rootScope.showSpinner();
-		SQUserHomeServices.SaveUser(userDetails);
-		}else if ($scope.buttonstatus=='edit'){
-			//console.log("UPDATE")
-			// if($scope.manageUser.userType.value){
-			// }else{
-			// 	$rootScope.userGroups.forEach(function(element,index){
-			// 		if($scope.manageUser.userType==element.value){
-			// 			$scope.manageUser.userType=element;
-			// 		}
-			// 	});
-			// }
-			var	userDetails=$scope.jsonToCreateUser();
-			$rootScope.showSpinner();
-			SQUserHomeServices.UpdateUserDetails(userDetails);
-		}	
+			if ($scope.buttonstatus=='add') {
+				console.log("ADD")
+				var	userDetails=$scope.jsonToCreateUser();
+				$rootScope.showSpinner();
+				SQUserHomeServices.SaveUser(userDetails);
+			}else if ($scope.buttonstatus=='edit'){
+				console.log("UPDATE")
+				var	userDetails=$scope.jsonToCreateUser();
+				$rootScope.showSpinner();
+				SQUserHomeServices.UpdateUserDetails(userDetails);
+			}	
+			}else{
+				$scope.dateValid=false;
+			}
 		}else{
-			$scope.dateValid=false;
+			$scope.onlyspaceError=true;
+			$scope.form.userManageUser.userPassword.$invalid=true;
 		}
+		
 	}else{
 		console.log("Form invalid");
 		console.log($scope.manageUser);
@@ -307,8 +305,19 @@ $rootScope.hideSpinner();
 /*===========================DELETE USER=============================*/
 $scope.deleteUser=function(){
 if($scope.manageUser.userId){
-$rootScope.showSpinner();
-SQUserHomeServices.DeleteUser($scope.manageUser.userId);	
+	swal({
+	  title: "Are you sure?",
+	  text: "You will not be able to recover this user!",
+	  type: "warning",
+	  showCancelButton: true,
+	  confirmButtonColor: "#DD6B55",
+	  confirmButtonText: "Yes, delete it!",
+	  closeOnConfirm: false
+	},
+	function(){
+	  $rootScope.showSpinner();
+	  SQUserHomeServices.DeleteUser($scope.manageUser.userId);	
+	});
 }
 };
 

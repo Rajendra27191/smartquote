@@ -6,6 +6,16 @@ background: url(../img/bg.jpg) no-repeat center center;
 background:rgba(255, 255, 255,0.3);        
 min-height:600px;
 }
+/*Controls CSS STARTS*/
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 /*::-webkit-scrollbar {
     width: 12px;
 }
@@ -19,6 +29,8 @@ min-height:600px;
     border-radius: 0px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
 }*/
+/*Controls CSS ENDS*/
+
 /*FOOTER START*/
 .footer {
   position: absolute;
@@ -227,6 +239,10 @@ background-color:transparent;
   text-transform: capitalize;
   color: #777575;
   font-size: medium;
+}
+.asteric{
+ text-transform: capitalize;
+  color: #777575; 
 }
 .container-box{
     /*border: 1px solid #c3b9b9;*/

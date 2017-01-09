@@ -70,10 +70,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Price 0(ex GST)</label></div>
 	<div class="col-md-8">
-	<input type="number" class='form-control' name="price0exGST" ng-model="manageProduct.price0exGST" required>
+	<input type="number" class='form-control' name="price0exGST" ng-model="manageProduct.price0exGST" ng-min="0" required>
 	<span ng-show="((form.manageProduct.price0exGST.$dirty && form.manageProduct.price0exGST.$invalid) 
 		  || (form.manageProduct.price0exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.price0exGST.$error.required">*Please enter price 0.</small>
+		<small ng-show="form.manageProduct.price0exGST.$error.min">*price0 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -82,10 +83,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Qty Break 1</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="qtyBreak1" ng-model="manageProduct.qtyBreak1" required>
+	<input type="number" class = 'form-control' name="qtyBreak1" ng-model="manageProduct.qtyBreak1" ng-min="0" required>
 	<span ng-show="((form.manageProduct.qtyBreak1.$dirty && form.manageProduct.qtyBreak1.$invalid) 
 		  || (form.manageProduct.qtyBreak1.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.qtyBreak1.$error.required">*Please enter qty break 1.</small>
+		<small ng-show="form.manageProduct.qtyBreak1.$error.min">*qty break1 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -94,10 +96,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Price 1(ex GST)</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="price1exGST" ng-model="manageProduct.price1exGST" required>
+	<input type="number" class = 'form-control' name="price1exGST" ng-model="manageProduct.price1exGST" ng-min="0" required>
 	<span ng-show="((form.manageProduct.price1exGST.$dirty && form.manageProduct.price1exGST.$invalid) 
 		  || (form.manageProduct.price1exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.price1exGST.$error.required">*Please enter price 1.</small>
+		<small ng-show="form.manageProduct.price1exGST.$error.min">*price1 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -106,10 +109,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Qty Break 2</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="qtyBreak2" ng-model="manageProduct.qtyBreak2" required>
+	<input type="number" class = 'form-control' name="qtyBreak2" ng-model="manageProduct.qtyBreak2" ng-min="0" required>
 	<span ng-show="((form.manageProduct.qtyBreak2.$dirty && form.manageProduct.qtyBreak2.$invalid) 
 		  || (form.manageProduct.qtyBreak2.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.qtyBreak2.$error.required">*Please enter qty break 2.</small>
+		<small ng-show="form.manageProduct.qtyBreak2.$error.min">*qty break2 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -118,10 +122,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Price 2</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="price2exGST" ng-model="manageProduct.price2exGST" required>
+	<input type="number" class = 'form-control' name="price2exGST" ng-model="manageProduct.price2exGST" ng-min="0" required>
 	<span ng-show="((form.manageProduct.price2exGST.$dirty && form.manageProduct.price2exGST.$invalid) 
 		  || (form.manageProduct.price2exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.price2exGST.$error.required">*Please enter price 2.</small>
+		<small ng-show="form.manageProduct.price2exGST.$error.min">*price2 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -130,10 +135,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Qty Break 3</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="qtyBreak3" ng-model="manageProduct.qtyBreak3" required>
+	<input type="number" class = 'form-control' name="qtyBreak3" ng-model="manageProduct.qtyBreak3" ng-min="0" required>
 	<span ng-show="((form.manageProduct.qtyBreak3.$dirty && form.manageProduct.qtyBreak3.$invalid) 
 		  || (form.manageProduct.qtyBreak3.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.qtyBreak3.$error.required">*Please enter qty break 3.</small>
+		<small ng-show="form.manageProduct.qtyBreak3.$error.min">*qty break3 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -142,10 +148,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Price 3(ex GST)</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="price3exGST" ng-model="manageProduct.price3exGST" required>
+	<input type="number" class = 'form-control' name="price3exGST" ng-model="manageProduct.price3exGST" ng-min="0" required>
 	<span ng-show="((form.manageProduct.price3exGST.$dirty && form.manageProduct.price3exGST.$invalid) 
 		  || (form.manageProduct.price3exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.price3exGST.$error.required">*Please enter price 3.</small>
+		<small ng-show="form.manageProduct.price3exGST.$error.min">*price3 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -154,10 +161,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Qty Break 4</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="qtyBreak4" ng-model="manageProduct.qtyBreak4" required>
+	<input type="number" class = 'form-control' name="qtyBreak4" ng-model="manageProduct.qtyBreak4" ng-min="0" required>
 	<span ng-show="((form.manageProduct.qtyBreak4.$dirty && form.manageProduct.qtyBreak4.$invalid) 
 		  || (form.manageProduct.qtyBreak4.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.qtyBreak4.$error.required">*Please enter qty break 4.</small>
+		<small ng-show="form.manageProduct.qtyBreak4.$error.min">*qty break4 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -166,10 +174,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Price 4</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name=" price4exGST" ng-model="manageProduct. price4exGST" required>
+	<input type="number" class = 'form-control' name=" price4exGST" ng-model="manageProduct. price4exGST" ng-min="0" required>
 	<span ng-show="((form.manageProduct. price4exGST.$dirty && form.manageProduct. price4exGST.$invalid) 
 		  || (form.manageProduct. price4exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct. price4exGST.$error.required">*Please enter price 4.</small>
+		<small ng-show="form.manageProduct. price4exGST.$error.min">*price4 should be greater than 0.</small>
 	</span>
 	</div>
 	</div>
@@ -178,10 +187,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Avg Cost</label></div>
 	<div class="col-md-8">
-	<input type="number" class = 'form-control' name="avgcost" ng-model="manageProduct.avgcost" required>
+	<input type="number" class = 'form-control' name="avgcost" ng-model="manageProduct.avgcost" ng-min="0" required>
 	<span ng-show="((form.manageProduct.avgcost.$dirty && form.manageProduct.avgcost.$invalid) 
 		  || (form.manageProduct.avgcost.$invalid && form.manageProduct.submitted))" class="invalid-control">
 		<small ng-show="form.manageProduct.avgcost.$error.required">*Please enter average cost.</small>
+		<small ng-show="form.manageProduct.avgcost.$error.min">*average cost should be greater than 0.</small>
 	</span>
 	</div>
 	</div>

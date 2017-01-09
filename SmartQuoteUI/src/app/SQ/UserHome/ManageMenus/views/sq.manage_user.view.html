@@ -21,6 +21,8 @@
 	<div class="col-md-4"><label class="sub-label">User Type</label></div>
 	<div class="col-md-8">
 	<select type="text" name="userGroupName" class="form-control" ng-options="usergroup as usergroup.value for usergroup in userGroups" ng-model="manageUser.userType" ng-change="userTypeChanged(manageUser.userType)" required>
+	<option value="">Select User Type</option>
+	<!-- <option selected ng-if="buttonstatus=='edit">{{manageUser.userType}}</option> -->
 	</select>
 	<!-- <input type = 'text' name="userGroupName" class = 'form-control' ng-model = 'manageUser.userType' uib-typeahead = 'usergroup as usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="userTypeChanged(manageUser.userType)"  autocomplete="off" required> -->
 	<span ng-show="((form.userManageUser.userGroupName.$dirty && form.userManageUser.userGroupName.$invalid) || (form.userManageUser.userGroupName.$invalid && form.userManageUser.submitted))" class="invalid-control">
@@ -32,9 +34,11 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Password</label></div>
 	<div class="col-md-8">
-	<input type="password" id='pw1' class = 'form-control' name="userPassword" ng-model="manageUser.userPassword" required>
+	<input type="password" id='pw1' class = 'form-control' name="userPassword" ng-model="manageUser.userPassword"   required>
 	<span ng-show="((form.userManageUser.userPassword.$dirty && form.userManageUser.userPassword.$invalid) || (form.userManageUser.userPassword.$invalid && form.userManageUser.submitted))" class="invalid-control">
-	<small>*Please enter password.</small>
+	<small ng-show="form.userManageUser.userPassword.$error.required">*Please enter password.</small>
+	<small ng-show="onlyspaceError&&!(form.userManageUser.userPassword.$error.required)">*Password should contain alphanumeric(a-z,A-Z,0-9) or special characters(@,#,$,&,-,_)..</small>
+	<!-- <small ng-show="form.userManageUser.userPassword.$error.pattern">*Password should contain alphanumeric(a-z,A-Z,0-9) or special characters(@,#,$,&,-,_).</small> ng-pattern="/^[a-zA-Z0-9&*@#$]*$/"-->
 	</span>
 
 	</div>
@@ -51,7 +55,7 @@
 	</div>
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Email Id</label></div>
-	<div class="col-md-8"><input type="text" class = 'form-control' name="userEmailId" ng-model="manageUser.userEmailId" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
+	<div class="col-md-8"><input type="text" class = 'form-control' name="userEmailId" ng-model="manageUser.userEmailId" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
 	<span ng-show="((form.userManageUser.userEmailId.$dirty && form.userManageUser.userEmailId.$invalid) || (form.userManageUser.userEmailId.$invalid && form.userManageUser.submitted))" class="invalid-control">
 		<small ng-show="form.userManageUser.userEmailId.$error.required">*Please enter email id.</small>
 		<small ng-show="form.userManageUser.userEmailId.$error.pattern">*Please enter valid email id.</small>
