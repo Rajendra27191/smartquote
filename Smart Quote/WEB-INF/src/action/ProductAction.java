@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
@@ -32,10 +33,18 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
-	private File productFile;
+	public File productFile;
 
 	public UserGroupResponse getData() {
 		return data;
+	}
+
+	public File getProductFile() {
+		return productFile;
+	}
+
+	public void setProductFile(File productFile) {
+		this.productFile = productFile;
 	}
 
 	public void setData(UserGroupResponse data) {
@@ -57,14 +66,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public void setProductDetailsResponse(
 			ProductResponseBean productDetailsResponse) {
 		this.productDetailsResponse = productDetailsResponse;
-	}
-
-	public File getProductFile() {
-		return productFile;
-	}
-
-	public void setProductFile(File productFile) {
-		this.productFile = productFile;
 	}
 
 	public String getProductList() {
@@ -90,7 +91,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 	public String createProduct() {
 		String productDetails = request.getParameter("productDetails");
-//		productDetails = "{\"description3\":\"POSITION: LHS CHEST\",\"description2\":\"EDI INTERNATIONAL\",\"price2exGST\":\"3.5\",\"price4exGST\":\"3.5\",\"unit\":\"EACH\",\"itemDescription\":\"EMBROIDERY BLACK TEXT\",\"price1exGST\":\"3.5\",\"price3exGST\":\"3.5\",\"avgcost\":\"3\",\"price0exGST\":\"3.5\",\"qtyBreak1\":\"9999\",\"qtyBreak2\":\"99999999\",\"qtyBreak3\":\"99999999\",\"qtyBreak4\":\"99999999\",\"itemCode\":\"3DE-EDICUSEMB1\"}";
+		// productDetails =
+		// "{\"description3\":\"POSITION: LHS CHEST\",\"description2\":\"EDI INTERNATIONAL\",\"price2exGST\":\"3.5\",\"price4exGST\":\"3.5\",\"unit\":\"EACH\",\"itemDescription\":\"EMBROIDERY BLACK TEXT\",\"price1exGST\":\"3.5\",\"price3exGST\":\"3.5\",\"avgcost\":\"3\",\"price0exGST\":\"3.5\",\"qtyBreak1\":\"9999\",\"qtyBreak2\":\"99999999\",\"qtyBreak3\":\"99999999\",\"qtyBreak4\":\"99999999\",\"itemCode\":\"3DE-EDICUSEMB1\"}";
 		ProductBean objBean = new ProductBean();
 		objBean = new Gson().fromJson(productDetails, ProductBean.class);
 		boolean isProductCreated = false, isProductExist = false;
@@ -120,7 +122,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 	public String getProductDetails() {
 		String productCode = request.getParameter("productCode");
-//		 productCode = "3DE-EDICUSEMB1";
+		// productCode = "3DE-EDICUSEMB1";
 		try {
 			productDetailsResponse.setCode("error");
 			productDetailsResponse.setMessage(getText("common_error"));
@@ -183,11 +185,17 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setMessage(getText("common_error"));
 
 		GlsFileReader objFileReader = new test.FileReader();
-//		productFile = new File(
-//				"/home/raj/git/smartquote/Smart Quote/file/ProductTemplate.xlsx");
+		// productFile = new File(
+		// "/home/raj/git/smartquote/Smart Quote/file/ProductTemplate.xlsx");
 		try {
-			JSONArray fileString = objFileReader.readFile(String
-					.valueOf(productFile));
+			System.out.println("Product File: " + productFile);
+			String filename = "dataFile.xlsx";
+			File fileToCreate = new File(filename);
+			FileUtils.copyFile(productFile, fileToCreate);
+			
+			
+			
+			JSONArray fileString = objFileReader.readFile(filename);
 			System.out.println("File Content: " + fileString);
 
 			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();

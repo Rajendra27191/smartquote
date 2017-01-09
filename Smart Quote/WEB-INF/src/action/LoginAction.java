@@ -42,6 +42,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		this.objLoginResponse = objLoginResponse;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public String execute() throws Exception {
 		String email = request.getParameter("email");
@@ -58,6 +59,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		if (objUserBean != null) {
 			httpSession = request.getSession(true);
 			String lang = (String) httpSession.getAttribute("language");
+			lang = "en";
 			Locale locale = null;
 			if (lang != null) {
 				locale = new Locale(lang);
