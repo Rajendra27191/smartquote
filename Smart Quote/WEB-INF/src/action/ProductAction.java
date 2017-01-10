@@ -230,21 +230,21 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				objEmptyResponse.setMessage(getText("product_file_uploaded"));
 			}
 		} catch (FileNotFoundException e) {
-			objEmptyResponse.setCode("success");
+			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
 			e.printStackTrace();
 		} catch (InvalidFormatException e) {
-			objEmptyResponse.setCode("success");
+			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("error_file_format"));
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
-			objEmptyResponse.setCode("success");
+			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("error_file_parse"));
 			e.printStackTrace();
 		} catch (NumberFormatException e) {
-			objEmptyResponse.setCode("success");
+			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("error_numeric_cell"));
 			e.printStackTrace();
 		} catch (Exception e) {
