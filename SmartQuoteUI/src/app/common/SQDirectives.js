@@ -57,5 +57,70 @@ function ($timeout) {
         });
       }
     }
-  }]);
-
+  }])
+.directive('stringToNumber', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$parsers.push(function(value) {
+        return '' + value;
+      });
+      ngModel.$formatters.push(function(value) {
+        return parseFloat(value);
+      });
+    }
+  };
+})
+.directive("regExInput", function(){
+    "use strict";
+    return {
+        restrict: "A",
+        require: "?regEx",
+        scope: {},
+        replace: false,
+        link: function(scope, element, attrs, ctrl){
+          element.bind('keypress', function (event) {
+            var regex = new RegExp(attrs.regEx);
+            if(event.which==8){
+              return true;
+            }else{
+              var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+              if(!regex.test(key)) {
+                 event.preventDefault();
+                 return false;
+              }
+            }
+          });
+        }
+    };
+})
+.directive('focusMe', function($timeout) {
+  return {
+    scope: { trigger: '=focusMe' },
+    link: function(scope, element) {
+      scope.$watch('trigger', function(value) {
+        if(value === true) { 
+          //console.log('trigger',value);
+          //$timeout(function() {
+            element[0].focus();
+            scope.trigger = false;
+          //});
+        }
+      });
+    }
+  };
+})
+.directive('focus', function() {
+  return {
+    restrict: 'A',
+    link: function($scope,elem,attrs) {
+      elem.bind('keydown', function(e) {
+        var code = e.keyCode || e.which;
+        if (code === 9) {
+          e.preventDefault();
+          elem.next().focus();
+        }
+      });
+    }
+  };
+});

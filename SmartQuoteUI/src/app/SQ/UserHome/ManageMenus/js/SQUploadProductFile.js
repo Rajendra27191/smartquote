@@ -35,39 +35,46 @@ $scope.addExcelToServer = function(){
       $scope.isRequired=false;
       }, 3000);
     }else
-    {       
-      console.log(latestExcelFile);
-      var productFile=latestExcelFile;
-      //http://192.169.1.118:8080
-      var uploadUrl="/smartquote/uploadProductByXlsx";
-      var fd= new FormData();
-      fd.append('productFile',productFile);
+    {   
 
-      $rootScope.showSpinner();
-      $http.post(uploadUrl, fd,{
-        withCredentials: true,
-        headers: {'Content-Type': undefined },
-        transformRequest: angular.identity
-      })
-      .success(function(data, status, header, config){
-        console.log(data);
-        if(data.code.toUpperCase()=="SUCCESS"){
-          console.log(data);
-          $rootScope.alertSuccess(data.message);
-          document.getElementById('fileTypeExcelHost').value = '';
-          latestExcelFile = {};
-          }else{
-            console.log(data); 
-            $rootScope.alertError(data.message);                             
+      if ((latestExcelFile.size / 1024) < 6144) {
+        // console.log("valid size");
+        // console.log(latestExcelFile);
+        var productFile=latestExcelFile;
+        var uploadUrl="/smartquote/uploadProductByXlsx";
+        var fd= new FormData();
+        fd.append('productFile',productFile);
+
+        $rootScope.showSpinner();
+        $http.post(uploadUrl, fd,{
+          withCredentials: true,
+          headers: {'Content-Type': undefined },
+          transformRequest: angular.identity
+        })
+        .success(function(data, status, header, config){
+          // console.log(data);
+          if(data.code.toUpperCase()=="SUCCESS"){
+            // console.log(data);
+            $rootScope.alertSuccess(data.message);
             document.getElementById('fileTypeExcelHost').value = '';
             latestExcelFile = {};
-          }
-          $rootScope.hideSpinner();
-      })
-      .error(function(data, status, header, config){
-      $rootScope.alertServerError("Server error");
-      $rootScope.hideSpinner();
-      });
+            }else{
+              // console.log(data); 
+              $rootScope.alertError(data.message);                             
+              document.getElementById('fileTypeExcelHost').value = '';
+              latestExcelFile = {};
+            }
+            $rootScope.hideSpinner();
+        })
+        .error(function(data, status, header, config){
+        $rootScope.alertServerError("Server error");
+        $rootScope.hideSpinner();
+        });
+
+      }else{
+          $rootScope.alertError("File size must ne less than 6MB"); 
+      }    
+      
 
      
 

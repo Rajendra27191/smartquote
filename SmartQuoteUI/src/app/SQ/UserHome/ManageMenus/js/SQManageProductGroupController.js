@@ -184,8 +184,19 @@ $scope.deleteProductGroup=function(){
 var productGroupCode=$scope.manageProductGroup.productCode;
 //console.log(customerCode);
 if (productGroupCode!==''&&productGroupCode!==undefined&&productGroupCode!==null) {
-$rootScope.showSpinner();
-SQUserHomeServices.DeleteProductGroup(productGroupCode);
+	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Are you sure?',
+	text: "You will not be able to recover this product group!",
+	showCancelButton: true,
+	closeOnConfirm: false,
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
+	 $rootScope.showSpinner();
+	 SQUserHomeServices.DeleteProductGroup(productGroupCode);
+	} 
+	});
 }
 };
 $scope.handleDeleteProductGroupDoneResponse=function(data){

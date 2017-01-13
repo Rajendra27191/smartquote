@@ -1,3 +1,8 @@
+<style type="text/css">
+	.input-group-btn .btn {
+    padding: 3px 12px;
+  }
+</style>
 <div class="container">
 <form name="form.userManageUser" novalidate>
 <div class="row">
@@ -10,7 +15,7 @@
 	<div class="col-md-4"><label class="sub-label">User Name</label></div>
 	<div class="col-md-8">
 	<!-- <input type="text" class = 'form-control' name="userName" ng-model="manageUser.userName" required> -->
-	<input type = 'text' name="userName" class = 'form-control' ng-model = 'manageUser.userName' uib-typeahead = 'userList as userList.value for userList in userList | filter:$viewValue' typeahead-on-select="userNameChanged(manageUser.userName)" ng-keydown="resetOnBackspace($event)"  ng-change="userNameSelected()"autocomplete="off" required>
+	<input type = 'text' name="userName" class = 'form-control' ng-model = 'manageUser.userName' uib-typeahead = 'userList as userList.value for userList in userList | filter:$viewValue' typeahead-on-select="userNameChanged(manageUser.userName)" ng-keydown="resetOnBackspace($event)"  ng-change="userNameSelected()" autocomplete="off" focus-me="true" required>
 
 	<span ng-show="((form.userManageUser.userName.$dirty && form.userManageUser.userName.$invalid) || (form.userManageUser.userName.$invalid && form.userManageUser.submitted))" class="invalid-control">
 	<small>*Please enter user name.</small>
@@ -28,9 +33,19 @@
 	<span ng-show="((form.userManageUser.userGroupName.$dirty && form.userManageUser.userGroupName.$invalid) || (form.userManageUser.userGroupName.$invalid && form.userManageUser.submitted))" class="invalid-control">
 	<small>*Please select user type.</small>
 	</span>
-
     </div>
 	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Email Id</label></div>
+	<div class="col-md-8"><input type="text" class = 'form-control' name="userEmailId" ng-model="manageUser.userEmailId" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
+	<span ng-show="((form.userManageUser.userEmailId.$dirty && form.userManageUser.userEmailId.$invalid) || (form.userManageUser.userEmailId.$invalid && form.userManageUser.submitted))" class="invalid-control">
+		<small ng-show="form.userManageUser.userEmailId.$error.required">*Please enter email id.</small>
+		<small ng-show="form.userManageUser.userEmailId.$error.pattern">*Please enter valid email id.</small>
+	</span>
+	</div>
+	</div>
+
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Password</label></div>
 	<div class="col-md-8">
@@ -53,20 +68,11 @@
 	</span>
 	</div>
 	</div>
-	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Email Id</label></div>
-	<div class="col-md-8"><input type="text" class = 'form-control' name="userEmailId" ng-model="manageUser.userEmailId" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
-	<span ng-show="((form.userManageUser.userEmailId.$dirty && form.userManageUser.userEmailId.$invalid) || (form.userManageUser.userEmailId.$invalid && form.userManageUser.submitted))" class="invalid-control">
-		<small ng-show="form.userManageUser.userEmailId.$error.required">*Please enter email id.</small>
-		<small ng-show="form.userManageUser.userEmailId.$error.pattern">*Please enter valid email id.</small>
-	</span>
 
-	</div>
-	</div>
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Contact No</label></div>
 	<div class="col-md-8">
-	<input type="" class = 'form-control' name="userContactNo" ng-model="manageUser.userContactNo" ng-pattern="/^[0-9]{10,12}$/" required>
+	<input type="" class = 'form-control' name="userContactNo" ng-model="manageUser.userContactNo" ng-pattern="/^[0-9]{5,12}$/" required>
 	<span ng-show="((form.userManageUser.userContactNo.$dirty && form.userManageUser.userContactNo.$invalid) || (form.userManageUser.userContactNo.$invalid && form.userManageUser.submitted))" class="invalid-control">
 		<small ng-show="form.userManageUser.userContactNo.$error.required">*Please enter contact no.</small>
 		<small ng-show="form.userManageUser.userContactNo.$error.pattern">*Please enter valid contact no.</small>
@@ -106,7 +112,7 @@
 	<div class="row">
 		<div class="col-md-6"></div>
 		<div class="col-md-3">
-    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUser()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUser()" class="btn btn-default btn-block button-delete" ng-disabled="disabledDelete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
     	</div>
 		<div class="col-md-3">
 		<button id="create" ng-click="saveUser()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	

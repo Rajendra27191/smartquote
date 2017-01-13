@@ -9,7 +9,7 @@
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Group Code</label></div>
 	<div class="col-md-8">
-	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = 'productGroup as productGroup.code for productGroup in productGroupList | filter:$viewValue' typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" required>
+	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = 'productGroup as productGroup.code for productGroup in productGroupList | filter:$viewValue' typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" focus-me="true" required>
 	<!--  -->
 	<span ng-show="((form.manageProductGroup.productCode.$dirty && form.manageProductGroup.productCode.$invalid) || (form.manageProductGroup.productCode.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
 	<small>*Please enter group code.</small>

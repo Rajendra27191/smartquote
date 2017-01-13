@@ -8,6 +8,15 @@ SQHomeServices.GetUserGroupInfo();
 SQHomeServices.GetUserGroupMenu();  
 };
 $scope.init();
+
+$rootScope.menuClicked=function(menuName){
+// console.log(menuName);
+if(menuName.toLowerCase()==='home'){
+  $state.transitionTo('userhome.start');
+}
+
+};
+
 $rootScope.subMenuClicked=function(subMenuName){
 	console.log(subMenuName);
 	if(subMenuName.toLowerCase()==='manage user group'){

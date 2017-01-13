@@ -12,9 +12,9 @@ angular.module('sq.SmartQuoteDesktop')
       };
     var home = {};
     home.GetUserGroupMenu = function () {
-      HomeServices.getUserGroupMenu.getUserGroupMenu(function (success) {
-        //console.log(success);
-        $rootScope.$broadcast('GetUserGroupMenuDone', success);
+      HomeServices.getUserGroupMenu.getUserGroupMenu(function (data) {
+        // console.log(data);
+        $rootScope.$broadcast('GetUserGroupMenuDone', data);   
       }, function (error) {
         //console.log(error);
         $rootScope.$broadcast('GetUserGroupMenuNotDone', error.status);
@@ -22,8 +22,8 @@ angular.module('sq.SmartQuoteDesktop')
     };
 
     home.GetUserGroupInfo = function () {
-      HomeServices.getUserGroup.getUserGroupInfo(function (success) {
-        $rootScope.$broadcast('GetUserGroupInfoDone', success);
+      HomeServices.getUserGroup.getUserGroupInfo(function (data) {
+        $rootScope.$broadcast('GetUserGroupInfoDone', data);
       }, function (error) {
         //console.log(error);
         $rootScope.$broadcast('GetUserGroupInfoNotDone', error.status);
@@ -35,7 +35,6 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/login?email="+email+"&password="+password,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
         //console.log("Login Success");
         //console.log(data);
@@ -52,11 +51,10 @@ angular.module('sq.SmartQuoteDesktop')
       $http({
       method: "POST",
       url: "/smartquote/forgotPassword?email="+email,
-      //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
         //console.log("userForgotPassword Success");
-        console.log(data);
-        $rootScope.$broadcast('UserForgotPasswordDone', data);          
+        // console.log(data);
+        $rootScope.$broadcast('UserForgotPasswordDone', data);      
       }).error(function(data, status, header, config){
         console.log(data);
         $rootScope.$broadcast('UserForgotPasswordNotDone', data);
@@ -64,7 +62,8 @@ angular.module('sq.SmartQuoteDesktop')
       });
     };
 
-    
+    /*Manage User Session*/
+
     
     return home;
   }

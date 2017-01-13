@@ -3,12 +3,14 @@ angular.module('sq.SmartQuoteDesktop')
 console.log('initialise SQManageCustomerController controller');
 $scope.form={};
 $scope.manageCustomer={};
-$scope.buttonstatus='add';
+// $scope.buttonstatus='add';
 $scope.address='';
 $scope.isAddress=false;
 $scope.isCollapsed = true;
 $scope.customerList=[];
+$scope.customerListView=[];
 $scope.iscustomerCodeSelected=false;
+
 
 $scope.collapseDiv=function(){
 $scope.isCollapsed = !$scope.isCollapsed;
@@ -17,7 +19,9 @@ $scope.address="address1"
 
 $scope.init=function(){
 $rootScope.showSpinner();
-SQUserHomeServices.GetCustomerList();
+SQUserHomeServices.GetCustomerListView();	
+//$rootScope.showSpinner();
+//SQUserHomeServices.GetCustomerList();
 };
 
 $scope.init();
@@ -51,6 +55,59 @@ $scope.resetForm();
 $scope.manageCustomer.customerCode = tempcode;	
 }
 };
+/*=============GET CUSTOMER LIST VIEW==================*/
+
+$scope.handleGetCustomerListViewDoneResponse=function(data){
+	// console.log(data)
+if(data){
+  if(data.code.toUpperCase()=='SUCCESS'){
+  $scope.customerListView=data.objCustomersDetailResponseList;
+  console.log($scope.customerListView)
+}
+}
+$rootScope.hideSpinner();
+};
+
+var cleanupEventGetCustomerListViewDone = $scope.$on("GetCustomerListViewDone", function(event, message){
+$scope.handleGetCustomerListViewDoneResponse(message);      
+});
+
+var cleanupEventGetCustomerListViewNotDone = $scope.$on("GetCustomerListViewNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
+/*=============ADD CUSTOMER==================*/
+$scope.initCustomer=function(){
+$scope.isCustomerTableView=true;
+$scope.addCustomerBtnShow=true;
+$scope.isCustomerAddView=false;	
+$scope.buttonstatus='add';
+
+};
+
+$scope.initCustomer();
+$scope.addCustomerBtnClicked=function(){
+	$scope.isCustomerTableView=false;
+	$scope.addCustomerBtnShow=false;
+	$scope.isCustomerAddView=true;
+};
+
+$scope.cancelAddCustomer=function(){
+$scope.reset();
+$scope.resetForm();
+$scope.initCustomer();
+};
+
+$scope.editCustomerBtnClicked=function(customer){
+	console.log(customer)
+  	$scope.manageCustomer=customer;
+  	$scope.buttonstatus='edit';
+  	$scope.isCustomerTableView=false;
+	$scope.addCustomerBtnShow=false;
+	$scope.isCustomerAddView=true;
+};
+
 /*=============GET CUSTOMER LIST==================*/
 $scope.handleGetCustomerListDoneResponse=function(data){
 if(data){
@@ -82,12 +139,12 @@ SQUserHomeServices.GetCustomerDetails(customer.code);
 $scope.handleGetCustomerDetailsDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
-  	console.log(data);
-  	$scope.manageCustomer=data.objResponseBean;
+  	var manageCustomer=data.objResponseBean; 		
+  	$scope.manageCustomer=manageCustomer;
   	$scope.buttonstatus='edit';
   	$scope.iscustomerCodeSelected=true;
   	if ($scope.manageCustomer.address1!=='') {
-  		console.log("collapseDiv")
+  		// console.log("collapseDiv");
   		$scope.collapseDiv();
   	}
 	}
@@ -126,6 +183,7 @@ return JSON.stringify(customer);
 $scope.saveCustomer=function(){
 if($scope.form.manageCustomer.$valid){
 	console.log("valid");
+
 	if ($scope.buttonstatus=='add'){
 	var customerExist=false;
 	$scope.customerList.forEach(function(element,index){
@@ -154,10 +212,20 @@ if($scope.form.manageCustomer.$valid){
 $scope.handleCreateCustomerDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
-  	$rootScope.alertSuccess("Successfully saved customer");
-  	$scope.reset();
+  	// $rootScope.alertSuccess("Successfully saved customer");
+  	swal({
+	  title: "Success",
+	  text: "Successfully saved customer!",
+	  type: "success",
+	  // animation: "slide-from-top",
+	},
+	function(){
+	$scope.reset();
 	$scope.resetForm();
-  	$scope.init();
+	$scope.init();
+	$scope.initCustomer();
+	});
+
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -177,10 +245,23 @@ $rootScope.hideSpinner();
 $scope.handleUpdateCustomerDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
-  	$rootScope.alertSuccess("Successfully updated customer");
-  	$scope.reset();
+  	// $rootScope.alertSuccess("Successfully updated customer");
+  	
+	swal({
+	  title: "Success",
+	  text: "Successfully updated customer!",
+	  type: "success",
+	  // animation: "slide-from-top",
+	},
+	function(){
+	$scope.reset();
 	$scope.resetForm();
 	$scope.init();
+	$scope.initCustomer();
+	});
+
+  	
+	
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -198,12 +279,23 @@ $rootScope.hideSpinner();
 });
 /*==================DELETE CUSTOMER RESPONSE===================*/
 
-$scope.deleteCustomer=function(){
-var customerCode=$scope.manageCustomer.customerCode;
+$scope.deleteCustomer=function(customer){
+var customerCode=customer.customerCode;
 //console.log(customerCode);
 if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
-$rootScope.showSpinner();
-SQUserHomeServices.DeleteCustomer(customerCode);
+	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Are you sure?',
+	text: "You will not be able to recover this customer!",
+	showCancelButton: true,
+	closeOnConfirm: false,
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
+	 $rootScope.showSpinner();
+	 SQUserHomeServices.DeleteCustomer(customerCode);
+	} 
+	});
 }
 };
 $scope.handleDeleteCustomerDoneResponse=function(data){
@@ -211,8 +303,9 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
   	$rootScope.alertSuccess("Successfully deleted customer");
   	$scope.reset();
-	$scope.resetForm();
+	//$scope.resetForm();
 	$scope.init();
+	$scope.initCustomer();
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -230,6 +323,8 @@ $rootScope.hideSpinner();
 });
 
 $scope.$on('$destroy', function(event, message) {
+	cleanupEventGetCustomerListViewDone();
+	cleanupEventGetCustomerListViewNotDone();
 	cleanupEventGetCustomerListDone();
 	cleanupEventGetCustomerListNotDone();
 	cleanupEventGetCustomerDetailsDone();
@@ -238,6 +333,8 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventCreateCustomerNotDone();
 	cleanupEventUpdateCustomerDone();
 	cleanupEventUpdateCustomerNotDone();
+	cleanupEventDeleteCustomerDone();
+	cleanupEventDeleteCustomerNotDone();
 
 });
 

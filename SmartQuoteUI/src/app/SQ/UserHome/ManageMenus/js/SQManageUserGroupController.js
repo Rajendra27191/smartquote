@@ -7,7 +7,12 @@ $scope.isOpen=false;
 $scope.isUserGroupSelected=false;
 $scope.buttonstatus='add';
 
-
+// $scope.init=function(){
+// $rootScope.showSpinner();  
+// SQHomeServices.GetUserGroupInfo();
+// SQHomeServices.GetUserGroupMenu();  
+// };
+// $scope.init();
 
 
 $scope.resetView=function(){
@@ -15,6 +20,7 @@ $rootScope.showSpinner();
 SQHomeServices.GetUserGroupInfo();
 SQHomeServices.GetUserGroupMenu();
 };
+
 $scope.resetForm=function(){
 $scope.user={};
 $scope.buttonstatus='add';
@@ -244,7 +250,8 @@ $rootScope.hideSpinner();
 $scope.handleEditUserGroupDoneResponse=function(data){
 console.log(data)	;
 if(data){
-  if(data.code.toUpperCase()=='SUCCESS'){   
+  if(data.code.toUpperCase()=='SUCCESS'){ 
+  	//$rootScope.alertError(data.message);  
 	$rootScope.alertSuccess("Successfully updated user group");
 	$scope.resetView();
 	$scope.resetForm();
@@ -270,8 +277,19 @@ $scope.deleteUserGroupMenu=function(){
 	var userGroup={'userGroup':userGroupName};
 	var userGroupId=$scope.getUserGroupId(userGroup);
 	//console.log(userGroupId);
-	$rootScope.showSpinner();
-	SQUserHomeServices.deleteUserGroup(userGroupId);
+	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Are you sure?',
+	text: "You will not be able to recover this user group!",
+	showCancelButton: true,
+	closeOnConfirm: false,
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
+	 $rootScope.showSpinner();
+	 SQUserHomeServices.deleteUserGroup(userGroupId);
+	} 
+	});
 
 };
 $scope.handleDeleteUserGroupDoneResponse=function(data){

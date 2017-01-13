@@ -1,11 +1,13 @@
 body{
 position: relative;  
-background: url(../img/bg.jpg) no-repeat center center;
+background: url(../img/bg.jpg);
+/*background: url(../img/bg.jpg) repeat center center;*/
+
 }
-.overlay {
+/*.overlay {
 background:rgba(255, 255, 255,0.3);        
 min-height:600px;
-}
+}*/
 /*Controls CSS STARTS*/
 input[type='number'] {
     -moz-appearance:textfield;
@@ -15,6 +17,28 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+.error-field{
+   border: 1px solid #e74c3c;
+   /*box-shadow: inset 0 1px 1px rgba(0,0,0,.075);*/
+}
+.error-icon{
+   color:#e74c3c;
+ }
+.inner-addon {
+  position: relative;
+}
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  /*margin: 10px;*/
+
+}
+.right-addon input { padding-right: 30px; }
+.right-addon .glyphicon { right: 0px;}
+
+.left-addon .glyphicon  { left:  0px;}
+.left-addon input  { padding-left:  30px; }
 
 /*::-webkit-scrollbar {
     width: 12px;
@@ -45,14 +69,14 @@ input[type=number]::-webkit-outer-spin-button {
 /*BUTTON*/
 .button-login{
   color: #fff;
+  padding: 6px 50px;
   background:rgba(237, 20, 61, 0.7);
   border-color: rgba(237, 20, 61, 0.7);
 }
 .button-login:hover{
   color:#fff;
-  font-size: 20px;
-  background:rgba(237, 20, 61, 0.7);
-  border-color: crimson;
+  background:rgba(237, 20, 61, 0.5);
+  border-color: rgba(237, 20, 61, 0.5);
 }
 .button-login:focus,.button-login:active{
   color:#fff;
@@ -110,9 +134,10 @@ input[type=number]::-webkit-outer-spin-button {
 .navbar {
   border-radius: 0px;
 }
-/*.navbar-nav{
-      margin: 7.5px 5px;
-}*/
+.navbar-nav{
+      margin: 0px 0px;
+      /*margin: 7.5px 5px;*/
+}
 .navbar-inverse {
   background: #113654; /* For browsers that do not support gradients */
   /*background: -webkit-linear-gradient(top, rgba(17, 54, 84, 0.9), #5f5f5f);*/
@@ -124,6 +149,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .navbar-inverse .navbar-nav>li>a {
     color: #fff;
+    padding: 15px 20px;
 }
 .navbar-inverse .navbar-nav>li>a:hover,.navbar-inverse .navbar-nav>li>a:focus {
     color: #fff;
@@ -147,7 +173,13 @@ input[type=number]::-webkit-outer-spin-button {
 .navbar-collapse {
      padding-right: 0px; 
      padding-left: 0px; 
-  }
+}
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #113654;
+}
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #fff;
+}
 /*============NAVBAR ENDS====================*/
 /*======= HOME SECTION ============*/
 #signin{
@@ -183,14 +215,14 @@ text-align:center;
 color:#fff;
 }
 .div-trans {
-padding-top: 5px;
+padding: 1% 8% 1% 8%;
 background-color: rgba(0, 0, 0, 0.5);
 min-height: 250px;
 margin-top: 150px;
 color: #fff;
 -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
-border-radius: 5px;
+border-radius: 0px;
 margin-bottom: 30px;
 }
 .div-trans .form-group input{
@@ -230,15 +262,15 @@ background-color:transparent;
 .main-label{
   text-transform: uppercase;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  font-size: medium;
+  font-size: 20px;
   color: crimson;
-  margin: 5px 5px 15px 5px;
+  margin: 6% 0% 6% 0%
 
 }
 .sub-label{
   text-transform: capitalize;
   color: #777575;
-  font-size: medium;
+  font-size: 15px;
 }
 .asteric{
  text-transform: capitalize;
@@ -304,7 +336,7 @@ background-color:transparent;
     height: 60px;
 }
 .sweet-alert .sa-icon.sa-success .sa-line.sa-tip {
-    width: 22px;
+ width: 22px;
     left: 14px;
     top: 46px;
     -webkit-transform: rotate(45deg);
@@ -342,11 +374,27 @@ background-color:transparent;
 }
 .sweet-alert .sa-icon.sa-success .sa-fix {
     height: 65px;}
+    
+.sweet-alert .sa-icon.sa-warning .sa-body {
+      height: 24px;
+}
+.sweet-alert button {
+    padding: 6px 17px;
+    margin: 23px 5px 5px 5px;
+}
 /*SWEET ALERT CSS ENDS*/
 .invalid-control{
   color:red;font-size:14px;word-break:break-all;
 }
+
 /*USERHOME CSS*/
 .row-control{
   margin-bottom: 5px;
 }
+
+.form-control{
+    height: 28px;
+    padding: 5px 8px;
+    font-size: 13px
+}
+

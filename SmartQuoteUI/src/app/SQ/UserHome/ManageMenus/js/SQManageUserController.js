@@ -30,7 +30,14 @@ startingDay: 1,
 showWeeks: false
 };
 $scope.dateValid=true;
-$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.today()};
+
+$scope.validToDate=function(){
+var currentDate=$scope.today();
+var toDate=new Date(currentDate.getFullYear()+1,currentDate.getMonth(),currentDate.getDate());
+return toDate;
+};
+// toDate.setYear($scope.today().getYear()+1);
+$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
 };
 
 $scope.resetForm=function(){
@@ -285,6 +292,7 @@ $scope.handleGetUserDetailsDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	console.log(data);
+	$scope.disabledDelete=false;
 	$scope.setUserDetails(data.objUserBean);
 	$scope.buttonstatus='edit';
 	$scope.isUserNameSelected=true;
@@ -305,19 +313,31 @@ $rootScope.hideSpinner();
 /*===========================DELETE USER=============================*/
 $scope.deleteUser=function(){
 if($scope.manageUser.userId){
-	swal({
-	  title: "Are you sure?",
-	  text: "You will not be able to recover this user!",
-	  type: "warning",
-	  showCancelButton: true,
-	  confirmButtonColor: "#DD6B55",
-	  confirmButtonText: "Yes, delete it!",
-	  closeOnConfirm: false
-	},
-	function(){
-	  $rootScope.showSpinner();
-	  SQUserHomeServices.DeleteUser($scope.manageUser.userId);	
-	});
+	if($scope.manageUser.userName==="admin"&&$scope.manageUser.userId===29){
+		swal({
+		  title: "Sorry",
+		  text: "Admin can't be delete.!",
+		  type: "warning",
+		  timer: 2000,
+		  showConfirmButton: false
+		});
+		
+	}else{
+		var previousWindowKeyDown = window.onkeydown;
+		swal({
+		title: 'Are you sure?',
+		text: "You will not be able to recover this user!",
+		showCancelButton: true,
+		closeOnConfirm: false,
+		}, function (isConfirm) {
+		window.onkeydown = previousWindowKeyDown;
+		if (isConfirm) {
+		 $rootScope.showSpinner();
+		 SQUserHomeServices.DeleteUser($scope.manageUser.userId);	
+		} 
+		});
+	}
+	
 }
 };
 

@@ -1,4 +1,4 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','angularLocalStorage','uiSwitch','ngFileUpload'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','angularLocalStorage','uiSwitch','ngFileUpload','datatables'])
 .config(function($logProvider){
     $logProvider.debugEnabled(true);
     
@@ -14,22 +14,22 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngRe
     storage.bind($rootScope, 'userNavMenu',[]);
 }])
 .controller('SmartQuoteDesktopController',['$scope','$rootScope','$window','$state','$filter','$timeout','$http','notify','SQHomeServices',function($scope,$rootScope,$window,$state,$filter,$timeout,$http,notify,SQHomeServices){
- console.log("SmartQuoteDesktopController initialise");
+console.log("SmartQuoteDesktopController initialise");
 $window.pageYOffset;
 $scope.user={};
 $scope.form={};
 $scope.invalidEmailPassword=false;
 $scope.errormsg='';
 $rootScope.isAdmin=false;
- // $rootScope.showSpinner();
- if ($rootScope.userSession) {
-  if ($rootScope.isAdmin) {
+ /*
+ $rootScope.showSpinner();
+ if ($rootScope.isAdmin) {
   console.log("isAdmin");
   $rootScope.userNavMenu=$rootScope.userMenu;
   }else{
-
-  }
- $state.transitionTo('userhome.start');
+  }*/
+ if ($rootScope.userSession) {
+  $state.transitionTo('userhome.start');
  }else{
  $state.transitionTo('home.start');
  }
@@ -37,13 +37,13 @@ $rootScope.isAdmin=false;
 /*===================================================*/
  $rootScope.userSignin=function(){
   if ($scope.form.loginUser.$valid){
-    if($scope.user.userName=="admin@gmail.com"&&$scope.user.userPassword=="admin"){
-      $rootScope.isAdmin=true;
-      $rootScope.userSession=true;
-      $state.transitionTo('userhome.start');
-    }else{
     SQHomeServices.userLogIn($scope.user.userName,$scope.user.userPassword); 
-    } 
+    // if($scope.user.userName=="admin@gmail.com"&&$scope.user.userPassword=="admin"){
+    //   $rootScope.isAdmin=true;
+    //   $rootScope.userSession=true;
+    //   $state.transitionTo('userhome.start');
+    // }else{
+    // } 
   }else{
     $scope.form.loginUser.submitted=true;
   }
@@ -58,6 +58,7 @@ $rootScope.isAdmin=false;
        //console.log("lllllllllllllllll");
        $state.transitionTo('userhome.start');
        $scope.user={};
+       $scope.invalidEmailPassword=false;
        $scope.form.loginUser.submitted=false;
        $scope.form.loginUser.$setPristine();
        $rootScope.userNavMenu=data.result;
@@ -73,12 +74,11 @@ $rootScope.isAdmin=false;
 
   var cleanupEventUserLogInDone = $scope.$on("UserLogInDone", function(event, message){
     console.log("UserLogInDone");
-    console.log(message);
     $scope.handleUserLogInDoneResponse(message);      
   });
 
   var cleanupEventUserLogInNotDone = $scope.$on("UserLogInNotDone", function(event, message){
-    console.log('Some server problem');
+    $rootScope.SQNotify("Server error please try after some time",'error');
     $rootScope.hideSpinner();
   });
 
@@ -94,6 +94,7 @@ $rootScope.isAdmin=false;
 $scope.isForgotPasswordOn=false;
 $scope.forgotPasswordClicked=function(){
 $scope.isForgotPasswordOn=true;
+
 };
 
 $scope.cancelForgetPassword=function(){
@@ -130,34 +131,38 @@ $scope.submitForgetPassword=function(){
   });
 
   var cleanupEventUserForgotPasswordNotDone = $scope.$on("UserForgotPasswordNotDone", function(event, message){
-    console.log('Some server problem');
+    $rootScope.alertServerError("Server error");
     $rootScope.hideSpinner();
   });
 
 /*============== FORGET PASSWORD===========*/
   $scope.handleGetUserGroupInfoDoneResponse=function(data){
     if(data){
-      if(data.code.toUpperCase()=='SUCCESS'){   
+      if(data.code){
+        if(data.code.toUpperCase()=='SUCCESS'){   
         $rootScope.userGroups=data.result;
+        }
+      }
+
     }
-    }
-    console.log("======================");
+    
     $rootScope.hideSpinner();
   };
 
   var cleanupEventGetUserGroupInfoDone = $scope.$on("GetUserGroupInfoDone", function(event, message){
-    console.log("GetUserGroupInfoDone");
+    console.log("GetUserGroupInfoDone.....");
     $scope.handleGetUserGroupInfoDoneResponse(message);      
   });
 
   var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", function(event, message){
-    console.log('Some server problem');
-     $rootScope.hideSpinner();
+    $rootScope.alertServerError("Server error");
+    $rootScope.hideSpinner();
   });
 
   $scope.handleGetUserGroupMenuDoneResponse=function(data){
   if(data){
-    if(data.code.toUpperCase()=='SUCCESS'){   
+    if(data.code){
+     if(data.code.toUpperCase()=='SUCCESS'){   
       var result=data.result;
       result.forEach(function(element,index){
         if(element.menuName=='Profile'){
@@ -169,27 +174,49 @@ $scope.submitForgetPassword=function(){
         }
       });
       $rootScope.userMenu=result;
-      if ($rootScope.isAdmin) {
-        $rootScope.userNavMenu=$rootScope.userMenu;
-      }
     //$rootScope.userNavMenu=$rootScope.userMenu;
+    } 
     }
    }
     $rootScope.hideSpinner();
   };
 
   var cleanupEventGetUserGroupMenuDone = $scope.$on("GetUserGroupMenuDone", function(event, message){
-    console.log("GetUserGroupMenuDone");
+    console.log("GetUserGroupMenuDone.....");
     $scope.handleGetUserGroupMenuDoneResponse(message);      
   });
 
   var cleanupEventGetUserGroupMenuNotDone = $scope.$on("GetUserGroupMenuNotDone", function(event, message){
-    //console.log('Some server problem');
+    $rootScope.alertServerError("Server error");
     $rootScope.hideSpinner();
   });
 
 
+/*===============SESSION TIME OUT STARTS=====================*/
+// $scope.handleSessionTimeOutResponse=function(data){
+//     if(data){
+//      console.log("SessionTimeOut 2.....");
+//      //$rootScope.alertError("Session Time Out Please Login To Continue");
+//       swal({
+//       title: "Error",
+//       text: "Session Time Out Please Login To Continue!",
+//       type: "error",
+//       },
+//       function(){
+//       $rootScope.userSession=false;
+//       $state.transitionTo('home.start');
+//       });
+//     }
 
+//     $rootScope.hideSpinner();
+//   };
+
+//   var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, message){
+//     console.log("SessionTimeOut 1.....");
+//     $scope.handleSessionTimeOutResponse(message);      
+//   });
+
+/*===============SESSION TIME OUT ENDS=====================*/
 	
  
  $rootScope.SQNotify = function(message,flag)
@@ -221,6 +248,7 @@ sweetAlert("Oops...",message, "error");
 $scope.$on('$destroy', function(event, message) {
   cleanupEventUserLogInDone();
   cleanupEventUserLogInNotDone();
+  // cleanupEventSessionTimeOut();
 });
 
-}])
+}]);

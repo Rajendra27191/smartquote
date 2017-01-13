@@ -28,7 +28,7 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getAssignedAccess?userGroupId="+userGroupId,
       //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log(data);
+        //console.log(data);          
         $rootScope.$broadcast('SetUserGroupDone', data);          
       }).error(function(data, status, header, config){
         //console.log(data);
@@ -136,6 +136,18 @@ angular.module('sq.SmartQuoteDesktop')
       });
     };
 /*===============Manage Customer====================*/
+    userhome.GetCustomerListView = function (userId){
+      $http({
+      method: "POST",
+      url: "/smartquote/getCustomerListView",
+      }).success(function(data, status, header, config){
+        $rootScope.$broadcast('GetCustomerListViewDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetCustomerListViewNotDone', data);
+      });
+    };
+
     userhome.GetCustomerList = function (userId){
       $http({
       method: "POST",
@@ -263,6 +275,19 @@ angular.module('sq.SmartQuoteDesktop')
       });
     };
 /*========================MANAGE PRODUCT==============================*/
+  userhome.GetProductListView = function (prodLike){
+      $http({
+      method: "POST",
+      url: "/smartquote/getProductListView?prodLike="+"",
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        $rootScope.$broadcast('GetProductListViewDone', data); 
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductListViewNotDone', data);
+      });
+    };
+
   userhome.GetProductList = function (prodLike){
       $http({
       method: "POST",
