@@ -44,65 +44,8 @@ $rootScope.subMenuClicked=function(subMenuName){
 
 
 
-  // $scope.handleGetUserGroupInfoDoneResponse=function(data){
-  //   if(data){
-  //     if(data.code.toUpperCase()=='SUCCESS'){   
-  //       $rootScope.userGroups=data.result;
-  //   }
-  // 	}
-  // 	console.log("======================");
-  // 	$rootScope.hideSpinner();
-  // };
-
-  // var cleanupEventGetUserGroupInfoDone = $scope.$on("GetUserGroupInfoDone", function(event, message){
-  //   $scope.handleGetUserGroupInfoDoneResponse(message);      
-  // });
-
-  // var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", function(event, message){
-  //   console.log('Some server problem');
-  //    $rootScope.hideSpinner();
-  // });
-
-  // $scope.handleGetUserGroupMenuDoneResponse=function(data){
-  // if(data){
-  //   if(data.code.toUpperCase()=='SUCCESS'){   
-  //     var result=data.result;
-  //     result.forEach(function(element,index){
-  //       if(element.menuName=='Profile'){
-  //         element.status=true;
-  //         console.log(element)
-  //         element.subMenuBeans.forEach(function(submenu,index){
-  //           submenu.status=true;
-  //         });
-  //       }
-  //     });
-  //  	  $rootScope.userMenu=result;
-  //     if ($rootScope.isAdmin) {
-  //     	$rootScope.userNavMenu=$rootScope.userMenu;
-  //     }
-  //  	//$rootScope.userNavMenu=$rootScope.userMenu;
-  //   }
-  //  }
-  //   $rootScope.hideSpinner();
-  // };
-
-  // var cleanupEventGetUserGroupMenuDone = $scope.$on("GetUserGroupMenuDone", function(event, message){
-  //   $scope.handleGetUserGroupMenuDoneResponse(message);      
-  // });
-
-  // var cleanupEventGetUserGroupMenuNotDone = $scope.$on("GetUserGroupMenuNotDone", function(event, message){
-  //   //console.log('Some server problem');
-  //   $rootScope.hideSpinner();
-  // });
-  /*////////////////////////////////////////*/
-
-
-
 $scope.$on('$destroy', function(event, message) {
-	// cleanupEventGetUserGroupInfoDone();
-	// cleanupEventGetUserGroupInfoNotDone();
-	// cleanupEventGetUserGroupMenuDone();
-	// cleanupEventGetUserGroupMenuNotDone();
+	
  
 });
 }]);

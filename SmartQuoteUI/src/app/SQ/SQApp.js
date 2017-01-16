@@ -57,10 +57,13 @@ $rootScope.isAdmin=false;
        $rootScope.userSession=true;
        //console.log("lllllllllllllllll");
        $state.transitionTo('userhome.start');
+       $rootScope.SQNotify("Successfully log in",'success');
        $scope.user={};
        $scope.invalidEmailPassword=false;
+       if ($scope.form.loginUser) {
        $scope.form.loginUser.submitted=false;
-       $scope.form.loginUser.$setPristine();
+       $scope.form.loginUser.$setPristine();        
+       }
        $rootScope.userNavMenu=data.result;
       }
       else if (data.code.toUpperCase()=='ERROR'){
@@ -87,7 +90,8 @@ $rootScope.isAdmin=false;
     $rootScope.userSession=false;
     $rootScope.userNavMenu=[];
     $rootScope.isAdmin=false;
-    $state.transitionTo('home.start');  
+    $state.transitionTo('home.start'); 
+    $rootScope.SQNotify("Successfully log out",'success'); 
   };
 /*===================================================*/
 /*============== FORGET PASSWORD===========*/
@@ -105,6 +109,8 @@ $scope.submitForgetPassword=function(){
  if ($scope.form.forgotPassword.$valid){
   console.log($scope.user.userName)
   SQHomeServices.userForgotPassword($scope.user.userName);
+ }else{
+  $scope.form.forgotPassword.submitted=true;
  }
 
 };
