@@ -97,11 +97,13 @@ $rootScope.isAdmin=false;
 /*============== FORGET PASSWORD===========*/
 $scope.isForgotPasswordOn=false;
 $scope.forgotPasswordClicked=function(){
+$scope.invalidEmailPassword=false;  
 $scope.isForgotPasswordOn=true;
 
 };
 
 $scope.cancelForgetPassword=function(){
+  $scope.invalidEmailPassword=false;
   $scope.isForgotPasswordOn=false;
 };
 
@@ -119,12 +121,16 @@ $scope.submitForgetPassword=function(){
       if(data.code.toUpperCase()=='SUCCESS'){ 
        $rootScope.alertSuccess("Successfully reset password, please check your inbox for new password");
        $scope.user={};
+       $scope.invalidEmailPassword=false;
        $scope.form.forgotPassword.submitted=false;
        $scope.form.forgotPassword.$setPristine();
        $scope.isForgotPasswordOn=false;
       }
       else if (data.code.toUpperCase()=='ERROR'){
-       $rootScope.alertError(data.message);
+       // $rootScope.alertError(data.message);
+       $scope.invalidEmailPassword=true;
+       $scope.errormsg=data.message;
+      
       }
   }
   //$rootScope.hideSpinner();

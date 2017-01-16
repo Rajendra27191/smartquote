@@ -46,11 +46,11 @@
 </div>
 </div>
 </form>
-<div class="div-trans text-center" ng-if="isForgotPasswordOn" style="min-height: 175px;">
+<div class="div-trans text-center" ng-if="isForgotPasswordOn" style="min-height: 200px;">
 <div class="col-lg-12 col-md-12 col-sm-12 div-topmargin">
 <form name="form.forgotPassword" novalidate>
 <div class="form-group">
-	<span ng-if="invalidEmailPassword" class="login-error">
+	<span ng-show="invalidEmailPassword" class="login-error">
 	<small ng-bind="errormsg"></small>
 	</span>
     <div class="inner-addon  right-addon">
