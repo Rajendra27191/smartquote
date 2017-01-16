@@ -96,12 +96,14 @@ public class UserGroupAction extends ActionSupport implements
 		String allMenuJson = request.getParameter("checkedMenuList");
 		//userGroupName = "Sales Person";
 
+		System.out.println("username : "+userGroupName+" \nmenu : "+allMenuJson);
+		
 		
 		// Dummy Data
 	    /*allMenuJson = "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},"
 				+ "{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},"
 				+ "{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},"
-				+ "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";*/
+			ecli	+ "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";*/
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
 		menuList = new Gson().fromJson(allMenuJson,
 				new TypeToken<List<MenuBean>>() {
