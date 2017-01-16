@@ -1,0 +1,63 @@
+<div class="container">
+<form name="form.userManageUserGroup" novalidate>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage User Groups</label></center></div>
+	</div>
+	<br>
+	<div class="row">
+	<div class="col-md-4" style="padding-right: 0px;"><label class="sub-label">User Group</label></div>
+	<div class="col-md-8" style="padding-left: 0px;">
+	<input type = 'text' name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups.result | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)" required>
+	<span ng-show="((form.userManageUserGroup.userGroupName.$dirty && form.userManageUserGroup.userGroupName.$invalid) || (form.userManageUserGroup.userGroupName.$invalid && form.userManageUserGroup.submitted))" style="color:red;font-size:14px;word-break:break-all;">
+	<small>*Please enter user group name.</small>
+	</span>
+	</div>	
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-6 sub-label"><label>Menu's And Submenu's</label></div>
+	</div>
+
+	<div class="row">
+	<div class="col-md-12" ng-repeat="menu in userMenu">
+		<uib-accordion >
+		 <div uib-accordion-group class="panel-default" heading="{{menu.menuName}}" is-open="isOpen">
+	    <p>
+	      <switch name="onOff" ng-model="menu.status" on="Yes" off="No" ng-change="menuChecked($index)" disabled="menu.menuName=='Profile'"></switch> <label><span data-ng-bind="menu.menuName"></span></label> 
+	     </p>
+	      <div class="col-md-12" style="padding:0px;" ng-if="menu.subMenuBeans.length>0">
+	      <div class="col-md-1" style="padding:0px;"></div>
+	      <div class="col-md-11" style="padding:0px;">
+	      	<ul style="list-style: none;">
+			<li ng-repeat="submenu in menu.subMenuBeans">
+			<switch name="onOff" ng-model="submenu.status" on="Yes" off="No" ng-change="subMenuChecked(menu,submenu)" disabled="menu.menuName=='Profile'"></switch> <span data-ng-bind="submenu.subMenuName"></span> 
+		
+			</li>
+			</ul>
+	      </div>
+		  </div>
+		 </div>
+		</uib-accordion>
+	</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-3">
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUserGroupMenu()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	</div>
+		<div class="col-md-3">
+		<button id="create" ng-click="saveUserGroupMenu()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+</div>
+
+

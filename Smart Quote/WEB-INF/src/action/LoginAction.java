@@ -42,13 +42,14 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		this.objLoginResponse = objLoginResponse;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public String execute() throws Exception {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		
-		/*email = "rajendra@giantleapsystems.com";
-		password = "rajendra123";*/
+		/*email = "radhika@giantleapsystems.com";
+		password = "aaa";*/
 		
 		UserBean objUserBean = null;
 		LoginDao objDao = new LoginDao();
@@ -58,6 +59,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		if (objUserBean != null) {
 			httpSession = request.getSession(true);
 			String lang = (String) httpSession.getAttribute("language");
+			lang = "en";
 			Locale locale = null;
 			if (lang != null) {
 				locale = new Locale(lang);
@@ -80,7 +82,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 			try {
 				UserGroupDao objUserGroupDao = new UserGroupDao();
 				objLoginResponse.setResult(objUserGroupDao
-						.getAssignedAccess(objUserBean.getUserId()));
+						.getAssignedAccess(objUserBean.getUserGroupId()));
 				objUserGroupDao.commit();
 				objUserGroupDao.closeAll();
 			} catch (Exception e) {

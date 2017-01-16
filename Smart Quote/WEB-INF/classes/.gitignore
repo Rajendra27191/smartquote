@@ -1,10 +1,4 @@
-/action
 /connection
-/dao
-/email
-/global.properties
-/global_es.properties
-/pojo
-/responseBeans
+/interceptor
 /responseStructure
-/struts.xml
+/action

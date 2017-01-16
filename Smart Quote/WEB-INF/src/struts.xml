@@ -4,7 +4,22 @@
 
 <struts>
 	<constant name="struts.custom.i18n.resources" value="global" />
+	<constant name="struts.multipart.maxSize" value="524288000" />
+	<constant name="struts.multipart.saveDir" value="/tmp" />
 	<package name="default" extends="struts-default,json-default">
+
+		<!-- <interceptors>
+			<interceptor name="mylogging" class="interceptor.SessionInterceptor"></interceptor>
+			<interceptor-stack name="loggingStack">
+				<interceptor-ref name="mylogging" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="loggingStack"></default-interceptor-ref>
+
+		<global-results>
+			<result name="sessionTimeOut">index.html</result>
+		</global-results> -->
 
 		<action name="login" class="action.LoginAction">
 			<result name="success" type="json">
@@ -43,7 +58,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateUserGroup" class="action.UserGroupAction"
 			method="updateUserGroup">
 			<result name="success" type="json">
@@ -67,11 +82,194 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
-		<action name="forgotPassword" class="email.EmailAction"
-			method="sendPassword">
+
+		<action name="forgotPassword" class="email.EmailAction" method="sendPassword">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getUserList" class="action.UserGroupAction"
+			method="getUserList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createUser" class="action.UserGroupAction"
+			method="createUser">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getUserDetails" class="action.UserGroupAction"
+			method="getUserDetails">
+			<result name="success" type="json">
+				<param name="root">userDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="updateUserDetails" class="action.UserGroupAction"
+			method="updateUserDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteUser" class="action.UserGroupAction"
+			method="deleteUser">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getCustomerList" class="action.CustomerAction"
+			method="getCustomerList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createCustomer" class="action.CustomerAction"
+			method="createCustomer">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getCustomerDetails" class="action.CustomerAction"
+			method="getCustomerDetails">
+			<result name="success" type="json">
+				<param name="root">customerDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="updateCustomerDetails" class="action.CustomerAction"
+			method="updateCustomerDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteCustomer" class="action.CustomerAction"
+			method="deleteCustomer">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductGroupList" class="action.ProductGroupAction"
+			method="getProductGroupList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProductGroup" class="action.ProductGroupAction"
+			method="createProductGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductGroupDetails" class="action.ProductGroupAction"
+			method="getProductGroupDetails">
+			<result name="success" type="json">
+				<param name="root">productGroupDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="updateProductGroupDetails" class="action.ProductGroupAction"
+			method="updateProductGroupDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteProductGroup" class="action.ProductGroupAction"
+			method="deleteProductGroup">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductList" class="action.ProductAction"
+			method="getProductList">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createProduct" class="action.ProductAction"
+			method="createProduct">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductDetails" class="action.ProductAction"
+			method="getProductDetails">
+			<result name="success" type="json">
+				<param name="root">productDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="updateProductDetails" class="action.ProductAction"
+			method="updateProductDetails">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="deleteProduct" class="action.ProductAction"
+			method="deleteProduct">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="uploadProductByXlsx" class="action.ProductAction"
+			method="uploadProductByXlsx">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getCustomerListView" class="action.CustomerAction"
+			method="getCustomerListView">
+			<result name="success" type="json">
+				<param name="root">customerDetailResponseList</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="getProductListView" class="action.ProductAction"
+			method="getProductListView">
+			<result name="success" type="json">
+				<param name="root">objProductDetailResponseList</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
