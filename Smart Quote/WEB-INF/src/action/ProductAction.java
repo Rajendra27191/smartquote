@@ -17,6 +17,7 @@ import org.json.JSONException;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import responseBeans.ProductDetailResponseList;
 import responseBeans.ProductResponseBean;
 import responseBeans.UserGroupResponse;
 import test.GlsFileReader;
@@ -33,6 +34,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
+	private ProductDetailResponseList objProductDetailResponseList = new ProductDetailResponseList();
 	public File productFile;
 
 	public UserGroupResponse getData() {
@@ -66,6 +68,15 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public void setProductDetailsResponse(
 			ProductResponseBean productDetailsResponse) {
 		this.productDetailsResponse = productDetailsResponse;
+	}
+
+	public ProductDetailResponseList getObjProductDetailResponseList() {
+		return objProductDetailResponseList;
+	}
+
+	public void setObjProductDetailResponseList(
+			ProductDetailResponseList objProductDetailResponseList) {
+		this.objProductDetailResponseList = objProductDetailResponseList;
 	}
 
 	public String getProductList() {
@@ -185,16 +196,14 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setMessage(getText("common_error"));
 
 		GlsFileReader objFileReader = new test.FileReader();
-		// productFile = new File(
-		// "/home/raj/git/smartquote/Smart Quote/file/ProductTemplate.xlsx");
+//		productFile = new File(
+//				"/home/raj/git/smartquote/Smart Quote/file/ProductDatabaseLarge.xlsx");
 		try {
 			System.out.println("Product File: " + productFile);
 			String filename = "dataFile.xlsx";
 			File fileToCreate = new File(filename);
 			FileUtils.copyFile(productFile, fileToCreate);
-			
-			
-			
+
 			JSONArray fileString = objFileReader.readFile(filename);
 			System.out.println("File Content: " + fileString);
 
@@ -248,6 +257,24 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			objEmptyResponse.setMessage(getText("error_numeric_cell"));
 			e.printStackTrace();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
+	public String getProductListView() {
+		try {
+			ProductDao objDao = new ProductDao();
+			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
+			objProductBeans = objDao.getAllProductDetailsList();
+			objDao.commit();
+			objDao.closeAll();
+			objProductDetailResponseList.setCode("success");
+			objProductDetailResponseList.setMessage(getText("details_loaded"));
+			objProductDetailResponseList.setObjProductDetailResponseList(objProductBeans);
+		} catch (Exception e) {
+			objProductDetailResponseList.setCode("error");
+			objProductDetailResponseList.setMessage(getText("common_error"));
 			e.printStackTrace();
 		}
 		return SUCCESS;

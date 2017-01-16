@@ -55,7 +55,8 @@ public class CustomerDao {
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("customer_Code"));
-				objKeyValuePairBean.setValue(rs.getString("customer_Code") + " ("+ rs.getString("customer_name")+")");
+				objKeyValuePairBean.setValue(rs.getString("customer_Code")
+						+ " (" + rs.getString("customer_name") + ")");
 				pairBeans.add(objKeyValuePairBean);
 			}
 		} catch (Exception e) {
@@ -212,5 +213,45 @@ public class CustomerDao {
 			e.printStackTrace();
 		}
 		return isDeleted;
+	}
+
+	public ArrayList<CustomerBean> getAllCustomerDetails() {
+		ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
+		CustomerBean objBean = null;
+		String getUserGroups = "SELECT customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
+				+ " ifnull(postal_code, '') postal_code, ifnull(add1, '') add1, ifnull(add2, '') add2, ifnull(phone, '') phone, "
+				+ " ifnull(contact_person, '') contact_person, ifnull(fax_no, '') fax_no, ifnull(email, '') email, "
+				+ " ifnull(total_staff, '0') total_staff, ifnull(avg_purchase, '0.0') avg_purchase, ifnull(industry_type, '') industry_type "
+				+ " FROM customer_master order by 1, 2";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			System.out.println("pstm: " + pstmt.toString());
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new CustomerBean();
+				objBean.setCustomerCode(rs.getString("customer_code"));
+				objBean.setCustomerName(rs.getString("customer_name"));
+				objBean.setState(rs.getString("state"));
+				objBean.setPostalCode(rs.getString("postal_code"));
+				objBean.setAddress1(rs.getString("add1"));
+				objBean.setAddress2(rs.getString("add2"));
+				objBean.setPhone(rs.getString("phone"));
+				objBean.setContactPerson(rs.getString("contact_person"));
+				objBean.setFax(rs.getString("fax_no"));
+				objBean.setEmail(rs.getString("email"));
+				objBean.setTotalStaff(rs.getInt("total_staff"));
+				objBean.setAvgPurchase(rs.getString("avg_purchase"));
+				objBean.setIndustryType(rs.getString("industry_type"));
+				objCustomerBeans.add(objBean);
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objCustomerBeans;
 	}
 }

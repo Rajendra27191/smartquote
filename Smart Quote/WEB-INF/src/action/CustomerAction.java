@@ -9,6 +9,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
+import responseBeans.CustomerDetailResponseList;
 import responseBeans.CustomerDetailsResponseBean;
 import responseBeans.UserGroupResponse;
 
@@ -24,6 +25,7 @@ public class CustomerAction extends ActionSupport implements
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private CustomerDetailsResponseBean customerDetailsResponse = new CustomerDetailsResponseBean();
+	private CustomerDetailResponseList customerDetailResponseList = new CustomerDetailResponseList();
 
 	public UserGroupResponse getData() {
 		return data;
@@ -50,6 +52,15 @@ public class CustomerAction extends ActionSupport implements
 		this.customerDetailsResponse = customerDetailsResponse;
 	}
 
+	public CustomerDetailResponseList getCustomerDetailResponseList() {
+		return customerDetailResponseList;
+	}
+
+	public void setCustomerDetailResponseList(
+			CustomerDetailResponseList customerDetailResponseList) {
+		this.customerDetailResponseList = customerDetailResponseList;
+	}
+
 	public String getCustomerList() {
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		try {
@@ -70,7 +81,8 @@ public class CustomerAction extends ActionSupport implements
 
 	public String createCustomer() {
 		String customerDetails = request.getParameter("customerDetails");
-//		customerDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		// customerDetails =
+		// "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
 		CustomerBean objBean = new CustomerBean();
 		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerCreated = false, isCustomerExist = false;
@@ -100,7 +112,7 @@ public class CustomerAction extends ActionSupport implements
 
 	public String getCustomerDetails() {
 		String customerCode = request.getParameter("customerCode");
-//		customerCode = "GLS123PUNE";
+		customerCode = "C001";
 		try {
 			customerDetailsResponse.setCode("error");
 			customerDetailsResponse.setMessage(getText("common_error"));
@@ -124,7 +136,8 @@ public class CustomerAction extends ActionSupport implements
 		objEmptyResponse.setMessage(getText("error_creating_user_group"));
 
 		String customerDetails = request.getParameter("customerDetails");
-//		customerDetails = "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems PVT. LTD.\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		// customerDetails =
+		// "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems PVT. LTD.\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
 		CustomerBean objBean = new CustomerBean();
 		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerUpdated = false;
@@ -145,7 +158,7 @@ public class CustomerAction extends ActionSupport implements
 
 	public String deleteCustomer() {
 		String customerCode = request.getParameter("customerCode");
-//		customerCode = "SHR6799AUN";
+		// customerCode = "SHR6799AUN";
 		CustomerDao objDao = new CustomerDao();
 		boolean isDeleted = objDao.deleteUser(customerCode);
 		objDao.commit();
@@ -156,6 +169,25 @@ public class CustomerAction extends ActionSupport implements
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
+		}
+		return SUCCESS;
+	}
+
+	public String getCustomerListView() {
+		try {
+			CustomerDao objDao = new CustomerDao();
+			ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
+			objCustomerBeans = objDao.getAllCustomerDetails();
+			objDao.commit();
+			objDao.closeAll();
+			customerDetailResponseList.setCode("success");
+			customerDetailResponseList.setMessage(getText("details_loaded"));
+			customerDetailResponseList
+					.setObjCustomersDetailResponseList(objCustomerBeans);
+		} catch (Exception e) {
+			customerDetailResponseList.setCode("error");
+			customerDetailResponseList.setMessage(getText("common_error"));
+			e.printStackTrace();
 		}
 		return SUCCESS;
 	}

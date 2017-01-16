@@ -58,7 +58,8 @@ public class ProductDao {
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("item_code"));
-				objKeyValuePairBean.setValue(rs.getString("item_code") + " (" + rs.getString("item_description")+")");
+				objKeyValuePairBean.setValue(rs.getString("item_code") + " ("
+						+ rs.getString("item_description") + ")");
 				pairBeans.add(objKeyValuePairBean);
 			}
 		} catch (Exception e) {
@@ -177,8 +178,7 @@ public class ProductDao {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0"
-					+ " WHERE item_code = ?";
+					+ " tax_code = ?, created_by = 0" + " WHERE item_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -237,7 +237,7 @@ public class ProductDao {
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by) "
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
 			pstmt = conn.prepareStatement(productQuery);
-			final int batchSize = 10;
+			final int batchSize = 500;
 			int count = 0;
 
 			for (int i = 0; i < productList.size(); i++) {
@@ -295,5 +295,51 @@ public class ProductDao {
 			e.printStackTrace();
 		}
 		return isDeleted;
+	}
+
+	public ArrayList<ProductBean> getAllProductDetailsList() {
+		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
+		ProductBean objBean = null;
+		String getUserGroups = "SELECT item_code, ifnull(item_description, '') item_description, "
+				+ " ifnull(description2, '') description2, description3, unit, ifnull(price0exGST, '') price0exGST, "
+				+ " ifnull(qty_break1, '0.0') qty_break1, ifnull(price1exGST, '0.0') price1exGST, "
+				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
+				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
+				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by "
+				+ " FROM product_master order by 1, 2";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new ProductBean();
+				objBean.setItemCode(rs.getString("item_code"));
+				objBean.setItemDescription(rs.getString("item_description"));
+				objBean.setDescription2(rs.getString("description2"));
+				objBean.setDescription3(rs.getString("description3"));
+				objBean.setUnit(rs.getString("unit"));
+				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
+				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
+				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
+				objBean.setQtyBreak2(rs.getDouble("qty_break2"));
+				objBean.setPrice2exGST(rs.getDouble("price2exGST"));
+				objBean.setQtyBreak3(rs.getDouble("qty_break3"));
+				objBean.setPrice3exGST(rs.getDouble("price3exGST"));
+				objBean.setQtyBreak4(rs.getDouble("qty_break4"));
+				objBean.setPrice4exGST(rs.getDouble("price4exGST"));
+				objBean.setAvgcost(rs.getDouble("avg_cost"));
+				objBean.setTaxCode(rs.getString("tax_code"));
+				objBean.setCreated_by(rs.getString("created_by"));
+				objProductBeans.add(objBean);
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objProductBeans;
 	}
 }

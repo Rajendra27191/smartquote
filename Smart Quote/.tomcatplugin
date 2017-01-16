@@ -5,7 +5,7 @@
     <reloadable>true</reloadable>
     <redirectLogger>false</redirectLogger>
     <updateXml>true</updateXml>
-    <warLocation>/home/raj/Desktop/Smart Quote/Smart Quote Raw Docs/war/smartquote.war</warLocation>
+    <warLocation>/home/raj/Desktop/Smart Quote/Smart Quote Raw Docs/war/war1/smartquote.war</warLocation>
     <extraInfo></extraInfo>
     <webPath></webPath>
 </tomcatProjectProperties>
