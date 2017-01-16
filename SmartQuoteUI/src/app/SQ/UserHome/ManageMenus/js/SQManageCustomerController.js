@@ -301,11 +301,21 @@ if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
 $scope.handleDeleteCustomerDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
-  	$rootScope.alertSuccess("Successfully deleted customer");
+  	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Success',
+	text: "Successfully deleted customer!",
+	type:"success"
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
   	$scope.reset();
-	//$scope.resetForm();
 	$scope.init();
 	$scope.initCustomer();
+	} 
+	});
+  	// $rootScope.alertSuccess("Successfully deleted customer");
+	//$scope.resetForm();
 	}else{
 		$rootScope.alertError(data.message);
 	}

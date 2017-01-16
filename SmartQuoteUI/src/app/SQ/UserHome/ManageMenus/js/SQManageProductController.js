@@ -247,11 +247,21 @@ SQUserHomeServices.DeleteProduct(productCode);
 $scope.handleDeleteProductDoneResponse=function(data){
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){
-  	$rootScope.alertSuccess("Successfully deleted product");
+  	// $rootScope.alertSuccess("Successfully deleted product");
   	// $scope.reset();
 	// $scope.resetForm();
+	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Success',
+	text: "Successfully deleted product!",
+	type:"success"
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
 	$scope.init();
 	$scope.initProduct();
+	} 
+	});
 	}else{
 		$rootScope.alertError(data.message);
 	}
