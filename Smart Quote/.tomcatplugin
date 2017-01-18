@@ -5,11 +5,7 @@
     <reloadable>true</reloadable>
     <redirectLogger>false</redirectLogger>
     <updateXml>true</updateXml>
-<<<<<<< HEAD
     <warLocation>/home/admin1/smWars/smartquote.war</warLocation>
-=======
-    <warLocation>/home/raj/Desktop/Smart Quote/Smart Quote Raw Docs/war/war1/smartquote.war</warLocation>
->>>>>>> refs/remotes/origin/SmartQuote-v1
     <extraInfo></extraInfo>
     <webPath></webPath>
 </tomcatProjectProperties>

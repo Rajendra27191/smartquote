@@ -8,18 +8,25 @@
 	<constant name="struts.multipart.saveDir" value="/tmp" />
 	<package name="default" extends="struts-default,json-default">
 
-		<!-- <interceptors>
+	  <interceptors>
 			<interceptor name="mylogging" class="interceptor.SessionInterceptor"></interceptor>
 			<interceptor-stack name="loggingStack">
-				<interceptor-ref name="mylogging" />
-				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="mylogging" ></interceptor-ref>
+				<interceptor-ref name="defaultStack" ></interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
+		
 		<default-interceptor-ref name="loggingStack"></default-interceptor-ref>
 
 		<global-results>
-			<result name="sessionTimeOut">index.html</result>
-		</global-results> -->
+			<result name="sessionTimeOut" type="json">
+					<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is expired","result": </param>
+					<param name="root">""</param>
+					<param name="wrapSuffix">}</param>
+					<param name="excludeNullProperties">true</param>
+					<param name="ignoreHierarchy">false</param>
+			</result>
+		</global-results>  
 
 		<action name="login" class="action.LoginAction">
 			<result name="success" type="json">

@@ -1,10 +1,13 @@
 package action;
 
+import interceptor.SessionInterceptor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.EmptyResponseBean;
@@ -68,6 +71,8 @@ public class UserGroupAction extends ActionSupport implements
 	 */
 
 	public String getUserGroups() {
+		
+		System.out.println("SESSION : "+ServletActionContext.getRequest().getSession()) ;
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		try {
@@ -87,6 +92,9 @@ public class UserGroupAction extends ActionSupport implements
 
 	public String getMenuAndSubmenu() {
 		UserGroupDao objUserGroupDao = new UserGroupDao();
+		SessionInterceptor interceptor = new SessionInterceptor();
+		boolean v = interceptor.isLoggedIn(request);
+		System.out.println("Session : "+v);
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));
