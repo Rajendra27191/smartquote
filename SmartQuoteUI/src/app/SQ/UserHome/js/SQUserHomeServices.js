@@ -28,8 +28,12 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getAssignedAccess?userGroupId="+userGroupId,
       //data: $scope.additionalCategory.addCatName
       }).success(function(data, status, header, config){
-        //console.log(data);          
-        $rootScope.$broadcast('SetUserGroupDone', data);          
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{          
+        $rootScope.$broadcast('SetUserGroupDone', data);    
+        }     
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('SetUserGroupNotDone', data);
@@ -43,7 +47,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/createUserGroup?userGroupName="+userGroupName+"&checkedMenuList="+checkedMenuList,
       }).success(function(data, status, header, config){
         //console.log(data);
-        $rootScope.$broadcast('AddUserGroupDone', data);    
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('AddUserGroupDone', data); 
+        }   
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('AddUserGroupNotDone', data); 
@@ -55,7 +63,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/updateUserGroup?userGroupId="+userGroupId+"&checkedMenuList="+checkedMenuList,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('EditUserGroupDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('EditUserGroupNotDone', data);
@@ -67,7 +79,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/deleteUserGroup?userGroupId="+userGroupId,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('DeleteUserGroupDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteUserGroupNotDone', data);
@@ -80,7 +96,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/createUser?userDetails="+userDetails,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('SaveUserDone', data); 
+        }
       }).error(function(data, status, header, config){
         console.log(data);
         $rootScope.$broadcast('SaveUserNotDone', data);
@@ -92,7 +112,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getUserList",
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetUserListDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetUserListNotDone', data);
@@ -105,7 +129,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getUserDetails?userId="+userId,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetUserDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetUserDetailsNotDone', data);
@@ -117,7 +145,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/updateUserDetails?userDetails="+userDetails,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('UpdateUserDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('UpdateUserDetailsNotDone', data);
@@ -129,7 +161,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/deleteUser?userId="+userId,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('DeleteUserDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteUserNotDone', data);
@@ -141,7 +177,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getCustomerListView",
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetCustomerListViewDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetCustomerListViewNotDone', data);
@@ -153,7 +193,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getCustomerList",
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetCustomerListDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetCustomerListNotDone', data);
@@ -165,7 +209,11 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getCustomerDetails?customerCode="+customerCode,
       }).success(function(data, status, header, config){
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetCustomerDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetCustomerDetailsNotDone', data);
@@ -178,7 +226,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/createCustomer?customerDetails="+customerDetails,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('CreateCustomerDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('CreateCustomerNotDone', data);
@@ -190,8 +242,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/updateCustomerDetails?customerDetails="+customerDetails,
       }).success(function(data, status, header, config){
-        //console.log(data)
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('UpdateCustomerDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('UpdateCustomerNotDone', data);
@@ -202,8 +258,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/deleteCustomer?customerCode="+customerCode,
       }).success(function(data, status, header, config){
-        //console.log(data)
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('DeleteCustomerDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteCustomerNotDone', data);
@@ -215,8 +275,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/getProductGroupList",
       }).success(function(data, status, header, config){
-        //console.log(data)
-        $rootScope.$broadcast('GetProductGroupListDone', data); 
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('GetProductGroupListDone', data);
+        } 
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetProductGroupListNotDone', data);
@@ -229,7 +293,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getProductGroupDetails?productGroupCode="+productGroupCode,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetProductGroupDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetProductGroupDetailsNotDone', data);
@@ -241,8 +309,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/createProductGroup?productDetails="+productDetails,
       }).success(function(data, status, header, config){
-        //console.log(data)
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('CreateProductGroupDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('CreateProductGroupNotDone', data);
@@ -254,8 +326,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/updateProductGroupDetails?productDetails="+productDetails,
       }).success(function(data, status, header, config){
-        //console.log(data)
-        $rootScope.$broadcast('UpdateProductGroupDetailsDone', data); 
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('UpdateProductGroupDetailsDone', data);
+        } 
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('UpdateProductGroupDetailsNotDone', data);
@@ -268,7 +344,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/deleteProductGroup?productGroupCode="+productGroupCode,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('DeleteProductGroupDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteProductGroupNotDone', data);
@@ -281,7 +361,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getProductListView?prodLike="+"",
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetProductListViewDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetProductListViewNotDone', data);
@@ -294,7 +378,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getProductList?prodLike="+"",
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetProductListDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetProductListNotDone', data);
@@ -306,7 +394,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/getProductDetails?productCode="+productCode,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('GetProductDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('GetProductDetailsNotDone', data);
@@ -319,7 +411,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/createProduct?productDetails="+productDetails,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('CreateProductDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('CreateProductNotDone', data);
@@ -332,7 +428,11 @@ angular.module('sq.SmartQuoteDesktop')
       url: "/smartquote/updateProductDetails?productDetails="+productDetails,
       }).success(function(data, status, header, config){
         //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('UpdateProductDetailsDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('UpdateProductDetailsNotDone', data);
@@ -344,8 +444,12 @@ angular.module('sq.SmartQuoteDesktop')
       method: "POST",
       url: "/smartquote/deleteProduct?productCode="+productCode,
       }).success(function(data, status, header, config){
-        //console.log(data)
+        //console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
         $rootScope.$broadcast('DeleteProductDone', data); 
+        }
       }).error(function(data, status, header, config){
         //console.log(data);
         $rootScope.$broadcast('DeleteProductNotDone', data);

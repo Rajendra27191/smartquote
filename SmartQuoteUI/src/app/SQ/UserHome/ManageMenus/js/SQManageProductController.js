@@ -56,15 +56,19 @@ $scope.init();
 
 $scope.handleGetProductListViewDoneResponse=function(data){
 if(data){
+  if(data.code){
   if(data.code.toUpperCase()=='SUCCESS'){
   console.log(data)
   $scope.productListView=data.objProductDetailResponseList;
-}
+  }
+  }
 }
 $rootScope.hideSpinner();
 };
 
 var cleanupEventGetProductListViewDone = $scope.$on("GetProductListViewDone", function(event, message){
+console.log("GetProductListViewDone");
+console.log(message);
 $scope.handleGetProductListViewDoneResponse(message);      
 });
 
@@ -81,12 +85,14 @@ $scope.buttonstatus='add';
 };
 $scope.initProduct();
 $scope.addProductBtnClicked=function(){
+	$window.pageYOffset;
 	$scope.isProductTableView=false;
 	$scope.addProductBtnShow=false;
 	$scope.isProductAddView=true;
 };
 
 $scope.cancelAddProduct=function(){
+$window.pageYOffset;
 $scope.initProduct();
 };
 
@@ -154,6 +160,7 @@ $scope.saveProductDetails=function(){
 // /*==================ADD PRODUCT GROUP RESPONSE===================*/
 $scope.handleCreateProductDoneResponse=function(data){
 if(data){
+if(data.code){
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data);
   	//$rootScope.alertSuccess("Successfully saved product");
@@ -174,6 +181,7 @@ if(data){
 	$rootScope.alertError(data.message);
 	}
 }
+}
 $rootScope.hideSpinner();
 };
 
@@ -189,11 +197,9 @@ $rootScope.hideSpinner();
 // /*==================UPDATE PRODUCT GROUP RESPONSE===================*/
 $scope.handleUpdateProductDetailsDoneResponse=function(data){
 if(data){
+if(data.code){
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data)
-  	// $rootScope.alertSuccess("Successfully updated product");
-  	// $scope.reset();
-	// $scope.resetForm();
 	swal({
 	  title: "Success",
 	  text: "Successfully updated product!",
@@ -211,6 +217,7 @@ if(data){
 		$rootScope.alertError(data.message);
 	}
 }
+}
 $rootScope.hideSpinner();
 };
 
@@ -224,10 +231,21 @@ $rootScope.hideSpinner();
 });
 
 // /*==================DELETE CUSTOMER RESPONSE===================*/
+$scope.deleteFromProductListView=function(index){
+console.log(index);
+console.log($scope.productListView.length);
+$scope.productListView.splice(index,1);
+console.log($scope.productListView.length);
+$timeout(function() {
+$rootScope.hideSpinner();
+}, 3000);
+};
 
-$scope.deleteProduct=function(product){
+$scope.deleteProduct=function(product,index){
 var productCode=product.itemCode;
-//console.log(customerCode);
+console.log(product);
+console.log(index);
+$scope.deleteProductIndex=index;
 if (productCode!==''&&productCode!==undefined&&productCode!==null) {
 var previousWindowKeyDown = window.onkeydown;
 swal({
@@ -244,8 +262,12 @@ SQUserHomeServices.DeleteProduct(productCode);
 });
 }
 };
+
+
+
 $scope.handleDeleteProductDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// $rootScope.alertSuccess("Successfully deleted product");
   	// $scope.reset();
@@ -258,15 +280,19 @@ if(data){
 	}, function (isConfirm) {
 	window.onkeydown = previousWindowKeyDown;
 	if (isConfirm) {
-	$scope.init();
+	// $scope.init();
 	$scope.initProduct();
+	$scope.deleteFromProductListView($scope.deleteProductIndex);
+	// $scope.deleteFromProductListView($scope.deleteProductIndex);
+	
 	} 
 	});
 	}else{
 		$rootScope.alertError(data.message);
+		$rootScope.hideSpinner();
 	}
 }
-$rootScope.hideSpinner();
+}
 };
 
 var cleanupEventDeleteProductDone = $scope.$on("DeleteProductDone", function(event, message){
@@ -282,16 +308,19 @@ $rootScope.hideSpinner();
 /*=============GET PRODUCT GROUP LIST==================*/
 $scope.handleGetProductListDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   console.log(data)
   $scope.productList=data.result;
- 
+}
 }
 }
 $rootScope.hideSpinner();
 };
 
 var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
+	console.log("GetProductListDone");
+	console.log(message);
 $scope.handleGetProductListDoneResponse(message);      
 });
 
@@ -310,12 +339,14 @@ SQUserHomeServices.GetProductDetails(product.code);
 
 $scope.handleGetProductDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data)
   	$scope.manageProduct=data.objProductResponseBean;
   	$scope.isProductSelected=true;
   	$scope.buttonstatus='edit';
 	}
+}
 }
 $rootScope.hideSpinner();
 };

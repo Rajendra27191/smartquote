@@ -15,7 +15,30 @@ $scope.today = function() {
 $scope.init=function(){
 $rootScope.showSpinner();
 SQUserHomeServices.GetUserList();
+SQHomeServices.GetUserGroupInfo();
 };
+/*Get User Group starts*/
+$scope.handleGetUserGroupInfoDoneResponse=function(data){
+  if(data){
+    if(data.code){
+      if(data.code.toUpperCase()=='SUCCESS'){   
+      $rootScope.userGroups=data.result;
+      }
+    }
+  }
+  $rootScope.hideSpinner();
+};
+
+var cleanupEventGetUserGroupInfoDone = $scope.$on("GetUserGroupInfoDone", function(event, message){
+  console.log("GetUserGroupInfoDone");
+  $scope.handleGetUserGroupInfoDoneResponse(message);      
+});
+
+var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+/*Get User Group ends*/
 
 $scope.reset=function(){
 $scope.manageUser={};
@@ -169,6 +192,7 @@ $scope.saveUser=function(userType){
 $scope.handleSaveUserDoneResponse=function(data){
 //console.log(data)	;
 if(data){
+if (data.code) {	
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.isUserNameSelected=false;
 	$scope.reset();
@@ -179,8 +203,9 @@ if(data){
 }else{
 	$rootScope.alertError(data.message);
 }
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventSaveUserDone = $scope.$on("SaveUserDone", function(event, message){
@@ -194,6 +219,7 @@ $rootScope.hideSpinner();
 
 $scope.handleUpdateUserDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.reset();
 	$scope.resetForm();
@@ -202,9 +228,10 @@ if(data){
 	$rootScope.alertSuccess("Successfully updated user");
 }else{
 	$rootScope.alertError(data.message);
-}
-}
+}	
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventUpdateUserDetailsDone = $scope.$on("UpdateUserDetailsDone", function(event, message){
@@ -219,12 +246,14 @@ $rootScope.hideSpinner();
 /*==========================GET USER LIST==============================*/
 $scope.handleGetUserListDoneResponse=function(data){
 if(data){
+if (data.code) {	
   if(data.code.toUpperCase()=='SUCCESS'){   
 	console.log(data)	;
 	$scope.userList=data.result;
+	}
+  $rootScope.hideSpinner();
 }
 }
-$rootScope.hideSpinner();
 };
 
 var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
@@ -290,6 +319,7 @@ $scope.manageUser={
 
 $scope.handleGetUserDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){   
 	console.log(data);
 	$scope.disabledDelete=false;
@@ -297,8 +327,9 @@ if(data){
 	$scope.buttonstatus='edit';
 	$scope.isUserNameSelected=true;
 }
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventGetUserDetailsDone = $scope.$on("GetUserDetailsDone", function(event, message){
@@ -343,6 +374,7 @@ if($scope.manageUser.userId){
 
 $scope.handleDeleteUserDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.reset();
 	$scope.resetForm();
@@ -352,8 +384,9 @@ if(data){
 }else{
 	$rootScope.alertError(data.message);
 }
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventDeleteUserDone = $scope.$on("DeleteUserDone", function(event, message){

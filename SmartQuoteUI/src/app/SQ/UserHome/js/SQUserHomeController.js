@@ -2,12 +2,7 @@ angular.module('sq.SmartQuoteDesktop')
 .controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices){
 console.log('initialise SQUserHomeController controller');
 $window.pageYOffset;
-$scope.init=function(){
-$rootScope.showSpinner();  
-SQHomeServices.GetUserGroupInfo();
-SQHomeServices.GetUserGroupMenu();  
-};
-$scope.init();
+
 
 $rootScope.menuClicked=function(menuName){
 // console.log(menuName);

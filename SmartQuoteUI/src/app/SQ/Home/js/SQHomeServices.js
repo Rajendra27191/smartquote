@@ -12,21 +12,38 @@ angular.module('sq.SmartQuoteDesktop')
       };
     var home = {};
     home.GetUserGroupMenu = function () {
-      HomeServices.getUserGroupMenu.getUserGroupMenu(function (data) {
-        // console.log(data);
-        $rootScope.$broadcast('GetUserGroupMenuDone', data);   
-      }, function (error) {
-        //console.log(error);
+      $http({
+      method: "POST",
+      url: "/smartquote/getMenuAndSubmenu",
+      }).success(function(data, status, header, config){
+        console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('GetUserGroupMenuDone', data);     
+        }
+      }).error(function(data, status, header, config){
+        console.log(data);
         $rootScope.$broadcast('GetUserGroupMenuNotDone', error.status);
+          //error
       });
     };
 
     home.GetUserGroupInfo = function () {
-      HomeServices.getUserGroup.getUserGroupInfo(function (data) {
-        $rootScope.$broadcast('GetUserGroupInfoDone', data);
-      }, function (error) {
-        //console.log(error);
+      $http({
+      method: "POST",
+      url: "/smartquote/getUserGroups",
+      }).success(function(data, status, header, config){
+        console.log(data);
+        if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('GetUserGroupInfoDone', data);     
+        }
+      }).error(function(data, status, header, config){
+        console.log(data);
         $rootScope.$broadcast('GetUserGroupInfoNotDone', error.status);
+          //error
       });
     };
 
@@ -46,6 +63,22 @@ angular.module('sq.SmartQuoteDesktop')
       });
     };
 
+    home.userLogOut = function () {
+      //console.log(email,password)
+      $http({
+      method: "POST",
+      url: "/smartquote/logout",
+      }).success(function(data, status, header, config){
+        // console.log("Logout Success");
+        // console.log(data);
+        $rootScope.$broadcast('UserLogOutDone', data);          
+      }).error(function(data, status, header, config){
+        console.log(data);
+        $rootScope.$broadcast('UserLogOutNotDone', data);
+          //error
+      });
+    };
+
     home.userForgotPassword = function (email) {
       console.log(email)
       $http({
@@ -61,9 +94,6 @@ angular.module('sq.SmartQuoteDesktop')
           //error
       });
     };
-
-    /*Manage User Session*/
-
     
     return home;
   }

@@ -45,12 +45,13 @@ $scope.manageProductGroup.productCode = tempcode;
 /*=============GET PRODUCT GROUP LIST==================*/
 $scope.handleGetGetProductGroupListDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   $scope.productGroupList=data.result;
-
-}
 }
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListDone", function(event, message){
@@ -72,13 +73,14 @@ SQUserHomeServices.GetProductGroupDetails(productgroup.code);
 
 $scope.handleGetProductGroupDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	$scope.manageProductGroup=data.objResponseBean;
   	$scope.buttonstatus='edit';
   	$scope.isProductGroupSelected=true;
 	}
-}
 $rootScope.hideSpinner();
+}}
 };
 
 var cleanupEventGetProductGroupDetailsDone = $scope.$on("GetProductGroupDetailsDone", function(event, message){
@@ -130,6 +132,7 @@ $scope.saveProductGroupDetails=function(){
 /*==================ADD PRODUCT GROUP RESPONSE===================*/
 $scope.handleCreateProductGroupDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data);
   	$scope.isProductGroupSelected=false;
@@ -140,8 +143,8 @@ if(data){
 	}else{
 	$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}}
 };
 
 var cleanupEventCreateProductGroupDone = $scope.$on("CreateProductGroupDone", function(event, message){
@@ -156,6 +159,7 @@ $rootScope.hideSpinner();
 /*==================UPDATE PRODUCT GROUP RESPONSE===================*/
 $scope.handleUpdateProductGroupDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data)
   	$rootScope.alertSuccess("Successfully updated product group");
@@ -165,8 +169,8 @@ if(data){
 	}else{
 		$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}}
 };
 
 var cleanupEventUpdateProductGroupDetailsDone = $scope.$on("UpdateProductGroupDetailsDone", function(event, message){
@@ -201,6 +205,7 @@ if (productGroupCode!==''&&productGroupCode!==undefined&&productGroupCode!==null
 };
 $scope.handleDeleteProductGroupDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	$rootScope.alertSuccess("Successfully deleted product group");
   	$scope.reset();
@@ -209,8 +214,8 @@ if(data){
 	}else{
 		$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}}
 };
 
 var cleanupEventDeleteProductGroupDone = $scope.$on("DeleteProductGroupDone", function(event, message){

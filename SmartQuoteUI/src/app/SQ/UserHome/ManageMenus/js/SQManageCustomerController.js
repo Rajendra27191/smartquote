@@ -60,12 +60,14 @@ $scope.manageCustomer.customerCode = tempcode;
 $scope.handleGetCustomerListViewDoneResponse=function(data){
 	// console.log(data)
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   $scope.customerListView=data.objCustomersDetailResponseList;
   console.log($scope.customerListView)
 }
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventGetCustomerListViewDone = $scope.$on("GetCustomerListViewDone", function(event, message){
@@ -111,12 +113,14 @@ $scope.editCustomerBtnClicked=function(customer){
 /*=============GET CUSTOMER LIST==================*/
 $scope.handleGetCustomerListDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   $scope.customerList=data.result;
   console.log($scope.customerList)
 }
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
@@ -138,6 +142,7 @@ SQUserHomeServices.GetCustomerDetails(customer.code);
 
 $scope.handleGetCustomerDetailsDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	var manageCustomer=data.objResponseBean; 		
   	$scope.manageCustomer=manageCustomer;
@@ -148,8 +153,8 @@ if(data){
   		$scope.collapseDiv();
   	}
 	}
-}
-$rootScope.hideSpinner();
+ $rootScope.hideSpinner();
+}}
 };
 
 var cleanupEventGetCustomerDetailsDone = $scope.$on("GetCustomerDetailsDone", function(event, message){
@@ -211,6 +216,7 @@ if($scope.form.manageCustomer.$valid){
 /*==================ADD CUSTOMER RESPONSE===================*/
 $scope.handleCreateCustomerDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// $rootScope.alertSuccess("Successfully saved customer");
   	swal({
@@ -229,8 +235,9 @@ if(data){
 	}else{
 		$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventCreateCustomerDone = $scope.$on("CreateCustomerDone", function(event, message){
@@ -244,6 +251,7 @@ $rootScope.hideSpinner();
 /*==================UPDATE CUSTOMER RESPONSE===================*/
 $scope.handleUpdateCustomerDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// $rootScope.alertSuccess("Successfully updated customer");
   	
@@ -265,8 +273,9 @@ if(data){
 	}else{
 		$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventUpdateCustomerDone = $scope.$on("UpdateCustomerDone", function(event, message){
@@ -300,6 +309,7 @@ if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
 };
 $scope.handleDeleteCustomerDoneResponse=function(data){
 if(data){
+if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	var previousWindowKeyDown = window.onkeydown;
 	swal({
@@ -319,8 +329,9 @@ if(data){
 	}else{
 		$rootScope.alertError(data.message);
 	}
-}
 $rootScope.hideSpinner();
+}
+}
 };
 
 var cleanupEventDeleteCustomerDone = $scope.$on("DeleteCustomerDone", function(event, message){

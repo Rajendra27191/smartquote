@@ -7,7 +7,6 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 	<link rel="icon" href="favicon.png" type="image/png">
-  <link rel="shortcut icon" href="favicon.ico" type="img/x-icon">
 	<link rel="stylesheet" type="text/css" href="assets/libs/bootstrap/dist/css/bootstrap.min.css">
   <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
   <script type="text/javascript" src="assets/libs/js/jquery.min.js"></script>
@@ -18,14 +17,15 @@
   <!--.......................-->
   <!-- <link rel="stylesheet" type="text/css" href="assets/libs/data-table/dataTables.bootstrap.min.css"> -->
   <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+  <link rel="stylesheet" href="assets/libs/js/angular/angular-csp.css">
      
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
 
 
 </head>
-<body ng-controller="SmartQuoteDesktopController"> 
+<body ng-controller="SmartQuoteDesktopController" ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}"> 
 <!-- ==========================Start Top Navigation======================== -->
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-show="userSession">
+  <nav  class="navbar navbar-inverse navbar-fixed-top ng-cloak" role="navigation" ng-if="isUserSignIn">
         <div class="container-fluid">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

@@ -7,13 +7,70 @@ $scope.isOpen=false;
 $scope.isUserGroupSelected=false;
 $scope.buttonstatus='add';
 
-// $scope.init=function(){
-// $rootScope.showSpinner();  
-// SQHomeServices.GetUserGroupInfo();
-// SQHomeServices.GetUserGroupMenu();  
-// };
-// $scope.init();
+$scope.init=function(){
+$rootScope.showSpinner();  
+SQHomeServices.GetUserGroupInfo();
+SQHomeServices.GetUserGroupMenu();  
+};
+$scope.init();
 
+/*=============GET USER GROUP AND MENUS START=====================*/
+$scope.handleGetUserGroupInfoDoneResponse=function(data){
+  if(data){
+    if(data.code){
+      if(data.code.toUpperCase()=='SUCCESS'){   
+      $rootScope.userGroups=data.result;
+      }
+    }
+
+  }
+  
+  $rootScope.hideSpinner();
+};
+
+var cleanupEventGetUserGroupInfoDone = $scope.$on("GetUserGroupInfoDone", function(event, message){
+  console.log("GetUserGroupInfoDone.....");
+  $scope.handleGetUserGroupInfoDoneResponse(message);      
+});
+
+var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
+$scope.handleGetUserGroupMenuDoneResponse=function(data){
+if(data){
+  if(data.code){
+   if(data.code.toUpperCase()=='SUCCESS'){   
+    var result=data.result;
+    result.forEach(function(element,index){
+      if(element.menuName=='Profile' || element.menuName=='Home'){
+        element.status=true;
+       // console.log(element)
+        element.subMenuBeans.forEach(function(submenu,index){
+          submenu.status=true;
+        });
+      }
+    });
+    $rootScope.userMenu=result;
+  //$rootScope.userNavMenu=$rootScope.userMenu;
+  } 
+  }
+ }
+  $rootScope.hideSpinner();
+};
+
+var cleanupEventGetUserGroupMenuDone = $scope.$on("GetUserGroupMenuDone", function(event, message){
+  console.log("GetUserGroupMenuDone.....");
+  $scope.handleGetUserGroupMenuDoneResponse(message);      
+});
+
+var cleanupEventGetUserGroupMenuNotDone = $scope.$on("GetUserGroupMenuNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
+/*=============GET USER GROUP AND MENUS STOP=====================*/
 
 $scope.resetView=function(){
 $rootScope.showSpinner();
@@ -315,6 +372,7 @@ var cleanupEventDeleteUserGroupNotDone = $scope.$on("DeleteUserGroupNotDone", fu
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
+
 
 
 

@@ -58,8 +58,10 @@ $scope.addExcelToServer = function(){
             $rootScope.alertSuccess(data.message);
             document.getElementById('fileTypeExcelHost').value = '';
             latestExcelFile = {};
+            }else if(data.code=="sessionTimeOut"){
+            $rootScope.$broadcast('SessionTimeOut', data); 
             }else{
-              // console.log(data); 
+              console.log(data); 
               $rootScope.alertError(data.message);                             
               document.getElementById('fileTypeExcelHost').value = '';
               latestExcelFile = {};
