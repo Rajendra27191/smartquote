@@ -99,8 +99,8 @@ public class ProductDao {
 		try {
 			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)";
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
 			pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -118,6 +118,7 @@ public class ProductDao {
 			pstmt.setDouble(14, objBean.getPrice4exGST());
 			pstmt.setDouble(15, objBean.getAvgcost());
 			pstmt.setString(16, objBean.getTaxCode());
+			pstmt.setString(17, objBean.getProductGroupCode());
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
@@ -135,7 +136,7 @@ public class ProductDao {
 		ProductBean objBean = null;
 		String getUserGroups = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by "
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,gst_flag "
 				+ " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -160,6 +161,7 @@ public class ProductDao {
 				objBean.setAvgcost(rs.getDouble("avg_cost"));
 				objBean.setTaxCode(rs.getString("tax_code"));
 				objBean.setCreated_by(rs.getString("created_by"));
+				objBean.setGstFlag(rs.getString("gst_flag"));
 			}
 		} catch (Exception e) {
 			try {
@@ -178,7 +180,8 @@ public class ProductDao {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0" + " WHERE item_code = ?";
+					+ " tax_code = ?, created_by = 0, product_group_code = ? "  
+					+ " WHERE item_code = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -196,7 +199,9 @@ public class ProductDao {
 			pstmt.setDouble(14, objBean.getPrice4exGST());
 			pstmt.setDouble(15, objBean.getAvgcost());
 			pstmt.setString(16, objBean.getTaxCode());
-			pstmt.setString(17, objBean.getItemCode());
+			pstmt.setString(17, objBean.getProductGroupCode());
+			pstmt.setString(18, objBean.getItemCode());
+			
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
 		} catch (SQLException e) {
@@ -306,8 +311,9 @@ public class ProductDao {
 				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
-				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by "
-				+ " FROM product_master order by 1, 2";
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
+				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
+				+ " order by 1, 2"; 
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			rs = pstmt.executeQuery();
@@ -330,6 +336,9 @@ public class ProductDao {
 				objBean.setAvgcost(rs.getDouble("avg_cost"));
 				objBean.setTaxCode(rs.getString("tax_code"));
 				objBean.setCreated_by(rs.getString("created_by"));
+				objBean.setProductGroupCode(rs.getString("product_group_code"));
+				objBean.setProductGroupName(rs.getString("product_group_name"));
+				objBean.setGstFlag(rs.getString("gst_flag"));
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {

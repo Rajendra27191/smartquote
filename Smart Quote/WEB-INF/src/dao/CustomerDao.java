@@ -95,8 +95,8 @@ public class CustomerDao {
 		boolean isUserCreated = false;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO customer_master (customer_code, customer_name, state, postal_code, "
-					+ " add1, add2, phone, contact_person, fax_no, email, total_staff, avg_purchase, industry_type) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					+ " add1, add2, phone, contact_person, fax_no, email, total_staff, avg_purchase, industry_type,suburb) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getCustomerCode());
 			pstmt.setString(2, objBean.getCustomerName());
@@ -111,6 +111,7 @@ public class CustomerDao {
 			pstmt.setInt(11, objBean.getTotalStaff());
 			pstmt.setString(12, objBean.getAvgPurchase());
 			pstmt.setString(13, objBean.getIndustryType());
+			pstmt.setString(14, objBean.getSuburb());
 			pstmt.executeUpdate();
 			isUserCreated = true;
 		} catch (Exception e) {
@@ -166,7 +167,7 @@ public class CustomerDao {
 		try {
 			String updateCustQuery = "UPDATE customer_master SET customer_name = ?, state = ?, postal_code = ?, "
 					+ " add1 = ?, add2 = ?, phone = ?, contact_person = ?, fax_no = ?, email = ?, total_staff = ?, "
-					+ " avg_purchase = ?, industry_type = ?"
+					+ " avg_purchase = ?, industry_type = ?, suburb = ? "
 					+ " WHERE customer_code = ?";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getCustomerName());
@@ -181,7 +182,8 @@ public class CustomerDao {
 			pstmt.setInt(10, objBean.getTotalStaff());
 			pstmt.setString(11, objBean.getAvgPurchase());
 			pstmt.setString(12, objBean.getIndustryType());
-			pstmt.setString(13, objBean.getCustomerCode());
+			pstmt.setString(13, objBean.getSuburb());
+			pstmt.setString(14, objBean.getCustomerCode());
 			System.out.println("Update Customer: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
@@ -221,7 +223,7 @@ public class CustomerDao {
 		String getUserGroups = "SELECT customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
 				+ " ifnull(postal_code, '') postal_code, ifnull(add1, '') add1, ifnull(add2, '') add2, ifnull(phone, '') phone, "
 				+ " ifnull(contact_person, '') contact_person, ifnull(fax_no, '') fax_no, ifnull(email, '') email, "
-				+ " ifnull(total_staff, '0') total_staff, ifnull(avg_purchase, '0.0') avg_purchase, ifnull(industry_type, '') industry_type "
+				+ " ifnull(total_staff, '0') total_staff, ifnull(avg_purchase, '0.0') avg_purchase, ifnull(industry_type, '') industry_type, suburb "
 				+ " FROM customer_master order by 1, 2";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -242,6 +244,7 @@ public class CustomerDao {
 				objBean.setTotalStaff(rs.getInt("total_staff"));
 				objBean.setAvgPurchase(rs.getString("avg_purchase"));
 				objBean.setIndustryType(rs.getString("industry_type"));
+				objBean.setSuburb(rs.getString("suburb"));
 				objCustomerBeans.add(objBean);
 			}
 		} catch (Exception e) {
