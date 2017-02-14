@@ -1,10 +1,13 @@
 package action;
 
+import interceptor.SessionInterceptor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.EmptyResponseBean;
@@ -68,6 +71,8 @@ public class UserGroupAction extends ActionSupport implements
 	 */
 
 	public String getUserGroups() {
+		
+		System.out.println("SESSION : "+ServletActionContext.getRequest().getSession()) ;
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		try {
@@ -87,6 +92,9 @@ public class UserGroupAction extends ActionSupport implements
 
 	public String getMenuAndSubmenu() {
 		UserGroupDao objUserGroupDao = new UserGroupDao();
+		SessionInterceptor interceptor = new SessionInterceptor();
+		boolean v = interceptor.isLoggedIn(request);
+		System.out.println("Session : "+v);
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));
@@ -107,15 +115,9 @@ public class UserGroupAction extends ActionSupport implements
 		String userGroupName = request.getParameter("userGroupName");
 		String allMenuJson = request.getParameter("checkedMenuList");
 
-		// allMenuJson =
-		// "[{\"menuId\":1,\"menuName\":\"Home\",\"subMenuBeans\":[]},"
-		// +
-		// "{\"menuId\":2,\"menuName\":\"Manage\",\"subMenuBeans\":[{\"subMenuId\":1,\"subMenuName\":\"Manage User Group\"},"
-		// +
-		// "{\"subMenuId\":2,\"subMenuName\":\"Manage User\"},{\"subMenuId\":3,\"subMenuName\":\"Manage Customer\"}]},"
-		// +
-		// "{\"menuId\":3,\"menuName\":\"Profile\",\"subMenuBeans\":[{\"subMenuId\":5,\"subMenuName\":\"Logout\"}]}]";
 
+		System.out.println("username : "+userGroupName+" \nmenu : "+allMenuJson);
+		
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
 		menuList = new Gson().fromJson(allMenuJson,
 				new TypeToken<List<MenuBean>>() {

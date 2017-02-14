@@ -112,7 +112,7 @@ public class CustomerAction extends ActionSupport implements
 
 	public String getCustomerDetails() {
 		String customerCode = request.getParameter("customerCode");
-		customerCode = "C001";
+	
 		try {
 			customerDetailsResponse.setCode("error");
 			customerDetailsResponse.setMessage(getText("common_error"));

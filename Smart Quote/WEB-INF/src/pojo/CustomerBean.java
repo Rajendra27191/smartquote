@@ -14,6 +14,17 @@ public class CustomerBean {
 	private int totalStaff;
 	private String avgPurchase;
 	private String industryType;
+	private String suburb;
+
+	
+	
+	public String getSuburb() {
+		return suburb;
+	}
+
+	public void setSuburb(String suburb) {
+		this.suburb = suburb;
+	}
 
 	public String getCustomerCode() {
 		return customerCode;

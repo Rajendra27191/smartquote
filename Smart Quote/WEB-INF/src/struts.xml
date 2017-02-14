@@ -8,18 +8,25 @@
 	<constant name="struts.multipart.saveDir" value="/tmp" />
 	<package name="default" extends="struts-default,json-default">
 
-		<!-- <interceptors>
+	  <interceptors>
 			<interceptor name="mylogging" class="interceptor.SessionInterceptor"></interceptor>
 			<interceptor-stack name="loggingStack">
-				<interceptor-ref name="mylogging" />
-				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="mylogging" ></interceptor-ref>
+				<interceptor-ref name="defaultStack" ></interceptor-ref>
 			</interceptor-stack>
 		</interceptors>
+		
 		<default-interceptor-ref name="loggingStack"></default-interceptor-ref>
 
 		<global-results>
-			<result name="sessionTimeOut">index.html</result>
-		</global-results> -->
+			<result name="sessionTimeOut" type="json">
+					<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is expired","result": </param>
+					<param name="root">""</param>
+					<param name="wrapSuffix">}</param>
+					<param name="excludeNullProperties">true</param>
+					<param name="ignoreHierarchy">false</param>
+			</result>
+		</global-results>  
 
 		<action name="login" class="action.LoginAction">
 			<result name="success" type="json">
@@ -226,53 +233,69 @@
 			</result>
 		</action>
 
-		<action name="getProductDetails" class="action.ProductAction"
-			method="getProductDetails">
+		<action name="getProductDetails" class="action.ProductAction" method="getProductDetails">
 			<result name="success" type="json">
 				<param name="root">productDetailsResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 
-		<action name="updateProductDetails" class="action.ProductAction"
-			method="updateProductDetails">
+		<action name="updateProductDetails" class="action.ProductAction" method="updateProductDetails">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 
-		<action name="deleteProduct" class="action.ProductAction"
-			method="deleteProduct">
+		<action name="deleteProduct" class="action.ProductAction" method="deleteProduct">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 
-		<action name="uploadProductByXlsx" class="action.ProductAction"
-			method="uploadProductByXlsx">
+		<action name="uploadProductByXlsx" class="action.ProductAction" method="uploadProductByXlsx">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 
-		<action name="getCustomerListView" class="action.CustomerAction"
-			method="getCustomerListView">
+		<action name="getCustomerListView" class="action.CustomerAction" method="getCustomerListView">
 			<result name="success" type="json">
 				<param name="root">customerDetailResponseList</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
 
-		<action name="getProductListView" class="action.ProductAction"
-			method="getProductListView">
+		<action name="getProductListView" class="action.ProductAction" method="getProductListView">
 			<result name="success" type="json">
 				<param name="root">objProductDetailResponseList</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		
+		<action name="createQuote" class="action.QuoteAction" method="createQuote">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="getCurrentSupplierList" class="action.QuoteAction" method="getCurrentSupplierList">
+			<result name="success" type="json">
+				<param name="root">objSupplierResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
+		<action name="getSalesPersonList" class="action.QuoteAction" method="getSalesPersonList">
+			<result name="success" type="json">
+				<param name="root">objSupplierResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>

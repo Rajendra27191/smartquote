@@ -18,6 +18,107 @@ public class ProductBean {
 	private double avgcost;
 	private String taxCode;
 	private String created_by;
+	private int itemQty;
+	private double total;
+	private double quotePrice;
+	private double currentSupplierPrice;
+	private double currentSupplierGP;
+	private double currentSupplierTotal;
+	private double gpRequired;
+	private String productGroupCode;
+	private String productGroupName;
+	private String gstFlag;
+	private double savings;
+	
+	
+	
+	public double getSavings() {
+		return savings;
+	}
+
+	public void setSavings(double savings) {
+		this.savings = savings;
+	}
+
+	public String getGstFlag() {
+		return gstFlag;
+	}
+
+	public void setGstFlag(String gstFlag) {
+		this.gstFlag = gstFlag;
+	}
+
+	public String getProductGroupName() {
+		return productGroupName;
+	}
+
+	public void setProductGroupName(String productGroupName) {
+		this.productGroupName = productGroupName;
+	}
+
+	public String getProductGroupCode() {
+		return productGroupCode;
+	}
+
+	public void setProductGroupCode(String productGroupCode) {
+		this.productGroupCode = productGroupCode;
+	}
+
+	public double getCurrentSupplierPrice() {
+		return currentSupplierPrice;
+	}
+
+	public void setCurrentSupplierPrice(double currentSupplierPrice) {
+		this.currentSupplierPrice = currentSupplierPrice;
+	}
+
+	public double getCurrentSupplierGP() {
+		return currentSupplierGP;
+	}
+
+	public void setCurrentSupplierGP(double currentSupplierGP) {
+		this.currentSupplierGP = currentSupplierGP;
+	}
+
+	public double getCurrentSupplierTotal() {
+		return currentSupplierTotal;
+	}
+
+	public void setCurrentSupplierTotal(double currentSupplierTotal) {
+		this.currentSupplierTotal = currentSupplierTotal;
+	}
+
+	public double getGpRequired() {
+		return gpRequired;
+	}
+
+	public void setGpRequired(double gpRequired) {
+		this.gpRequired = gpRequired;
+	}
+
+	public double getQuotePrice() {
+		return quotePrice;
+	}
+
+	public void setQuotePrice(double quotePrice) {
+		this.quotePrice = quotePrice;
+	}
+
+	public int getItemQty() {
+		return itemQty;
+	}
+
+	public void setItemQty(int itemQty) {
+		this.itemQty = itemQty;
+	}
+
+	public double getTotal() {
+		return total;
+	}
+
+	public void setTotal(double total) {
+		this.total = total;
+	}
 
 	public String getItemCode() {
 		return itemCode;

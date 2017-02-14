@@ -15,9 +15,16 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
+import pojo.EmptyResponseBean;
+
 import com.google.gson.Gson;
+import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
+
+import connection.AuditDumpDao;
+
+
 
 /**
  * @author rajendra
@@ -37,7 +44,9 @@ public class SessionInterceptor implements Interceptor,
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
+		EmptyResponseBean data = new EmptyResponseBean(); 
 		HttpServletRequest request = ServletActionContext.getRequest();
+		Map session = ActionContext.getContext().getSession();
 		boolean status = isLoggedIn(request);
 		 System.out.println("Intercepter Status: "+status);
 
@@ -74,6 +83,10 @@ public class SessionInterceptor implements Interceptor,
 			} else {
 				return "sessionTimeOut";
 			}
+		}
+		else
+		{
+			new AuditDumpDao().insertData(Integer.parseInt(session.get("userId").toString()), url, gson.toJson(objMapList));
 		}
 		return invocation.invoke();
 	}
