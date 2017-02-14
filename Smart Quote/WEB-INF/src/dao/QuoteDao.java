@@ -136,8 +136,8 @@ public class QuoteDao {
 	
 	public int saveQuote(QuoteBean quoteBean , String userId){
 		int quoteId=0;
-		String saveData = " insert into create_quote (custcode,quote_attn,prices_gst_include,notes,created_date,user_id,current_supplier_id,compete_quote,sales_person_id) "
-						+ " values(?,?,?,?,now(),?,?,?,?)";
+		String saveData = " insert into create_quote (custcode,quote_attn,prices_gst_include,notes,created_date,user_id,current_supplier_id,compete_quote,sales_person_id,status) "
+						+ " values(?,?,?,?,now(),?,?,?,?,'SAVED')";
 		try {
 			pstmt= conn.prepareStatement(saveData,pstmt.RETURN_GENERATED_KEYS);
 			
@@ -175,8 +175,8 @@ public class QuoteDao {
 		int count = 0;
 		boolean quoteSaved=false;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				        + " current_supplier_gp,current_supplier_total,gp_required ) "
-						+ " values(?,?,?,?,?,?,?,?,?);";
+				        + " current_supplier_gp,current_supplier_total,gp_required ,savings) "
+						+ " values(?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt= conn.prepareStatement(saveData);
 			for (int i = 0; i < productList.size(); i++) {
@@ -189,6 +189,7 @@ public class QuoteDao {
 				pstmt.setDouble(7, productList.get(i).getCurrentSupplierGP());
 				pstmt.setDouble(8, productList.get(i).getCurrentSupplierTotal());
 				pstmt.setDouble(9, productList.get(i).getGpRequired());
+				pstmt.setDouble(10,productList.get(i).getSavings());
 				pstmt.addBatch();
 				
 				/*if (++count % batchSize == 0) {
