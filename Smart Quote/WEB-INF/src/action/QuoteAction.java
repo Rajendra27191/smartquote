@@ -16,6 +16,7 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.QuoteBean;
 import responseBeans.CurrentSupplierResponse;
+import responseBeans.QuoteResponseBean;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
@@ -30,9 +31,26 @@ public class QuoteAction extends ActionSupport  implements ServletContextAware, 
 	ArrayList<KeyValuePairBean> salesPersonList;
 	ArrayList<KeyValuePairBean> currentSupplierList;
 	private CurrentSupplierResponse objSupplierResponse ;
+	private ArrayList<QuoteBean> quoteList ;
+	private QuoteResponseBean quoteResponseBean ;
 	
 	
-	
+	public QuoteResponseBean getQuoteResponseBean() {
+		return quoteResponseBean;
+	}
+
+	public void setQuoteResponseBean(QuoteResponseBean quoteResponseBean) {
+		this.quoteResponseBean = quoteResponseBean;
+	}
+
+	public ArrayList<QuoteBean> getQuoteList() {
+		return quoteList;
+	}
+
+	public void setQuoteList(ArrayList<QuoteBean> quoteList) {
+		this.quoteList = quoteList;
+	}
+
 	public CurrentSupplierResponse getObjSupplierResponse() {
 		return objSupplierResponse;
 	}
@@ -182,6 +200,27 @@ public class QuoteAction extends ActionSupport  implements ServletContextAware, 
 		}
 		return SUCCESS;
 	
+	}
+	
+	public String getQuoteView(){
+		try {
+			quoteResponseBean = new QuoteResponseBean();
+			QuoteDao objQuoteDao = new QuoteDao();
+			quoteList = objQuoteDao.getQuoteList();
+			System.out.println("Quote List : "+quoteList.size());
+			objQuoteDao.commit();
+			objQuoteDao.closeAll();
+			quoteResponseBean.setCode("success");
+			quoteResponseBean.setMessage("quote_list_loaded");
+			quoteResponseBean.setResult(quoteList);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			quoteResponseBean.setCode("common_error");
+			quoteResponseBean.setMessage("error_quote_list_loaded");
+			quoteResponseBean.setResult(quoteList);
+		}
+		return SUCCESS;
 	}
 	
 }

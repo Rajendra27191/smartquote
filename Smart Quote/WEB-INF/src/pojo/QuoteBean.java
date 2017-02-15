@@ -21,10 +21,29 @@ public class QuoteBean {
 	private String salesPerson;
 	private int currentSupplierId;
 	private int salesPersonId;
+	private int userId;
+	private String createdDate;
+	private String status;
 	
 	
-	
-	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	public String getIsNewCustomer() {
 		return isNewCustomer;
 	}

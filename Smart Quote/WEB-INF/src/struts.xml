@@ -297,5 +297,13 @@
 			</result>
 		</action>
 		
+		
+			<action name="getQuoteView" class="action.QuoteAction" method="getQuoteView">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>
