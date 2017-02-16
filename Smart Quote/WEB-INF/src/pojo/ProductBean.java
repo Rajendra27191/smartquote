@@ -29,9 +29,17 @@ public class ProductBean {
 	private String productGroupName;
 	private String gstFlag;
 	private double savings;
+	private int quoteId;
 	
 	
-	
+	public int getQuoteId() {
+		return quoteId;
+	}
+
+	public void setQuoteId(int quoteId) {
+		this.quoteId = quoteId;
+	}
+
 	public double getSavings() {
 		return savings;
 	}

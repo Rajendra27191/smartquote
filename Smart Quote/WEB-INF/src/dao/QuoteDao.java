@@ -13,7 +13,7 @@ import connection.ConnectionFactory;
 
 public class QuoteDao {
 	Connection conn = null;
-	ResultSet rs = null;
+	ResultSet rs,rs1 = null;
 	PreparedStatement pstmt = null;
 
 	public QuoteDao() {
@@ -212,5 +212,95 @@ public class QuoteDao {
 	}
 
 
+	public ArrayList<QuoteBean> getQuoteList(){
+		ArrayList<QuoteBean> quoteList = new ArrayList<QuoteBean>();
+		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
+		QuoteBean objQuoteBean ;
+		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, "
+						+" user_id,DATE(created_date) created_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
+						+" cq.sales_person_id,sales_person_name,status "
+						+" from create_quote cq join customer_master cm on cq.custcode=cm.customer_code " 
+						+" join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
+						+" join sales_person sp on cq.sales_person_id = sp.sales_person_id;";
+		try {
+			pstmt = conn.prepareStatement(getData);
+			rs = pstmt.executeQuery();
+			//System.out.println("Quote : "+pstmt);
+			while (rs.next())
+			{
+				objQuoteBean = new QuoteBean();
+				objQuoteBean.setQuoteId(rs.getInt("quote_id"));
+				objQuoteBean.setCustCode(rs.getString("custcode"));
+				objQuoteBean.setCustName(rs.getString("customer_name"));
+				objQuoteBean.setAddress(rs.getString("add1"));
+				objQuoteBean.setPhone(rs.getString("phone"));
+				objQuoteBean.setEmail(rs.getString("email"));
+				objQuoteBean.setFaxNo(rs.getString("fax_no"));
+				objQuoteBean.setQuoteAttn(rs.getString("quote_attn"));
+				if(rs.getString("prices_gst_include").equals("Yes") || rs.getString("prices_gst_include")=="Yes")
+					objQuoteBean.setPricesGstInclude(true);
+				else
+					objQuoteBean.setPricesGstInclude(false);
+				objQuoteBean.setNotes(rs.getString("notes"));
+				objQuoteBean.setUserId(rs.getInt("user_id"));
+				objQuoteBean.setCreatedDate(rs.getString("created_date"));
+				objQuoteBean.setCurrentSupplierId(rs.getInt("current_supplier_id"));
+				objQuoteBean.setCurrentSupplierName(rs.getString("current_supplier_name"));
+				objQuoteBean.setCompeteQuote(rs.getString("compete_quote"));
+				objQuoteBean.setSalesPersonId(rs.getInt("sales_person_id"));
+				objQuoteBean.setSalesPerson(rs.getString("sales_person_name"));
+				objQuoteBean.setStatus(rs.getString("status"));
+				productList = getProductDetails(rs.getInt("quote_id"));
+				objQuoteBean.setProductList(productList);
+				quoteList.add(objQuoteBean);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return quoteList;
+	}
+	
+	public ArrayList<ProductBean> getProductDetails(int quoteId)
+	{
+		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
+		ProductBean objProductBean = null;
+		String getData = "select quote_detail_id,quote_id,product_id,item_description,product_qty,avg_cost,quote_price,total, "
+						+" gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,gst_flag "
+						+" from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
+						+" where quote_id="+quoteId+"";
+		try {
+			
+			pstmt = conn.prepareStatement(getData);
+			rs1 = pstmt.executeQuery();
+			//System.out.println("Quote Details : "+pstmt);
+			while(rs1.next())
+			{
+				objProductBean = new ProductBean();
+				objProductBean.setQuoteId(rs1.getInt("quote_id"));
+				objProductBean.setItemCode(rs1.getString("product_id"));
+				objProductBean.setItemDescription(rs1.getString("item_description"));
+				objProductBean.setItemQty(rs1.getInt("product_qty"));
+				objProductBean.setAvgcost(rs1.getDouble("avg_cost"));
+				objProductBean.setQuotePrice(rs1.getDouble("quote_price"));
+				objProductBean.setTotal(rs1.getDouble("total"));
+				objProductBean.setGpRequired(rs1.getDouble("gp_required"));
+				objProductBean.setCurrentSupplierPrice(rs1.getDouble("current_supplier_price"));
+				objProductBean.setCurrentSupplierGP(rs1.getDouble("current_supplier_gp"));
+				objProductBean.setCurrentSupplierTotal(rs1.getDouble("current_supplier_total"));
+				objProductBean.setSavings(rs1.getDouble("savings"));
+				objProductBean.setGstFlag(rs1.getString("gst_flag"));
+				productList.add(objProductBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
+	
+	
+	
+	
 	
 }
