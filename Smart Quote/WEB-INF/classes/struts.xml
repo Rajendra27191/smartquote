@@ -305,5 +305,19 @@
 			</result>
 		</action>
 		
+		<action name="addComment" class="action.QuoteAction" method="addComment">
+			<result name="success" type="json">
+				<param name="root">objCommentResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="updateQuote" class="action.QuoteAction" method="updateQuote">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 	</package>
 </struts>
