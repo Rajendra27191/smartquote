@@ -14,7 +14,7 @@ import connection.ConnectionFactory;
 
 public class QuoteDao {
 	Connection conn = null;
-	ResultSet rs, rs1 = null;
+	ResultSet rs, rs1,rsTerm, rsService  = null;
 	PreparedStatement pstmt = null;
 
 	public QuoteDao() {
@@ -213,7 +213,7 @@ public class QuoteDao {
 		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 		QuoteBean objQuoteBean;
 		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, "
-				+ " user_id,DATE(created_date) created_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
+				+ " user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
 				+ " cq.sales_person_id,sales_person_name,status "
 				+ " from create_quote cq left outer join customer_master cm on cq.custcode=cm.customer_code "
 				+ " left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
@@ -240,6 +240,7 @@ public class QuoteDao {
 				objQuoteBean.setNotes(rs.getString("notes"));
 				objQuoteBean.setUserId(rs.getInt("user_id"));
 				objQuoteBean.setCreatedDate(rs.getString("created_date"));
+				objQuoteBean.setModifiedDate(rs.getString("modified_date"));
 				objQuoteBean.setCurrentSupplierId(rs
 						.getInt("current_supplier_id"));
 				objQuoteBean.setCurrentSupplierName(rs
@@ -252,6 +253,8 @@ public class QuoteDao {
 				objQuoteBean.setProductList(productList);
 				objQuoteBean.setCommentList(getCommentList(rs
 						.getInt("quote_id")));
+				//objQuoteBean.setTermConditionList(getTermAndConditionList(rs.getInt("quote_id")));
+				//objQuoteBean.setServiceList(getServiceList(rs.getInt("quote_id")));
 				quoteList.add(objQuoteBean);
 			}
 
@@ -259,6 +262,61 @@ public class QuoteDao {
 			e.printStackTrace();
 		}
 		return quoteList;
+	}
+
+	private ArrayList<KeyValuePairBean> getServiceList(int quote_id) {
+		// TODO Auto-generated method stub
+		ArrayList<KeyValuePairBean> serviceList = new ArrayList<KeyValuePairBean>();
+		KeyValuePairBean pairBean = null;
+		
+		String query = "select sm.id,sm.service from quote_service_master qs,service_master sm "
+				+ "where qs.service_id = sm.id  and qs.quote_id= ?;";
+		
+		try {
+			pstmt= conn.prepareStatement(query);
+			pstmt.setInt(1, quote_id);
+			rsService = pstmt.executeQuery();
+			while(rsService.next()){
+				pairBean = new KeyValuePairBean();
+				pairBean.setCode(rsService.getString("id"));
+				pairBean.setKey(Integer.parseInt(rsService.getString("id")));
+				pairBean.setValue(rsService.getString("service"));
+				serviceList.add(pairBean);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return serviceList;
+	}
+
+	private ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
+		// TODO Auto-generated method stub
+		ArrayList<KeyValuePairBean> termAndConditionList = new ArrayList<KeyValuePairBean>();
+		KeyValuePairBean pairBean = null;
+		String query = "select tcm.id,tcm.term_condition from quote_term_condition_master qt,term_condition_master tcm "
+				+ "where qt.term_id = tcm.id  and qt.quote_id= ?; ";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, quote_id);
+			rsTerm = pstmt.executeQuery();
+			
+			while(rsTerm.next()){
+				pairBean = new KeyValuePairBean();
+				pairBean.setKey(Integer.parseInt(rsTerm.getString("id")));
+				pairBean.setCode(rsTerm.getString("id"));
+				pairBean.setValue(rsTerm.getString("term_condition"));
+				termAndConditionList.add(pairBean);
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return termAndConditionList;
 	}
 
 	public ArrayList<CommentBean> getCommentList(int quoteId) {
@@ -340,6 +398,7 @@ public class QuoteDao {
 		}
 		return productList;
 	}
+	
 
 	@SuppressWarnings("static-access")
 	public int addComment(String userId, int quoteId, String comment) {
@@ -414,9 +473,12 @@ public class QuoteDao {
 
 	public boolean updateQuote(QuoteBean quoteBean) {
 		boolean isQuoteUpdated = false;
-		String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
+		/*String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
 				+ " notes = ?, created_date = now(), user_id = ?, current_supplier_id = ?, compete_quote = ?, "
-				+ " sales_person_id = ?, status = 'UPDATED' WHERE quote_id = ?";
+				+ " sales_person_id = ?, status = 'UPDATED' WHERE quote_id = ?";*/
+		String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
+				+ " notes = ?, user_id = ?, current_supplier_id = ?, compete_quote = ?, "
+				+ " sales_person_id = ?, status = 'UPDATED',modified_date = now() WHERE quote_id = ?";
 		try {
 			pstmt = conn.prepareStatement(saveData);
 
@@ -444,6 +506,122 @@ public class QuoteDao {
 			e.printStackTrace();
 		}
 		return isQuoteUpdated;
+	}
+
+	public boolean saveTermsAndConditionDetails(
+			ArrayList<KeyValuePairBean> termConditionList, int quoteId) {
+		// TODO Auto-generated method stub
+		boolean termsAndConditionSaved= false;
+		String saveData = " insert IGNORE into quote_term_condition_master (quote_id ,term_id) "
+				+ " values(?,?);";
+		System.out.println("quote id:::::"+quoteId);
+		try {
+			pstmt = conn.prepareStatement(saveData);
+			for (int i = 0; i < termConditionList.size(); i++) {
+				
+				System.out.println("codeeeee::::::::"+termConditionList.get(i).getCode());
+				if(termConditionList.get(i).getCode().equalsIgnoreCase("true")){
+					
+					pstmt.setInt(1, quoteId);
+					System.out.println("value::"+termConditionList.get(i).getKey()+"quoteId::::"+quoteId);
+					pstmt.setInt(2, termConditionList.get(i).getKey());
+					pstmt.addBatch();
+				}
+				
+			}
+			pstmt.executeBatch();
+			termsAndConditionSaved = true;
+			
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return termsAndConditionSaved;
+	}
+
+	public boolean saveServiceDetails(ArrayList<KeyValuePairBean> serviceList,
+			int quoteId) {
+		boolean serviceDetailsSaved= false;
+		String saveData = " insert IGNORE into quote_service_master (quote_id ,service_id) "
+				+ " values(?,?);";
+		System.out.println("quote id:::::"+quoteId);
+		try {
+			pstmt = conn.prepareStatement(saveData);
+			for (int i = 0; i < serviceList.size(); i++) {
+				
+				System.out.println("codeeeee::::::::"+serviceList.get(i).getCode());
+				if(serviceList.get(i).getCode().equalsIgnoreCase("true")){
+					serviceDetailsSaved = true;
+					pstmt.setInt(1, quoteId);
+					System.out.println("value::"+serviceList.get(i).getKey()+"quoteId::::"+quoteId);
+					pstmt.setInt(2, serviceList.get(i).getKey());
+					pstmt.addBatch();
+				}
+			}
+			
+			pstmt.executeBatch();
+
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return serviceDetailsSaved;
+	}
+
+	public QuoteBean getTermsServiceList(int quoteId) {
+		QuoteBean objQuoteBean = new QuoteBean();
+		objQuoteBean.setQuoteId(quoteId);
+		objQuoteBean.setTermConditionList(getTermAndConditionList(quoteId));
+		objQuoteBean.setServiceList(getServiceList(quoteId));
+		return objQuoteBean;
+	}
+
+	public boolean deleteTermsDetails(int quoteId) {
+		boolean isDeleted = false;
+		try {
+			String deleteGroupQuery = "DELETE FROM quote_term_condition_master WHERE quote_id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.setInt(1, quoteId);
+			pstmt.executeUpdate();
+			isDeleted = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDeleted;
+		
+	}
+	
+	public boolean deleteServiceDetails(int quoteId) {
+		boolean isDeleted = false;
+		try {
+			String deleteGroupQuery = "DELETE FROM quote_service_master WHERE quote_id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.setInt(1, quoteId);
+			pstmt.executeUpdate();
+			isDeleted = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDeleted;
+		
 	}
 
 }

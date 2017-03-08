@@ -1,12 +1,8 @@
 package action;
-
 import java.util.ArrayList;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.apache.struts2.interceptor.ServletRequestAware;
-
 import pojo.CommentBean;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
@@ -15,14 +11,14 @@ import pojo.QuoteBean;
 import responseBeans.CommentResponseBean;
 import responseBeans.CurrentSupplierResponse;
 import responseBeans.QuoteResponseBean;
-
+import responseBeans.QuoteTermServiceResponseBean;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
-
 import dao.CustomerDao;
+import dao.ProductDao;
 import dao.QuoteDao;
-
 @SuppressWarnings("serial")
+
 public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	private HttpServletRequest request;
 	private EmptyResponseBean objEmptyResponse;
@@ -32,6 +28,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	private CurrentSupplierResponse objSupplierResponse;
 	private ArrayList<QuoteBean> quoteList;
 	private QuoteResponseBean quoteResponseBean;
+	private QuoteTermServiceResponseBean quoteTermServiceResponseBean;
 	private CommentResponseBean objCommentResponse;
 
 	public CommentResponseBean getObjCommentResponse() {
@@ -83,6 +80,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	public void setObjEmptyResponse(EmptyResponseBean objEmptyResponse) {
 		this.objEmptyResponse = objEmptyResponse;
 	}
+	
+	public QuoteTermServiceResponseBean getQuoteTermServiceResponseBean() {
+		return quoteTermServiceResponseBean;
+	}
+
+	public void setQuoteTermServiceResponseBean(
+			QuoteTermServiceResponseBean quoteTermServiceResponseBean) {
+		this.quoteTermServiceResponseBean = quoteTermServiceResponseBean;
+	}
 
 	public String createQuote() {
 		httpSession = request.getSession(true);
@@ -131,11 +137,46 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					.getSalesPerson());
 			objQuoteBean.setSalesPersonId(salesPersonId);
 		}
-
+		
+		for (int i =0; i< objQuoteBean.getProductList().size(); i++){
+			
+			if(objQuoteBean.getProductList().get(i).getIsNewProduct() != null && objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")){
+				boolean isProductCreated=false;
+				ProductDao objDao1 = new ProductDao();
+				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
+				System.out.println("new product added ::::::::"+isProductCreated);
+				objDao1.commit();
+				objDao1.closeAll();
+			}
+			
+			/*boolean isProductCreated=false, isProductExist = false;
+			ProductDao objProductDao = new ProductDao();
+			isProductExist = objProductDao.isProductExist(objQuoteBean.getProductList().get(i).getItemCode());
+			objProductDao.commit();
+			objProductDao.closeAll();
+			if (!isProductExist) {
+				ProductDao objDao1 = new ProductDao();
+				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
+				System.out.println("new product added ::::::::"+isProductCreated);
+				objDao1.commit();
+				objDao1.closeAll();
+			}*/
+		}
+		
+		
 		int quoteId = objQuoteDao.saveQuote(objQuoteBean, userId);
 		boolean isQuoteSaved = objQuoteDao.saveQuoteDetails(
 				objQuoteBean.getProductList(), quoteId);
-		System.out.println("SAVED : " + isQuoteSaved);
+		System.out.println("SAVED  : " + isQuoteSaved);
+		
+		boolean istermSaved = objQuoteDao.saveTermsAndConditionDetails(
+				objQuoteBean.getTermConditionList(), quoteId); 
+		System.out.println("SAVED terms and condition  : " + istermSaved);
+		
+		boolean isServiceSaved = objQuoteDao.saveServiceDetails(
+				objQuoteBean.getServiceList(), quoteId); 
+		System.out.println("SAVED terms and condition  : " + isServiceSaved);
+
 		objQuoteDao.commit();
 		objQuoteDao.closeAll();
 		if (isQuoteSaved) {
@@ -290,16 +331,55 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					.getSalesPerson());
 			objQuoteBean.setSalesPersonId(salesPersonId);
 		}
+		
+			for (int i =0; i< objQuoteBean.getProductList().size(); i++){
+			if(objQuoteBean.getProductList().get(i).getIsNewProduct() != null && objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")){
+				boolean isProductCreated=false;
+				ProductDao objDao1 = new ProductDao();
+				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
+				System.out.println("new product added ::::::::"+isProductCreated);
+				objDao1.commit();
+				objDao1.closeAll();
+			}
+			
+			/*boolean isProductCreated=false, isProductExist = false;
+			ProductDao objProductDao = new ProductDao();
+			isProductExist = objProductDao.isProductExist(objQuoteBean.getProductList().get(i).getItemCode());
+			objProductDao.commit();
+			objProductDao.closeAll();
+			if (!isProductExist) {
+				ProductDao objDao1 = new ProductDao();
+				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
+				System.out.println("new product added ::::::::"+isProductCreated);
+				objDao1.commit();
+				objDao1.closeAll();
+			}*/
+		}
 
 		// objQuoteDao.deleteQuote(objQuoteBean.getQuoteId());
 		objQuoteBean.setUserId(Integer.parseInt(userId));
 		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean);
 		boolean isQuoteSaved = false;
+		boolean isTermsSaved = false;
+		boolean isServiceSaved = false;
 		if (isQuoteUpdated) {
 			objQuoteDao.deleteQuoteDetails(objQuoteBean.getQuoteId());
 			isQuoteSaved = objQuoteDao.saveQuoteDetails(
 					objQuoteBean.getProductList(), objQuoteBean.getQuoteId());
 			System.out.println("Quote Updated Successfully...!");
+			
+			objQuoteDao.deleteTermsDetails(objQuoteBean.getQuoteId());
+			isTermsSaved = objQuoteDao.saveTermsAndConditionDetails(
+					objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
+			System.out.println("Terms Updated Successfully...!"+isTermsSaved);
+			
+			
+			objQuoteDao.deleteServiceDetails(objQuoteBean.getQuoteId());
+			isServiceSaved = objQuoteDao.saveServiceDetails(
+					objQuoteBean.getServiceList(), objQuoteBean.getQuoteId());
+			System.out.println("Service Updated Successfully...!"+isServiceSaved);
+			
+			
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
 			if (isQuoteSaved) {
@@ -311,5 +391,34 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			}
 		}
 		return SUCCESS;
+	}
+	
+	
+	public String getTermsAndServiceList() {
+		httpSession = request.getSession(true);
+		int quoteId = Integer.parseInt(request.getParameter("quoteId"));
+		QuoteBean quoteBean = new QuoteBean();
+		try {
+			quoteTermServiceResponseBean = new QuoteTermServiceResponseBean();
+			
+			
+			QuoteDao objQuoteDao = new QuoteDao();
+			//quoteList = objQuoteDao.getQuoteList();
+			quoteBean= objQuoteDao.getTermsServiceList(quoteId);
+			//System.out.println("Quote List : " + quoteList.size());
+			objQuoteDao.commit();
+			objQuoteDao.closeAll();
+			quoteTermServiceResponseBean.setCode("success");
+			quoteTermServiceResponseBean.setMessage("terms and Condition list loaded");
+			quoteTermServiceResponseBean.setResult(quoteBean);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			quoteTermServiceResponseBean.setCode("common_error");
+			quoteTermServiceResponseBean.setMessage("error_quote_list_loaded");
+			quoteTermServiceResponseBean.setResult(quoteBean);
+		}
+		return SUCCESS;
+		
 	}
 }

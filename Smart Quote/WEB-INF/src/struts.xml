@@ -20,8 +20,7 @@
 
 		<global-results>
 			<result name="sessionTimeOut" type="json">
-				<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is
-					expired","result": </param>
+				<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is expired","result": </param>
 				<param name="root">""</param>
 				<param name="wrapSuffix">}</param>
 				<param name="excludeNullProperties">true</param>
@@ -391,6 +390,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="getTermsAndServiceList" class="action.QuoteAction"
+            method="getTermsAndServiceList">
+            <result name="success" type="json">
+                <param name="root">quoteTermServiceResponseBean</param>
+                <param name="ignoreHierarchy">false</param>
+            </result>
+        </action>
 
 	</package>
 </struts>

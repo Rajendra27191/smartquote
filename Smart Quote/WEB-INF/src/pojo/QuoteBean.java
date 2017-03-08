@@ -23,8 +23,12 @@ public class QuoteBean {
 	private int salesPersonId;
 	private int userId;
 	private String createdDate;
+	private String modifiedDate;
 	private String status;
 	private ArrayList<CommentBean> commentList;
+	
+	private ArrayList<KeyValuePairBean> termConditionList;
+	private ArrayList<KeyValuePairBean> serviceList;
 
 	public String getStatus() {
 		return status;
@@ -32,6 +36,14 @@ public class QuoteBean {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(String modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 	public String getCreatedDate() {
@@ -201,5 +213,23 @@ public class QuoteBean {
 	public void setCommentList(ArrayList<CommentBean> commentList) {
 		this.commentList = commentList;
 	}
+
+	public ArrayList<KeyValuePairBean> getTermConditionList() {
+		return termConditionList;
+	}
+
+	public void setTermConditionList(ArrayList<KeyValuePairBean> termConditionList) {
+		this.termConditionList = termConditionList;
+	}
+
+	public ArrayList<KeyValuePairBean> getServiceList() {
+		return serviceList;
+	}
+
+	public void setServiceList(ArrayList<KeyValuePairBean> serviceList) {
+		this.serviceList = serviceList;
+	}
+	
+	
 
 }
