@@ -35,5 +35,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/jox116.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/java-json.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/gls-file-reader.jar" sourcepath="WEB-INF/lib/gls-file-reader.jar"/>
+	<classpathentry kind="var" path="TOMCAT_HOME"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

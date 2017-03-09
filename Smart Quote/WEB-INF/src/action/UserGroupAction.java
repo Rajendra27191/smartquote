@@ -71,7 +71,6 @@ public class UserGroupAction extends ActionSupport implements
 	 */
 
 	public String getUserGroups() {
-		
 		System.out.println("SESSION : "+ServletActionContext.getRequest().getSession()) ;
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		UserGroupDao objUserGroupDao = new UserGroupDao();

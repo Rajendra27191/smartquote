@@ -1,7 +1,6 @@
 package pojo;
 
 public class KeyValuePairBean {
-
 	private int key;
 	private String value;
 	private String code;

@@ -31,6 +31,8 @@ public class ProductBean {
 	private double savings;
 	private int quoteId;
 	
+	private String isNewProduct;
+	
 	
 	public int getQuoteId() {
 		return quoteId;
@@ -263,5 +265,15 @@ public class ProductBean {
 	public void setCreated_by(String created_by) {
 		this.created_by = created_by;
 	}
+
+	public String getIsNewProduct() {
+		return isNewProduct;
+	}
+
+	public void setIsNewProduct(String isNewProduct) {
+		this.isNewProduct = isNewProduct;
+	}
+	
+	
 
 }
