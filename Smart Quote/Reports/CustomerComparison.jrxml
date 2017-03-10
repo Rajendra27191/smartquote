@@ -3,16 +3,15 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="quoteId" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
-			<image>
-				<reportElement uuid="d6ad9740-15f5-40d0-b4ed-792a0ef6bfc7" x="517" y="0" width="55" height="16"/>
-				<imageExpression><![CDATA["/home/admin1/Downloads/4trucks.png"]]></imageExpression>
-			</image>
-		</band>
+		<band height="79" splitType="Stretch"/>
 	</title>
 	<pageHeader>
 		<band height="35" splitType="Stretch"/>

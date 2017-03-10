@@ -313,13 +313,13 @@
 			</result>
 		</action>
 
-		<action name="custComparison" class="" method="">
-			<result name="success" type="jasper">
-		            <param name="location"></param>
-		            <param name="dataSource"></param>  
+		<action name="custComparison" class="action.CustComparisonAction" method="exportPDF">
+		           <result name="success" type="jasper">
+		            <param name="location">/Reports/CustomerComparison.jasper</param>
+		            <param name="dataSource">objQuoteBean</param>
 		            <param name="format">PDF</param>
-		            <param name="reportParameters">exportParameters</param>
-	      	 </result>
+		            <param name="reportParameters">jasperParams</param>
+	      	 		</result>
 		</action> 
 
 
