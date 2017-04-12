@@ -65,8 +65,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		return productDetailsResponse;
 	}
 
-	public void setProductDetailsResponse(
-			ProductResponseBean productDetailsResponse) {
+	public void setProductDetailsResponse(ProductResponseBean productDetailsResponse) {
 		this.productDetailsResponse = productDetailsResponse;
 	}
 
@@ -74,8 +73,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		return objProductDetailResponseList;
 	}
 
-	public void setObjProductDetailResponseList(
-			ProductDetailResponseList objProductDetailResponseList) {
+	public void setObjProductDetailResponseList(ProductDetailResponseList objProductDetailResponseList) {
 		this.objProductDetailResponseList = objProductDetailResponseList;
 	}
 
@@ -196,8 +194,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setMessage(getText("common_error"));
 
 		GlsFileReader objFileReader = new test.FileReader();
-//		productFile = new File(
-//				"/home/raj/git/smartquote/Smart Quote/file/ProductDatabaseLarge.xlsx");
 		try {
 			System.out.println("Product File: " + productFile);
 			String filename = "dataFile.xlsx";
@@ -208,19 +204,17 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			System.out.println("File Content: " + fileString);
 
 			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
-			productList = new Gson().fromJson(fileString.toString(),
-					new TypeToken<List<ProductBean>>() {
-					}.getType());
+			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
+			}.getType());
 			System.out.println("Total Products: " + productList.size());
+			System.out.println("productList: " + new Gson().toJson(productList));
 
 			String productCodeString = "";
 			for (int i = 0; i < productList.size(); i++) {
 				if (i == 0) {
-					productCodeString = "'"
-							+ productList.get(i).getItemCode().trim() + "'";
+					productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
 				} else {
-					productCodeString = productCodeString + ", '"
-							+ productList.get(i).getItemCode().trim() + "'";
+					productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
 				}
 			}
 
@@ -228,10 +222,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 			ProductDao objProductDao = new ProductDao();
 			@SuppressWarnings("unused")
-			boolean isDeleted = objProductDao
-					.deletedPreviousProduct(productCodeString);
-			boolean isFileUploaded = objProductDao
-					.uploadProductFile(productList);
+			boolean isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
+			boolean isFileUploaded = objProductDao.uploadProductFile(productList);
 			objProductDao.commit();
 			objProductDao.closeAll();
 			if (isFileUploaded) {

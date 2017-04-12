@@ -99,8 +99,8 @@ public class ProductDao {
 		try {
 			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)";
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,qty_break0) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?)";
 			pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -119,6 +119,7 @@ public class ProductDao {
 			pstmt.setDouble(15, objBean.getAvgcost());
 			pstmt.setString(16, objBean.getTaxCode());
 			pstmt.setString(17, objBean.getProductGroupCode());
+			pstmt.setDouble(18, objBean.getQtyBreak0());
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
@@ -180,7 +181,7 @@ public class ProductDao {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0, product_group_code = ? "  
+					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?"  
 					+ " WHERE item_code = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
@@ -200,7 +201,8 @@ public class ProductDao {
 			pstmt.setDouble(15, objBean.getAvgcost());
 			pstmt.setString(16, objBean.getTaxCode());
 			pstmt.setString(17, objBean.getProductGroupCode());
-			pstmt.setString(18, objBean.getItemCode());
+			pstmt.setDouble(18, objBean.getQtyBreak0());
+			pstmt.setString(19, objBean.getItemCode());
 			
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
@@ -239,10 +241,10 @@ public class ProductDao {
 		try {
 			String productQuery = "REPLACE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)";
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)";
 			pstmt = conn.prepareStatement(productQuery);
-			final int batchSize = 500;
+			final int batchSize = 1000;
 			int count = 0;
 
 			for (int i = 0; i < productList.size(); i++) {
@@ -262,6 +264,8 @@ public class ProductDao {
 				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
 				pstmt.setDouble(15, productList.get(i).getAvgcost());
 				pstmt.setString(16, productList.get(i).getTaxCode());
+				pstmt.setDouble(17, productList.get(i).getQtyBreak0());
+				pstmt.setString(18, productList.get(i).getProductGroupCode());
 				pstmt.addBatch();
 
 				if (++count % batchSize == 0) {
@@ -273,9 +277,11 @@ public class ProductDao {
 			System.out.println("Remaining Executed...!");
 			isFileUploaded = true;
 		} catch (Exception e) {
+			System.out.println("SQLException 1 :"+ e);
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
+			System.out.println("SQLException 2 :"+ e1);
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -305,8 +311,10 @@ public class ProductDao {
 	public ArrayList<ProductBean> getAllProductDetailsList() {
 		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 		ProductBean objBean = null;
-		String getUserGroups = "SELECT item_code, ifnull(item_description, '') item_description, "
-				+ " ifnull(description2, '') description2, description3, unit, ifnull(price0exGST, '') price0exGST, "
+		String getUserGroups = "SELECT item_code, pm.product_group_code, "
+				+ " ifnull(item_description, '') item_description, "
+				+ " ifnull(description2, '') description2, description3, unit,"
+				+ " ifnull(qty_break0, '0.0') qty_break0, ifnull(price0exGST, '') price0exGST, "
 				+ " ifnull(qty_break1, '0.0') qty_break1, ifnull(price1exGST, '0.0') price1exGST, "
 				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
@@ -324,6 +332,7 @@ public class ProductDao {
 				objBean.setDescription2(rs.getString("description2"));
 				objBean.setDescription3(rs.getString("description3"));
 				objBean.setUnit(rs.getString("unit"));
+				objBean.setQtyBreak0(rs.getDouble("qty_break0"));
 				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
 				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
 				objBean.setPrice1exGST(rs.getDouble("price1exGST"));

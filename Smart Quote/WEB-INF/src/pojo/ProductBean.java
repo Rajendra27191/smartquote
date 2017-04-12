@@ -6,6 +6,7 @@ public class ProductBean {
 	private String description2;
 	private String description3;
 	private String unit;
+	private double qtyBreak0;
 	private double price0exGST;
 	private double qtyBreak1;
 	private double price1exGST;
@@ -30,10 +31,8 @@ public class ProductBean {
 	private String gstFlag;
 	private double savings;
 	private int quoteId;
-	
 	private String isNewProduct;
-	
-	
+
 	public int getQuoteId() {
 		return quoteId;
 	}
@@ -170,6 +169,14 @@ public class ProductBean {
 		this.unit = unit;
 	}
 
+	public double getQtyBreak0() {
+		return qtyBreak0;
+	}
+
+	public void setQtyBreak0(double qtyBreak0) {
+		this.qtyBreak0 = qtyBreak0;
+	}
+
 	public double getPrice0exGST() {
 		return price0exGST;
 	}
@@ -273,7 +280,5 @@ public class ProductBean {
 	public void setIsNewProduct(String isNewProduct) {
 		this.isNewProduct = isNewProduct;
 	}
-	
-	
 
 }
