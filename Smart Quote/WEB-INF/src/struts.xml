@@ -280,6 +280,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getSearchedProductListView" class="action.ProductAction"
+			method="getSearchedProductListView">
+			<result name="success" type="json">
+				<param name="root">objProductDetailResponseList</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 
 		<action name="createQuote" class="action.QuoteAction" method="createQuote">

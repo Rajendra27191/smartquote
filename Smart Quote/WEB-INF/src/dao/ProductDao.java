@@ -308,7 +308,7 @@ public class ProductDao {
 		return isDeleted;
 	}
 
-	public ArrayList<ProductBean> getAllProductDetailsList() {
+	public ArrayList<ProductBean> getAllProductDetailsList(int fromLimit, int toLimit) {
 		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 		ProductBean objBean = null;
 		String getUserGroups = "SELECT item_code, pm.product_group_code, "
@@ -321,9 +321,65 @@ public class ProductDao {
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
-				+ " order by 1, 2"; 
+				+ " order by 1, 2 limit "+fromLimit+","+toLimit+""; 
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new ProductBean();
+				objBean.setItemCode(rs.getString("item_code"));
+				objBean.setItemDescription(rs.getString("item_description"));
+				objBean.setDescription2(rs.getString("description2"));
+				objBean.setDescription3(rs.getString("description3"));
+				objBean.setUnit(rs.getString("unit"));
+				objBean.setQtyBreak0(rs.getDouble("qty_break0"));
+				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
+				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
+				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
+				objBean.setQtyBreak2(rs.getDouble("qty_break2"));
+				objBean.setPrice2exGST(rs.getDouble("price2exGST"));
+				objBean.setQtyBreak3(rs.getDouble("qty_break3"));
+				objBean.setPrice3exGST(rs.getDouble("price3exGST"));
+				objBean.setQtyBreak4(rs.getDouble("qty_break4"));
+				objBean.setPrice4exGST(rs.getDouble("price4exGST"));
+				objBean.setAvgcost(rs.getDouble("avg_cost"));
+				objBean.setTaxCode(rs.getString("tax_code"));
+				objBean.setCreated_by(rs.getString("created_by"));
+				objBean.setProductGroupCode(rs.getString("product_group_code"));
+				objBean.setProductGroupName(rs.getString("product_group_name"));
+				objBean.setGstFlag(rs.getString("gst_flag"));
+				objProductBeans.add(objBean);
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objProductBeans;
+	}
+	
+	public ArrayList<ProductBean> getSearchedProductDetailsList(String productLike) {
+		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
+		ProductBean objBean = null;
+		String getUserGroups = "SELECT item_code, pm.product_group_code, "
+				+ " ifnull(item_description, '') item_description, "
+				+ " ifnull(description2, '') description2, description3, unit,"
+				+ " ifnull(qty_break0, '0.0') qty_break0, ifnull(price0exGST, '') price0exGST, "
+				+ " ifnull(qty_break1, '0.0') qty_break1, ifnull(price1exGST, '0.0') price1exGST, "
+				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
+				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
+				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
+				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
+				+ " WHERE item_code like ? OR item_description like ?"
+				+ " order by 1, 2 "; 
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			pstmt.setString(1, productLike);
+			pstmt.setString(2, productLike);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objBean = new ProductBean();

@@ -1,0 +1,9 @@
+<Context path="/smartquote" reloadable="true" docBase="/home/radhika/git/smartquote/Smart Quote" 
+	workDir="/home/radhika/git/smartquote/Smart Quote/work">
+
+ <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
+	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
+	driverClassName="com.mysql.jdbc.Driver"
+	url="jdbc:mysql://janta.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/>
+
+</Context> 

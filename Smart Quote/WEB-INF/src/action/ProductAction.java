@@ -36,6 +36,24 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
 	private ProductDetailResponseList objProductDetailResponseList = new ProductDetailResponseList();
 	public File productFile;
+	private int fromLimit;
+	private int toLimit;
+	
+	public int getFromLimit() {
+		return fromLimit;
+	}
+
+	public void setFromLimit(int fromLimit) {
+		this.fromLimit = fromLimit;
+	}
+
+	public int getToLimit() {
+		return toLimit;
+	}
+
+	public void setToLimit(int toLimit) {
+		this.toLimit = toLimit;
+	}
 
 	public UserGroupResponse getData() {
 		return data;
@@ -258,7 +276,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		try {
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
-			objProductBeans = objDao.getAllProductDetailsList();
+			System.out.println("LIMIT=============");
+			System.out.println("fromLimit:"+fromLimit+" toLimit:"+toLimit);
+			objProductBeans = objDao.getAllProductDetailsList(fromLimit,toLimit);
 			objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
@@ -271,7 +291,29 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		}
 		return SUCCESS;
 	}
-
+	
+	public String getSearchedProductListView() {
+		String productLike = request.getParameter("prodLike");
+		// productLike = "nk";
+		productLike = "%" + productLike + "%";
+		try {
+			ProductDao objDao = new ProductDao();
+			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
+			System.out.println("LIMIT=============");
+			System.out.println("prodLike:"+productLike);
+			objProductBeans = objDao.getSearchedProductDetailsList(productLike);
+			objDao.commit();
+			objDao.closeAll();
+			objProductDetailResponseList.setCode("success");
+			objProductDetailResponseList.setMessage(getText("details_loaded"));
+			objProductDetailResponseList.setObjProductDetailResponseList(objProductBeans);
+		} catch (Exception e) {
+			objProductDetailResponseList.setCode("error");
+			objProductDetailResponseList.setMessage(getText("common_error"));
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
