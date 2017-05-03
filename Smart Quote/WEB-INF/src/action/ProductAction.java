@@ -38,7 +38,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public File productFile;
 	private int fromLimit;
 	private int toLimit;
-	
+
 	public int getFromLimit() {
 		return fromLimit;
 	}
@@ -211,43 +211,107 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 
-		GlsFileReader objFileReader = new test.FileReader();
+//		GlsFileReader objFileReader = new test.FileReader();
+		ExcelFileSplit objFileSplit = new ExcelFileSplit();
 		try {
 			System.out.println("Product File: " + productFile);
 			String filename = "dataFile.xlsx";
 			File fileToCreate = new File(filename);
 			FileUtils.copyFile(productFile, fileToCreate);
 
-			JSONArray fileString = objFileReader.readFile(filename);
-			System.out.println("File Content: " + fileString);
+//			JSONArray fileString = objFileReader.readFile(filename);
+//			System.out.println("File Content: " + fileString);
+//			
+			
+			String subFilePath="", userDirPath=System.getProperty("user.dir");
+			GlsFileReader objSubFileReader ;
+			JSONArray subFileString;
+			
+			int subFileCount=objFileSplit.splitFile(filename);
+			
+			ArrayList<ProductBean> productList = null;
+			ProductDao objProductDao=null;
+//			int j=1;
+			for (int j = 0; j<subFileCount; j++) {
+				try{
+			 	subFilePath=userDirPath+"/ExcelFiles/subFile" + j + ".xlsx";
+			 	objSubFileReader = new test.FileReader();
+			 	subFileString = new JSONArray();
+			 	subFileString=objSubFileReader.readFile(subFilePath);
+			 	System.out.println("subFileCount:"+subFileCount);
+			 	System.out.println(subFilePath);
+			 	System.out.println("subFileString :"+subFileString);
+			 	productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
+					}.getType());
+					System.out.println("Total Products: " + productList.size());
+					//=============
+					String productCodeString = "";
+					for (int i = 0; i < productList.size() && productList != null; i++) {
+						if (i == 0) {
+							productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
+						} else {
+							productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
+						}
+					}
 
-			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
-			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
-			}.getType());
-			System.out.println("Total Products: " + productList.size());
-			System.out.println("productList: " + new Gson().toJson(productList));
-
-			String productCodeString = "";
-			for (int i = 0; i < productList.size(); i++) {
-				if (i == 0) {
-					productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
-				} else {
-					productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
+					// System.out.println("Codes to Delete: " + productCodeString);
+					objProductDao = new ProductDao();
+					@SuppressWarnings("unused")
+					boolean isDeleted = true;
+					boolean isFileUploaded = true;
+					isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
+					isFileUploaded = objProductDao.uploadProductFile(productList);
+					objProductDao.commit();
+					objProductDao.closeAll();
+					if (isFileUploaded) {
+						objEmptyResponse.setCode("success");
+						objEmptyResponse.setMessage(getText("product_file_uploaded"));
+					}
+					
+				} catch(Exception e){
+					System.out.println("Error in "+j);
+					e.printStackTrace();
+					break;
 				}
 			}
-
-			System.out.println("Codes to Delete: " + productCodeString);
-
-			ProductDao objProductDao = new ProductDao();
-			@SuppressWarnings("unused")
-			boolean isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
-			boolean isFileUploaded = objProductDao.uploadProductFile(productList);
-			objProductDao.commit();
-			objProductDao.closeAll();
-			if (isFileUploaded) {
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("product_file_uploaded"));
+//			if (isFileUploaded) {
+			if (objEmptyResponse.getCode()=="success") {
+				File fileToDelete=new File(userDirPath + "/ExcelFiles" );;
+				ExcelFileSplit.delete(fileToDelete);
 			}
+//          }
+			
+//			
+//			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
+//			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
+//			}.getType());
+//			System.out.println("Total Products: " + productList.size());
+//			// System.out.println("productList: " + new
+//			// Gson().toJson(productList));
+//
+//			String productCodeString = "";
+//			for (int i = 0; i < productList.size() && productList != null; i++) {
+//				if (i == 0) {
+//					productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
+//				} else {
+//					productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
+//				}
+//			}
+
+			// System.out.println("Codes to Delete: " + productCodeString);
+
+//			ProductDao objProductDao = new ProductDao();
+//			@SuppressWarnings("unused")
+//			boolean isDeleted = true;
+//			boolean isFileUploaded = true;
+//			isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
+//			isFileUploaded = objProductDao.uploadProductFile(productList);
+//			objProductDao.commit();
+//			objProductDao.closeAll();
+//			if (isFileUploaded) {
+//				objEmptyResponse.setCode("success");
+//				objEmptyResponse.setMessage(getText("product_file_uploaded"));
+//			}
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -269,6 +333,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done");
 		return SUCCESS;
 	}
 
@@ -277,8 +342,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			System.out.println("LIMIT=============");
-			System.out.println("fromLimit:"+fromLimit+" toLimit:"+toLimit);
-			objProductBeans = objDao.getAllProductDetailsList(fromLimit,toLimit);
+			System.out.println("fromLimit:" + fromLimit + " toLimit:" + toLimit);
+			objProductBeans = objDao.getAllProductDetailsList(fromLimit, toLimit);
 			objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
@@ -291,7 +356,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		}
 		return SUCCESS;
 	}
-	
+
 	public String getSearchedProductListView() {
 		String productLike = request.getParameter("prodLike");
 		// productLike = "nk";
@@ -300,7 +365,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			System.out.println("LIMIT=============");
-			System.out.println("prodLike:"+productLike);
+			System.out.println("prodLike:" + productLike);
 			objProductBeans = objDao.getSearchedProductDetailsList(productLike);
 			objDao.commit();
 			objDao.closeAll();
@@ -314,6 +379,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		}
 		return SUCCESS;
 	}
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
