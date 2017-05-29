@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import pojo.ProductGroupBean;
 import connection.ConnectionFactory;
 
 public class ProductDao {
@@ -58,8 +59,7 @@ public class ProductDao {
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("item_code"));
-				objKeyValuePairBean.setValue(rs.getString("item_code") + " ("
-						+ rs.getString("item_description") + ")");
+				objKeyValuePairBean.setValue(rs.getString("item_code") + " (" + rs.getString("item_description") + ")");
 				pairBeans.add(objKeyValuePairBean);
 			}
 		} catch (Exception e) {
@@ -181,8 +181,7 @@ public class ProductDao {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?"  
-					+ " WHERE item_code = ? ";
+					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?" + " WHERE item_code = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -203,7 +202,7 @@ public class ProductDao {
 			pstmt.setString(17, objBean.getProductGroupCode());
 			pstmt.setDouble(18, objBean.getQtyBreak0());
 			pstmt.setString(19, objBean.getItemCode());
-			
+
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
 		} catch (SQLException e) {
@@ -244,7 +243,7 @@ public class ProductDao {
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code) "
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)";
 			pstmt = conn.prepareStatement(productQuery);
-			final int batchSize = 1000;
+			final int batchSize = 5000;
 			int count = 0;
 
 			for (int i = 0; i < productList.size(); i++) {
@@ -277,11 +276,11 @@ public class ProductDao {
 			System.out.println("Remaining Executed...!");
 			isFileUploaded = true;
 		} catch (Exception e) {
-			System.out.println("SQLException 1 :"+ e);
+			System.out.println("SQLException 1 :" + e);
 			try {
 				conn.rollback();
 			} catch (SQLException e1) {
-			System.out.println("SQLException 2 :"+ e1);
+				System.out.println("SQLException 2 :" + e1);
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
@@ -321,7 +320,7 @@ public class ProductDao {
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
-				+ " order by 1, 2 limit "+fromLimit+","+toLimit+""; 
+				+ " order by 1, 2 limit " + fromLimit + "," + toLimit + "";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			rs = pstmt.executeQuery();
@@ -360,7 +359,7 @@ public class ProductDao {
 		}
 		return objProductBeans;
 	}
-	
+
 	public ArrayList<ProductBean> getSearchedProductDetailsList(String productLike) {
 		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 		ProductBean objBean = null;
@@ -374,8 +373,7 @@ public class ProductDao {
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
-				+ " WHERE item_code like ? OR item_description like ?"
-				+ " order by 1, 2 "; 
+				+ " WHERE item_code like ? OR item_description like ?" + " order by 1, 2 ";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			pstmt.setString(1, productLike);
@@ -415,5 +413,32 @@ public class ProductDao {
 			e.printStackTrace();
 		}
 		return objProductBeans;
+	}
+
+	public ArrayList<ProductGroupBean> getDistinctProductGroupList() {
+		ArrayList<ProductGroupBean> objProductGroupBeans = new ArrayList<ProductGroupBean>();
+		ProductGroupBean objBean = null;
+		String sqlGetDistinctProductGroup = "select distinct(product_group_code) from product_master";
+		try {
+			pstmt = conn.prepareStatement(sqlGetDistinctProductGroup);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new ProductGroupBean();
+				objBean.setProductCode(rs.getString("product_group_code"));
+				objBean.setProductName("No Description");
+				objBean.setCatalogueNo("No Description");
+				objProductGroupBeans.add(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+
+		return objProductGroupBeans;
 	}
 }

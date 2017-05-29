@@ -178,5 +178,40 @@ public class ProductGroupDao {
 		}
 		return isDeleted;
 	}
+	
+	public boolean insertProductGroupByFile(ArrayList<ProductGroupBean> productGroupList) {
+		boolean isProductGroupListUploaded = false;
+		try {
+			String sqlProductGroup="INSERT IGNORE INTO product_group (product_group_code, product_group_name, catalogue_no) "
+					+ " VALUES(?, ?, ?)";
+			pstmt = conn.prepareStatement(sqlProductGroup);
+			final int batchSize = 100;
+			int count = 0;
+			for (int i = 0; i < productGroupList.size(); i++) {
+				pstmt.setString(1, productGroupList.get(i).getProductCode());
+				pstmt.setString(2, productGroupList.get(i).getProductName());
+				pstmt.setString(3, productGroupList.get(i).getCatalogueNo());
+				pstmt.addBatch();
+				
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+			conn.commit();
+			System.out.println("Remaining Executed...!");
+			isProductGroupListUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+			System.out.println("SQLException 2 :"+ e1);
+				e1.printStackTrace();
+			}
+		}
+		return isProductGroupListUploaded;
+	}
 
 }

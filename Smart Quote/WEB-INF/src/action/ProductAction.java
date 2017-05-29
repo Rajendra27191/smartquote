@@ -17,6 +17,7 @@ import org.json.JSONException;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import pojo.ProductGroupBean;
 import responseBeans.ProductDetailResponseList;
 import responseBeans.ProductResponseBean;
 import responseBeans.UserGroupResponse;
@@ -27,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
 
 import dao.ProductDao;
+import dao.ProductGroupDao;
 
 @SuppressWarnings("serial")
 public class ProductAction extends ActionSupport implements ServletRequestAware {
@@ -211,7 +213,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 
-//		GlsFileReader objFileReader = new test.FileReader();
+		// GlsFileReader objFileReader = new test.FileReader();
 		ExcelFileSplit objFileSplit = new ExcelFileSplit();
 		try {
 			System.out.println("Product File: " + productFile);
@@ -219,32 +221,29 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			File fileToCreate = new File(filename);
 			FileUtils.copyFile(productFile, fileToCreate);
 
-//			JSONArray fileString = objFileReader.readFile(filename);
-//			System.out.println("File Content: " + fileString);
-//			
-			
-			String subFilePath="", userDirPath=System.getProperty("user.dir");
-			GlsFileReader objSubFileReader ;
+			// JSONArray fileString = objFileReader.readFile(filename);
+			// System.out.println("File Content: " + fileString);
+			String projectPath = request.getSession().getServletContext().getRealPath("/");
+			GlsFileReader objSubFileReader;
 			JSONArray subFileString;
-			
-			int subFileCount=objFileSplit.splitFile(filename);
-			
+
+			int subFileCount = objFileSplit.splitFile(filename, projectPath);
+
 			ArrayList<ProductBean> productList = null;
-			ProductDao objProductDao=null;
-//			int j=1;
-			for (int j = 0; j<subFileCount; j++) {
-				try{
-			 	subFilePath=userDirPath+"/ExcelFiles/subFile" + j + ".xlsx";
-			 	objSubFileReader = new test.FileReader();
-			 	subFileString = new JSONArray();
-			 	subFileString=objSubFileReader.readFile(subFilePath);
-			 	System.out.println("subFileCount:"+subFileCount);
-			 	System.out.println(subFilePath);
-			 	System.out.println("subFileString :"+subFileString);
-			 	productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
+			ProductDao objProductDao = null;
+			for (int j = 0; j < subFileCount; j++) {
+				try {
+					String subFilePath = projectPath + "ExcelFiles/subFile" + j + ".xlsx";
+					objSubFileReader = new test.FileReader();
+					subFileString = new JSONArray();
+					subFileString = objSubFileReader.readFile(subFilePath);
+					System.out.println("subFileCount:" + subFileCount);
+					System.out.println(subFilePath);
+					System.out.println("subFileString :" + subFileString);
+					productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
 					}.getType());
 					System.out.println("Total Products: " + productList.size());
-					//=============
+					// =============
 					String productCodeString = "";
 					for (int i = 0; i < productList.size() && productList != null; i++) {
 						if (i == 0) {
@@ -254,7 +253,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 						}
 					}
 
-					// System.out.println("Codes to Delete: " + productCodeString);
+					// System.out.println("Codes to Delete: " +
+					// productCodeString);
 					objProductDao = new ProductDao();
 					@SuppressWarnings("unused")
 					boolean isDeleted = true;
@@ -262,56 +262,46 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
 					isFileUploaded = objProductDao.uploadProductFile(productList);
 					objProductDao.commit();
-					objProductDao.closeAll();
+//					objProductDao.closeAll();
 					if (isFileUploaded) {
 						objEmptyResponse.setCode("success");
 						objEmptyResponse.setMessage(getText("product_file_uploaded"));
+					}else{
+						objEmptyResponse.setCode("error");
+						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
 					}
-					
-				} catch(Exception e){
-					System.out.println("Error in "+j);
+
+				} catch (Exception e) {
+					System.out.println("Error in " + j);
 					e.printStackTrace();
 					break;
 				}
 			}
-//			if (isFileUploaded) {
-			if (objEmptyResponse.getCode()=="success") {
-				File fileToDelete=new File(userDirPath + "/ExcelFiles" );;
+			if (objEmptyResponse.getCode() == "success") {
+				File fileToDelete = new File(projectPath + "ExcelFiles");
 				ExcelFileSplit.delete(fileToDelete);
+				
+				ArrayList<ProductGroupBean> distinctProductGroupList= new ArrayList<ProductGroupBean>();
+				distinctProductGroupList=objProductDao.getDistinctProductGroupList();
+//				objProductDao.commit();
+				//objProductDao.closeAll();
+				System.out.println("Distinct Product Group List Size :"+distinctProductGroupList.size());
+				if (distinctProductGroupList.size() > 0) {
+					ProductGroupDao objProductGroupDao = new ProductGroupDao();
+					boolean isNewProductGroupsUploaded = objProductGroupDao.insertProductGroupByFile(distinctProductGroupList);
+					if (isNewProductGroupsUploaded) {
+					    System.out.println("New Product Group inserted successfully...");
+						objProductDao.closeAll();
+					}else{
+						System.out.println("New Product Group insertion unsuccessfully...");	
+					}
+				}
 			}
-//          }
 			
-//			
-//			ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
-//			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
-//			}.getType());
-//			System.out.println("Total Products: " + productList.size());
-//			// System.out.println("productList: " + new
-//			// Gson().toJson(productList));
-//
-//			String productCodeString = "";
-//			for (int i = 0; i < productList.size() && productList != null; i++) {
-//				if (i == 0) {
-//					productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
-//				} else {
-//					productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
-//				}
-//			}
-
-			// System.out.println("Codes to Delete: " + productCodeString);
-
-//			ProductDao objProductDao = new ProductDao();
-//			@SuppressWarnings("unused")
-//			boolean isDeleted = true;
-//			boolean isFileUploaded = true;
-//			isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
-//			isFileUploaded = objProductDao.uploadProductFile(productList);
-//			objProductDao.commit();
-//			objProductDao.closeAll();
-//			if (isFileUploaded) {
-//				objEmptyResponse.setCode("success");
-//				objEmptyResponse.setMessage(getText("product_file_uploaded"));
-//			}
+			
+			
+			
+			
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -334,6 +324,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		}
 		System.out.println("Done");
+		
+		
+		
 		return SUCCESS;
 	}
 
@@ -341,8 +334,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		try {
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
-			System.out.println("LIMIT=============");
-			System.out.println("fromLimit:" + fromLimit + " toLimit:" + toLimit);
 			objProductBeans = objDao.getAllProductDetailsList(fromLimit, toLimit);
 			objDao.commit();
 			objDao.closeAll();
@@ -364,7 +355,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		try {
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
-			System.out.println("LIMIT=============");
 			System.out.println("prodLike:" + productLike);
 			objProductBeans = objDao.getSearchedProductDetailsList(productLike);
 			objDao.commit();

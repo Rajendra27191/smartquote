@@ -321,12 +321,16 @@
 		</action>
 
 		<action name="custComparison" class="action.CustComparisonAction" method="exportPDF">
-		           <result name="success" type="jasper">
-		            <param name="location">/Reports/CustomerComparison.jasper</param>
-		            <param name="dataSource">objQuoteBean</param>
+	      	<result name="success" type="jasper">
+		            <param name="location">/Reports/quote_report.jasper</param>
+		            <param name="dataSource">arrayPdfMasterReportBeans</param>
 		            <param name="format">PDF</param>
-		            <param name="reportParameters">jasperParams</param>
-	      	 		</result>
+		            <param name="reportParameters">exportParameters</param>
+	      	</result>  
+	      	 <!-- <result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result> --> 
 		</action> 
 
 

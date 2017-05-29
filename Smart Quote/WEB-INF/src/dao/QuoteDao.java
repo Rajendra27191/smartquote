@@ -265,7 +265,6 @@ public class QuoteDao {
 	}
 
 	private ArrayList<KeyValuePairBean> getServiceList(int quote_id) {
-		// TODO Auto-generated method stub
 		ArrayList<KeyValuePairBean> serviceList = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean pairBean = null;
 		
@@ -285,14 +284,12 @@ public class QuoteDao {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return serviceList;
 	}
 
 	private ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
-		// TODO Auto-generated method stub
 		ArrayList<KeyValuePairBean> termAndConditionList = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean pairBean = null;
 		String query = "select tcm.id,tcm.term_condition from quote_term_condition_master qt,term_condition_master tcm "
@@ -312,7 +309,6 @@ public class QuoteDao {
 			}
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -355,7 +351,7 @@ public class QuoteDao {
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
 				+ " qty_break4, price4exGST, tax_code "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
-				+ " where quote_id=" + quoteId + "";
+				+ " where quote_id=" + quoteId;
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs1 = pstmt.executeQuery();
@@ -510,7 +506,6 @@ public class QuoteDao {
 
 	public boolean saveTermsAndConditionDetails(
 			ArrayList<KeyValuePairBean> termConditionList, int quoteId) {
-		// TODO Auto-generated method stub
 		boolean termsAndConditionSaved= false;
 		String saveData = " insert IGNORE into quote_term_condition_master (quote_id ,term_id) "
 				+ " values(?,?);";

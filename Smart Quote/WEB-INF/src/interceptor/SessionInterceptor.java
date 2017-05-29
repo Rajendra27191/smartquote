@@ -46,6 +46,7 @@ public class SessionInterceptor implements Interceptor,
 	public String intercept(ActionInvocation invocation) throws Exception {
 		EmptyResponseBean data = new EmptyResponseBean(); 
 		HttpServletRequest request = ServletActionContext.getRequest();
+		@SuppressWarnings("rawtypes")
 		Map session = ActionContext.getContext().getSession();
 		boolean status = isLoggedIn(request);
 		 System.out.println("Intercepter Status: "+status);
