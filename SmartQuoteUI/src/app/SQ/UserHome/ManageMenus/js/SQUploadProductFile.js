@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','Upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,Upload){
+.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,$upload){
 console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];
@@ -36,16 +36,44 @@ $scope.addExcelToServer = function(){
       }, 3000);
     }else
     {   
-
-      if ((latestExcelFile.size / 1024) < 6144) {
+      console.log(latestExcelFile.size);
+      if ((latestExcelFile.size / 1024) < 15360) {//6144
         // console.log("valid size");
-        // console.log(latestExcelFile);
+         console.log(latestExcelFile.size);
         var productFile=latestExcelFile;
         var uploadUrl="/smartquote/uploadProductByXlsx";
         var fd= new FormData();
         fd.append('productFile',productFile);
 
         $rootScope.showSpinner();
+        //  $scope.upload=$upload.upload({
+        //  url: uploadUrl,
+        //  // file:fd,
+        //   data: {"productFile": productFile,}
+        // }).success(function(data){
+        //   console.log("SUCCESS :")
+        //   console.log(data)
+        //   if(data.code.toUpperCase()=="SUCCESS"){
+        //     // console.log(data);
+        //     $rootScope.alertSuccess(data.message);
+        //     document.getElementById('fileTypeExcelHost').value = '';
+        //     latestExcelFile = {};
+        //     }else if(data.code=="sessionTimeOut"){
+        //     $rootScope.$broadcast('SessionTimeOut', data); 
+        //     }else{
+        //       console.log(data); 
+        //       $rootScope.alertError(data.message);                             
+        //       document.getElementById('fileTypeExcelHost').value = '';
+        //       latestExcelFile = {};
+        //     }
+        //     $rootScope.hideSpinner();
+        // }).error(function(data){
+        //   console.log("ERROR :")
+        //   console.log(data)
+        //   $rootScope.alertServerError("Server error");
+        //   $rootScope.hideSpinner();
+        // })
+
         $http.post(uploadUrl, fd,{
           withCredentials: true,
           headers: {'Content-Type': undefined },
@@ -74,7 +102,7 @@ $scope.addExcelToServer = function(){
         });
 
       }else{
-          $rootScope.alertError("File size must ne less than 6MB"); 
+          $rootScope.alertError("File size must ne less than 15MB"); 
       }    
       
 

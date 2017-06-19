@@ -110,61 +110,61 @@ $scope.editCustomerBtnClicked=function(customer){
 	$scope.isCustomerAddView=true;
 };
 
-/*=============GET CUSTOMER LIST==================*/
-$scope.handleGetCustomerListDoneResponse=function(data){
-if(data){
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
-  $scope.customerList=data.result;
-  console.log($scope.customerList)
-}
-$rootScope.hideSpinner();
-}
-}
-};
+// /*=============GET CUSTOMER LIST==================*/
+// $scope.handleGetCustomerListDoneResponse=function(data){
+// if(data){
+// if (data.code) {
+//   if(data.code.toUpperCase()=='SUCCESS'){
+//   $scope.customerList=data.result;
+//   console.log($scope.customerList)
+// }
+// $rootScope.hideSpinner();
+// }
+// }
+// };
 
-var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
-$scope.handleGetCustomerListDoneResponse(message);      
-});
+// var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
+// $scope.handleGetCustomerListDoneResponse(message);      
+// });
 
-var cleanupEventGetCustomerListNotDone = $scope.$on("GetCustomerListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
+// var cleanupEventGetCustomerListNotDone = $scope.$on("GetCustomerListNotDone", function(event, message){
+// $rootScope.alertServerError("Server error");
+// $rootScope.hideSpinner();
+// });
 
-/*===================GET CUSTOMER DETAILS=================*/
+// /*===================GET CUSTOMER DETAILS=================*/
 
-$scope.getCustomerDetails=function(customer){
-console.log(customer);
-$rootScope.showSpinner();
-SQUserHomeServices.GetCustomerDetails(customer.code);
-};
+// $scope.getCustomerDetails=function(customer){
+// console.log(customer);
+// $rootScope.showSpinner();
+// SQUserHomeServices.GetCustomerDetails(customer.code);
+// };
 
-$scope.handleGetCustomerDetailsDoneResponse=function(data){
-if(data){
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
-  	var manageCustomer=data.objResponseBean; 		
-  	$scope.manageCustomer=manageCustomer;
-  	$scope.buttonstatus='edit';
-  	$scope.iscustomerCodeSelected=true;
-  	if ($scope.manageCustomer.address1!=='') {
-  		// console.log("collapseDiv");
-  		$scope.collapseDiv();
-  	}
-	}
- $rootScope.hideSpinner();
-}}
-};
+// $scope.handleGetCustomerDetailsDoneResponse=function(data){
+// if(data){
+// if (data.code) {
+//   if(data.code.toUpperCase()=='SUCCESS'){
+//   	var manageCustomer=data.objResponseBean; 		
+//   	$scope.manageCustomer=manageCustomer;
+//   	$scope.buttonstatus='edit';
+//   	$scope.iscustomerCodeSelected=true;
+//   	if ($scope.manageCustomer.address1!=='') {
+//   		// console.log("collapseDiv");
+//   		$scope.collapseDiv();
+//   	}
+// 	}
+//  $rootScope.hideSpinner();
+// }}
+// };
 
-var cleanupEventGetCustomerDetailsDone = $scope.$on("GetCustomerDetailsDone", function(event, message){
-$scope.handleGetCustomerDetailsDoneResponse(message);      
-});
+// var cleanupEventGetCustomerDetailsDone = $scope.$on("GetCustomerDetailsDone", function(event, message){
+// $scope.handleGetCustomerDetailsDoneResponse(message);      
+// });
 
-var cleanupEventGetCustomerDetailsNotDone = $scope.$on("GetCustomerDetailsNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
+// var cleanupEventGetCustomerDetailsNotDone = $scope.$on("GetCustomerDetailsNotDone", function(event, message){
+// $rootScope.alertServerError("Server error");
+// $rootScope.hideSpinner();
+// });
 
 /*===============CREATE CUSTOMER==================*/
 $scope.jsonToSaveCustomer=function(){
@@ -175,6 +175,7 @@ $scope.jsonToSaveCustomer=function(){
 		"contactPerson":$scope.manageCustomer.contactPerson,
 		"address1":$scope.manageCustomer.address1,
 		"address2":$scope.manageCustomer.address2,
+		"suburb":$scope.manageCustomer.suburb,
 		"state":$scope.manageCustomer.state,
 		"postalCode":$scope.manageCustomer.postalCode,
 		"fax":$scope.manageCustomer.fax,
@@ -206,7 +207,7 @@ if($scope.form.manageCustomer.$valid){
 		$rootScope.showSpinner();
 		SQUserHomeServices.UpdateCustomer($scope.jsonToSaveCustomer());
 	}
-	//console.log($scope.jsonToSaveCustomer());
+	// console.log($scope.jsonToSaveCustomer());
 	
 }else{
 	$scope.form.manageCustomer.submitted=true;
@@ -346,10 +347,10 @@ $rootScope.hideSpinner();
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventGetCustomerListViewDone();
 	cleanupEventGetCustomerListViewNotDone();
-	cleanupEventGetCustomerListDone();
-	cleanupEventGetCustomerListNotDone();
-	cleanupEventGetCustomerDetailsDone();
-	cleanupEventGetCustomerDetailsNotDone();
+	// cleanupEventGetCustomerListDone();
+	// cleanupEventGetCustomerListNotDone();
+	// cleanupEventGetCustomerDetailsDone();
+	// cleanupEventGetCustomerDetailsNotDone();
 	cleanupEventCreateCustomerDone();
 	cleanupEventCreateCustomerNotDone();
 	cleanupEventUpdateCustomerDone();

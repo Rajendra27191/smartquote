@@ -1,16 +1,101 @@
+<style type="text/css" media="screen">
+	.main-label {   
+    margin: 3% 0% 0% 0%;
+}
+</style>
 <div class="container">
 <form name="form.manageProductGroup" novalidate>
 <div class="row">
-<div class="col-md-6 col-md-offset-3">
-	<div class="row">
 	<div class="col-md-12"><center><label class="main-label">Manage Product Group</label></center></div>
-	</div>
-	<br>
+</div>
+<div  style="padding-bottom: 40px;" class="row" ng-if="addProductGroupBtnShow">
+		<div class="col-md-8" style="width: 75.333333%;"></div>
+		<div class="col-md-2" style="width: 16%;">
+			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addProductGroupBtnClicked()" uib-popover="Click to add product group." popover-placement="left" popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Product Group</button>
+		</div>
+		<!-- <div class="col-md-1"></div> -->
+</div>
+<div class="row">
+<div class="col-md-10 col-md-offset-1">
+<div id="productGroupTable"  style="font-size: 12px;" ng-if="isProductGroupTableView"><!-- && customerListView.length>0  " -->
+<table datatable="ng" class="table row-border hover table-responsive">
+                <thead class="table-header">
+                    <tr>
+		                <th style="width: 20%;">Product Group Code</th>
+		                <th>Product Group Name</th>
+		                <th>Catalogue No</th>
+		                <th style="width: 10%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="productGroup in productGroupListView" ng-click="testingClick(name)">
+		                <td><span data-ng-bind="productGroup.productCode"></span></td>
+		                <td><span data-ng-bind="productGroup.productName"></span></td>
+		                <td><span data-ng-bind="productGroup.catalogueNo"></span></td>
+		                <td>
+		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="editProductGroupBtnClicked(productGroup)" popover-placement="left" uib-popover="Click to edit product group."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>
+		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="deleteProductGroup(productGroup)" popover-placement="left" uib-popover="Click to delete product group."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-trash"></i></span>
+		                </td>
+                	</tr>
+                </tbody>
+</table>	
+</div>
+
+
+<div id="createNewProductGroupView" ng-if="showAddEditView && !isProductGroupTableView" style="margin-top: 3%;" >
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Group Code</label></div>
 	<div class="col-md-8">
-	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = 'productGroup as productGroup.code for productGroup in productGroupList | filter:$viewValue' typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" focus-me="true" required>
-	<!--  -->
+	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode' ng-disabled="buttonstatus=='edit'" required>
+	<!-- <input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = "productGroup as productGroup.code+'  ['+productGroup.value+']' for productGroup in productGroupList | filter:$viewValue" typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" focus-me="true" required> -->
+	<span ng-show="((form.manageProductGroup.productCode.$dirty && form.manageProductGroup.productCode.$invalid) || (form.manageProductGroup.productCode.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter group code.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Group Desc</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="productName" class = 'form-control' ng-model = 'manageProductGroup.productName'  required>
+	<span ng-show="((form.manageProductGroup.productName.$dirty && form.manageProductGroup.productName.$invalid) || (form.manageProductGroup.productName.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter group desc.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Catalog No</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="catalogueNo" class = 'form-control' ng-model = 'manageProductGroup.catalogueNo'  required>
+	<span ng-show="((form.manageProductGroup.catalogueNo.$dirty && form.manageProductGroup.catalogueNo.$invalid) || (form.manageProductGroup.catalogueNo.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
+	<small>*Please enter catalog no.</small>
+	</span>
+	</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+    	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteProductGroup()" class="btn btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+    	<button ng-click="cancelProductGroup()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+    	</div>
+		<div class="col-md-4">
+		<button id="create" ng-click="saveProductGroupDetails()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+</div>
+<div class="col-md-3"></div>
+</div>
+
+	
+</div>
+
+<!-- 	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Group Code</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="productCode" class = 'form-control' ng-model = 'manageProductGroup.productCode'  uib-typeahead = "productGroup as productGroup.code+'  ['+productGroup.value+']' for productGroup in productGroupList | filter:$viewValue" typeahead-on-select="getProductGroupDetails(manageProductGroup.productCode)" ng-keydown="resetOnBackspace($event)"  ng-change="productGroupCodeChanged()" autocomplete="off" focus-me="true" required>
 	<span ng-show="((form.manageProductGroup.productCode.$dirty && form.manageProductGroup.productCode.$invalid) || (form.manageProductGroup.productCode.$invalid && form.manageProductGroup.submitted))" class="invalid-control">
 	<small>*Please enter group code.</small>
 	</span>
@@ -40,20 +125,19 @@
 
 
 
-
 	<div class="row">
 		<div class="col-md-4"></div>
 		<div class="col-md-4">
-    	<button ng-if="buttonstatus=='edit'" ng-click="deleteProductGroup()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteProductGroup()" class="btn btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
     	</div>
 		<div class="col-md-4">
-		<button id="create" ng-click="saveProductGroupDetails()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		<button id="create" ng-click="saveProductGroupDetails()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
 		</div>
-	</div>
+	</div> -->
 
 
 </div>
-<div class="col-md-3"></div>
+<div class="col-md-1"></div>
 </div>
 </form>
 </div>

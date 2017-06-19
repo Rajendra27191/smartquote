@@ -1,10 +1,28 @@
-body{
+
+/* html,body{
 position: relative;  
+margin: 0px;
+padding: 0px;
+height: 100%;
+overflow: hidden;
+background-size: 100% 100%;
+padding-top: 25px;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 /*background: url(../img/bg.jpg);*/
 /*background:#FEFEFA;*/
 /*background:#F8F8FF;*/
 /*background:#FFF;*/
 /*background: url(../img/bg.jpg) repeat center center;*/
+
+/* html { height: 100%; overflow:hidden; } */
+body {
+/* height: 100%;  */
+position: relative;  
+margin: 0px;
+padding: 0px;
+background-size: 100% 100%;
+padding-top: 25px;
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 .login-background{
   background: url(../img/bg.jpg);
@@ -44,8 +62,15 @@ input[type=number]::-webkit-outer-spin-button {
 .left-addon .glyphicon  { left:  0px;}
 .left-addon input  { padding-left:  30px; }
 
-/*::-webkit-scrollbar {
-    width: 12px;
+.inner-addon .fa{
+  position: absolute;
+  padding: 10px;
+}
+.right-addon .fa{right: 0px;}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
     overflow: hidden;
 }
 ::-webkit-scrollbar:hover{
@@ -53,16 +78,16 @@ input[type=number]::-webkit-outer-spin-button {
 }
  
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
-    border-radius: 0px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0); 
+    border-radius: 5px;
     overflow: hidden;
 }
  
 ::-webkit-scrollbar-thumb {
-    border-radius: 0px;
+    border-radius: 5px;
     overflow: hidden;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
-}*/
+}
 /*Controls CSS ENDS*/
 
 /*FOOTER START*/
@@ -80,9 +105,10 @@ input[type=number]::-webkit-outer-spin-button {
 .button-login{
   color: #fff;
   margin-top: 5%;
+  background: #113654;
   background: -webkit-linear-gradient(#113654,#0e1f2d);
   border-color:#0e1f2d;
-  border-radius: 0px; 
+  border-radius: 2px; 
   padding: 6px 50px;
   /*color: #fff;
   background:rgba(237, 20, 61, 0.7);
@@ -105,12 +131,14 @@ input[type=number]::-webkit-outer-spin-button {
 .button-delete{
   color: #fff;
   margin-top: 5%;
+  background: #6C6B6A;
   background: -webkit-linear-gradient(#6C6B6A ,#393836 );
   border-color: #393836;
-  border-radius: 0px;
+  border-radius: 2px;
+  margin-bottom: 5%;
 }
 .button-delete:hover{
-  font-size: 16px;
+  /* font-size: 16px; */
   background:transparent;
   color: #393836;
   border-color: #393836;
@@ -118,23 +146,27 @@ input[type=number]::-webkit-outer-spin-button {
 .button-delete:focus,.button-delete:active{
   color: #fff;
   border-color: #393836;
+  background: #6C6B6A;
   background: -webkit-linear-gradient(#6C6B6A ,#393836 );
 }
 .button-ok{
   color: #fff;
   margin-top: 5%;
+  background: #113654;
   background: -webkit-linear-gradient(#113654,#0e1f2d);
   border-color:#0e1f2d;
-  border-radius: 0px; 
+  border-radius: 2px;
+  margin-bottom: 5%; 
 }
 .button-ok:hover{
-  font-size: 16px;
+  /* font-size: 16px; */
   color: rgba(17, 54, 84, 1);
   border-color: rgba(17, 54, 84, 1);
   background:transparent;
 }
 .button-ok:focus,.button-ok:active{
   color: #fff;
+  background: #113654;
   background: -webkit-linear-gradient(#113654,#0e1f2d);
   border-color:#0e1f2d;
 }
@@ -175,7 +207,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .navbar-inverse .navbar-nav>li>a:hover,.navbar-inverse .navbar-nav>li>a:focus {
     color: #fff;
-    font-size: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    /* font-size: 16px; */
     /*background-color: rgb(1, 175, 246);*/
 }
 .navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
@@ -241,12 +274,12 @@ color:#fff;
 padding: 1% 8% 1% 8%;
 background-color: rgba(0, 0, 0, 0.4);
 min-height: 250px;
-margin-top: 150px;
+margin-top: 25%;
 color: #fff;
 -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 0px;
-margin-bottom: 30px;
+margin-bottom: 30%;
 }
 /*.div-trans .form-group input{
   color: #fff;
@@ -283,8 +316,7 @@ background-color:transparent;
 /*=========================================*/
 /*USER HOME CSS STARTS*/
 .main-label{
-  text-transform: uppercase;
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  text-transform: capitalize;
   font-size: 16px;
   color: #113654;
   margin: 6% 0% 6% 0%
@@ -292,12 +324,14 @@ background-color:transparent;
 }
 .sub-label{
   text-transform: capitalize;
-  color: #777575;
+  /* color: #777575; */
+  color: #6f6767;
   font-size: 15px;
+  margin-bottom: 0px; 
 }
 .asteric{
  text-transform: capitalize;
-  color: #777575; 
+  color: red; 
 }
 .container-box{
     /*border: 1px solid #c3b9b9;*/
@@ -307,11 +341,9 @@ background-color:transparent;
 }
 .container-fluid{padding: 0px;margin: 0px;}
 .main-nav li a{margin:5px 32px; }
-.panel-default>.panel-heading {
+.panel-primary>.panel-heading {
     color: #fff;
     background:#0f4674;
-    /*background-color: #113654;*/
-    /*rgb(146, 148, 150);*/
     border-color: rgb(13, 60, 97);;
 }
 .panel-group {
@@ -339,6 +371,7 @@ background-color:transparent;
 }
 /*USER HOME CSS ENDS*/
 /*SWEET ALERT CSS STARTS*/
+
 .sweet-alert {
       width: 425px;
       left: 53%;
@@ -351,6 +384,7 @@ background-color:transparent;
     height: 60px;
 }
 .sweet-alert h2 {
+    font-size: 20px;
   margin: 0px 0;
 }
 .sweet-alert .sa-icon.sa-success .sa-placeholder {
@@ -406,6 +440,10 @@ background-color:transparent;
     padding: 6px 17px;
     margin: 23px 5px 5px 5px;
 }
+.sweet-alert fieldset {
+margin: 0;
+padding: 0;
+}
 /*SWEET ALERT CSS ENDS*/
 .invalid-control{
   color:red;font-size:14px;word-break:break-all;
@@ -420,5 +458,13 @@ background-color:transparent;
     height: 28px;
     padding: 5px 8px;
     font-size: 13px
+}
+/* Data Table*/
+.table-header{
+  background-color: #0f4674;
+  color:#fff;
+}
+table.dataTable thead th, table.dataTable thead td {
+    padding: 8px 10px;
 }
 

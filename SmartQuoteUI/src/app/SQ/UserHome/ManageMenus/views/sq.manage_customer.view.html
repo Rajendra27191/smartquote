@@ -8,13 +8,7 @@ width: 62.666667%;
 .main-label {   
     margin: 3% 0% 0% 0%;
 }
-.table-header{
-	background-color: #0f4674;
-	color:#fff;
-}
-table.dataTable thead th, table.dataTable thead td {
-    padding: 8px 10px;
-}
+
 </style>
 <div class="container">
 <div class="row">
@@ -54,7 +48,7 @@ table.dataTable thead th, table.dataTable thead td {
 		                <td><span data-ng-bind="customer.fax"></span></td>
 		                <td><span data-ng-bind="customer.email"></span></td>
 		                <td><span data-ng-bind="customer.totalStaff"></span></td>
-		                <td><span data-ng-bind="customer.avgPurchase"></span></td> 
+		                <td><span data-ng-bind="getPrice(customer.avgPurchase)"></span></td> 
 		                <td><span data-ng-bind="customer.industryType"></span></td> 
 		                <td>
 		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="editCustomerBtnClicked(customer)" popover-placement="left" uib-popover="Click to edit customer."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>
@@ -142,6 +136,16 @@ table.dataTable thead th, table.dataTable thead td {
 	</div>
 	</div>
 
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Suburb </label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="suburb" class = 'form-control' ng-model = 'manageCustomer.suburb'>
+	</div>
+	</div>
+
 	<div class="row row-control">
 	<div class="col-md-4">
 	<label class="sub-label">State</label>
@@ -223,10 +227,10 @@ table.dataTable thead th, table.dataTable thead td {
 		<div class="col-md-4"></div>
 		<div class="col-md-4" style="width: 31.333333%;">
     	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteCustomer()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
-    	<button ng-click="cancelAddCustomer()" class="btn btn-default btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+    	<button ng-click="cancelAddCustomer()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
     	</div>
 		<div class="col-md-4" style="width: 31.333333%;">
-		<button id="create" ng-click="saveCustomer()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		<button id="create" ng-click="saveCustomer()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
 		</div>
 	</div>
 

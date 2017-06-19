@@ -24,7 +24,7 @@ angular.module('sq.SmartQuoteDesktop')
         }
       }).error(function(data, status, header, config){
         console.log(data);
-        $rootScope.$broadcast('GetUserGroupMenuNotDone', error.status);
+        $rootScope.$broadcast('GetUserGroupMenuNotDone', data);
           //error
       });
     };
@@ -42,7 +42,7 @@ angular.module('sq.SmartQuoteDesktop')
         }
       }).error(function(data, status, header, config){
         console.log(data);
-        $rootScope.$broadcast('GetUserGroupInfoNotDone', error.status);
+        $rootScope.$broadcast('GetUserGroupInfoNotDone', data);
           //error
       });
     };

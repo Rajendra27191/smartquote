@@ -4,13 +4,23 @@ console.log('initialise SQManageProductGroupController controller');
 $window.pageYOffset;
 $scope.form={};
 $scope.manageProductGroup={};
-$scope.buttonstatus='add';
+
 $scope.productGroupList=[];
 $scope.isProductGroupSelected=false;
+$scope.productGroupListView=[];
 
+$scope.resetManageProductView=function(){
+console.log("resetManageProductView")
+$scope.addProductGroupBtnShow=true;
+$scope.isProductGroupTableView=true;
+$scope.showAddEditView=false;
+};
+
+$scope.resetManageProductView();
 $scope.init=function(){
 $rootScope.showSpinner();
-SQUserHomeServices.GetProductGroupList();
+ // SQUserHomeServices.GetProductGroupList();
+ SQUserHomeServices.GetProductGroupListView();
 };
 
 $scope.init();
@@ -42,10 +52,33 @@ $scope.resetForm();
 $scope.manageProductGroup.productCode = tempcode;
 }
 };
+
+/*=============GET PRODUCT GROUP LIST View==================*/
+$scope.handleGetGetProductGroupListViewDoneResponse=function(data){
+if(data){
+if (data.code) {
+	console.log(data)
+  if(data.code.toUpperCase()=='SUCCESS'){
+  $scope.productGroupListView=data.objProductGroupDetailResponseList;
+}
+$rootScope.hideSpinner();
+}
+}
+};
+
+var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListViewDone", function(event, message){
+$scope.handleGetGetProductGroupListViewDoneResponse(message);      
+});
+
+var cleanupEventGetProductGroupListNotDone = $scope.$on("GetProductGroupListViewNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
 /*=============GET PRODUCT GROUP LIST==================*/
 $scope.handleGetGetProductGroupListDoneResponse=function(data){
 if(data){
 if (data.code) {
+	console.log(data)
   if(data.code.toUpperCase()=='SUCCESS'){
   $scope.productGroupList=data.result;
 }
@@ -105,10 +138,11 @@ return JSON.stringify(productgroup);
 $scope.saveProductGroupDetails=function(){
 	if($scope.form.manageProductGroup.$valid){
 	console.log("valid");
+
 	if ($scope.buttonstatus=='add'){
 	var productGroupExist=false;
-	$scope.productGroupList.forEach(function(element,index){
-	 if(element.code.toLowerCase()==$scope.manageProductGroup.productCode.toLowerCase()){
+	$scope.productGroupListView.forEach(function(element,index){
+	 if(element.productCode.toLowerCase()==$scope.manageProductGroup.productCode.toLowerCase()){
 	 	productGroupExist=true;
 	 }	
 	});	
@@ -135,11 +169,23 @@ if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data);
-  	$scope.isProductGroupSelected=false;
-  	$rootScope.alertSuccess("Successfully saved product group");
-  	$scope.reset();
-  	$scope.resetForm();
-  	$scope.init();
+  	// $scope.isProductGroupSelected=false;
+  	// $rootScope.alertSuccess("Successfully saved product group");
+  	// $scope.reset();
+  	// $scope.resetForm();
+  	// $scope.resetManageProductView();
+  	swal({
+	  title: "Success",
+	  text: "Successfully saved product group!",
+	  type: "success",
+	  // animation: "slide-from-top",
+	},
+	function(){
+	$scope.reset();
+	$scope.resetForm();
+	$scope.init();
+	$scope.resetManageProductView();
+	});
 	}else{
 	$rootScope.alertError(data.message);
 	}
@@ -162,10 +208,22 @@ if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	console.log(data)
-  	$rootScope.alertSuccess("Successfully updated product group");
-  	$scope.reset();
+ //  	$rootScope.alertSuccess("Successfully updated product group");
+ //  	$scope.reset();
+	// $scope.resetForm();
+	// $scope.init();
+		swal({
+	  title: "Success",
+	  text: "Successfully updated product group!",
+	  type: "success",
+	  // animation: "slide-from-top",
+	},
+	function(){
+	$scope.reset();
 	$scope.resetForm();
 	$scope.init();
+	$scope.resetManageProductView();
+	});
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -184,9 +242,9 @@ $rootScope.hideSpinner();
 
 /*==================DELETE CUSTOMER RESPONSE===================*/
 
-$scope.deleteProductGroup=function(){
-var productGroupCode=$scope.manageProductGroup.productCode;
-//console.log(customerCode);
+$scope.deleteProductGroup=function(productGroup){
+console.log("deleteProductGroup");
+var productGroupCode=productGroup.productCode;
 if (productGroupCode!==''&&productGroupCode!==undefined&&productGroupCode!==null) {
 	var previousWindowKeyDown = window.onkeydown;
 	swal({
@@ -206,6 +264,7 @@ if (productGroupCode!==''&&productGroupCode!==undefined&&productGroupCode!==null
 $scope.handleDeleteProductGroupDoneResponse=function(data){
 if(data){
 if (data.code) {
+	console.log(data)
   if(data.code.toUpperCase()=='SUCCESS'){
   	$rootScope.alertSuccess("Successfully deleted product group");
   	$scope.reset();
@@ -226,6 +285,30 @@ var cleanupEventDeleteProductGroupNotDone = $scope.$on("DeleteProductGroupNotDon
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
+
+
+$scope.editProductGroupBtnClicked=function(prodGroup){
+console.log(prodGroup);
+$scope.isProductGroupTableView=false;
+$scope.showAddEditView=true;
+$scope.buttonstatus='edit';
+$scope.addProductGroupBtnShow=false;
+$scope.manageProductGroup=prodGroup;
+};
+
+$scope.addProductGroupBtnClicked=function(){
+// console.log(prodGroup);
+$scope.isProductGroupTableView=false;
+$scope.showAddEditView=true;
+$scope.buttonstatus='add';
+$scope.addProductGroupBtnShow=false;
+};
+
+$scope.cancelProductGroup=function(){
+$scope.resetManageProductView();
+$scope.resetForm();
+$scope.reset();
+};
 
 
 $scope.$on('$destroy', function(event, message) {

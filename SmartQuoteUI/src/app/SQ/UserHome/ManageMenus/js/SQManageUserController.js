@@ -267,8 +267,8 @@ $rootScope.hideSpinner();
 /*==========================================================================*/
 /*========================GET USER DETAILS================================*/
 $scope.userNameChanged=function(user){
-//console.log("userNameChanged====")
-//console.log(user);
+console.log("userNameChanged====")
+console.log(user);
 $rootScope.showSpinner();
 SQUserHomeServices.GetUserDetails(user.key);
 };
@@ -384,7 +384,7 @@ if (data.code) {
 }else{
 	$rootScope.alertError(data.message);
 }
-$rootScope.hideSpinner();
+	$rootScope.hideSpinner();
 }
 }
 };

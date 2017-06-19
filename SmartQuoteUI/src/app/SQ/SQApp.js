@@ -1,19 +1,23 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngResource','ngAnimate','angularLocalStorage','uiSwitch','ngFileUpload','datatables'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination'])
 .config(function($logProvider){
   $logProvider.debugEnabled(true);
   
 })
 .run(['$rootScope','$window','storage',function($rootScope,$window,storage){
- if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
-    $rootScope.isUserSignIn=false;
- }
- if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
-    $rootScope.userNavMenu=[];
- }
+   if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
+      $rootScope.isUserSignIn=false;
+   }
+   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
+      $rootScope.userNavMenu=[];
+   }
+   if(storage.get('userData')==null || storage.get('userData')==''){
+      $rootScope.userData={};
+   }
   storage.bind($rootScope, 'isUserSignIn',false);
   storage.bind($rootScope, 'userNavMenu',[]);
+  storage.bind($rootScope, 'userData',{});
 }])
-.controller('SmartQuoteDesktopController',['$scope','$rootScope','$window','$state','$filter','$timeout','$http','notify','SQHomeServices',function($scope,$rootScope,$window,$state,$filter,$timeout,$http,notify,SQHomeServices){
+.controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices){
 console.log("SmartQuoteDesktopController initialise");
 $window.pageYOffset;
 $scope.user={};
@@ -22,6 +26,7 @@ $scope.invalidEmailPassword=false;
 $scope.errormsg='';
 $rootScope.isAdmin=false;
 $rootScope.isSessionExpired=false;
+
 
 if ($rootScope.isUserSignIn) {
 $state.transitionTo('userhome.start');
@@ -57,6 +62,15 @@ $scope.handleUserLogInDoneResponse=function(data){
      $scope.form.loginUser.$setPristine();        
      }
      $rootScope.userNavMenu=data.result;
+     $rootScope.userData={
+                           'userId':data.userData.userId,
+                           'userGroupId':data.userData.userGroupId,
+                           'emailId':data.userData.emailId,
+                           'contact':data.userData.contact,
+                           'userName':data.userData.userName,
+                           'validFrom':data.userData.validFrom,
+                           'validTo':data.userData.validTo
+                         }
     }
     else if (data.code.toUpperCase()=='ERROR'){
       //$rootScope.alertError(data.message);
@@ -71,6 +85,7 @@ $scope.handleUserLogInDoneResponse=function(data){
 
 var cleanupEventUserLogInDone = $scope.$on("UserLogInDone", function(event, message){
   console.log("UserLogInDone");
+   console.log(message);
   $scope.handleUserLogInDoneResponse(message);      
 });
 
@@ -92,6 +107,7 @@ $rootScope.userSignout=function(){
      $state.transitionTo('home.start'); 
      $rootScope.isUserSignIn=false;
      $rootScope.userNavMenu=[];
+     $rootScope.userData={};
      $rootScope.SQNotify("Successfully log out",'success'); 
     }else{
     $rootScope.alertError(data.message);
@@ -167,6 +183,11 @@ var cleanupEventUserForgotPasswordNotDone = $scope.$on("UserForgotPasswordNotDon
 });
 
 /*============== FORGET PASSWORD===========*/
+$rootScope.getPrice = function(price){
+// console.log(price)  
+var price1=parseFloat(price);
+return price1.toFixed(2);
+};
 
 /*===============SESSION TIME OUT STARTS=====================*/
 $scope.redirectToLogin=function(){
@@ -190,6 +211,19 @@ var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, me
 });
 
 /*===============SESSION TIME OUT ENDS=====================*/
+$rootScope.moveToTop=function(){
+    //   $('html, body').animate({
+    //     scrollTop: $("#top").offset().top
+    // }, 1000);
+    // $(window).scrollTop(0);
+    // $(window).scrollTop(100);
+     // $window.pageYOffset;
+   // $anchorScroll();
+   $window.scrollTo(0,0);
+     // $anchorScroll.yOffset = 100
+     // $location.hash('top');
+    // $anchorScroll();
+  }
 
 $rootScope.SQNotify = function(message,flag)
   {
@@ -208,7 +242,7 @@ $rootScope.SQNotify = function(message,flag)
   };
 
 $rootScope.alertSuccess=function(message){
-swal("Success",message, "success");
+sweetAlert("Success",message, "success");
 };
 $rootScope.alertError=function(message){
 sweetAlert("Error",message, "error");

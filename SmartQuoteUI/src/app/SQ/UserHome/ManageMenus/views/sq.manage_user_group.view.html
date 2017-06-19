@@ -7,7 +7,7 @@
 	</div>
 	<br>
 	<div class="row">
-	<div class="col-md-4" style="padding-right: 0px;"><label class="sub-label">User Group</label></div>
+	<div class="col-md-4" style="padding-right: 0px;"><label class="sub-label">User Group</label> <span class="asteric">*</span></div>
 	<div class="col-md-8" style="padding-left: 0px;">
 	<input type = 'text' name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)"  ng-change="userGroupChanged()" autocomplete="off" focus-me="true" required>
 	<span ng-show="((form.userManageUserGroup.userGroupName.$dirty && form.userManageUserGroup.userGroupName.$invalid) || (form.userManageUserGroup.userGroupName.$invalid && form.userManageUserGroup.submitted))" style="color:red;font-size:14px;word-break:break-all;">
@@ -22,8 +22,14 @@
 
 	<div class="row">
 	<div class="col-md-12" ng-repeat="menu in userMenu">
-		<uib-accordion >
-		 <div uib-accordion-group class="panel-default" heading="{{menu.menuName}}" is-open="isOpen">
+		<uib-accordion>
+		<!-- heading="{{menu.menuName}}" -->
+		 <div uib-accordion-group class=" panel panel-primary"  is-open="isOpen">
+		 <uib-accordion-heading>
+		 	{{menu.menuName}}
+		 	<i class="pull-right glyphicon glyphicon-chevron-right" ng-show="!isOpen"></i>
+		 	<i class="pull-right glyphicon glyphicon-chevron-down" ng-show="isOpen"></i>
+		 </uib-accordion-heading>
 	    <p>
 	      <switch name="onOff" ng-model="menu.status" on="Yes" off="No" ng-change="menuChecked($index)" disabled="menu.menuName=='Profile' || menu.menuName=='Home'"></switch> <label><span data-ng-bind="menu.menuName"></span></label> 
 	     </p>
@@ -45,10 +51,10 @@
 	<div class="row">
 		<div class="col-md-4"></div>
 		<div class="col-md-4">
-    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUserGroupMenu()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUserGroupMenu()" class="btn btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
     	</div>
 		<div class="col-md-4">
-		<button id="create" ng-click="saveUserGroupMenu()" class="btn btn-default btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		<button id="create" ng-click="saveUserGroupMenu()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
 		</div>
 	</div>
 

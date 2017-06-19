@@ -1,6 +1,6 @@
 angular.module('sq.SmartQuoteDesktop')
 .config(['$stateProvider', function($stateProvider) { 
-   console.log("initialise OZAppRoute");
+   // console.log("initialise OZAppRoute");
    $stateProvider
    .state('home', {
       abstract: true,
@@ -49,6 +49,22 @@ angular.module('sq.SmartQuoteDesktop')
    .state('uploadproductfile', {
       controller:'SQUploadProductFileController',
       templateUrl: 'SQ/UserHome/ManageMenus/views/sq.upload_product_file.view.html',
+    })
+   .state('managetermsconditions', {
+      controller:'SQManageTermsConditionsController',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_Terms&Conditions.view.html',
+    })
+   .state('manageservices', {
+      controller:'SQManageServicesController',
+      templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_services.view.html',
+    })
+   .state('createquote', {
+      controller:'SQCreateQuoteController',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.create_quote.view.html',
+    })
+   .state('vieweditquote', {
+      controller:'SQViewEditQuoteController',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.view_edit_quote.view.html',
     });
 
 }]);
