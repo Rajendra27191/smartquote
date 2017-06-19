@@ -207,7 +207,7 @@ $scope.getProductList1 = function(val,event) {
       $rootScope.hideSpinner();
     });
 }
-$scope.getProductList1('');
+// $scope.getProductList1('');
     // return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
     //   params: {
     //     address: val,

@@ -30,18 +30,19 @@
 	              <p style="font-size: 16px;">No content available to display.</p> 
 	            </center>
 
-				=====================
+			<!-- 	=====================
 				<center>
 				<h4>Product Search</h4>
-				<pre>Model: {{product | json}}</pre>
+				<pre>Model: {{product | json}}</pre> -->
+				
 				<!-- uib-typeahead="productGroup as productGroup.value for productGroup in getProduct($viewValue) | limitTo:50" typeahead-loading="loadingLocations" typeahead-no-results="noResults"   ng-keyup="getProduct(product,$event)"-->
 			
-				<!-- <input type="text" ng-model="product" placeholder="product loaded via $http" ng-keyup="getProductList(product,$event)" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in productListArray | limitTo:100 |filter:$viewValue" typeahead-min-length="1">
+			<!-- 	 <input type="text" ng-model="product" placeholder="product loaded via $http" ng-keyup="getProductList(product,$event)" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in productListArray | limitTo:100 |filter:$viewValue" typeahead-min-length="1">
 				<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 				<div ng-show="noResults">
 				<i class="glyphicon glyphicon-remove"></i> No Results Found
 				</div>
-				-->
+				
 				
 				<input type="text" ng-model="product" placeholder="product loaded via $http" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in getProduct($viewValue) | limitTo:100" typeahead-loading="loadingLocations">
 				<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
@@ -64,7 +65,7 @@
 
 
 
-				</center>
+				</center> -->
 
 
 
