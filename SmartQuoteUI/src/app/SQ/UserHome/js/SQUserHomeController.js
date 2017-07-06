@@ -144,6 +144,17 @@ $rootScope.subMenuClicked=function(subMenuName){
 	// $rootScope.userSignout();	
 	// }
 };
+
+
+
+
+
+
+
+
+
+
+
 $scope.productListArray=[];
 var event;
 $scope.setEvent = function(ev) {
@@ -189,6 +200,66 @@ $scope.getProduct = function(val) {
   };
 $scope.productListArray1=[];
 $scope.addProduct={};
+//=======================TYPEAHEAD=================================
+
+  
+  // instantiate the bloodhound suggestion engine
+  // var numbers = new Bloodhound({
+  //   datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.num); },
+  //   queryTokenizer: Bloodhound.tokenizers.whitespace,
+  //   local:  
+  //   [
+  //     { num: 'one two' },
+  //     { num: 'two one' },
+  //     { num: 'three five' },
+  //     { num: 'four one' },
+  //     { num: 'five two' },
+  //     { num: 'six' },
+  //     { num: 'seven' },
+  //     { num: 'eight' },
+  //     { num: 'nine 2' },
+  //     { num: 'one' },
+  //     { num: 'two' },
+  //     { num: 'ten 1' }
+  //   ]
+  // });
+   
+  // // initialize the bloodhound suggestion engine
+  // numbers.initialize();
+
+  // $scope.numbersDataset = {
+  //   displayKey: 'num',
+  //   source: numbers.ttAdapter(),
+  //   templates: {
+  //     empty: [
+  //       '<div class="tt-suggestion tt-empty-message">',
+  //       'No results were found ...',
+  //       '</div>'
+  //     ].join('\n'),
+  //   }
+  // };
+  
+  // $scope.addValue = function () {
+  //   numbers.add({
+  //     num: 'twenty'
+  //   });
+  // };
+  
+  // $scope.setValue = function () {
+  //   $scope.selectedNumber = { num: 'seven' };
+  // };
+  
+  // $scope.clearValue = function () {
+  //   $scope.selectedNumber = null;
+  // };
+  
+  // // Typeahead options object
+  // $scope.exampleOptions = {
+  //   displayKey: 'title'
+  // };
+//=======================TYPEAHEAD=================================
+
+var numbers;
 $scope.getProductList1 = function(val,event) {
   $rootScope.showSpinner();
     $http.get('/smartquote/getProductList', {
@@ -202,36 +273,84 @@ $scope.getProductList1 = function(val,event) {
       $scope.productListArray1=productList;
       console.log("$scope.productListArray1")
       console.log($scope.productListArray1.length)
-      // console.log($scope.productListArray1)
-      // return response.data.result;
+      // $scope.productArray=[];
+      //  angular.forEach($scope.productListArray1, function(item, key){
+      //    var num1;
+      //    num1={val:item.value.toUpperCase(),code:item.code};
+      //    $scope.productArray.push(num1)
+      //  });
+      //  console.log(JSON.stringify($scope.productArray));
+      //  // instantiate the bloodhound suggestion engine
+      //  var proArray=angular.copy($scope.productArray);
+      //  console.log("PRO ARRAY >>")
+      //  console.log(proArray.length)
+      numbers = new Bloodhound({
+        datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        local: $scope.productListArray1
+      });
+        // initialize the bloodhound suggestion engine
+        numbers.initialize();
+        $scope.noRecordsFound=0;
+        $scope.numbersDataset = {
+          displayKey: 'value',
+          limit: $scope.productListArray1.length,
+          source: numbers.ttAdapter(),
+          templates: {
+            // notFound:' no records',
+            empty: [
+              '<div class="tt-suggestion tt-empty-message">',
+              'No results were found ...',
+              +$scope.noRecordsFound+'</div>'
+            ].join('\n'),
+          }
+        };
+        // Typeahead options object
+        $scope.exampleOptions = {
+          displayKey: 'title',
+          highlight: true
+        };
+
+
+       // numbers.initialize();
+
       $rootScope.hideSpinner();
     });
 }
-// $scope.getProductList1('');
-    // return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-    //   params: {
-    //     address: val,
-    //     sensor: false
-    //   }
-    // }).then(function(response){
-    //   console.log(response) 
-    //   return response.data.results.map(function(item){
-    //     return item.formatted_address;
-    //   });
-    // });
 
-    // return $http.get('/smartquote/getProductList', {
-    //   params: {
-    //     prodLike: val,
-    //   }
-    // }).then(function(response){
-    //   console.log(response) 
-    //   return response.data.result;
-    //   // return response.data.results.map(function(item){
-    //   //   return item.formatted_address;
-    //   // });
-    // });
+// $('.typeahead').bind('typeahead:select', function(ev, suggestion) {
+//   console.log('Selection: ' + suggestion);
+// });
 
+$scope.productChanged=function(product){
+console.log("Selected Product")
+console.log(product)
+if (product) {
+  if (product.code) {
+    console.log("old product");
+    $scope.selectedNumber = product;
+  }else{
+    console.log("new product")
+  }
+}
+}
+// $scope.getProductList1('a4 sheet');
+   
+
+$scope.filterFn = function(product,input)
+{
+    // Do some tests
+    console.log(product)
+    angular.forEach(input, function (item) {
+            angular.forEach(values, function (txtBoxVal) {
+            if (item.value.indexOf(txtBoxVal)) {
+                return true;
+            } 
+            });
+        });
+
+    return false; // otherwise it won't be within the results
+};
 $scope.$on('$destroy', function(event, message) {
 	
  
@@ -252,24 +371,8 @@ $scope.$on('$destroy', function(event, message) {
     return result;
   }
 })
-.filter('myCustomFilter', function () {
-    function move(arr, old_index, new_index) {
-    while (old_index < 0) {
-        old_index += arr.length;
-    }
-    while (new_index < 0) {
-        new_index += arr.length;
-    }
-    if (new_index >= arr.length) {
-        var k = new_index - arr.length;
-        while ((k--) + 1) {
-            arr.push(undefined);
-        }
-    }
-     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);  
-   return arr;
-  }
-    return function (input, txtVal) {
+.filter('mySearchFilter', function () {
+return function (input, txtVal) {
         var output = [];
         console.log("myCustomFilter")
         // console.log(input)
@@ -296,14 +399,109 @@ $scope.$on('$destroy', function(event, message) {
             } 
           });
           if (flag) {
-            finalOutput=move(output,key,0)
+            // finalOutput=move(output,key,0)
           }
         });
         }
           
         // move([10, 20, 30, 40, 50], 0, 2)
         // console.log(output);
-        // return output;
-        return finalOutput;
+        return output;
+        // return finalOutput;
     }
+})
+.filter('myCustomFilter', function () {
+  //   function move(arr, old_index, new_index) {
+  //   console.log("MOVE")
+  //   while (old_index < 0) {
+  //       old_index += arr.length;
+  //   }
+  //   while (new_index < 0) {
+  //       new_index += arr.length;
+  //   }
+  //   if (new_index >= arr.length) {
+  //       var k = new_index - arr.length;
+  //       while ((k--) + 1) {
+  //           arr.push(undefined);
+  //       }
+  //   }
+  //    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);  
+  //  return arr;
+  // }
+    return function (input, txtVal) {
+        var output = [];
+        console.log("myCustomFilter")
+        console.log(output)
+        console.log(txtVal)
+        var strItem=txtVal;
+        var values = strItem.split(" ");
+        console.log("Input Box Value >>")
+        console.log(values)
+        // arrayElement=item;
+        var flag=false;
+        for (var i = 0; i < input.length; i++) {
+          for (var j = 0; j < values.length; j++) {  
+           if (input[i].value.indexOf(values[j])) {
+           flag=true;
+           } 
+          }
+           if (flag) {
+            output.push(input[i]); 
+           }
+        }
+        // angular.forEach(input, function (item) {
+        //     angular.forEach(values, function (txtBoxVal) {
+        //     if (item.value.indexOf(txtBoxVal)) {
+        //         output.push(item);
+        //     } 
+        //     });
+        // });
+        if (output.length>0) {
+        var finalOutput=[];
+        var flag2=false;
+        console.log("OUTPUT")
+        console.log(output.length)
+        console.log(output)
+        var arrCount=0;
+        // for (var i = 0; i < output.length; i++) {
+        //   if (output[i].value.indexOf(strItem)) {
+        //    flag2=true;
+        //    arrCount++;
+        //   } 
+        //   if (flag2) {
+        //     finalOutput=move(output,i,arrCount);
+        //   }
+        // }
+        
+        // output.sort(function(a,b){
+        // if(a.indexOf(txtVal) < b.indexOf(txtVal)) return -1;
+        // else if(a.indexOf(txtVal) > b.indexOf(txtVal)) return 1;
+        // else return 0;
+        // });
+
+        // angular.forEach(output, function(outValue, key){
+        //   angular.forEach(values, function (txtBoxVal) {
+        //     if (outValue.value.indexOf(txtBoxVal)) {
+        //       flag=true;
+        //     } 
+        //   });
+        //   if (flag) {
+        //     finalOutput=move(output,key,0)
+        //   }
+        // });
+
+
+        }
+          
+        // move([10, 20, 30, 40, 50], 0, 2)
+        // console.log(output);
+        // return finalOutput;
+        return output;
+    }
+
+
+
+
+
+    
 });

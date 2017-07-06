@@ -29,13 +29,27 @@ $scope.userLists=[];
 
 $scope.productList=[];
 
+//initialising Search======================
 
-
-$scope.init=function(){
-$rootScope.showSpinner();
-SQUserHomeServices.GetTermsConditions();
-};
-$scope.init();
+$scope.initAuotoComplete=function(){
+	// $scope.selectedProduct=null;
+	 products = new Bloodhound({
+	    datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+	    queryTokenizer: Bloodhound.tokenizers.whitespace,
+	    local: $scope.productList
+	  });
+        products.initialize();
+        $rootScope.productsDataset = {
+          displayKey: 'value',
+          limit: 200,
+          async: false,
+          source: products.ttAdapter(),
+        };
+        $rootScope.exampleOptions = {
+          displayKey: 'title',
+          highlight: true
+        };
+}
 
 // ===============UIB MODAL STARTS====================
 $scope.animationsEnabled=true;
@@ -43,6 +57,7 @@ $scope.openMyModal = function (product) {
 var modalInstance1=$uibModal.open({
 animation: $scope.animationsEnabled,
 backdrop: "static",
+keyboard: false,
 templateUrl: 'addProductModal.html',
 size: 'lg',
 controller: 'SQAddProductModalController',
@@ -51,17 +66,21 @@ dataToModal: function () {
 	var dataToModal
 	if ($scope.productButtonStatus=='add') {	
 	dataToModal={
+		'quoteStatus':'create',
 		'productButtonStatus':$scope.productButtonStatus,
 		'customerQuote':$scope.customerQuote,
-		'productList':$scope.productList,
+		// 'productList':$scope.productList,
 		'productGroupList':$scope.productGroupList,
 		'isAddProductModalShow':$scope.isAddProductModalShow,
 		}
 	}else if ($scope.productButtonStatus=='edit') {
+		console.log("$scope.editProduct")
+		console.log($scope.editProduct)
 		dataToModal={
+		'quoteStatus':'create',
 		'productButtonStatus':$scope.productButtonStatus,
 		'customerQuote':$scope.customerQuote,
-		'productList':$scope.productList,
+		// 'productList':$scope.productList,
 		'productGroupList':$scope.productGroupList,
 		'isAddProductModalShow':$scope.isAddProductModalShow,
 		'product':$scope.editProduct,
@@ -71,17 +90,24 @@ dataToModal: function () {
 }
 }
 });
+
+
+
 // $( "#myAnchor" ).focus();
 modalInstance1.result.then(function (dataFromModal) {
 // console.log("dataFromModal");
 // console.log(dataFromModal);
-if (dataFromModal.addNextProduct) {
-	$scope.addProductToQuote(dataFromModal);
-	$scope.isAddProductModalShow=true;
-	$scope.openMyModal();
-}else{
-	$scope.addProductToQuote(dataFromModal);
+if (dataFromModal.addNextProduct.toLowerCase()=="addnextproduct") {
+	// $scope.addProductToQuote(dataFromModal);
+	// $scope.isAddProductModalShow=true;
+	// $scope.openMyModal();
+}else if(dataFromModal.addNextProduct.toLowerCase()=="saveclose"){
+	$rootScope.addProductToQuote(dataFromModal);
 	$scope.isAddProductModalShow=false;
+}else if(dataFromModal.addNextProduct.toLowerCase()=="sessiontimeout"){
+	console.log("Session time out create quote >>")
+	$scope.isAddProductModalShow=false;
+	$scope.createQuote();
 }
 }, function () {
 $log.info('Modal dismissed at: ' + new Date());
@@ -93,18 +119,25 @@ $scope.isAddProductModalShow=false;
 
 // ===============UIB MODAL ENDS======================
 
-
-// Get Terms & Services=====================================
+$scope.initTermsConditionsAndServices=function(){
+$rootScope.showSpinner();
+console.log("GetTermsConditions API Request :"+new Date());
+SQUserHomeServices.GetTermsConditions();
+};
+$scope.initTermsConditionsAndServices();
+// Get TermsConditions=====================================
 $scope.termConditionList=[];
 $scope.servicesList=[];
 $scope.handleGetTermsConditionsDoneResponse=function(data){
-// console.log(data)
+console.log("GetTermsConditions API Response :"+new Date());	
+console.log(data)
 if(data){
 if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 $scope.termConditionList=data.result;
 $scope.termConditionList1=data.result;
 $rootScope.showSpinner();
+console.log("GetServices API Request :"+new Date());
 SQUserHomeServices.GetServices();
 
 }else{
@@ -123,17 +156,16 @@ var cleanupEventGetTermsConditionsNotDone = $scope.$on("GetTermsConditionsNotDon
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
-// -------------------------------------------------------------------
+// Get Services =================================================
 $scope.handleGetServicesDoneResponse=function(data){
-// console.log(data)
+console.log("GetServices API Response :"+new Date());	
+console.log(data)
 if(data){
 if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 $scope.serviceList=data.result;
 $scope.serviceList1=data.result;
-$rootScope.showSpinner();
-SQUserHomeServices.GetCurrentSupplierList();
-
+$scope.initQuoteView();
 }else{
 $rootScope.alertError(data.message);	
 $rootScope.hideSpinner();
@@ -141,7 +173,6 @@ $rootScope.hideSpinner();
 }
 }
 };
-
 var cleanupEventGetServicesDone = $scope.$on("GetServicesDone", function(event, message){
 $scope.handleGetServicesDoneResponse(message);      
 });
@@ -150,9 +181,182 @@ var cleanupEventGetServicesNotDone = $scope.$on("GetServicesNotDone", function(e
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
-// Get Terms & Services=====================================
+/*=============GET CURRENT SUPPLIER LIST==================*/
+$scope.initQuoteView=function(){
+$rootScope.showSpinner();
+console.log("GetCurrentSupplierList API Request :"+new Date());
+SQUserHomeServices.GetCurrentSupplierList();
+}
+$scope.handleGetCurrentSupplierListDoneResponse=function(data){
+console.log("GetCurrentSupplierList API Response :"+new Date());	
+console.log(data)
+if(data){
+if (data.code) {
+if(data.code.toUpperCase()=='SUCCESS'){
+	$scope.currentSupplierList=data.result;
+	$rootScope.showSpinner();
+    // SQUserHomeServices.GetSalesPersonList();
+    console.log("GetUserList API Request :"+new Date());
+    SQUserHomeServices.GetUserList();
+
+}else{
+$rootScope.alertError(data.message);
+$rootScope.hideSpinner();
+}
+}
+}
+};
+
+var cleanupEventGetCurrentSupplierListDone = $scope.$on("GetCurrentSupplierListDone", function(event, message){
+$scope.handleGetCurrentSupplierListDoneResponse(message);      
+});
+
+var cleanupEventGetCurrentSupplierListNotDone = $scope.$on("GetCurrentSupplierListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+/*==========================GET USER LIST==============================*/
+$scope.handleGetUserListDoneResponse=function(data){
+ console.log("GetUserList API Response :"+new Date());	
+ console.log(data);
+if(data){
+if (data.code) {	
+  if(data.code.toUpperCase()=='SUCCESS'){   
+	$scope.userList=data.result;
+	// console.log($rootScope.userData)
+	angular.forEach($scope.userList, function(element, key){
+		if (element.key==$rootScope.userData.userId && element.value==$rootScope.userData.userName) {
+			$scope.customerQuote.salesPerson=element;
+		}
+	});
+	$rootScope.showSpinner();
+	console.log("GetCustomerList API Request :"+new Date());	
+    SQUserHomeServices.GetCustomerList();
+	}else{
+	$rootScope.alertError(data.message);
+	$rootScope.hideSpinner();
+	}
+ 
+}
+}
+};
+
+var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
+$scope.handleGetUserListDoneResponse(message);      
+});
+
+var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+/*=============GET CUSTOMER LIST==================*/
+$scope.handleGetCustomerListDoneResponse=function(data){
+console.log("GetCustomerList API Response :"+new Date());
+console.log(data)
+if(data){
+if (data.code) {
+if(data.code.toUpperCase()=='SUCCESS'){
+$scope.customerList=data.result;
+// console.log($scope.customerList)
+// $rootScope.hideSpinner();
+console.log("getProductGroup API Request :"+new Date());
+$scope.getProductGroup();
+}else{
+$rootScope.alertError(data.message);
+$rootScope.hideSpinner();
+}
+}
+}
+};
+
+var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
+$scope.handleGetCustomerListDoneResponse(message);      
+});
+
+var cleanupEventGetCustomerListNotDone = $scope.$on("GetCustomerListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+/*=============GET PRODUCT GROUP LIST==================*/
+$scope.productGroupList=[]
+$scope.getProductGroup=function(){
+	// console.log("getProductGroup")
+	// $rootScope.showLoadSpinner();
+	SQUserHomeServices.GetProductGroupList();
+};
+$scope.handleGetGetProductGroupListDoneResponse=function(data){
+console.log("getProductGroup API Response :"+new Date());
+console.log(data)
+if(data){
+if (data.code) {
+if(data.code.toUpperCase()=='SUCCESS'){
+$scope.productGroupList=data.result;
+$rootScope.globalProductGroupList=data.result;
+// $scope.openMyModal(); 
+console.log("getProductsList API Request :"+new Date().getTime());
+$scope.getProductsList('');
+}else{
+$rootScope.hideSpinner();
+$rootScope.alertError(data.message);
+}
+// $rootScope.hideLoadSpinner();
+}
+}
+};
+
+var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListDone", function(event, message){
+$scope.handleGetGetProductGroupListDoneResponse(message);      
+});
+
+var cleanupEventGetProductGroupListNotDone = $scope.$on("GetProductGroupListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
+//Get Product List=====================================
+$scope.getProductsList=function(prod){
+	// $rootScope.showSpinner();
+	var prodLike=prod;
+	SQUserHomeServices.GetProductList(prodLike);
+}
+$scope.handleGetProductListDoneResponse=function(data){
+console.log("getProductsList API Response :"+new Date().getTime());
+console.log(data)
+if(data){
+if (data.code){
+if(data.code.toUpperCase()=='SUCCESS'){
+	$scope.productList=data.result;
+	$rootScope.globalProductList=data.result;
+	$scope.priceArray=[];
+	// console.log("JSON Product List >")
+	// console.log(JSON.stringify($scope.productList));
+	// $scope.getProductGroup();
+	$rootScope.isQuoteActivated=true;
+	$scope.initAuotoComplete();
+	
+	$rootScope.hideSpinner();
+}else{
+$rootScope.hideSpinner();
+$rootScope.alertError(data.message);
+}
+// $rootScope.hideLoadSpinner();
+}
+}
+};
+
+var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
+// console.log("GetProductListDone");
+$scope.handleGetProductListDoneResponse(message);      
+});
+
+var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
 
 
+
+// =====================================
 
 $scope.customerCodeChanged=function(code){
 // console.log("customerCodeChanged")
@@ -186,69 +390,11 @@ $scope.getCustomerDetails(customerCode);
 // console.log("$scope.isNewCustomer  "+$scope.isNewCustomer)
 };
 
-/*=============GET CURRENT SUPPLIER LIST==================*/
-$scope.handleGetCurrentSupplierListDoneResponse=function(data){
-if(data){
-if (data.code) {
-if(data.code.toUpperCase()=='SUCCESS'){
-	$scope.currentSupplierList=data.result;
-	$rootScope.showSpinner();
-    // SQUserHomeServices.GetSalesPersonList();
-    SQUserHomeServices.GetUserList();
-
-}else{
-$rootScope.alertError(data.message);
-$rootScope.hideSpinner();
-}
-}
-}
-};
-
-var cleanupEventGetCurrentSupplierListDone = $scope.$on("GetCurrentSupplierListDone", function(event, message){
-$scope.handleGetCurrentSupplierListDoneResponse(message);      
-});
-
-var cleanupEventGetCurrentSupplierListNotDone = $scope.$on("GetCurrentSupplierListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-/*==========================GET USER LIST==============================*/
-$scope.handleGetUserListDoneResponse=function(data){
-if(data){
-if (data.code) {	
-  if(data.code.toUpperCase()=='SUCCESS'){   
-	console.log(data)	;
-	$scope.userList=data.result;
-	console.log($rootScope.userData)
-	angular.forEach($scope.userList, function(element, key){
-		if (element.key==$rootScope.userData.userId && element.value==$rootScope.userData.userName) {
-			$scope.customerQuote.salesPerson=element;
-		}
-	});
-	$rootScope.showSpinner();
-    SQUserHomeServices.GetCustomerList();
-	}else{
-	$rootScope.alertError(data.message);
-	$rootScope.hideSpinner();
-	}
- 
-}
-}
-};
-
-var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
-$scope.handleGetUserListDoneResponse(message);      
-});
-
-var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
 
 /*=============GET SALES PERSON LIST==================*/
 $scope.handleGetSalesPersonListDoneResponse=function(data){
 if(data){
-// console.log(data)	
+console.log(data)	
 if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 	$scope.salesPersonList=data.result;
@@ -272,32 +418,7 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 
-/*=============GET CUSTOMER LIST==================*/
-$scope.handleGetCustomerListDoneResponse=function(data){
-if(data){
-if (data.code) {
-if(data.code.toUpperCase()=='SUCCESS'){
-$scope.customerList=data.result;
-// console.log($scope.customerList)
-// $rootScope.hideSpinner();
-$scope.getProductsList('');
 
-}else{
-$rootScope.alertError(data.message);
-$rootScope.hideSpinner();
-}
-}
-}
-};
-
-var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
-$scope.handleGetCustomerListDoneResponse(message);      
-});
-
-var cleanupEventGetCustomerListNotDone = $scope.$on("GetCustomerListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
 
 /*===================GET CUSTOMER DETAILS=================*/
 $scope.assignCustomerDetails=function(data){
@@ -341,84 +462,6 @@ var cleanupEventGetCustomerDetailsNotDone = $scope.$on("GetCustomerDetailsNotDon
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
-
-
-/*=============GET PRODUCT GROUP LIST==================*/
-$scope.productGroupList=[]
-$scope.getProductGroup=function(){
-	// console.log("getProductGroup")
-	// $rootScope.showLoadSpinner();
-	SQUserHomeServices.GetProductGroupList();
-};
-$scope.handleGetGetProductGroupListDoneResponse=function(data){
-console.log(data)
-if(data){
-if (data.code) {
-if(data.code.toUpperCase()=='SUCCESS'){
-$scope.productGroupList=data.result;
-$scope.openMyModal(); 
-}
-$rootScope.hideSpinner();
-// $rootScope.hideLoadSpinner();
-}
-}
-};
-
-var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListDone", function(event, message){
-$scope.handleGetGetProductGroupListDoneResponse(message);      
-});
-
-var cleanupEventGetProductGroupListNotDone = $scope.$on("GetProductGroupListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-
-/*=============GET PRODUCT GROUP LIST==================*/
-$scope.initProducts=function(){
-$rootScope.showSpinner();
-// var prodLike='';
-// SQUserHomeServices.GetProductList(prodLike);
-	$scope.getProductGroup();
-};
-
-$scope.getProductsList=function(prod){
-	$rootScope.showSpinner();
-	var prodLike=prod;
-	SQUserHomeServices.GetProductList(prodLike);
-}
-$scope.handleGetProductListDoneResponse=function(data){
-if(data){
-if (data.code){
-if(data.code.toUpperCase()=='SUCCESS'){
-	$rootScope.hideSpinner();
-	$scope.productList=data.result;
-	$scope.priceArray=[];
-	// console.log("JSON Product List >")
-	// console.log(JSON.stringify($scope.productList));
-	// $scope.getProductGroup();
-	$rootScope.isQuoteActivated=true;
-		
-}else{
-   $rootScope.hideSpinner();
-$rootScope.alertError(data.message);
-}
-// $rootScope.hideLoadSpinner();
-}
-}
-};
-
-var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
-console.log("GetProductListDone");
-console.log(message);
-$scope.handleGetProductListDoneResponse(message);      
-});
-
-var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-
-
 
 // ===================== RESET & CANCEL=====================
 $scope.cancelCreateQuote=function(){
@@ -489,19 +532,24 @@ $scope.isCurrentSupplierNameRequired=true;
 // }
 
 
-
+// $scope.productsDataset=[];
 $scope.showAddProductModal=function(status,product,index){
 if ($scope.form.addCustomerQuote.$valid) {
 	$scope.productButtonStatus=status;
 	$scope.isAddProductModalShow=true;
 	console.log($scope.productButtonStatus+" product >>>>")
 	if ($scope.productButtonStatus=='add') {
-	    $scope.initProducts();
+	    // $scope.initProducts();
+	    $scope.openMyModal(); 
 	}else if($scope.productButtonStatus=='edit'){
 		console.log("edit")
-		$scope.getProductGroup();
+		// console.log(product)
+		// $scope.getProductGroup();
 		$scope.editProduct=angular.copy(product);
 		$scope.editIndex=index;
+		$scope.openMyModal(); 
+		// console.log("===========")
+		// console.log($scope.editProduct)
 	}
 }else{
 	$scope.form.addCustomerQuote.submitted=true;		
@@ -604,8 +652,8 @@ console.log("calculateAllInformation")
 
 
 
-$scope.addProductToQuote=function(dataFromModal){
-console.log("addProductToQuote>>>>>")
+$rootScope.addProductToQuote=function(dataFromModal){
+console.log("addProductToQuote>>>>>....<<<<<<")
 console.log(dataFromModal)
 $scope.addProduct=dataFromModal.addProduct;
 $scope.productButtonStatus=dataFromModal.productButtonStatus;
@@ -672,7 +720,7 @@ if ($scope.productButtonStatus=='add') {
 	// console.log(JSON.stringify(product));
 console.log("$scope.customerQuote.productList")
 console.log($scope.customerQuote.productList)
-
+$scope.showAddProductError=false;
 
 };
 
@@ -702,6 +750,10 @@ supplierId=$scope.customerQuote.currentSupplierName.key
 supplierName=$scope.customerQuote.currentSupplierName;
 supplierId=0;
 }
+}else{
+	console.log("$scope.customerQuote.currentSupplierName "+$scope.customerQuote.currentSupplierName);
+	supplierName=$scope.customerQuote.currentSupplierName;
+	supplierId=-1;
 };
 if ($scope.customerQuote.salesPerson!=undefined) {
 if ($scope.customerQuote.salesPerson.key) {
@@ -740,6 +792,7 @@ objQuoteBean={
 'productList':$scope.customerQuote.productList,
 'serviceList':$scope.serviceList,
 'termConditionList':$scope.termConditionList,
+'userId':$rootScope.userData.userId,
 }
 // console.log(JSON.stringify(objQuoteBean))
 // return JSON.stringify(objQuoteBean);
@@ -813,7 +866,7 @@ if(data.code.toUpperCase()=='SUCCESS'){
 	$rootScope.alertSuccess("Successfully created quote");
 	$timeout(function() {
 	$scope.cancelCreateQuote();
-	$scope.getProductsList('');
+	$scope.initQuoteView();	
 	}, 2000);
 	  
 }else{
@@ -822,6 +875,12 @@ if(data.code.toUpperCase()=='SUCCESS'){
 $rootScope.hideSpinner();
 }}
 };
+var cleanupEventCreateQuoteDone = $scope.$on("QuoteSessionTimeOut", function(event, message){
+// $scope.handleCreateQuoteDoneResponse(message);      
+$scope.cancelCreateQuote();
+$rootScope.$broadcast('SessionTimeOut', message); 		
+$rootScope.alertSessionTimeOutOnQuote();
+});
 
 var cleanupEventCreateQuoteDone = $scope.$on("CreateQuoteDone", function(event, message){
 $scope.handleCreateQuoteDoneResponse(message);      
@@ -893,6 +952,9 @@ hotkeys.bindTo($scope)
   	}
   }
 });
+
+
+
 
 $scope.$on('$destroy', function(event, message) {
 cleanupEventCreateQuoteDone();

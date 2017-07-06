@@ -1,6 +1,7 @@
 	angular.module('sq.SmartQuoteDesktop')
-	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQUserHomeServices,$uibModal,$http){
+	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQUserHomeServices,$uibModal,$http,hotkeys){
 	console.log('initialise SQAddProductModalController');
+	// $('#searchProduct').focus();
 
 	$scope.form={};
 	$scope.addProduct={};
@@ -11,10 +12,14 @@
 
 	$scope.customerQuote=dataToModal.customerQuote;
 	$scope.productButtonStatus=dataToModal.productButtonStatus;
-	$scope.productList=dataToModal.productList;
+	// $scope.productList=dataToModal.productList;
 	$scope.productGroupList=dataToModal.productGroupList;
+	// $scope.productList=$rootScope.globalProductList;
+	// $scope.productGroupList=$rootScope.globalProductGroupList;
 	$scope.isAddProductModalShow=dataToModal.isAddProductModalShow;
+	// $('#searchProduct').focus();	  
 
+	var quoteStatus=dataToModal.quoteStatus;
 	$scope.modelOptions = {
 	debounce: {
 	default: 500,
@@ -23,6 +28,27 @@
 	getterSetter: true
 	};
 
+	$scope.search={}
+	$scope.search.selectedProduct="";
+	
+	//initialising Search======================
+	// $scope.selectedProduct=null;
+	//  products = new Bloodhound({
+	//     datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+	//     queryTokenizer: Bloodhound.tokenizers.whitespace,
+	//     local: $scope.productList
+	//   });
+ //        products.initialize();
+ //        $scope.productsDataset = {
+ //          displayKey: 'value',
+ //          limit: 200,
+ //          source: products.ttAdapter(),
+ //        };
+ //        $scope.exampleOptions = {
+ //          displayKey: 'title',
+ //          highlight: true
+ //        };
+	//initialising Search=========================
 
 	$scope.ok = function () {
 	console.log("ok clicked")
@@ -47,7 +73,6 @@
 		console.log($scope.addProduct.avgcost)	
 	if (parseFloat($scope.addProduct.quotePrice)>=parseFloat($scope.addProduct.avgcost)) {
 	console.log("Valid product data");
-	var dataFromModal;
 	dataFromModal={
 	'addProduct':$scope.addProduct,
 	'addNextProduct':addNextProduct,
@@ -55,7 +80,23 @@
 	'isNewProduct':$scope.isNewProduct,
 	'isAddProductModalShow':false,
 	}
+	var dataFromModal;
+	if(addNextProduct.toLowerCase()=="addnextproduct") {
+		if (quoteStatus=='create') {
+		$rootScope.addProductToQuote(dataFromModal);
+		}else if(quoteStatus=='edit'){
+		$rootScope.addProductToEditQuote(dataFromModal);
+		}
+		$scope.addProduct={};
+		$scope.productInfo=undefined;
+		$scope.form.addProductIntoQuote.submitted=false;
+		$scope.form.addProductIntoQuote.$setPristine();
+		$scope.priceArray=[];
+		$scope.search.selectedProduct="";
+		$('#searchProduct').focus();	
+	}else if(addNextProduct.toLowerCase()=="saveclose"){
 	$uibModalInstance.close(dataFromModal);
+	}
 	}else{
 	console.log("Invalid product data");		
 	$('#quotePrice').focus();
@@ -64,17 +105,50 @@
 	}
 	}else{
 	$scope.form.addProductIntoQuote.submitted=true;
+	console.log();
+	if(addNextProduct.toLowerCase()=="sessiontimeout"){
+	dataFromModal={
+	'addNextProduct':"sessiontimeout",
+	'isAddProductModalShow':false,
 	}
+	console.log("sessionTimeOut...")
+	$uibModalInstance.close(dataFromModal);
+
+	}else{
+	if ($scope.customerQuote.competeQuote.toUpperCase()=='YES') {
+	console.log("COMPETE");
+		
+		if ($scope.search.selectedProduct=="" || $scope.search.selectedProduct==null) {
+		$('#searchProduct').focus();
+		}else if ($scope.form.addProductIntoQuote.currentSupplierPrice.$invalid) {
+			$('#currentSupplierPrice').focus();
+		}else if ($scope.form.addProductIntoQuote.quotePrice.$invalid) {
+			$('#quotePrice').focus();
+		}else if($scope.form.addProductIntoQuote.itemQty.$invalid){
+			$('#itemQty').focus();
+		}
+	}else{
+		if ($scope.search.selectedProduct=="" || $scope.search.selectedProduct==null) {
+		$('#searchProduct').focus();
+		}else if ($scope.form.addProductIntoQuote.quotePrice.$invalid) {
+			$('#quotePrice').focus();
+		}else if($scope.form.addProductIntoQuote.itemQty.$invalid){
+			$('#itemQty').focus();
+		}
+	}}
+	
+	}
+
 	}
 
 	$rootScope.addNextProduct=function(){
-	var addNextProduct=true;	
+	var addNextProduct="addnextproduct";	
 	// console.log("addNextProduct")
 	$scope.addProductFromModal(addNextProduct);
 	};
 
 	$rootScope.saveAndClose=function(){
-	var addNextProduct=false;	
+	var addNextProduct="saveclose";	
 	// console.log("saveAndClose")
 	$scope.addProductFromModal(addNextProduct);
 	}
@@ -171,11 +245,28 @@
 
 	$scope.disableCurrentSupplierGP=false;
 
-	$scope.getProductDetails=function(product){
-	// console.log(product);
-	// $rootScope.showSpinner();
+	// $scope.GetProductDetails = function (productCode){
+     
+ //    };
+
+	$scope.getProductDetails=function(productCode){
 	$rootScope.showLoadSpinner();
-	SQUserHomeServices.GetProductDetails(product.code);
+	// SQUserHomeServices.GetProductDetails(productCode);
+	 $http({
+      method: "POST",
+      url: "/smartquote/getProductDetails?productCode="+productCode,
+      }).success(function(data, status, header, config){
+        //console.log(data)
+        if (data.code=="sessionTimeOut") {
+        // $rootScope.$broadcast('SessionTimeOut', data);
+        $scope.addProductFromModal("sessiontimeout");
+        }else{
+        $rootScope.$broadcast('GetProductDetailsDone', data); 
+        }
+      }).error(function(data, status, header, config){
+        //console.log(data);
+        $rootScope.$broadcast('GetProductDetailsNotDone', data);
+      });
 	};
 
 	$scope.handleGetProductDetailsDoneResponse=function(data){
@@ -185,17 +276,28 @@
 	console.log("getProductDetails");
 	console.log(data.objProductResponseBean);	
 	$scope.addProduct=angular.copy(data.objProductResponseBean);
-	$scope.addProduct.quotePrice=null;
+	$scope.addProduct.quotePrice='';
 	$scope.productInfo=angular.copy(data.objProductResponseBean);
 	$scope.addProduct.itemQty=1;
+	$scope.addProduct.currentSupplierPrice='';
+	$scope.addProduct.currentSupplierGP='';
+	$scope.addProduct.gpRequired='';
+	$scope.selectedProduct="";
 	if ($scope.addProduct.gstFlag.toUpperCase()=='NO') {
 	$scope.disableCurrentSupplierGP=true;	
 	};
 	$scope.createArrayOfQuantityAndPrice($scope.addProduct);
 	$scope.isProductSelected=true;
+	
+	// $('#quotePrice').change();
 	}else{
 	$rootScope.alertError(data.message);
 	}
+	}
+	if ($scope.customerQuote.competeQuote.toUpperCase()=='YES') {
+	$('#currentSupplierPrice').focus();		
+	}else{
+	$('#quotePrice').focus();		
 	}
 	}
 	// $rootScope.hideSpinner();
@@ -236,8 +338,8 @@
 	}
 
 	$scope.productCodeNotFound=function(noProductFound){
-	 console.log("productCodeNotFound")
-	 console.log(noProductFound)
+	 // console.log("productCodeNotFound")
+	 // console.log(noProductFound)
 	if (noProductFound!=undefined) {
 	if ($scope.productButtonStatus=='add') {
 	$scope.isNewProduct=noProductFound;
@@ -245,106 +347,53 @@
 	}
 	};
 
-	//=================
-	$scope.getLocation = function(val) {
-    return $http.get('//maps.googleapis.com/maps/api/geocode/json', {
-      params: {
-        address: val,
-        sensor: false
-      }
-    }).then(function(response){
-    	console.log(response)	
-      return response.data.results.map(function(item){
-        return item.formatted_address;
-      });
-    });
-  };
-
-    $scope.getProductListData=function(val){
-    console.log("getProductListData")
-     return $http.get('/smartquote/getProductList', {
-      params: {
-        prodLike: val,
-      }
-    }).then(function(response){
-    console.log(response)	
-        return response.data.results;
-    });
-     // $http({
-     //  method: "POST",
-     //  url: "/smartquote/getProductList?prodLike="+prodLike,
-     //  }).success(function(data, status, header, config){
-     //    // console.log(data)
-     //    if (data.code=="sessionTimeOut") {
-     //    $rootScope.$broadcast('SessionTimeOut', data);   
-     //    }else{
-     //    console.log("returning")
-     //    $scope.productList=data.result;
-     //    console.log($scope.productList)
-     //    return $scope.productList;
-     //    }
-     //  }).error(function(data, status, header, config){
-     //    //console.log(data);
-     //    $rootScope.$broadcast('GetProductListNotDone', data);
-     //  });
-    }
-
-	$scope.getProductsList=function(prod){
-	$rootScope.showSpinner();
-	var prodLike=prod;
-	SQUserHomeServices.GetProductList(prodLike);
-	}
-	$scope.handleGetProductListDoneResponse=function(data){
-	if(data){
-	if (data.code){
-	if(data.code.toUpperCase()=='SUCCESS'){
-	$scope.productList=data.result;
-	angular.element('#upload').trigger('change');
-	}else{
-	$rootScope.hideLoadSpinner();
-	$rootScope.alertError(data.message);
-	}
-	$rootScope.hideLoadSpinner();
-	}
-	}
-	};
-
-	var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
-	console.log("GetProductListDone");
-	console.log(message);
-	$scope.handleGetProductListDoneResponse(message);      
-	});
-
-	var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
-	$rootScope.alertServerError("Server error");
-	$rootScope.hideSpinner();
-	});
-	//=================
+	
 	$scope.isLoading=false;
 	$scope.productCodeChanged=function(prod){
+	console.log("productCodeChanged");
+	console.log(prod);
+	$scope.addProduct.itemCode=prod;
 	if ($scope.isProductSelected) {
 	var code=$scope.addProduct.itemCode;	
 	$scope.addProduct={};
 	$scope.productInfo=undefined;
 	$scope.addProduct.itemCode=code;
 	$scope.priceArray=[];
+	$scope.isProductSelected=false;
 	// $scope.isProductInvalid=true;
+	if (prod) {
+		 	if (prod.code) {
+		 		// console.log(prod.code);
+		 		$scope.addProduct.itemCode=prod.code;
+		 		var proCode=prod.code.replace(/\s+/g,'');;
+		 		// console.log(proCode);
+		 		$scope.getProductDetails(proCode);
+		 		$scope.productCodeNotFound(false);	
+		 	}else{
+		 		$scope.addProduct.itemCode=prod;
+		 		$scope.productCodeNotFound(true);	
+		 	}
+		 }
 	}else{
-		// console.log("productCodeChanged");
-		// console.log(prod)
-		// console.log($scope.addProduct.itemCode);
-		// if($scope.addProduct.itemCode!=undefined){
-		// console.log($scope.addProduct.itemCode.length);
-		// if ($scope.addProduct.itemCode.length==2) {
-		// $scope.getProductsList($scope.addProduct.itemCode);			
-		// }
-		// }
+		 if (prod) {
+		 	if (prod.code) {
+		 		$scope.addProduct.itemCode=prod.code;
+		 		// console.log(prod.code);
+		 		var proCode=prod.code.replace(/\s+/g,'');
+		 		console.log(proCode);
+		 		$scope.getProductDetails(proCode);
+		 		$scope.productCodeNotFound(false);	
+		 	}else{
+		 		$scope.productCodeNotFound(true);	
+		 	}
+		 }
 	}
 	};
-
-
+//========================Search
+	
+	var products;
 	if ($scope.productButtonStatus=='edit') {
-		console.log(dataToModal.product)
+	console.log(dataToModal.product)
 	$scope.addProduct=dataToModal.product;
 	$scope.productInfo=dataToModal.product;
 	$scope.createArrayOfQuantityAndPrice(dataToModal.product);
@@ -366,31 +415,63 @@
 	});
 	$scope.addProduct.productGroup=productGroupCode;
 	// console.log($scope.addProduct.productGroup)
-	}
-	//================HOTKEYS=====================
-	$scope.radius=125;
-	  $scope.getStyle = function(){
-	    var transform = 'translateY(-50%) ' + 'translateX(-50%)';
+	}else{
+		 // document.getElementById("#searchProduct").focus();
 
-	    return {
-	        'top': '50%',
-	        'bottom': 'auto',
-	        'left': '50%',
-	        'transform': transform,
-	        '-moz-transform': transform,
-	        '-webkit-transform': transform,
-	        'font-size': 16 + 'px',
-	        'font-weight': 'bold',
+	}
+$scope.clearSearch=function(){
+	console.log($scope.search.selectedProduct);
+	console.log($scope.addProduct.itemCode);
+	if ($scope.isProductSelected) {
+		$scope.search.selectedProduct="";
+	}else{
+		$scope.search.selectedProduct="";
+		$scope.addProduct.itemCode="";
+	}
 }
-	        // 'font-size': $scope.radius/ + 'px'
-	    };
-	
-// $scope.myCustomFilter=function(product){
-// }
+//================HOTKEYS=====================
+$scope.radius=125;
+  $scope.getStyle = function(){
+    var transform = 'translateY(-50%) ' + 'translateX(-50%)';
+
+    return {
+        'top': '50%',
+        'bottom': 'auto',
+        'left': '50%',
+        'transform': transform,
+        '-moz-transform': transform,
+        '-webkit-transform': transform,
+        'font-size': 16 + 'px',
+        'font-weight': 'bold',
+		}
+        // 'font-size': $scope.radius/ + 'px'
+    };
+
+    hotkeys.bindTo($scope)
+	.add({
+	  combo: 'escape',
+	  description: 'Clear Search ',
+	  allowIn: ['INPUT', 'SELECT', 'TEXTAREA'],
+	  callback: function() {
+	  	console.log("Escape pressed")
+	  	$scope.clearSearch();
+	  }
+	});
+
+
 	$scope.$on('$destroy', function(event, message) {
 	cleanupEventGetProductDetailsDone();
 	cleanupEventGetProductDetailsNotDone();
 
 	});
 })
-	;
+.directive('autofocus', ['$timeout', function($timeout) {
+  return {
+    restrict: 'A',
+    link : function($scope, $element) {
+      $timeout(function() {
+        $element[0].focus();
+      });
+    }
+  }
+}]);

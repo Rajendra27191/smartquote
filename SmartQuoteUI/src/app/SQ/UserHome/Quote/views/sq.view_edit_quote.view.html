@@ -87,6 +87,7 @@ legend>label{
 		                <th>Supplier &nbsp;</th>
 		                <th>Attention &nbsp;</th>
 		                <th>Modified Date &nbsp;</th>
+		                <th>Status &nbsp;</th>
 		                <th>Action &nbsp;</th>
                     </tr>
                 </thead>
@@ -104,14 +105,15 @@ legend>label{
 		                </td>
 		                <td>
 		                <span data-ng-bind="quote.currentSupplierName" ng-if="quote.currentSupplierName!=''"></span>
-		                <span ng-if="quote.currentSupplierName==''"> --- </span>
+		                <span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null"> --- </span>
 		                </td>
 		                <td><span data-ng-bind="quote.quoteAttn"></span></td>
 		                <td><span data-ng-bind="quote.modifiedDate"></span></td>
+		                <td><span data-ng-bind="quote.status"></span></td>
 		                <td>
 		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="viewDetailInformation(quote)" popover-placement="left" uib-popover="Click to view/edit quote."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
 		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="showCommentModal(quote)" popover-placement="left" uib-popover="Click to add comment on quote."  popover-trigger="'mouseenter'"><i class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>
-		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span>
+		              <!--   <span style="cursor: pointer;margin: 0px 5px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span> -->
 
 		                </td>
                 	</tr>

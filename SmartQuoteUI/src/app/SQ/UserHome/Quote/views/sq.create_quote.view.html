@@ -161,7 +161,7 @@ margin: 0px;
 			<label class="sub-label">Current Supplier Name</label> <span class="asteric"></span>		
 			</div>
 			<div class="col-md-8">
-			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" ng-change="currentSupplierNameChanged()" autocomplete="off">
+			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" ng-change="currentSupplierNameChanged()" autocomplete="off" typeahead-min-length="0">
 			<!--     -->
 			<span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
 			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">* please enter supplier name.</small>
@@ -263,6 +263,7 @@ margin: 0px;
 	<div class="col-md-2">
 		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product
 		</a>
+		<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
 		<!-- <a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="openMyModal()" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product Modal
 		</a> -->
 		<!-- <span style="color: gray;float: right;">[ctrl+shift+a]</span> -->
@@ -296,7 +297,7 @@ margin: 0px;
     </thead>
     <tbody>
       <tr ng-if="addedProductList.length>0" ng-repeat="product in customerQuote.productList">
-        <td ><span data-ng-bind="product.itemCode"></span></td>
+        <td ><span data-ng-bind="product.itemCode"></span> </td>
         <td ><span data-ng-bind="product.itemDescription"></span></td>
         
         <td ><span data-ng-bind="product.unit"></span></td>
@@ -314,7 +315,7 @@ margin: 0px;
         
         <td><span data-ng-bind="product.gstFlag"></span></td>
         <td>
-        	<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
+        	<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index,product.itemCode);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
             <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></span>
         </td>
       </tr>
@@ -484,6 +485,29 @@ margin: 0px;
 </div>
 
 
+<!-- <div ng-include="'SQ/UserHome/Quote/views/add_product_modal.html'" ng-if="productList.length>0"></div> -->
 <!-- <div ng-include="'SQ/UserHome/Quote/views/sq.add_product_into_quote_modal.html'"></div> -->
 <div ng-include="'SQ/UserHome/Quote/views/addproduct-uib-modal.html'"></div>
 
+<!-- Modal -->
+<!-- <div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+         <div class="input-group">
+                <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
+                <input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(selectedProduct)" style="padding: 6px 6px;" autofocus>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> -->

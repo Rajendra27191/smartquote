@@ -109,8 +109,11 @@ th{cursor:pointer;}
 				<th ng-click="sort('avgcost')">Avg Cost
 				<span class="glyphicon sort-icon" ng-show="sortKey=='avgcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 				</th>
-				<th ng-click="sort('taxCode')">Tax Code  
+			<!-- 	<th ng-click="sort('taxCode')">Tax Code  
 				<span class="glyphicon sort-icon" ng-show="sortKey=='taxCode'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th> -->
+				<th ng-click="sort('gstFlag')"> GST Exempt
+				<span class="glyphicon sort-icon" ng-show="sortKey=='gstFlag'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
 				</th>
 				<th >Action</th>
 				
@@ -125,7 +128,7 @@ th{cursor:pointer;}
                 <td ><span data-ng-bind="product.unit"></span></td>
                 <td ><span data-ng-bind="product.price0exGST"></span></td>
                 <td ><span data-ng-bind="product.avgcost"></span></td>
-                <td ><span data-ng-bind="product.taxCode"></span></td>
+                <td ><span data-ng-bind="product.gstFlag"></span></td>
                 <td >
                 <span style="cursor: pointer;float: left;margin: 0px 5px;" ng-click="editProductBtnClicked(product)" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>
                 <span style="cursor: pointer;float: right;margin:0px 5px;" ng-click="deleteProduct(product,$index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-trash"></i></span>
@@ -388,7 +391,7 @@ th{cursor:pointer;}
 	</div>
 	</div>
 
-	<div class="row row-control">
+<!-- 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Tax Code</label></div>
 	<div class="col-md-8">
 	<input type="text" class = 'form-control' name="taxCode" ng-model="manageProduct.taxCode">
@@ -397,7 +400,7 @@ th{cursor:pointer;}
 		<small ng-show="form.manageProduct.taxCode.$error.required">*Please enter tax code.</small>
 	</span>
 	</div>
-	</div>
+	</div> -->
 
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">GST Exempt</label></div>

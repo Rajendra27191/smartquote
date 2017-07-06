@@ -3,7 +3,7 @@
 /* .main-nav li a{margin:5px 32px; } */
 
 </style>
-<div class="container" >
+<!-- <div class="container" > -->
 	<div ng-if="isSessionExpired" style="font-size: 12px; margin-top: 15%;margin-bottom: 10%;">
 	  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
 	        <div class="col-md-12">
@@ -30,21 +30,27 @@
 	              <p style="font-size: 16px;">No content available to display.</p> 
 	            </center>
 
-			<!-- 	=====================
-				<center>
-				<h4>Product Search</h4>
-				<pre>Model: {{product | json}}</pre> -->
+			
+				<!-- <h4>Product Search</h4>
+				<div ng-if="productListArray1.length>0">
+				<p>Model: {{selectedNumber|json}}</p>
+   				<input id="searchProduct" class='typeahead form-control' type="text" sf-typeahead options="exampleOptions" datasets="numbersDataset" ng-model="selectedNumber" ng-change="productChanged(selectedNumber)" >				
+				</div> -->
 				
+				<center ng-show="">
+				
+				<!-- <pre>Model: {{addProduct.itemCode | json}}</pre> -->
 				<!-- uib-typeahead="productGroup as productGroup.value for productGroup in getProduct($viewValue) | limitTo:50" typeahead-loading="loadingLocations" typeahead-no-results="noResults"   ng-keyup="getProduct(product,$event)"-->
 			
-			<!-- 	 <input type="text" ng-model="product" placeholder="product loaded via $http" ng-keyup="getProductList(product,$event)" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in productListArray | limitTo:100 |filter:$viewValue" typeahead-min-length="1">
+				<!-- <input type="text" ng-model="product" placeholder="product loaded via $http" ng-keyup="getProductList(product,$event)" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in productListArray | limitTo:100 |filter:$viewValue" typeahead-min-length="1">
 				<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 				<div ng-show="noResults">
 				<i class="glyphicon glyphicon-remove"></i> No Results Found
 				</div>
-				
-				
-				<input type="text" ng-model="product" placeholder="product loaded via $http" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in getProduct($viewValue) | limitTo:100" typeahead-loading="loadingLocations">
+				 -->
+				<br>
+			<!-- 	
+				<input type="text" ng-model="product" placeholder="product loaded via $http" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in getProduct($viewValue) | limitTo:150" typeahead-loading="loadingLocations">
 				<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 				<div ng-show="noResults">
 				<i class="glyphicon glyphicon-remove"></i> No Results Found
@@ -52,37 +58,55 @@
 				
 				<br>
 
-				<input type="text" ng-model="addProduct.itemCode" placeholder="Select product" class="form-control"  uib-typeahead="productGroup as productGroup.value for productGroup in productListArray1 | filter:$viewValue" typeahead-min-length="1">
+				<input type="text" ng-model="addProduct.itemCode" placeholder="Select product" class="form-control"  uib-typeahead="productGroup as productGroup.code+' '+productGroup.value for productGroup in productListArray1| myCustomFilter:$viewValue | limitTo:500" typeahead-min-length="1">
 				<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
 				<div ng-show="noResults">
 				<i class="glyphicon glyphicon-remove"></i> No Results Found
 				</div>
+				 -->
+				<br>
+
 				
+			
+				<!-- <input type="text" id="Autocomplete" class="form-control" ng-autocomplete ng-model="result1" /> -->
+
+				<!--  <input type = 'text' id="targetItemCode" name="itemCode" class = 'form-control' ng-model = 'addProduct.itemCode' focus-me="true" uib-typeahead = 'productList as productList.value for productList in productListArray1 | filter:$viewValue | limitTo:50'   autocomplete="off" placeholder="Select Product" typeahead-min-length="1" required > -->
+
+				<br>
+				 <!-- <angucomplete id="ex1" placeholder="Search countries" pause="0" selectedobject="selectedProduct" localdata="productListArray1" searchfields="value" titlefield="value" minlength="1" inputclass="form-control form-control-small" matchclass="highlight" />
+
+				 <div class="" ng-show="selectedProduct">
+                    You selected <span class="bold-span">{{selectedCountry.originalObject.name}}</span>
+                </div> -->
+
+				<!-- <angucomplete id="members"
+              placeholder="Search members"
+              pause="400"
+              selectedobject="testObj"
+              url="/smartquote/getProductList?prodLike="
+              datafield="results"
+              titlefield="firstName,surname"
+              descriptionfield="email"
+              imagefield="profilePic"
+              inputclass="form-control form-control-small"/> -->
+				<!-- <div class="large-padded-row">
+                <h3>Example 1 - Countries of the World</h3>
+                <div class="padded-row">
+                    <angucomplete id="ex1" placeholder="Search countries" pause="100" selectedobject="selectedCountry" localdata="countries" searchfields="name" titlefield="name" minlength="1" inputclass="form-control form-control-small" matchclass="highlight" />
+                </div>
+                <div class="" ng-show="selectedCountry">
+                    You selected <span class="bold-span">{{selectedCountry.originalObject.name}}</span> which has a country code of <span class="bold-span">{{selectedCountry.originalObject.code}}</span>
+                </div>
+           		 </div>
+ -->
 
 
 
 
 
+				</center>
 
-
-				</center> -->
-
-
-
-
-
-				<!-- {{productListArray.length}}
-				<input type="text" name="" value="" placeholder="Search" class="form-control" ng-model="page">
-				<ul >
-			    <li ng-repeat="productGroup in productListArray | filter:page | limitTo:100 ">{{productGroup.value}}</li>
-				</ul> -->
-
-				<!-- 
-				<ul class="dropdown-menu ng-isolate-scope" ng-show="isOpen() &amp;&amp; !moveInProgress" ng-style="{top: position().top+'px', left: position().left+'px'}" role="listbox" aria-hidden="false" uib-typeahead-popup="" id="typeahead-63-4339" matches="matches" active="activeIdx" select="select(activeIdx, evt)" move-in-progress="moveInProgress" query="query" position="position" assign-is-open="assignIsOpen(isOpen)" debounce="debounceUpdate" style="top: 257px; left: 15px;">
-				<li class="uib-typeahead-match ng-scope" ng-repeat="match in matches track by $index" ng-class="{active: isActive($index) }" ng-mouseenter="selectActive($index)" ng-click="selectMatch($index, $event)" role="option" id="typeahead-63-4339-option-0" style="">
-				<a href="" tabindex="-1" ng-bind-html="match.label | uibTypeaheadHighlight:query" ng-attr-title="{{match.label}}" class="ng-binding ng-scope" title="ACO-123141OC (OFFICE CHOICE HEAVY DUTY A4 SHEET PROTECTORS COPYSAFE BX100 ** SUB PRODUCT 25100 **)">ACO-123141OC (OFFICE CHOICE HEAVY DUTY <strong>A4 SHEET</strong> PROTECTORS COPYSAFE BX100 ** SUB PRODUCT 25100 **)</a>
-				</li>
-				</ul> -->
+				
 
 		
 
@@ -90,4 +114,4 @@
 	        </div>
 	  </div>
 	</div>
-</div>
+<!-- </div> -->

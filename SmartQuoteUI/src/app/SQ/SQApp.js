@@ -1,4 +1,4 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead'])
 .config(function($logProvider){
   $logProvider.debugEnabled(true);
   
@@ -17,7 +17,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
   storage.bind($rootScope, 'userNavMenu',[]);
   storage.bind($rootScope, 'userData',{});
 }])
-.controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices){
+.controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices','$interval',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices,$interval){
 console.log("SmartQuoteDesktopController initialise");
 $window.pageYOffset;
 $scope.user={};
@@ -250,6 +250,61 @@ sweetAlert("Error",message, "error");
 $rootScope.alertServerError=function(message){
 sweetAlert("Oops...",message, "error");
 };
+$rootScope.alertSessionTimeOutOnQuote=function(){
+swal({
+      title: "<h3>Quote Saved Partially</h3>",
+      text: "your quote partially saved with status 'INI' you can complete quote from Edit/View Quote.",
+      html: true
+});
+};
+
+//Auto Reload 
+// $scope.reload = function () {
+// console.log("reload executed");     
+// };
+// $scope.reload();
+// $interval($scope.reload, 5000);
+
+
+
+// $scope.onExit = function() {
+//   console.log("onExit")
+//       return ('bye bye');
+// };
+// $window.onbeforeunload =  $scope.onExit;
+
+
+
+// $scope.$on('$locationChangeStart', function( event ) {
+//     var answer = confirm("Are you sure you want to leave this page???")
+//     if (!answer) {
+//         event.preventDefault();
+//     }
+// });
+// $(window).bind("beforeunload",function(event) {
+  //     return "";
+  // });
+
+$scope.checkQuoteActivated = function () {
+// console.log("reload executed");     
+  if ($rootScope.isQuoteActivated) {
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+          confirmation.message = "All data willl be lost.";
+          e.preventDefault();
+      });
+    $scope.$on('onUnload', function (e) {
+      console.log('leaving page'); // Use 'Preserve Log' option in Console
+    });
+  }else{
+    $scope.$on('onBeforeUnload', function (e, confirmation) {
+          confirmation.message = "All data willl be lost.";
+          // e.preventDefault();
+    });
+    
+  }
+};
+$scope.checkQuoteActivated();
+$interval($scope.checkQuoteActivated, 1000);
 
 $scope.$on('$destroy', function(event, message) {
 cleanupEventUserLogInDone();
@@ -263,4 +318,24 @@ cleanupEventGetUserGroupMenuDone();
 cleanupEventSessionTimeOut();
 });
 
-}]);
+
+}])
+.factory('beforeUnload', function ($rootScope, $window) {
+    // Events are broadcast outside the Scope Lifecycle
+    
+    $window.onbeforeunload = function (e) {
+        var confirmation = {};
+        var event = $rootScope.$broadcast('onBeforeUnload', confirmation);
+        if (event.defaultPrevented) {
+            return confirmation.message;
+        }
+    };
+    
+    $window.onunload = function () {
+        $rootScope.$broadcast('onUnload');
+    };
+    return {};
+})
+.run(function (beforeUnload) {
+    // Must invoke the service at least once
+});

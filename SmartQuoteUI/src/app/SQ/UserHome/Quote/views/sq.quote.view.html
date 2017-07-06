@@ -96,7 +96,8 @@
 			<label class="sub-label">Current Supplier Name</label> <span class="asteric"></span>		
 			</div>
 			<div class="col-md-8">
-			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" typeahead-loading ng-change="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" autocomplete="off">
+			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-change="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" autocomplete="off" typeahead-min-length="0">
+
 			<span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
 			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">* please enter supplier name.</small>
 			<small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">* supplier already exist please select from list.</small>

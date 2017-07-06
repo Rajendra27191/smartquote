@@ -71,7 +71,10 @@ overflow-y: auto;
     width: 100%;
 }
 </style>
-<script type="text/ng-template" id="addProductModal.html">
+<!-- <script type="text/ng-template" id="addProductModal.html"> -->
+<div id="addProductModal"  class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+  <div class="modal-dialog"  style="width: 90%;" >
+    <div class="modal-content">
         <div class="modal-header">
         <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="closeAddProductModal()"><span aria-hidden="true">&times;</span></button> -->
         <h4 class="modal-title" id="myModalLabel" >
@@ -91,7 +94,7 @@ overflow-y: auto;
          <div load-spinner-load></div>
          <!-- {{isNewProduct}} -->
          <form name="form.addProductIntoQuote" novalidate>
-            <div class="row" style="margin-bottom: 5px" ng-if="productButtonStatus=='add'">
+            <div class="row" style="margin-bottom: 5px">
             <div class="col-md-6">
             <div class="row row-control">
                 <div class="col-md-4">
@@ -106,7 +109,7 @@ overflow-y: auto;
                 <div class="col-md-8">
                 <div class="input-group">
                 <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
-                <input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(search.selectedProduct)" style="padding: 6px 6px;" autofocus>
+                <input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(selectedProduct)" style="padding: 6px 6px;" autofocus>
                 </div>
                 </div>
             </div>
@@ -615,4 +618,5 @@ overflow-y: auto;
             <button type="button" class="btn btn-block btn-default " data-dismiss="modal" aria-label="Close" ng-click="closeModal()" uib-popover="Click to close. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'">Close</button>
             </div>
         </div>
-</script>
+        </div></div></div>
+<!-- </script> -->

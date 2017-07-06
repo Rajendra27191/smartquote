@@ -24,8 +24,10 @@ angular.module('sq.SmartQuoteDesktop')
     // console.log(objQuoteBean)
     UserHomeServices.updateQuote1.updateQuote1({objQuoteBean:objQuoteBean},function (data) {
         console.log(data);
-         if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
+        if (data.code=="sessionTimeOut") {
+        // $rootScope.$broadcast('SessionTimeOut', data);   
+        $rootScope.$broadcast('QuoteSessionTimeOut', data);   
+       
         }else{
          $rootScope.$broadcast('UpdateQuoteDone', data); 
         }
@@ -668,9 +670,9 @@ userhome.UpdateService = function (service,id){
       method: "POST",
       url: "/smartquote/createQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
       }).success(function(data, status, header, config){
-        // console.log(data);
+        console.log(data);
         if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
+        $rootScope.$broadcast('QuoteSessionTimeOut', data);   
         }else{
          $rootScope.$broadcast('CreateQuoteDone', data); 
         }
@@ -742,7 +744,7 @@ userhome.UpdateService = function (service,id){
       method: "POST",
       url: "/smartquote/updateQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
       }).success(function(data, status, header, config){
-        // console.log(data);
+        console.log(data);
         if (data.code=="sessionTimeOut") {
         $rootScope.$broadcast('SessionTimeOut', data);   
         }else{
