@@ -229,6 +229,17 @@ public class QuoteBean {
 	public void setServiceList(ArrayList<KeyValuePairBean> serviceList) {
 		this.serviceList = serviceList;
 	}
+
+	@Override
+	public String toString() {
+		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
+				+ email + ", faxNo=" + faxNo + ", phone=" + phone + ", quoteAttn=" + quoteAttn + ", isNewCustomer=" + isNewCustomer
+				+ ", monthlyAvgPurchase=" + monthlyAvgPurchase + ", notes=" + notes + ", pricesGstInclude=" + pricesGstInclude
+				+ ", productList=" + productList + ", currentSupplierName=" + currentSupplierName + ", competeQuote=" + competeQuote
+				+ ", salesPerson=" + salesPerson + ", currentSupplierId=" + currentSupplierId + ", salesPersonId=" + salesPersonId
+				+ ", userId=" + userId + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", status=" + status
+				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList + "]";
+	}
 	
 	
 

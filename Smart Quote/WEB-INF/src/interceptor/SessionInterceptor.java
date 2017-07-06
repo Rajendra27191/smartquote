@@ -17,6 +17,8 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.EmptyResponseBean;
 
+import action.CommonLoadAction;
+
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -24,15 +26,12 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import connection.AuditDumpDao;
 
-
-
 /**
  * @author rajendra
  * 
  */
 @SuppressWarnings("serial")
-public class SessionInterceptor implements Interceptor,
-		ServletRequestAware {
+public class SessionInterceptor implements Interceptor, ServletRequestAware {
 
 	/*
 	 * (non-Javadoc)
@@ -59,11 +58,13 @@ public class SessionInterceptor implements Interceptor,
 		@SuppressWarnings("rawtypes")
 		Enumeration parameterNames = request.getParameterNames();
 		System.out.println("-------------------------\n");
-		String paramName;
-		ArrayList<String> valuArrayList;
-		for (; parameterNames.hasMoreElements(); objMapList.put(paramName,
-				valuArrayList)) {
+		Gson gson = new Gson();
+//		System.out.println("PAram>>"+parameterNames);
+		String paramName="";
+		ArrayList<String> valuArrayList = null;
+		for (; parameterNames.hasMoreElements(); objMapList.put(paramName, valuArrayList)) {
 			paramName = (String) parameterNames.nextElement();
+			
 			valuArrayList = new ArrayList<String>();
 			String as[];
 			int j = (as = request.getParameterValues(paramName)).length;
@@ -72,12 +73,27 @@ public class SessionInterceptor implements Interceptor,
 				valuArrayList.add(URLEncoder.encode(paramValue, "UTF-8"));
 			}
 		}
-		Gson gson = new Gson();
-		System.out.println((new StringBuilder("Json = ")).append(
+		System.out.println("Param Name :"+paramName + " | valuArrayList: " + valuArrayList);
+		System.out.println((new StringBuilder("Json1 = ")).append(
 				gson.toJson(objMapList)).toString());
-		System.out
-				.println("-----------------------------------------------------------\n");
+		
+		String result = java.net.URLDecoder.decode(String.valueOf(valuArrayList), "UTF-8");
+		result = result.substring(1, result.length()-1);
+		System.out.println("Result1: "+ result);
+		
 		System.out.println("status  = " + status);
+		if(!status){
+			CommonLoadAction cLoadAction=null;
+			if(url.equals("/createQuote")){
+				System.out.println("Create Quote");
+				cLoadAction=new CommonLoadAction();
+				cLoadAction.createQuote(result);				
+			}else if(url.equals("/updateQuote")){
+				System.out.println("Update Quote");
+				cLoadAction=new CommonLoadAction();
+				cLoadAction.updateQuote(result);
+			}
+		}
 		if (!status) {
 			if (url.equals("/login") || url.equals("/logout")) {
 				return invocation.invoke();
@@ -113,7 +129,7 @@ public class SessionInterceptor implements Interceptor,
 	}
 
 	public boolean isLoggedIn(HttpServletRequest request) {
-		System.out.println("request: "+ request);
+		System.out.println("request: " + request);
 		HttpSession session;
 		session = request.getSession(false);
 		if (session == null)
@@ -128,7 +144,7 @@ public class SessionInterceptor implements Interceptor,
 
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
-		
+
 	}
 
 }

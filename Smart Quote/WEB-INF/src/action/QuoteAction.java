@@ -1,8 +1,11 @@
 package action;
 import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.apache.struts2.interceptor.ServletRequestAware;
+
 import pojo.CommentBean;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
@@ -12,8 +15,10 @@ import responseBeans.CommentResponseBean;
 import responseBeans.CurrentSupplierResponse;
 import responseBeans.QuoteResponseBean;
 import responseBeans.QuoteTermServiceResponseBean;
+
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
+
 import dao.CustomerDao;
 import dao.ProductDao;
 import dao.QuoteDao;
@@ -126,17 +131,19 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objDao1.commit();
 			objDao1.closeAll();
 		}
-
+		
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
+			System.out.println("SaveCurrentSupplier :>>");
+			System.out.println(objQuoteBean.getCurrentSupplierId());
 			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean
 					.getCurrentSupplierName());
 			objQuoteBean.setCurrentSupplierId(supplierId);
 		}
-		if (objQuoteBean.getSalesPersonId() == 0) {
-			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
-					.getSalesPerson());
-			objQuoteBean.setSalesPersonId(salesPersonId);
-		}
+//		if (objQuoteBean.getSalesPersonId() == 0) {
+//			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
+//					.getSalesPerson());
+//			objQuoteBean.setSalesPersonId(salesPersonId);
+//		}
 		
 		for (int i =0; i< objQuoteBean.getProductList().size(); i++){
 			
@@ -163,8 +170,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			}*/
 		}
 		
-		
-		int quoteId = objQuoteDao.saveQuote(objQuoteBean, userId);
+		String status="SAVED";
+		int quoteId = objQuoteDao.saveQuote(objQuoteBean, userId,status);
 		boolean isQuoteSaved = objQuoteDao.saveQuoteDetails(
 				objQuoteBean.getProductList(), quoteId);
 		System.out.println("SAVED  : " + isQuoteSaved);
@@ -358,7 +365,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 
 		// objQuoteDao.deleteQuote(objQuoteBean.getQuoteId());
 		objQuoteBean.setUserId(Integer.parseInt(userId));
-		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean);
+		String status="UPDATED";
+		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean,status);
 		boolean isQuoteSaved = false;
 		boolean isTermsSaved = false;
 		boolean isServiceSaved = false;

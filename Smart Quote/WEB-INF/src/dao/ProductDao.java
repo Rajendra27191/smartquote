@@ -49,19 +49,35 @@ public class ProductDao {
 	public ArrayList<KeyValuePairBean> getProductList(String productLike) {
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
-		String getProdustList = "SELECT item_code, item_description FROM product_master "
-				+ " WHERE item_code like ? OR item_description like ?";
+		System.out.println("T1: "+ System.currentTimeMillis());
+		String getProdustList = "SELECT item_code, "
+				+ "ifnull(item_description, 'No Description') item_description,"
+				+ "ifnull(description2, 'No Description') description2, "
+				+ "ifnull(description3, 'No Description') description3 "
+				+ "FROM product_master";
+		System.out.println("Query>>");
+		System.out.println(getProdustList);
 		try {
 			pstmt = conn.prepareStatement(getProdustList);
-			pstmt.setString(1, productLike);
-			pstmt.setString(2, productLike);
+//			pstmt.setString(1, productLike);
+//			pstmt.setString(2, productLike);
+//			pstmt.setString(3, productLike);
+//			pstmt.setString(4, productLike);
 			rs = pstmt.executeQuery();
+			int rsCount = 0;
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("item_code"));
-				objKeyValuePairBean.setValue(rs.getString("item_code") + " (" + rs.getString("item_description") + ")");
+				objKeyValuePairBean.setValue(
+						rs.getString("item_code") 
+						+ " ( " + rs.getString("item_description") 
+					    +" " + rs.getString("description2") 
+						+" " + rs.getString("description3") + " )");
 				pairBeans.add(objKeyValuePairBean);
+				rsCount = rsCount + 1;
 			}
+			System.out.println("T2: "+ System.currentTimeMillis());
+			System.out.println("RowCount>>"+rsCount);
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -99,8 +115,8 @@ public class ProductDao {
 		try {
 			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,qty_break0) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?)";
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,qty_break0,gst_flag) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?)";
 			pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -120,6 +136,8 @@ public class ProductDao {
 			pstmt.setString(16, objBean.getTaxCode());
 			pstmt.setString(17, objBean.getProductGroupCode());
 			pstmt.setDouble(18, objBean.getQtyBreak0());
+			pstmt.setString(19, objBean.getGstFlag());
+//			System.out.println("GST FLAG"+objBean.getGstFlag());
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
@@ -137,7 +155,8 @@ public class ProductDao {
 		ProductBean objBean = null;
 		String getUserGroups = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,gst_flag "
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
+				+ " ifnull(gst_flag, 'No') gst_flag "
 				+ " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -181,7 +200,7 @@ public class ProductDao {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?" + " WHERE item_code = ? ";
+					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?, gst_flag = ?" + " WHERE item_code = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -201,7 +220,8 @@ public class ProductDao {
 			pstmt.setString(16, objBean.getTaxCode());
 			pstmt.setString(17, objBean.getProductGroupCode());
 			pstmt.setDouble(18, objBean.getQtyBreak0());
-			pstmt.setString(19, objBean.getItemCode());
+			pstmt.setString(19, objBean.getGstFlag());
+			pstmt.setString(20, objBean.getItemCode());
 
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
@@ -240,8 +260,8 @@ public class ProductDao {
 		try {
 			String productQuery = "REPLACE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)";
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code,gst_flag) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?,?)";
 			pstmt = conn.prepareStatement(productQuery);
 			final int batchSize = 5000;
 			int count = 0;
@@ -265,6 +285,15 @@ public class ProductDao {
 				pstmt.setString(16, productList.get(i).getTaxCode());
 				pstmt.setDouble(17, productList.get(i).getQtyBreak0());
 				pstmt.setString(18, productList.get(i).getProductGroupCode());
+				String taxCode=productList.get(i).getTaxCode();
+				if (taxCode.equalsIgnoreCase("E")) {
+					System.out.println("TAXCODE NO: "+ taxCode);
+					pstmt.setString(19,"NO");
+				} else {
+					System.out.println("TAXCODE YES: "+ taxCode);
+					pstmt.setString(19,"YES");
+				}
+//				pstmt.setString(19,"YES");
 				pstmt.addBatch();
 
 				if (++count % batchSize == 0) {

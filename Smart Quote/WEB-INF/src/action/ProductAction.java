@@ -102,6 +102,30 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		// productLike = "nk";
 		productLike = "%" + productLike + "%";
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
+//		String[] splitArray = productLike.split(" ");
+//		System.out.println(">>>>>>>>>>>>>");
+//		System.out.println(productLike);
+//		System.out.println(java.util.Arrays.toString(splitArray));
+//		System.out.println(splitArray.length);
+//		String whereClause1="";
+//		String whereClause2="";
+//		String whereClause3="";
+//		String whereClause4="";
+//		for (int i = 0; i < splitArray.length; i++) {
+//			if(i==0){
+//				whereClause1="item_code like "+"'%"+splitArray[i]+"%'";
+//				whereClause2=" OR "+"item_description like " +"'%"+splitArray[i]+"%'";
+//				whereClause3=" OR "+"description2 like " +"'%"+splitArray[i]+"%'";	
+//				whereClause4=" OR "+"description3 like " +"'%"+splitArray[i]+"%'";
+//			}else{
+//				whereClause1=whereClause1+" OR "+"item_code like "+"'%"+splitArray[i]+"%'";
+//				whereClause2=whereClause2+" OR "+"item_description like "+"'%"+splitArray[i]+"%'";
+//				whereClause3=whereClause3+" OR "+"description2 like "+"'%"+splitArray[i]+"%'";	
+//				whereClause4=whereClause4+" OR "+"description3 like " +"'%"+splitArray[i]+"%'";
+//			}		
+//		}
+//		System.out.println(whereClause1+whereClause2+whereClause3);
+//		String whereClause=whereClause1+whereClause2+whereClause3+whereClause4+";";
 		try {
 			ProductDao objDao = new ProductDao();
 			valuePairBeans = objDao.getProductList(productLike);

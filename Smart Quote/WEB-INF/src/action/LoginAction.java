@@ -84,6 +84,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 				objLoginResponse.setResult(objUserGroupDao
 						.getAssignedAccess(objUserBean.getUserGroupId()));
 				objUserGroupDao.commit();
+				objLoginResponse.setUserData(objUserBean);;
 				objUserGroupDao.closeAll();
 			} catch (Exception e) {
 				objLoginResponse.setCode("error");

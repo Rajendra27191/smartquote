@@ -8,13 +8,17 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
+import pojo.ProductBean;
 import pojo.ProductGroupBean;
+import responseBeans.ProductDetailResponseList;
+import responseBeans.ProductGroupDetailResponseList;
 import responseBeans.ProductGroupResponseBean;
 import responseBeans.UserGroupResponse;
 
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 
+import dao.ProductDao;
 import dao.ProductGroupDao;
 
 @SuppressWarnings("serial")
@@ -24,6 +28,15 @@ public class ProductGroupAction extends ActionSupport implements
 	private UserGroupResponse data = new UserGroupResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private ProductGroupResponseBean productGroupDetailsResponse = new ProductGroupResponseBean();
+	private ProductGroupDetailResponseList objProductGroupDetailResponseList = new ProductGroupDetailResponseList();
+
+	public ProductGroupDetailResponseList getObjProductGroupDetailResponseList() {
+		return objProductGroupDetailResponseList;
+	}
+
+	public void setObjProductGroupDetailResponseList(ProductGroupDetailResponseList objProductGroupDetailResponseList) {
+		this.objProductGroupDetailResponseList = objProductGroupDetailResponseList;
+	}
 
 	public UserGroupResponse getData() {
 		return data;
@@ -67,6 +80,25 @@ public class ProductGroupAction extends ActionSupport implements
 		}
 		return SUCCESS;
 	}
+	
+	public String getProductGroupListView() {
+		try {
+			ProductGroupDao objDao = new ProductGroupDao();
+			ArrayList<ProductGroupBean> objProductGroupBeans = new ArrayList<ProductGroupBean>();
+			objProductGroupBeans = objDao.getAllProductGroupDetails();
+			objDao.commit();
+			objDao.closeAll();
+			objProductGroupDetailResponseList.setCode("success");
+			objProductGroupDetailResponseList.setMessage(getText("details_loaded"));
+			objProductGroupDetailResponseList.setObjProductGroupDetailResponseList(objProductGroupBeans);
+		} catch (Exception e) {
+			objProductGroupDetailResponseList.setCode("error");
+			objProductGroupDetailResponseList.setMessage(getText("common_error"));
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
 
 	public String createProductGroup() {
 		String productDetails = request.getParameter("productDetails");

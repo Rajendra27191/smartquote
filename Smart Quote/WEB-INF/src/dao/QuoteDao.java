@@ -137,10 +137,10 @@ public class QuoteDao {
 	}
 
 	@SuppressWarnings("static-access")
-	public int saveQuote(QuoteBean quoteBean, String userId) {
+	public int saveQuote(QuoteBean quoteBean, String userId,String status) {
 		int quoteId = 0;
 		String saveData = " insert into create_quote (custcode,quote_attn,prices_gst_include,notes,created_date,user_id,current_supplier_id,compete_quote,sales_person_id,status) "
-				+ " values(?,?,?,?,now(),?,?,?,?,'SAVED')";
+				+ " values(?,?,?,?,now(),?,?,?,?,?)";
 		try {
 			pstmt = conn
 					.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
@@ -156,7 +156,7 @@ public class QuoteDao {
 			pstmt.setInt(6, quoteBean.getCurrentSupplierId());
 			pstmt.setString(7, quoteBean.getCompeteQuote());
 			pstmt.setInt(8, quoteBean.getSalesPersonId());
-
+			pstmt.setString(9,status);
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
@@ -212,12 +212,20 @@ public class QuoteDao {
 		ArrayList<QuoteBean> quoteList = new ArrayList<QuoteBean>();
 		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 		QuoteBean objQuoteBean;
-		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, "
-				+ " user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
-				+ " cq.sales_person_id,sales_person_name,status "
-				+ " from create_quote cq left outer join customer_master cm on cq.custcode=cm.customer_code "
-				+ " left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
-				+ " left outer join sales_person sp on cq.sales_person_id = sp.sales_person_id order by created_date desc;";
+//		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, "
+//				+ " user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
+//				+ " cq.sales_person_id,sales_person_name,status "
+//				+ " from create_quote cq left outer join customer_master cm on cq.custcode=cm.customer_code "
+//				+ " left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
+//				+ " left outer join sales_person sp on cq.sales_person_id = sp.sales_person_id order by created_date desc;";
+		String getData="select quote_id,custcode,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
+				+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
+				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
+				+ "from create_quote cq "
+				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
+				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
+				+ "left outer join user_master um on cq.sales_person_id = um.user_id "
+				+ "order by created_date desc;";
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();
@@ -467,14 +475,14 @@ public class QuoteDao {
 		return objBean;
 	}
 
-	public boolean updateQuote(QuoteBean quoteBean) {
+	public boolean updateQuote(QuoteBean quoteBean,String status) {
 		boolean isQuoteUpdated = false;
 		/*String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
 				+ " notes = ?, created_date = now(), user_id = ?, current_supplier_id = ?, compete_quote = ?, "
 				+ " sales_person_id = ?, status = 'UPDATED' WHERE quote_id = ?";*/
 		String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
 				+ " notes = ?, user_id = ?, current_supplier_id = ?, compete_quote = ?, "
-				+ " sales_person_id = ?, status = 'UPDATED',modified_date = now() WHERE quote_id = ?";
+				+ " sales_person_id = ?, status = ?,modified_date = now() WHERE quote_id = ?";
 		try {
 			pstmt = conn.prepareStatement(saveData);
 
@@ -489,7 +497,8 @@ public class QuoteDao {
 			pstmt.setInt(6, quoteBean.getCurrentSupplierId());
 			pstmt.setString(7, quoteBean.getCompeteQuote());
 			pstmt.setInt(8, quoteBean.getSalesPersonId());
-			pstmt.setInt(9, quoteBean.getQuoteId());
+			pstmt.setString(9,status);
+			pstmt.setInt(10, quoteBean.getQuoteId());
 			System.out.println("Update Quote: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isQuoteUpdated = true;

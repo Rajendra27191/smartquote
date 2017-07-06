@@ -213,5 +213,35 @@ public class ProductGroupDao {
 		}
 		return isProductGroupListUploaded;
 	}
+	
+	public ArrayList<ProductGroupBean> getAllProductGroupDetails(){
+		ArrayList<ProductGroupBean> objProductGroupBeans= new ArrayList<ProductGroupBean>();
+		ProductGroupBean objGroupBean=null;
+		String getProductGroups="SELECT product_group_code, "
+				+ "ifnull(product_group_name, '') product_group_name,"
+				+ "ifnull(catalogue_no, '') catalogue_no"
+				+ " FROM product_group";
+		try {
+		pstmt=conn.prepareStatement(getProductGroups);
+		System.out.println("pstm: " + pstmt.toString());
+		rs = pstmt.executeQuery();
+		while (rs.next()) {
+			objGroupBean= new ProductGroupBean();
+			objGroupBean.setProductCode(rs.getString("product_group_code"));
+			objGroupBean.setProductName(rs.getString("product_group_name"));
+			objGroupBean.setCatalogueNo(rs.getString("catalogue_no"));
+			objProductGroupBeans.add(objGroupBean);
+		}
+		} catch (Exception e) {
+			// TODO: handle exception
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objProductGroupBeans;
+	}
 
 }

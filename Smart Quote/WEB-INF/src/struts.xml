@@ -184,6 +184,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="getProductGroupListView" class="action.ProductGroupAction"
+			method="getProductGroupListView">
+			<result name="success" type="json">
+				<param name="root">objProductGroupDetailResponseList</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="createProductGroup" class="action.ProductGroupAction"
 			method="createProductGroup">
