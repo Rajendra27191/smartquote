@@ -95,25 +95,26 @@ public class CommonLoadAction extends ActionSupport {
 			}
 		}
 		String status="INI";
+		boolean isQuoteSaved=false;
+		boolean istermSaved;
+		boolean isServiceSaved;
 		int quoteId = objQuoteDao.saveQuote(objQuoteBean,String.valueOf(objQuoteBean.getUserId()),status);
 		System.out.println("SAVED Quote id : " + quoteId);
-		
-		boolean isQuoteSaved = objQuoteDao.saveQuoteDetails(
+		if(quoteId>0){
+		isQuoteSaved = objQuoteDao.saveQuoteDetails(
 				objQuoteBean.getProductList(), quoteId);
 		System.out.println("SAVED  : " + isQuoteSaved);
 		
-		boolean istermSaved = objQuoteDao.saveTermsAndConditionDetails(
+		istermSaved = objQuoteDao.saveTermsAndConditionDetails(
 				objQuoteBean.getTermConditionList(), quoteId); 
 		System.out.println("SAVED terms and condition  : " + istermSaved);
 		
-		boolean isServiceSaved = objQuoteDao.saveServiceDetails(
+		isServiceSaved = objQuoteDao.saveServiceDetails(
 				objQuoteBean.getServiceList(), quoteId); 
 		System.out.println("SAVED service  : " + isServiceSaved);
-
 		objQuoteDao.commit();
 		objQuoteDao.closeAll();
-		
-
+		}
 		return "success";
 	}
 	public String updateQuote(String quoteDetails) {

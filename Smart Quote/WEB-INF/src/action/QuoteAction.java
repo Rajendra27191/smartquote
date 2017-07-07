@@ -171,22 +171,28 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		
 		String status="SAVED";
+		boolean isQuoteSaved=false;
+		boolean istermSaved;
+		boolean isServiceSaved;
 		int quoteId = objQuoteDao.saveQuote(objQuoteBean, userId,status);
-		boolean isQuoteSaved = objQuoteDao.saveQuoteDetails(
+		System.out.print("quoteId  : " + quoteId);
+		if(quoteId>0){
+		isQuoteSaved = objQuoteDao.saveQuoteDetails(
 				objQuoteBean.getProductList(), quoteId);
 		System.out.println("SAVED  : " + isQuoteSaved);
 		
-		boolean istermSaved = objQuoteDao.saveTermsAndConditionDetails(
+		istermSaved = objQuoteDao.saveTermsAndConditionDetails(
 				objQuoteBean.getTermConditionList(), quoteId); 
 		System.out.println("SAVED terms and condition  : " + istermSaved);
 		
-		boolean isServiceSaved = objQuoteDao.saveServiceDetails(
+		isServiceSaved = objQuoteDao.saveServiceDetails(
 				objQuoteBean.getServiceList(), quoteId); 
 		System.out.println("SAVED terms and condition  : " + isServiceSaved);
 
 		objQuoteDao.commit();
 		objQuoteDao.closeAll();
-		if (isQuoteSaved) {
+		}
+		if (isQuoteSaved && quoteId>0) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("quote_saved"));
 		} else {
