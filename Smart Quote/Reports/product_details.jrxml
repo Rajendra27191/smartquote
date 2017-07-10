@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
+	<property name="ireport.zoom" value="1.2100000000000057"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#EE3024">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#DADADA">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#E6E6E6" pattern="">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue()%2==0)]]></conditionExpression>
+			<style backcolor="#F8F4F3"/>
+		</conditionalStyle>
+	</style>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="productCode" class="java.lang.String">
+		<fieldDescription><![CDATA[productCode]]></fieldDescription>
+	</field>
+	<field name="productCurrentPriceExGST" class="java.lang.Double">
+		<fieldDescription><![CDATA[productCurrentPriceExGST]]></fieldDescription>
+	</field>
+	<field name="productCurrentPriceTotalExGST" class="java.lang.Double">
+		<fieldDescription><![CDATA[productCurrentPriceTotalExGST]]></fieldDescription>
+	</field>
+	<field name="productDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[productDescription]]></fieldDescription>
+	</field>
+	<field name="productJaybelPriceExGST" class="java.lang.Double">
+		<fieldDescription><![CDATA[productJaybelPriceExGST]]></fieldDescription>
+	</field>
+	<field name="productJaybelPriceTotalExGST" class="java.lang.Double">
+		<fieldDescription><![CDATA[productJaybelPriceTotalExGST]]></fieldDescription>
+	</field>
+	<field name="productQty" class="java.lang.Integer">
+		<fieldDescription><![CDATA[productQty]]></fieldDescription>
+	</field>
+	<field name="productSavings" class="java.lang.Double">
+		<fieldDescription><![CDATA[productSavings]]></fieldDescription>
+	</field>
+	<field name="productUOM" class="java.lang.String">
+		<fieldDescription><![CDATA[productUOM]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="c881babc-4172-4334-8737-3f89cdcd71fa" style="table_TH" mode="Opaque" x="0" y="0" width="81" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38c6ce42-9edc-4ab3-9637-aece90bd2b66" style="table_TH" mode="Opaque" x="81" y="0" width="133" height="65" forecolor="#FFFFFF" backcolor="#EE3024">
+					<property name="net.sf.jasperreports.export.pdf.tag.h1"/>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="530ab432-ff78-4ea6-b7a3-bed6f95470be" style="table_TH" mode="Opaque" x="213" y="0" width="49" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UOM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a9a37d1a-8156-4b27-9bcd-23ba541d79a9" style="table_TH" mode="Opaque" x="261" y="0" width="48" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8ae0baed-2f08-49a8-973c-d08b1bf0384a" style="table_TH" mode="Opaque" x="308" y="0" width="48" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Current Price Ex GST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f1c29517-753a-416a-a9bb-78a9e75697a4" style="table_TH" mode="Opaque" x="355" y="0" width="49" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Current Price Total Ex GST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9ee5e219-d7af-4707-aef3-e106a0924915" style="table_TH" mode="Opaque" x="403" y="0" width="52" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Jaybel Price Ex GST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1b83e1f-6877-4697-a538-b809052def16" style="table_TH" mode="Opaque" x="455" y="0" width="51" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Jaybel Price Total Ex GST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0c3c1f1b-852e-4fc3-9ca7-ea498fcf5533" style="table_TH" mode="Opaque" x="506" y="0" width="49" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Savings]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="43" splitType="Stretch">
+			<textField>
+				<reportElement uuid="1c9b1e12-b644-4afd-99c4-a6db72e62a6a" style="table_TD" mode="Opaque" x="81" y="0" width="132" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productDescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="724ec8a4-91fc-44fc-ab54-cea347178e82" style="table_TD" mode="Opaque" x="455" y="0" width="51" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceTotalExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcb22f35-7d6d-44f4-8f96-b48dfd164a3d" style="table_TD" mode="Opaque" x="213" y="0" width="49" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productUOM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c0f7e1da-3585-4c7e-b38e-18dac7276c12" style="table_TD" mode="Opaque" x="261" y="0" width="48" height="43" forecolor="#000000"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productQty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a8cdd7c0-4b75-4740-8f00-83d93895989f" style="table_TD" mode="Opaque" x="308" y="0" width="48" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b08fa362-12a9-4015-be1f-ce40d98350b3" style="table_TD" mode="Opaque" x="355" y="0" width="48" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceTotalExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8bfa870e-eac9-4bfe-b412-09b880a607db" style="table_TD" mode="Opaque" x="403" y="0" width="52" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" style="table_TD" mode="Opaque" x="506" y="0" width="49" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productSavings}+" %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3e80cb0f-77c0-4a3e-92a3-1f69a69e5e40" style="table_TD" mode="Opaque" x="0" y="0" width="81" height="43"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="28">
+			<staticText>
+				<reportElement uuid="1330c291-7407-4e6e-bff8-7ace2b431081" x="29" y="0" width="557" height="20" forecolor="#999999"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[All prices quoted are excuding GST. Pricing guaranteed for 6 months provided our supplier prices remain the same.]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+</jasperReport>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quote_report" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8db8e68c-96db-4599-b0f5-5c8299cef66a">
+	<property name="ireport.zoom" value="1.6105100000000052"/>
+	<property name="ireport.x" value="174"/>
+	<property name="ireport.y" value="1057"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FF0000">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH"/>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/radhika/git/smartquote/Smart Quote/Reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subreportPath" class="java.lang.String"/>
+	<parameter name="headerImg1Path" class="java.lang.String"/>
+	<parameter name="headerImg2Path" class="java.lang.String"/>
+	<parameter name="headerImg3Path" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[email]]></fieldDescription>
+	</field>
+	<field name="arrayPdfSubReportBean" class="org.apache.struts2.views.jasperreports.ValueStackDataSource">
+		<fieldDescription><![CDATA[arrayPdfSubReportBean]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManager" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManager]]></fieldDescription>
+	</field>
+	<field name="currentTotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[currentTotal]]></fieldDescription>
+	</field>
+	<field name="savingInPercentage" class="java.lang.Double">
+		<fieldDescription><![CDATA[savingInPercentage]]></fieldDescription>
+	</field>
+	<field name="annualSaving" class="java.lang.Double">
+		<fieldDescription><![CDATA[annualSaving]]></fieldDescription>
+	</field>
+	<field name="saving" class="java.lang.Double">
+		<fieldDescription><![CDATA[saving]]></fieldDescription>
+	</field>
+	<field name="contact" class="java.lang.String">
+		<fieldDescription><![CDATA[contact]]></fieldDescription>
+	</field>
+	<field name="jaybelTotal" class="java.lang.Double">
+		<fieldDescription><![CDATA[jaybelTotal]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="752" splitType="Stretch">
+			<image>
+				<reportElement uuid="2b98c993-52a3-4c4e-9a8d-ccd7b8925a61" x="179" y="0" width="213" height="180"/>
+				<imageExpression><![CDATA[$P{headerImg1Path}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="13b91d63-03d2-42ad-b99e-6cbc21400731" x="179" y="205" width="212" height="226"/>
+				<imageExpression><![CDATA[$P{headerImg2Path}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="21cc6d66-75f5-4651-a2cd-0ac3449964ba" x="72" y="683" width="428" height="68"/>
+				<imageExpression><![CDATA[$P{headerImg3Path}]]></imageExpression>
+			</image>
+		</band>
+		<band height="106">
+			<subreport runToBottom="false">
+				<reportElement uuid="e8026f55-c051-4e12-b75a-00357a2ab217" x="13" y="63" width="518" height="39"/>
+				<dataSourceExpression><![CDATA[$F{arrayPdfSubReportBean}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{subreportPath} + "product_details.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement uuid="6a868ee5-2a31-4223-9fe8-7da5c8decb2c" x="13" y="43" width="163" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Email ID]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="ca408cd1-4f8b-4efb-876e-135e59a66afb" mode="Transparent" x="176" y="43" width="255" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " + $F{email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="7ffe2bd4-d9b2-4d75-966d-2d9ca3d103ac" x="13" y="23" width="163" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Contact No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="dff10870-82ab-4b25-aac0-cca4571f1488" mode="Transparent" x="176" y="23" width="255" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " + $F{contact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7bfb81ce-072d-454d-ad59-fa5fd2497096" mode="Transparent" x="176" y="3" width="255" height="20"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " + $F{dedicatedAccountManager}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="0b5da78d-af00-482b-83be-b160c5cbc5fa" x="13" y="3" width="163" height="20"/>
+				<textElement>
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Dedicated Account Manager]]></text>
+			</staticText>
+		</band>
+		<band height="112">
+			<staticText>
+				<reportElement uuid="24a0b9db-94bc-42eb-aa98-68d4b65b4242" mode="Opaque" x="12" y="6" width="104" height="22" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Current Total $]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24a0b9db-94bc-42eb-aa98-68d4b65b4242" mode="Opaque" x="121" y="6" width="104" height="22" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jaybel Total $]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24a0b9db-94bc-42eb-aa98-68d4b65b4242" mode="Opaque" x="340" y="6" width="111" height="22" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Annual Savings $]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24a0b9db-94bc-42eb-aa98-68d4b65b4242" mode="Opaque" x="230" y="6" width="104" height="22" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Savings $]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24a0b9db-94bc-42eb-aa98-68d4b65b4242" mode="Opaque" x="458" y="6" width="104" height="22" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Savings %]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="c8dc6e7b-5447-48b8-9b00-552cb24c53be" mode="Opaque" x="12" y="28" width="104" height="48" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currentTotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7ffbf2c1-66c8-4b87-99a6-dec60c583b22" mode="Opaque" x="121" y="28" width="104" height="48" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jaybelTotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c5e35831-d968-47db-9e12-fe4aab70ed5f" mode="Opaque" x="230" y="28" width="104" height="48" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saving}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c97996a1-7023-4bb6-a084-7002568cebe7" mode="Opaque" x="340" y="28" width="111" height="48" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{annualSaving}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3ab0e9a0-bcca-480e-9b4e-4c49db275612" mode="Opaque" x="458" y="28" width="104" height="48" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{savingInPercentage}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
