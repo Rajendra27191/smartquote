@@ -1,5 +1,7 @@
 package pojo;
 
+import java.util.ArrayList;
+
 public class ProductBean {
 	private String itemCode;
 	private String itemDescription;
@@ -32,6 +34,18 @@ public class ProductBean {
 	private double savings;
 	private int quoteId;
 	private String isNewProduct;
+//	private boolean isAlternativeProductAdded;
+	private ArrayList<AlternateProductBean> alternativeProducts;
+
+
+
+	public ArrayList<AlternateProductBean> getAlternativeProducts() {
+		return alternativeProducts;
+	}
+
+	public void setAlternativeProducts(ArrayList<AlternateProductBean> alternativeProducts) {
+		this.alternativeProducts = alternativeProducts;
+	}
 
 	public int getQuoteId() {
 		return quoteId;
@@ -280,5 +294,13 @@ public class ProductBean {
 	public void setIsNewProduct(String isNewProduct) {
 		this.isNewProduct = isNewProduct;
 	}
+
+//	public boolean isAlternativeProductAdded() {
+//		return isAlternativeProductAdded;
+//	}
+//
+//	public void setAlternativeProductAdded(boolean isAlternativeProductAdded) {
+//		this.isAlternativeProductAdded = isAlternativeProductAdded;
+//	}
 
 }

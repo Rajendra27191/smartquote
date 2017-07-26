@@ -248,6 +248,22 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="getProductDetailsWithAlternatives" class="action.ProductAction"
+			method="getProductDetailsWithAlternatives">
+			<result name="success" type="json">
+				<param name="root">productDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="getProductAlternatives" class="action.ProductAction"
+			method="getProductAlternatives">
+			<result name="success" type="json">
+				<param name="root">objAlternativesResponseList</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="updateProductDetails" class="action.ProductAction"
 			method="updateProductDetails">
@@ -427,6 +443,27 @@
                 <param name="ignoreHierarchy">false</param>
             </result>
         </action>
+        
+        <action name="createAlternateProducts" class="action.AlternateProductAction"
+			method="createAlternateProducts">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteAlternateProduct" class="action.AlternateProductAction"
+			method="deleteAlternateProduct">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getAlternateProductsView" class="action.AlternateProductAction" method="getAlternateProductsView">
+			<result name="success" type="json">
+				<param name="root">data</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 	</package>
 </struts>

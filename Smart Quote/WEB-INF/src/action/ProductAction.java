@@ -14,10 +14,12 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import pojo.AlternateProductBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
 import pojo.ProductGroupBean;
+import responseBeans.AlternativeProductResponseBean;
 import responseBeans.ProductDetailResponseList;
 import responseBeans.ProductResponseBean;
 import responseBeans.UserGroupResponse;
@@ -37,6 +39,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
 	private ProductDetailResponseList objProductDetailResponseList = new ProductDetailResponseList();
+	private AlternativeProductResponseBean objAlternativesResponseList=new AlternativeProductResponseBean();
+	
 	public File productFile;
 	private int fromLimit;
 	private int toLimit;
@@ -102,30 +106,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		// productLike = "nk";
 		productLike = "%" + productLike + "%";
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
-//		String[] splitArray = productLike.split(" ");
-//		System.out.println(">>>>>>>>>>>>>");
-//		System.out.println(productLike);
-//		System.out.println(java.util.Arrays.toString(splitArray));
-//		System.out.println(splitArray.length);
-//		String whereClause1="";
-//		String whereClause2="";
-//		String whereClause3="";
-//		String whereClause4="";
-//		for (int i = 0; i < splitArray.length; i++) {
-//			if(i==0){
-//				whereClause1="item_code like "+"'%"+splitArray[i]+"%'";
-//				whereClause2=" OR "+"item_description like " +"'%"+splitArray[i]+"%'";
-//				whereClause3=" OR "+"description2 like " +"'%"+splitArray[i]+"%'";	
-//				whereClause4=" OR "+"description3 like " +"'%"+splitArray[i]+"%'";
-//			}else{
-//				whereClause1=whereClause1+" OR "+"item_code like "+"'%"+splitArray[i]+"%'";
-//				whereClause2=whereClause2+" OR "+"item_description like "+"'%"+splitArray[i]+"%'";
-//				whereClause3=whereClause3+" OR "+"description2 like "+"'%"+splitArray[i]+"%'";	
-//				whereClause4=whereClause4+" OR "+"description3 like " +"'%"+splitArray[i]+"%'";
-//			}		
-//		}
-//		System.out.println(whereClause1+whereClause2+whereClause3);
-//		String whereClause=whereClause1+whereClause2+whereClause3+whereClause4+";";
 		try {
 			ProductDao objDao = new ProductDao();
 			valuePairBeans = objDao.getProductList(productLike);
@@ -162,6 +142,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			if (isProductCreated) {
 				objEmptyResponse.setCode("success");
 				objEmptyResponse.setMessage(getText("product_created"));
+				String projectPath = request.getSession().getServletContext().getRealPath("/");
+				CommonLoadAction.createProductFile(projectPath);
 			} else {
 				objEmptyResponse.setCode("error");
 				objEmptyResponse.setMessage(getText("common_error"));
@@ -193,6 +175,47 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		}
 		return SUCCESS;
 	}
+	public String getProductDetailsWithAlternatives() {
+		String productCode = request.getParameter("productCode");
+		// productCode = "3DE-EDICUSEMB1";
+		try {
+			productDetailsResponse.setCode("error");
+			productDetailsResponse.setMessage(getText("common_error"));
+			ProductDao objDao = new ProductDao();
+			ProductBean objBean = objDao.getProductDetailsWithAlternatives(productCode);
+			objDao.commit();
+			objDao.closeAll();
+			if (objBean != null) {
+				productDetailsResponse.setCode("success");
+				productDetailsResponse.setMessage(getText("details_loaded"));
+				productDetailsResponse.setObjProductResponseBean(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+	public String getProductAlternatives() {
+		String productCode = request.getParameter("productCode");
+		// productCode = "3DE-EDICUSEMB1";
+		try {
+			objAlternativesResponseList.setCode("error");
+			objAlternativesResponseList.setMessage(getText("common_error"));
+			ProductDao objDao = new ProductDao();
+			ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+			arrayAlternateProductBeans= objDao.getAlternatives(productCode);
+			objDao.commit();
+			objDao.closeAll();
+			if (arrayAlternateProductBeans.size()>0) {
+				objAlternativesResponseList.setCode("success");
+				objAlternativesResponseList.setMessage(getText("details_loaded"));
+				objAlternativesResponseList.setObjAlternateProductBeans(arrayAlternateProductBeans);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
 
 	public String updateProductDetails() {
 		String productDetails = request.getParameter("productDetails");
@@ -209,6 +232,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		if (isProductUpdated) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("product_updated"));
+			String projectPath = request.getSession().getServletContext().getRealPath("/");
+			CommonLoadAction.createProductFile(projectPath);
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
@@ -226,6 +251,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		if (isDeleted) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("product_deleted"));
+			String projectPath = request.getSession().getServletContext().getRealPath("/");
+			CommonLoadAction.createProductFile(projectPath);
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
@@ -286,11 +313,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
 					isFileUploaded = objProductDao.uploadProductFile(productList);
 					objProductDao.commit();
-//					objProductDao.closeAll();
+					// objProductDao.closeAll();
 					if (isFileUploaded) {
 						objEmptyResponse.setCode("success");
 						objEmptyResponse.setMessage(getText("product_file_uploaded"));
-					}else{
+						CommonLoadAction.createProductFile(projectPath);
+					} else {
 						objEmptyResponse.setCode("error");
 						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
 					}
@@ -304,28 +332,24 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			if (objEmptyResponse.getCode() == "success") {
 				File fileToDelete = new File(projectPath + "ExcelFiles");
 				ExcelFileSplit.delete(fileToDelete);
-				
-				ArrayList<ProductGroupBean> distinctProductGroupList= new ArrayList<ProductGroupBean>();
-				distinctProductGroupList=objProductDao.getDistinctProductGroupList();
-//				objProductDao.commit();
-				//objProductDao.closeAll();
-				System.out.println("Distinct Product Group List Size :"+distinctProductGroupList.size());
+
+				ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList<ProductGroupBean>();
+				distinctProductGroupList = objProductDao.getDistinctProductGroupList();
+				// objProductDao.commit();
+				// objProductDao.closeAll();
+				System.out.println("Distinct Product Group List Size :" + distinctProductGroupList.size());
 				if (distinctProductGroupList.size() > 0) {
 					ProductGroupDao objProductGroupDao = new ProductGroupDao();
 					boolean isNewProductGroupsUploaded = objProductGroupDao.insertProductGroupByFile(distinctProductGroupList);
 					if (isNewProductGroupsUploaded) {
-					    System.out.println("New Product Group inserted successfully...");
+						System.out.println("New Product Group inserted successfully...");
 						objProductDao.closeAll();
-					}else{
-						System.out.println("New Product Group insertion unsuccessfully...");	
+					} else {
+						System.out.println("New Product Group insertion unsuccessfully...");
 					}
 				}
 			}
-			
-			
-			
-			
-			
+
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -348,9 +372,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		}
 		System.out.println("Done");
-		
-		
-		
+
 		return SUCCESS;
 	}
 
@@ -397,5 +419,13 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
+	}
+
+	public AlternativeProductResponseBean getObjAlternativesResponseList() {
+		return objAlternativesResponseList;
+	}
+
+	public void setObjAlternativesResponseList(AlternativeProductResponseBean objAlternativesResponseList) {
+		this.objAlternativesResponseList = objAlternativesResponseList;
 	}
 }

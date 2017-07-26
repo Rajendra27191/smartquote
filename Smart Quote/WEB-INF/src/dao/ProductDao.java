@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import pojo.AlternateProductBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
 import pojo.ProductGroupBean;
@@ -193,7 +194,101 @@ public class ProductDao {
 		}
 		return objBean;
 	}
-
+	public ProductBean getProductDetailsWithAlternatives(String productCode) {
+		ProductBean objBean=new ProductBean();
+		String getProductDetails="SELECT item_code, item_description, description2, "
+				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
+				+ " ifnull(gst_flag, 'No') gst_flag "
+				+ " FROM product_master WHERE item_code = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(getProductDetails);
+			pstmt.setString(1, productCode);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objBean = new ProductBean();
+				objBean.setItemCode(rs.getString("item_code"));
+				objBean.setItemDescription(rs.getString("item_description"));
+				objBean.setDescription2(rs.getString("description2"));
+				objBean.setDescription3(rs.getString("description3"));
+				objBean.setUnit(rs.getString("unit"));
+				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
+				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
+				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
+				objBean.setQtyBreak2(rs.getDouble("qty_break2"));
+				objBean.setPrice2exGST(rs.getDouble("price2exGST"));
+				objBean.setQtyBreak3(rs.getDouble("qty_break3"));
+				objBean.setPrice3exGST(rs.getDouble("price3exGST"));
+				objBean.setQtyBreak4(rs.getDouble("qty_break4"));
+				objBean.setPrice4exGST(rs.getDouble("price4exGST"));
+				objBean.setAvgcost(rs.getDouble("avg_cost"));
+				objBean.setTaxCode(rs.getString("tax_code"));
+				objBean.setCreated_by(rs.getString("created_by"));
+				objBean.setGstFlag(rs.getString("gst_flag"));
+			}
+			ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+			boolean isAltAdded=false;
+			arrayAlternateProductBeans=getAlternatives(productCode);
+			if(arrayAlternateProductBeans.size()>0){
+				isAltAdded=true;
+			}
+			if (isAltAdded) {
+//				System.out.println("If rs.next");
+//				objBean.setAlternativeProductAdded(true);	
+				objBean.setAlternativeProducts(arrayAlternateProductBeans);
+			}
+			
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objBean;
+	}
+	public ArrayList<AlternateProductBean> getAlternatives(String productCode) {
+		System.out.println("GET Alternatives...");
+		System.out.println("Product Code"+productCode);
+		ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+		String getAlternatives="SELECT a.alternative_product_id 'alt_product_id', "
+				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
+				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
+				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
+				+ "p.price4exGST 'alt_price4exGST',p.gst_flag 'alt_gst_flag' "
+				+ "FROM alternative_product_master a, product_master p "
+				+ "WHERE a.main_product_id = ? AND p.item_code=a.alternative_product_id;";
+		
+		try {
+			pstmt = conn.prepareStatement(getAlternatives);
+			pstmt.setString(1, productCode);
+			rs = pstmt.executeQuery();
+			AlternateProductBean objAltBean=null;
+			while (rs.next()) {
+				objAltBean=new AlternateProductBean();
+				objAltBean.setAltProductCode(rs.getString("alt_product_id"));
+//				System.out.println("alt_product_id >>"+rs.getString("alt_product_id"));
+				objAltBean.setAltProductDesc(rs.getString("alt_item_desc"));
+				objAltBean.setAltProductDesc2(rs.getString("alt_item_desc2"));
+				objAltBean.setAltProductDesc3(rs.getString("alt_item_desc3"));
+				objAltBean.setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
+				objAltBean.setAltProductUnit(rs.getString("alt_unit"));
+				objAltBean.setAltProductPrice0exGST(rs.getDouble("alt_price0exGST"));
+				objAltBean.setAltProductPrice1exGST(rs.getDouble("alt_price1exGST"));
+				objAltBean.setAltProductPrice2exGST(rs.getDouble("alt_price2exGST"));
+				objAltBean.setAltProductPrice3exGST(rs.getDouble("alt_price3exGST"));
+				objAltBean.setAltProductPrice4exGST(rs.getDouble("alt_price4exGST"));
+				objAltBean.setAltProductGstFlag(rs.getString("alt_gst_flag"));
+				arrayAlternateProductBeans.add(objAltBean);
+			}
+			System.out.println("GET Alternatives List Size ..."+arrayAlternateProductBeans.size());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return arrayAlternateProductBeans;
+	}
 	public boolean updateProduct(ProductBean objBean) {
 		boolean isCustomerUpdated = false;
 		try {
