@@ -163,8 +163,19 @@ $rootScope.hideSpinner();
 $scope.deleteTermAndCondition=function(term){
 	// console.log(term)
 	if (term.value && term.key) {
+	var previousWindowKeyDown = window.onkeydown;
+	swal({
+	title: 'Are you sure?',
+	text: "You will not be able to recover this customer!",
+	showCancelButton: true,
+	closeOnConfirm: false,
+	}, function (isConfirm) {
+	window.onkeydown = previousWindowKeyDown;
+	if (isConfirm) {
 		$rootScope.showSpinner();
 		SQUserHomeServices.DeleteTermCondition(term.key);
+	} 
+	});
 
 	}else{
 

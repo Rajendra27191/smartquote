@@ -1,4 +1,4 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt'])
 .config(function($logProvider){
   $logProvider.debugEnabled(true);
   
@@ -90,7 +90,7 @@ var cleanupEventUserLogInDone = $scope.$on("UserLogInDone", function(event, mess
 });
 
 var cleanupEventUserLogInNotDone = $scope.$on("UserLogInNotDone", function(event, message){
-  $rootScope.SQNotify("Server error please try after some time",'error');
+  $rootScope.SQNotify("Server error please try after some time",'failure');
   $rootScope.hideSpinner();
 });
 
@@ -184,9 +184,14 @@ var cleanupEventUserForgotPasswordNotDone = $scope.$on("UserForgotPasswordNotDon
 
 /*============== FORGET PASSWORD===========*/
 $rootScope.getPrice = function(price){
-// console.log(price)  
+// console.log(price) 
 var price1=parseFloat(price);
-return price1.toFixed(2);
+if (price1=='') {
+price1=0;
+} else {
+price1=price1.toFixed(2);
+} 
+return price1;
 };
 
 /*===============SESSION TIME OUT STARTS=====================*/
@@ -231,13 +236,17 @@ $rootScope.SQNotify = function(message,flag)
     {
       notify({message:message,template:'assets/notification/views/oz.success.tpl.html',position:'center'});
     }
-    else if (flag === 'error') 
+    else if (flag === 'failure') 
     {
        notify({message:message,template:'assets/notification/views/oz.failure.tpl.html',position:'center'});
     } 
      else if (flag === 'central') 
     {
        notify({message:message,template:'assets/notification/views/oz.central.tpl.html',position:'center'});
+    }
+     else if (flag === 'error') 
+    {
+       notify({message:message,template:'assets/notification/views/oz.error.tpl.html',position:'center'});
     } 
   };
 
@@ -252,8 +261,8 @@ sweetAlert("Oops...",message, "error");
 };
 $rootScope.alertSessionTimeOutOnQuote=function(){
 swal({
-      title: "<h3>Quote Saved Partially</h3>",
-      text: "your quote partially saved with status 'INI' you can complete quote from Edit/View Quote.",
+      title: "<h4 style='color:#F8BB86'>Session Expired</h4><h4>Quote saved partially with status 'INI' </h4>",
+      // text: "your quote partially saved with status 'INI' you can complete quote from Edit/View Quote.",
       html: true
 });
 };
@@ -286,22 +295,30 @@ swal({
   // });
 
 $scope.checkQuoteActivated = function () {
-// console.log("reload executed");     
-  if ($rootScope.isQuoteActivated) {
-    $scope.$on('onBeforeUnload', function (e, confirmation) {
-          confirmation.message = "All data willl be lost.";
-          e.preventDefault();
-      });
-    $scope.$on('onUnload', function (e) {
-      console.log('leaving page'); // Use 'Preserve Log' option in Console
-    });
-  }else{
-    $scope.$on('onBeforeUnload', function (e, confirmation) {
-          confirmation.message = "All data willl be lost.";
-          // e.preventDefault();
-    });
-    
-  }
+// console.log("reload isQuoteActivated");  
+// console.log($rootScope.isQuoteActivated)  ;
+$(window).bind("beforeunload",function(event) {
+      if ($rootScope.isQuoteActivated) {
+      return "";
+        
+      }
+}); 
+// $(window).unbind('beforeunload');
+
+  // if ($rootScope.isQuoteActivated) {
+  //   $scope.$on('onBeforeUnload', function (e, confirmation) {
+  //         confirmation.message = "All data willl be lost.";
+  //         e.preventDefault();
+  //     });
+  //   $scope.$on('onUnload', function (e) {
+  //     console.log('leaving page'); // Use 'Preserve Log' option in Console
+  //   });
+  // }else{
+  //   $scope.$on('onBeforeUnload', function (e, confirmation) {
+  //         confirmation.message = "All data willl be lost.";
+  //         // e.preventDefault();
+  //   })
+  // }
 };
 $scope.checkQuoteActivated();
 $interval($scope.checkQuoteActivated, 1000);

@@ -8,7 +8,8 @@ angular.module('sq.SmartQuoteDesktop')
   function ($rootScope, $resource, $http, $state, $log) {
     var UserHomeServices = {
         //createUserGroup:$resource('/smartquote/createUserGroup?userGroupName=:userGroupName&checkedMenuList=:checkedMenuList', {}, {createUserGroup :{method: 'POST'}}),
-        updateQuote1:$resource('/smartquote/updateQuote?objQuoteBean=:objQuoteBean', {}, {updateQuote1 :{method: 'GET'},params:{objQuoteBean:'@objQuoteBean'}}),
+        // updateQuote1:$resource('/smartquote/updateQuote?objQuoteBean=:objQuoteBean', {}, {updateQuote1 :{method: 'POST'},params:{objQuoteBean:'@objQuoteBean'}}),
+        // createQuote1:$resource('/smartquote/createQuote',{}, {createQuote1 :{method: 'POST'}}),
         getTermsListAPI:$resource('/smartquote/getTermsConditions', {}, {getTermsListMethod :{method: 'POST'}}),
         createTermsConditionsAPI:$resource('/smartquote/createTermsConditions?termCondition=:termCondition', {}, {createTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition'}}),
         updateTermsConditionsAPI:$resource('/smartquote/updateTermsConditions?termCondition=:termCondition&id=:id', {}, {updateTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition',id:'@id'}}),
@@ -19,24 +20,50 @@ angular.module('sq.SmartQuoteDesktop')
         deleteServiceAPI:$resource('/smartquote/deleteService?id=:id', {}, {deleteServiceMethod :{method: 'GET'},params:{id:'@id'}}),
       };
     var userhome = {};
-  
-    userhome.UpdateQuote1 = function (objQuoteBean){
-    // console.log(objQuoteBean)
-    UserHomeServices.updateQuote1.updateQuote1({objQuoteBean:objQuoteBean},function (data) {
-        console.log(data);
-        if (data.code=="sessionTimeOut") {
-        // $rootScope.$broadcast('SessionTimeOut', data);   
-        $rootScope.$broadcast('QuoteSessionTimeOut', data);   
-       
-        }else{
-         $rootScope.$broadcast('UpdateQuoteDone', data); 
-        }
-      }, function (error) {
-        console.log(error);
-         $rootScope.$broadcast('UpdateQuoteNotDone', error);
-      });
+    var data;
+    var config = {
+                headers : {
+                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                }
+            }
+    // userhome.UpdateQuote1 = function (objQuoteBean){
+    // console.log("UpdateQuote1")
+    // data = $.param({objQuoteBean:objQuoteBean}); 
+    //  $http.post('/smartquote/updateQuote', data, config)
+    //         .success(function (data, status, headers, config) {
+    //          console.log(data);
+    //             if (data.code=="sessionTimeOut") {
+    //             $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    //             }else{
+    //              $rootScope.$broadcast('UpdateQuoteDone', data); 
+    //             }
+    //         })
+    //         .error(function (data, status, header, config) {
+    //           console.log(data);
+    //           $rootScope.$broadcast('UpdateQuoteNotDone', data);
+    //         });
      
-    };
+    // };
+
+    // userhome.CreateQuote1 = function (objQuoteBean){
+    // console.log("CreateQuote1")
+    // data = $.param({objQuoteBean:objQuoteBean}); 
+    // $http.post('/smartquote/createQuote', data, config)
+    //         .success(function (data, status, headers, config) {
+    //          console.log(data);
+    //             if (data.code=="sessionTimeOut") {
+    //             $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    //             }else{
+    //              $rootScope.$broadcast('CreateQuoteDone', data); 
+    //             }
+    //         })
+    //         .error(function (data, status, header, config) {
+    //           console.log(data);
+    //           $rootScope.$broadcast('CreateQuoteNotDone', data);
+    //         });
+
+
+    // };
 
 /*===============Manage User Group====================*/
     userhome.setUserGroup = function (userGroupId){
@@ -627,154 +654,136 @@ userhome.UpdateService = function (service,id){
 });  
 }
 
-// ==========================CREATE QUOTE ================================
-  userhome.GetCurrentSupplierList = function (){
-    // console.log(objQuoteBean)
-      $http({
-      method: "POST",
-      url: "/smartquote/getCurrentSupplierList",
-      }).success(function(data, status, header, config){
-        // console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('GetCurrentSupplierListDone', data); 
-        }
-      }).error(function(data, status, header, config){
-        // console.log(data);
-         $rootScope.$broadcast('GetCurrentSupplierListNotDone', data);
-      });
-    };
+// // ==========================CREATE QUOTE ================================
+//   userhome.GetCurrentSupplierList = function (){
+//     // console.log(objQuoteBean)
+//       $http({
+//       method: "POST",
+//       url: "/smartquote/getCurrentSupplierList",
+//       }).success(function(data, status, header, config){
+//         // console.log(data);
+//         if (data.code=="sessionTimeOut") {
+//         $rootScope.$broadcast('SessionTimeOut', data);   
+//         }else{
+//          $rootScope.$broadcast('GetCurrentSupplierListDone', data); 
+//         }
+//       }).error(function(data, status, header, config){
+//         // console.log(data);
+//          $rootScope.$broadcast('GetCurrentSupplierListNotDone', data);
+//       });
+//     };
 
-  userhome.GetSalesPersonList = function (){
-    // console.log(objQuoteBean)
-      $http({
-      method: "POST",
-      url: "/smartquote/getSalesPersonList",
-      }).success(function(data, status, header, config){
-        // console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('GetSalesPersonListDone', data); 
-        }
-      }).error(function(data, status, header, config){
-        // console.log(data);
-         $rootScope.$broadcast('GetSalesPersonListNotDone', data);
-      });
-    };
+//   userhome.GetSalesPersonList = function (){
+//     // console.log(objQuoteBean)
+//       $http({
+//       method: "POST",
+//       url: "/smartquote/getSalesPersonList",
+//       }).success(function(data, status, header, config){
+//         // console.log(data);
+//         if (data.code=="sessionTimeOut") {
+//         $rootScope.$broadcast('SessionTimeOut', data);   
+//         }else{
+//          $rootScope.$broadcast('GetSalesPersonListDone', data); 
+//         }
+//       }).error(function(data, status, header, config){
+//         // console.log(data);
+//          $rootScope.$broadcast('GetSalesPersonListNotDone', data);
+//       });
+//     };
 
-  userhome.CreateQuote = function (objQuoteBean){
-    // console.log(objQuoteBean)
-      $http({
-      method: "POST",
-      url: "/smartquote/createQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
-      }).success(function(data, status, header, config){
-        console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('QuoteSessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('CreateQuoteDone', data); 
-        }
-      }).error(function(data, status, header, config){
-        // console.log(data);
-         $rootScope.$broadcast('CreateQuoteNotDone', data);
-      });
-    };
-// ==========================VIEW/EDIT QUOTE ================================
+  // userhome.CreateQuote = function (objQuoteBean){
+  //   // console.log(objQuoteBean)
+  //     $http({
+  //     method: "POST",
+  //     url: "/smartquote/createQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
+  //     }).success(function(data, status, header, config){
+  //       console.log(data);
+  //       if (data.code=="sessionTimeOut") {
+  //       $rootScope.$broadcast('QuoteSessionTimeOut', data);   
+  //       }else{
+  //        $rootScope.$broadcast('CreateQuoteDone', data); 
+  //       }
+  //     }).error(function(data, status, header, config){
+  //       // console.log(data);
+  //        $rootScope.$broadcast('CreateQuoteNotDone', data);
+  //     });
+  //   };
+
+// // ==========================VIEW/EDIT QUOTE ================================
     
-    userhome.GetQuoteView = function (){
-     console.log("GetQuoteView")
-      $http({
-      method: "POST",
-      url: "/smartquote/getQuoteView",
-      }).success(function(data, status, header, config){
-        console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('GetQuoteViewDone', data); 
-        }
-      }).error(function(data, status, header, config){
-         console.log(data);
-         $rootScope.$broadcast('GetQuoteViewNotDone', data);
-      });
-    };
+//     userhome.GetQuoteView = function (){
+//      console.log("GetQuoteView")
+//       $http({
+//       method: "POST",
+//       url: "/smartquote/getQuoteView",
+//       }).success(function(data, status, header, config){
+//         console.log(data);
+//         if (data.code=="sessionTimeOut") {
+//         $rootScope.$broadcast('SessionTimeOut', data);   
+//         }else{
+//          $rootScope.$broadcast('GetQuoteViewDone', data); 
+//         }
+//       }).error(function(data, status, header, config){
+//          console.log(data);
+//          $rootScope.$broadcast('GetQuoteViewNotDone', data);
+//       });
+//     };
 
-    userhome.GetTermsAndServiceList = function (quoteId){
-    // console.log(quoteId)
-      $http({
-      method: "POST",
-      url: "/smartquote/getTermsAndServiceList?quoteId="+quoteId,
-      }).success(function(data, status, header, config){
-         console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('GetTermsAndServiceListDone', data); 
-        }
-      }).error(function(data, status, header, config){
-         console.log(data);
-         $rootScope.$broadcast('GetTermsAndServiceListNotDone', data);
-      });
-    };
+//     userhome.GetTermsAndServiceList = function (quoteId){
+//     // console.log(quoteId)
+//       $http({
+//       method: "POST",
+//       url: "/smartquote/getTermsAndServiceList?quoteId="+quoteId,
+//       }).success(function(data, status, header, config){
+//          console.log(data);
+//         if (data.code=="sessionTimeOut") {
+//         $rootScope.$broadcast('SessionTimeOut', data);   
+//         }else{
+//          $rootScope.$broadcast('GetTermsAndServiceListDone', data); 
+//         }
+//       }).error(function(data, status, header, config){
+//          console.log(data);
+//          $rootScope.$broadcast('GetTermsAndServiceListNotDone', data);
+//       });
+//     };
 
-    userhome.AddComment = function (quoteId,comment){
-    // console.log(objQuoteBean)
-      $http({
-      method: "POST",
-      url: "/smartquote/addComment?quoteId="+quoteId+"&comment="+comment,
-      }).success(function(data, status, header, config){
-         // console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $('#commentModal').modal('hide');
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('AddCommentDone', data); 
-        }
-      }).error(function(data, status, header, config){
-         // console.log(data);
-         $rootScope.$broadcast('AddCommentNotDone', data);
-      });
-    };
 
-    userhome.UpdateQuote = function (objQuoteBean){
-    // console.log(objQuoteBean)
-      $http({
-      method: "POST",
-      url: "/smartquote/updateQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
-      }).success(function(data, status, header, config){
-        console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('UpdateQuoteDone', data); 
-        }
-      }).error(function(data, status, header, config){
-        // console.log(data);
-         $rootScope.$broadcast('UpdateQuoteNotDone', data);
-      });
-    };
+    // userhome.UpdateQuote = function (objQuoteBean){
+    // // console.log(objQuoteBean)
+    //   $http({
+    //   method: "POST",
+    //   url: "/smartquote/updateQuote?objQuoteBean="+encodeURIComponent(objQuoteBean),
+    //   }).success(function(data, status, header, config){
+    //     console.log(data);
+    //     if (data.code=="sessionTimeOut") {
+    //     $rootScope.$broadcast('SessionTimeOut', data);   
+    //     }else{
+    //      $rootScope.$broadcast('UpdateQuoteDone', data); 
+    //     }
+    //   }).error(function(data, status, header, config){
+    //     // console.log(data);
+    //      $rootScope.$broadcast('UpdateQuoteNotDone', data);
+    //   });
+    // };
 
-    userhome.saveQuoteAsPDF = function (quoteId){
-    // console.log(objQuoteBean)
+    // userhome.saveQuoteAsPDF = function (quoteId){
+    // // console.log(objQuoteBean)
     
-      $http({
-      method: "POST",
-      url: "/smartquote/updateQuote?objQuoteBean="+objQuoteBean,
-      }).success(function(data, status, header, config){
-        // console.log(data);
-        if (data.code=="sessionTimeOut") {
-        $rootScope.$broadcast('SessionTimeOut', data);   
-        }else{
-         $rootScope.$broadcast('UpdateQuoteDone', data); 
-        }
-      }).error(function(data, status, header, config){
-        // console.log(data);
-         $rootScope.$broadcast('UpdateQuoteNotDone', data);
-      });
-    };
-
+    //   $http({
+    //   method: "POST",
+    //   url: "/smartquote/updateQuote?objQuoteBean="+objQuoteBean,
+    //   }).success(function(data, status, header, config){
+    //     // console.log(data);
+    //     if (data.code=="sessionTimeOut") {
+    //     $rootScope.$broadcast('SessionTimeOut', data);   
+    //     }else{
+    //      $rootScope.$broadcast('UpdateQuoteDone', data); 
+    //     }
+    //   }).error(function(data, status, header, config){
+    //     // console.log(data);
+    //      $rootScope.$broadcast('UpdateQuoteNotDone', data);
+    //   });
+    // };
 
     return userhome;
   }

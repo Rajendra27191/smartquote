@@ -67,8 +67,15 @@ legend>label{
     border: solid 15px transparent;
     border-right-color: #FFF;
 }
+table.dataTable tbody th, table.dataTable tbody td {
+    padding: 8px 3px;
+}
+.viewQuote{
+	margin-right: 5%;
+	margin-left: 5%;
+}
 </style>
-<div class="container">
+<div class="viewQuote">
 <div class="row">
 	<div class="col-md-12"><center><label class="main-label">View / Edit Quote</label></center></div>
 </div>
@@ -77,39 +84,45 @@ legend>label{
 <table datatable="ng" class="table row-border hover table-responsive">
                 <thead class="table-header">
                     <tr>
-		                <th>Sr No &nbsp;</th>
-		                <th>Quote Id &nbsp;</th>
-		                <th>Created Date &nbsp;</th>
-		                <th>Cust Name &nbsp;</th>
-		                <th>Phone &nbsp;</th>
-		                <th>Email &nbsp;</th>
-		                <th>Sales Person &nbsp;</th>
-		                <th>Supplier &nbsp;</th>
-		                <th>Attention &nbsp;</th>
-		                <th>Modified Date &nbsp;</th>
-		                <th>Status &nbsp;</th>
-		                <th>Action &nbsp;</th>
+		                <th style="width:3%;">Sr No &nbsp;</th>
+		                <th style="width:5%;">Quote &nbsp;&nbsp; Id </th>
+		                <th style="width:10%;">Created Date &nbsp;</th>
+		                <th style="width:15%;">Cust Name &nbsp;</th>
+		                <th style="width:10%;">Phone &nbsp;</th>
+		                <th style="width:10%;">Email &nbsp;</th>
+		                <th style="width:10%;">Sales Person &nbsp;</th>
+		                <th style="width:10%;">Supplier &nbsp;</th>
+		                <th style="width:5%;">Atten &nbsp;</th>
+		                <th style="width:10%;">Modified Date &nbsp;</th>
+		                <th style="width:5%;">Status &nbsp;</th>
+		                <th style="width:7%;">Action &nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="quote in quoteListView" ng-click="testingClick(name)">
+             
+                    <tr ng-repeat="quote in quoteListView" ng-click="testingClick(name)" >
 		                <td>{{$index+1}}</td>
-		                <td><span data-ng-bind="quote.quoteId"></span></td>
-		                <td><span data-ng-bind="quote.createdDate"></span></td>
-		                <td><span data-ng-bind="quote.custName"></span></td>
-		                <td><span data-ng-bind="quote.phone"></span></td>
-		                <td><span data-ng-bind="quote.email"></span></td>
+		                <td><span data-ng-bind="quote.quoteId" ></span></td>
+		                <td><span data-ng-bind="quote.createdDate" ></span></td>
+		                <td><span data-ng-bind="quote.custName" ></span></td>
+		                <td><span data-ng-bind="quote.phone" ></span></td>
+		                <td><span data-ng-bind="quote.email" ></span></td>
 		                <td>
-		                <span data-ng-bind="quote.salesPerson" ng-if="quote.salesPerson!=''"></span>
-		                <span ng-if="quote.salesPerson==''"> --- </span>
+		                <span data-ng-bind="quote.salesPerson" ng-if="quote.salesPerson!=''" ></span>
+		                <span ng-if="quote.salesPerson==''" > --- </span>
 		                </td>
+		                <td> 
+		                <span data-ng-bind="quote.currentSupplierName" ng-if="quote.currentSupplierName!=''" ></span>
+		                <span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null" > --- </span>
+		                </td>
+		                <td><span data-ng-bind="quote.quoteAttn" ></span></td>
+		                <td><span data-ng-bind="quote.modifiedDate" ></span></td>
 		                <td>
-		                <span data-ng-bind="quote.currentSupplierName" ng-if="quote.currentSupplierName!=''"></span>
-		                <span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null"> --- </span>
+						<!-- <i class="fa fa-info-circle fa-lg text-info" aria-hidden="true" ng-if="quote.status=='UPDATED'" data-toggle="tooltip" title="UPDATED"></i>
+						<i class="fa fa-info-circle fa-lg text-warning" aria-hidden="true" ng-if="quote.status=='INI'"  data-toggle="tooltip" title="INI"></i>
+						<i class="fa fa-info-circle fa-lg text-success" aria-hidden="true" ng-if="quote.status=='SAVED'" data-toggle="tooltip" title="SAVED"></i> -->
+		                <span data-ng-bind="quote.status"></span>
 		                </td>
-		                <td><span data-ng-bind="quote.quoteAttn"></span></td>
-		                <td><span data-ng-bind="quote.modifiedDate"></span></td>
-		                <td><span data-ng-bind="quote.status"></span></td>
 		                <td>
 		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="viewDetailInformation(quote)" popover-placement="left" uib-popover="Click to view/edit quote."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
 		                <span style="cursor: pointer;margin: 0px 5px;" ng-click="showCommentModal(quote)" popover-placement="left" uib-popover="Click to add comment on quote."  popover-trigger="'mouseenter'"><i class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>
@@ -121,8 +134,8 @@ legend>label{
 </table>	
 </div>
 
-<div  ng-if="showEditQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.quote.view.html'">
-</div>
+<!-- <div  ng-if="showEditQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.quote.view.html'"></div> -->
+<div  ng-if="showEditQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.create_quote.view.html'"></div>
 
 <div class="modal fade-scale" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document" style="width: 80%;font-size: 12px;">

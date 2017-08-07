@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQViewEditQuoteController',['$uibModal','$scope','$rootScope','$window','$anchorScroll','$log','$state','$timeout','SQUserHomeServices','hotkeys','$http',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQUserHomeServices,hotkeys,$http){
+.controller('SQViewEditQuoteController',['$uibModal','$scope','$rootScope','$window','$anchorScroll','$log','$state','$timeout','SQUserHomeServices','hotkeys','$http','SQQuoteServices',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQUserHomeServices,hotkeys,$http,SQQuoteServices){
 console.log('initialise SQViewEditQuoteController');
 $scope.quoteListView=[];
 $scope.quoteView={};
@@ -23,15 +23,28 @@ $scope.competeQuote=["yes","no"];
 $scope.currentSupplierList=[];
 $scope.salesPersonList=[];
 $scope.userList=[];
-
+$scope.isAlternateAdded=false;
 //initialising Search======================
 
 $scope.initAuotoComplete=function(){
 	$scope.selectedProduct=null;
 	 products = new Bloodhound({
-	    datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+	    // datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
+	    datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
 	    queryTokenizer: Bloodhound.tokenizers.whitespace,
-	    local: $scope.productList
+	    // local: $scope.productList,
+	    prefetch: {
+		url: "smartquote/products.json?query=%QUERY",
+		cache: false,
+		filter: function (devices) {
+		return $.map(devices, function (device) {
+		return {
+			code: device.code,
+		    value : device.value
+		};
+		});
+		}
+		},
 	  });
     products.initialize();
     $rootScope.productsDataset = {
@@ -43,6 +56,9 @@ $scope.initAuotoComplete=function(){
       displayKey: 'title',
       highlight: true
     };
+    $timeout(function() {
+  		 $rootScope.hideSpinner();
+  	}, 1000);
 }
 
 // ===============================UIB MODAL CODE=================================//
@@ -108,7 +124,7 @@ $scope.openMyModal = function (product) {
 
 $scope.initViewEditQuote=function(){
 $rootScope.showSpinner();
-SQUserHomeServices.GetQuoteView();
+SQQuoteServices.GetQuoteView();
 
 };
 $scope.initViewEditQuote();
@@ -196,7 +212,7 @@ var quote;
 $scope.initEditQuote=function(quote1){
 // console.log(quote)
 $rootScope.showSpinner();
-SQUserHomeServices.GetCurrentSupplierList();
+SQQuoteServices.GetCurrentSupplierList();
 quote=quote1;
 };
 /*=============GET CURRENT SUPPLIER LIST==================*/
@@ -239,7 +255,7 @@ if (data.code) {
 			$scope.customerQuote.salesPerson=element;
 		}
 	});
-	SQUserHomeServices.GetTermsAndServiceList(quote.quoteId);
+	SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
 	}
   // $rootScope.hideSpinner();
 }
@@ -266,6 +282,7 @@ if (data.code) {
 	$scope.getProductsList();
 	
 	
+	
 }else{
   $rootScope.alertError(data.message);
 }
@@ -285,41 +302,44 @@ $rootScope.hideSpinner();
 // =====================getProductsList=======
 $scope.getProductsList=function(){
 	console.log("getProductsList")
-	// $rootScope.showSpinner();
-	var prodLike='';
-	SQUserHomeServices.GetProductList(prodLike);
+	// $scope.initAuotoComplete();
+	$scope.checkSelectedTermsAndCondition();
+	$scope.checkSelectedServices();
+	$scope.initAuotoComplete();
+	$scope.getProductGroup();
+	// $scope.initAuotoComplete();
 }
 
-$scope.handleGetProductListDoneResponse=function(data){
-if(data){
-if (data.code){
-  if(data.code.toUpperCase()=='SUCCESS'){
-  		// $rootScope.hideSpinner();
-   		$scope.productList=data.result;
-		$scope.priceArray=[];
-		// $scope.getProductGroup();
-		$scope.checkSelectedTermsAndCondition();
-		$scope.checkSelectedServices();
-		$scope.initAuotoComplete();
-		$scope.getProductGroup();
-  }else{
-   $rootScope.hideSpinner();
-   $rootScope.alertError(data.message);
-  }
-// $rootScope.hideLoadSpinner();
-}
-}
-};
+// $scope.handleGetProductListDoneResponse=function(data){
+// if(data){
+// if (data.code){
+//   if(data.code.toUpperCase()=='SUCCESS'){
+//   		// $rootScope.hideSpinner();
+//    		$scope.productList=data.result;
+// 		$scope.priceArray=[];
+// 		// $scope.getProductGroup();
+// 		$scope.checkSelectedTermsAndCondition();
+// 		$scope.checkSelectedServices();
+// 		$scope.initAuotoComplete();
+// 		$scope.getProductGroup();
+//   }else{
+//    $rootScope.hideSpinner();
+//    $rootScope.alertError(data.message);
+//   }
+// // $rootScope.hideLoadSpinner();
+// }
+// }
+// };
 
-var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
-	// console.log("GetProductListDone");
-$scope.handleGetProductListDoneResponse(message);      
-});
+// var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
+// 	// console.log("GetProductListDone");
+// $scope.handleGetProductListDoneResponse(message);      
+// });
 
-var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
+// var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
+// $rootScope.alertServerError("Server error");
+// $rootScope.hideSpinner();
+// });
 /*=============GET PRODUCT GROUP LIST==================*/
 $scope.productGroupList=[];
 $scope.getProductGroup=function(){
@@ -334,6 +354,7 @@ $scope.handleGetGetProductGroupListDoneResponse=function(data){
 	if (data.code) {
 	if(data.code.toUpperCase()=='SUCCESS'){
 	$scope.productGroupList=data.result;
+
 	//$scope.openMyModal(); 
 	}else{
 	$rootScope.hideSpinner();
@@ -366,7 +387,7 @@ if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
  	$scope.salesPersonList=data.result;
  	// $rootScope.showSpinner();
-	SQUserHomeServices.GetTermsAndServiceList(quote.quoteId);
+	SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
 }else{
   $rootScope.alertError(data.message);
 }
@@ -428,10 +449,6 @@ for (var i =0; i<$scope.termConditionList.length; i++) {
 // console.log(JSON.stringify($scope.termConditionList));
 };
 
-
-
-
-
 $scope.closeEditProduct=function(){
 console.log("closeEditProducts");
 };
@@ -449,18 +466,40 @@ $scope.viewDetailInformation=function(quote){
 	if (currentQuote.currentSupplierId>0) {
 	var currentSupplierName = {'code': currentQuote.currentSupplierName, 'key': currentQuote.currentSupplierId, 'value': currentQuote.currentSupplierName}	
 	}else{
+	// var currentSupplierName = {'code': null, 'key': null, 'value': null}	
 	var currentSupplierName ="";	
 	}
 	$scope.isEditViewShow=true;
 	currentQuote.currentSupplierName=currentSupplierName;
 	currentQuote.salesPerson=salesPerson;
 	$scope.customerQuote=currentQuote;
+	$scope.customerQuote.productList=$scope.getProductsListArray(currentQuote.productList);
 	$scope.initEditQuote(quote);
 	$scope.calculateAllInformation();
 	$rootScope.isQuoteActivated=true;
+
 };
 // ===============****************************=================================
-
+$scope.getProductsListArray=function(productList){
+console.log("getProductsListArray");
+console.log(productList);
+var list=[];	
+if (productList.length>0) {
+	angular.forEach(productList, function(product, key){
+		if (product.altForQuoteDetailId>0) {
+			if (productList[key-1].quoteDetailId==product.altForQuoteDetailId) {
+				var altProd=product;
+				list[key-1].altProd=angular.copy(altProd);
+				list[key-1].isLinkedExact=true
+			}
+		}else{
+			list.push(product);
+		}
+	});
+	console.log(list)
+}
+return list;
+};
 
 /*===================GET PRODUCT GROUP DETAILS=================*/
 $scope.checkIfProductExist=function(){
@@ -516,7 +555,8 @@ $scope.checkIfProductExist=function(){
 // });
 
 // ===================== RESET & CANCEL=====================
-$scope.cancelCreateQuote=function(){
+
+$scope.resetUpdateQuote=function(){
 	$rootScope.moveToTop();
 	$log.debug("cancelCreateQuote call");
 	$scope.customerQuote={};
@@ -535,6 +575,24 @@ $scope.cancelCreateQuote=function(){
 	$scope.showEditQuoteView=false;
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
+}
+$scope.cancelCreateQuote=function(){
+var previousWindowKeyDown = window.onkeydown;
+  swal({
+  title: 'Confirm Navigation',
+  text: "Your unsaved data will be lost. \n Are you sure you want to leave this page ?",
+  showCancelButton: true,
+  closeOnConfirm: true,
+  cancelButtonText:"Stay on Page",
+  confirmButtonText:"Leave Page"
+  }, function (isConfirm) {
+    console.log("isConfirm >" + isConfirm)
+  // window.onkeydown = previousWindowKeyDown;
+  if (isConfirm) {
+    $scope.resetUpdateQuote();
+  } 
+  });
+	
 }
 // ===================== ADD PRODUCTS=====================
 $scope.currentSupplierNameChanged=function(){
@@ -602,7 +660,8 @@ $scope.priceArray=[];
 }
 };
 $scope.showAddProductModal=function(status,product,index){
-	// console.log($scope.isEditViewShow)
+	console.log($scope.isEditViewShow)
+	console.log($scope.form.addCustomerQuote)
 	if ($scope.isEditViewShow) {	
 	if ($scope.form.addCustomerQuote.$valid) {
 		// console.log("edit valid")
@@ -749,7 +808,6 @@ $scope.getGpInformation=function(){
 	var countGpRequired=0;
 	var countcurrentSupplierGP=0;
 	if ($scope.customerQuote.productList.length>0) {
-		
 		angular.forEach($scope.customerQuote.productList, function(value, key){
 			gpRequiredSubtotal=gpRequiredSubtotal+parseFloat(value.gpRequired);
 			countGpRequired++;
@@ -770,7 +828,142 @@ $scope.calculateAllInformation=function(){
 	$scope.getSupplierInformation();
   	$scope.getGpInformation();
   	$scope.getTotalInformation();	
+  	$scope.calculateAlternativeProductsInformation();
 };
+//===========================
+$scope.altSupplierInformation={'subtotal':0,'gstTotal':0,'total':0};
+$scope.getAltSupplierInformation=function(){
+	var subtotal=0;
+	var gstTotal=0;
+	if ($scope.customerQuote.productList.length>0) {
+		angular.forEach($scope.customerQuote.productList, function(value, key){
+			if (value.isLinkedExact) {
+			if (value.altProd.currentSupplierTotal) {	
+			// subtotal=subtotal+parseFloat(value.currentSupplierTotal);	
+			subtotal=subtotal+parseFloat(value.altProd.currentSupplierTotal);		
+			}
+			}else{
+			subtotal=subtotal+parseFloat(value.currentSupplierTotal);
+			}
+			if ($scope.customerQuote.pricesGstInclude) {	
+				if (value.isLinkedExact) {
+				if (value.altProd.currentSupplierTotal && value.altProd.gstFlag.toUpperCase()=='YES') {	
+				gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.currentSupplierTotal))		
+				}
+				}else{
+				if (value.gstFlag.toUpperCase()=='YES') {
+				gstTotal=gstTotal+((10/100)*parseFloat(value.currentSupplierTotal))
+				}
+				}
+			}
+		});
+		$scope.altSupplierInformation.subtotal=subtotal;
+		$scope.altSupplierInformation.gstTotal=gstTotal;
+		$scope.altSupplierInformation.total=$scope.altSupplierInformation.subtotal+$scope.altSupplierInformation.gstTotal;
+	}else{
+		$scope.altSupplierInformation={'subtotal':0,'gstTotal':0,'total':0};
+	}
+};
+
+$scope.altGpInformation={'avgGpRequired':0,'avgCurrentSupplierGp':0};
+$scope.getAltGpInformation=function(){
+// console.log("getSupplierInformation")
+var gpRequiredSubtotal=0;
+var currentSupplierGPSubtotal=0;
+var countGpRequired=0;
+var countcurrentSupplierGP=0;
+if ($scope.customerQuote.productList.length>0) {
+	angular.forEach($scope.customerQuote.productList, function(value, key){	
+		if (value.isLinkedExact) {
+		if (value.altProd.gpRequired) {
+		gpRequiredSubtotal=gpRequiredSubtotal+parseFloat(value.altProd.gpRequired);
+		countGpRequired++;	
+		}
+		}else{
+		gpRequiredSubtotal=gpRequiredSubtotal+parseFloat(value.gpRequired);
+		countGpRequired++;
+		}
+	});
+	angular.forEach($scope.customerQuote.productList, function(value, key){
+		if (value.isLinkedExact) {
+		if (value.altProd.currentSupplierGP) {	
+		currentSupplierGPSubtotal=currentSupplierGPSubtotal+parseFloat(value.altProd.currentSupplierGP);
+		countcurrentSupplierGP++;	
+		}
+		}else{
+		currentSupplierGPSubtotal=currentSupplierGPSubtotal+parseFloat(value.currentSupplierGP);
+		countcurrentSupplierGP++;
+		}
+	});
+$scope.altGpInformation.avgGpRequired=gpRequiredSubtotal/countGpRequired;
+$scope.altGpInformation.avgCurrentSupplierGp=currentSupplierGPSubtotal/countcurrentSupplierGP;
+}else{
+	$scope.altGpInformation={'avgGpRequired':0,'avgCurrentSupplierGp':0};	
+}
+};
+
+$scope.altTotalInformation={'subtotal':0,'gstTotal':0,'total':0};
+$scope.getAltTotalInformation=function(){
+console.log("getAltTotalInformation")
+var subtotal=0;
+var gstTotal=0;
+if ($scope.customerQuote.productList.length>0) {
+	angular.forEach($scope.customerQuote.productList, function(value, key){
+		// console.log(value)
+		if (value.isLinkedExact) {
+			if (value.altProd.total) {	
+			subtotal=subtotal+parseFloat(value.altProd.total);		
+			}
+		}else{
+			subtotal=subtotal+parseFloat(value.total);
+		}
+		if ($scope.customerQuote.pricesGstInclude) {
+			if (value.isLinkedExact) {
+				if (value.altProd.total && value.altProd.gstFlag.toUpperCase()=='YES') {	
+				gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.total))		
+				}
+			}else{
+				if (value.gstFlag.toUpperCase()=='YES') {
+				gstTotal=gstTotal+((10/100)*parseFloat(value.total))
+				}
+			}
+		}
+	});
+	$scope.altTotalInformation.subtotal=subtotal;
+	$scope.altTotalInformation.gstTotal=gstTotal;
+	$scope.altTotalInformation.total=$scope.altTotalInformation.subtotal+$scope.altTotalInformation.gstTotal;
+}else{
+	$scope.altTotalInformation={'subtotal':0,'gstTotal':0,'total':0};
+}
+};
+$scope.calculateAlternativeProductsInformation=function(){
+	console.log("calculateAlternativeProductsInformation")
+	$scope.getAltSupplierInformation();
+	$scope.getAltGpInformation();
+	$scope.getAltTotalInformation();
+	var count=0;
+	$scope.addedProductCount=0;
+	if ($scope.customerQuote.productList.length>0) {
+		angular.forEach($scope.customerQuote.productList, function(value, key){
+			if (value.altProd) {
+			if (value.altProd.itemCode){
+				count++;
+				$scope.addedProductCount=$scope.addedProductCount+2;
+			}
+			}else{
+				$scope.addedProductCount++;
+			}
+		});
+	}	
+	if (count>0) {
+		$scope.isAlternateAdded=true;
+	}else{
+		$scope.isAlternateAdded=false;
+	}
+	console.log($scope.addedProductCount);
+	// console.log("isAlternateAdded" + $scope.isAlternateAdded)
+};
+//============================================================
 
 $rootScope.addProductToEditQuote=function(dataFromModal){
 	console.log("addProductToEditQuote<<<<<<<<...>>>>>")
@@ -912,7 +1105,7 @@ $scope.addComment=function(){
 // console.log($scope.customerQuote);
 if ($scope.form.commentForm.$valid) {
 	$rootScope.showSpinner();
-	SQUserHomeServices.AddComment($scope.customerQuote.quoteId,$scope.comment);
+	SQQuoteServices.AddComment($scope.customerQuote.quoteId,$scope.comment);
 }else{
 	$scope.form.commentForm.submitted=true;
 }
@@ -972,8 +1165,6 @@ console.log(quote);
 //   unit: 'in',
 //   format: [4, 2]
 // })
-
-
 // doc.addPage()
 // doc.addPage()
 // doc.text('I am on page 3', 10, 10)
@@ -984,6 +1175,129 @@ console.log(quote);
  window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
 };
 //==============================================Update Quote=======================================
+$scope.createAlternativeArray=function(product){
+var alternativeArray=[];
+var obj={};
+obj.mainProductCode='';
+obj.altProductCode='';
+// var mainProductCode,altProductCode;
+// var objAlternativeBean={};
+angular.forEach($scope.customerQuote.productList, function(value, key){
+	if (value.altProd) {
+	if (value.altProd.itemCode) {
+		obj={"mainProductCode":value.itemCode,"altProductCode":value.altProd.itemCode}
+		alternativeArray.push(obj);
+	}
+	}
+});
+return alternativeArray;
+}
+$scope.jsonOfProductList=function(customerQuote){
+	var productList=[];
+	var product={};
+	console.log("customerQuote");
+	console.log(customerQuote);
+	if (customerQuote.saveWithAlternative) {
+		angular.forEach(customerQuote.productList, function(value, key){
+			if (value.altProd) {
+			if (value.altProd.itemCode) {	
+			product={
+			"avgcost":value.altProd.avgcost,
+			"itemCode": value.altProd.itemCode,
+			"currentSupplierGP": value.altProd.currentSupplierGP,
+			"currentSupplierPrice": value.altProd.currentSupplierPrice,
+			"currentSupplierTotal": value.altProd.currentSupplierTotal,
+			"itemDescription": value.altProd.itemDescription,
+			"description2": value.altProd.description2,
+			"description3": value.altProd.description3,
+			"gpRequired": value.altProd.gpRequired,
+			"gstFlag": value.altProd.gstFlag,
+			"itemQty": value.altProd.itemQty,
+			"price0exGST": value.altProd.price0exGST,
+			"price1exGST": value.altProd.price1exGST,
+			"price2exGST": value.altProd.price2exGST,
+			"price3exGST": value.altProd.price3exGST,
+			"price4exGST": value.altProd.price4exGST,
+			"quotePrice": value.altProd.quotePrice,
+			"savings": value.altProd.savings,
+			"total": value.altProd.total,
+			"unit": value.altProd.unit,
+			}
+			productList.push(product);
+			}
+			}else{
+			product={
+			"avgcost": value.avgcost,
+			"itemCode": value.itemCode,
+			"itemDescription": value.itemDescriptione,
+			"description2": value.description2,
+			"description3": value.description3,
+			"currentSupplierGP": value.currentSupplierGP,
+			"currentSupplierPrice": value.currentSupplierPrice,
+			"currentSupplierTotal": value.currentSupplierTotal,
+			"gpRequired": value.gpRequired,
+			"gstFlag": value.gstFlag,
+			"isNewProduct": value.isNewProduct,
+			"itemQty": value.itemQty,
+			"price0exGST": value.price0exGST,
+			"price1exGST": value.price1exGST,
+			"price2exGST": value.price2exGST,
+			"price3exGST": value.price3exGST,
+			"price4exGST": value.price4exGST,
+			"productGroupCode": value.productGroupCode,
+			"productGroupName": value.productGroupName,
+			"qtyBreak0": value.qtyBreak0,
+			"qtyBreak1": value.qtyBreak1,
+			"qtyBreak2": value.qtyBreak2,
+			"qtyBreak3": value.qtyBreak3,
+			"qtyBreak4": value.qtyBreak4,
+			"quotePrice": value.quotePrice,
+			"savings": value.savings,
+			"total": value.total,
+			"unit": value.unit,
+			"isLinkedExact": value.isLinkedExact,
+			}
+			productList.push(product);	
+			}
+		});
+	}else{
+		angular.forEach(customerQuote.productList, function(value, key){
+			product={
+			"avgcost": value.avgcost,
+			"itemCode": value.itemCode,
+			"itemDescription": value.itemDescriptione,
+			"description2": value.description2,
+			"description3": value.description3,
+			"currentSupplierGP": value.currentSupplierGP,
+			"currentSupplierPrice": value.currentSupplierPrice,
+			"currentSupplierTotal": value.currentSupplierTotal,
+			"gpRequired": value.gpRequired,
+			"gstFlag": value.gstFlag,
+			"isNewProduct": value.isNewProduct,
+			"itemQty": value.itemQty,
+			"price0exGST": value.price0exGST,
+			"price1exGST": value.price1exGST,
+			"price2exGST": value.price2exGST,
+			"price3exGST": value.price3exGST,
+			"price4exGST": value.price4exGST,
+			"productGroupCode": value.productGroupCode,
+			"productGroupName": value.productGroupName,
+			"qtyBreak0": value.qtyBreak0,
+			"qtyBreak1": value.qtyBreak1,
+			"qtyBreak2": value.qtyBreak2,
+			"qtyBreak3": value.qtyBreak3,
+			"qtyBreak4": value.qtyBreak4,
+			"quotePrice": value.quotePrice,
+			"savings": value.savings,
+			"total": value.total,
+			"unit": value.unit,
+			"isLinkedExact": value.isLinkedExact,
+			}
+			productList.push(product);
+		});
+	}
+	return productList;
+};
 $scope.jsonToCreateQuote=function(){
 var objQuoteBean={};
 var supplierName='';
@@ -991,18 +1305,17 @@ var supplierId=null;
 var salesPerson='';
 var salesPersonId=null;
 if ($scope.customerQuote.currentSupplierName!=undefined) {
-
 if($scope.customerQuote.currentSupplierName.key){
 	supplierName=$scope.customerQuote.currentSupplierName.value;
 	supplierId=$scope.customerQuote.currentSupplierName.key
-}else{
-	supplierName=$scope.customerQuote.currentSupplierName;
-	supplierId=0;
-}
-}else{
+}else if($scope.customerQuote.currentSupplierName==''||$scope.customerQuote.currentSupplierName==null){
 	console.log("$scope.customerQuote.currentSupplierName "+$scope.customerQuote.currentSupplierName);
 	supplierName=$scope.customerQuote.currentSupplierName;
 	supplierId=-1;
+}else{
+	supplierName=$scope.customerQuote.currentSupplierName;
+	supplierId=0;	
+}
 };
 if ($scope.customerQuote.salesPerson!=undefined) {
 if ($scope.customerQuote.salesPerson.key) {
@@ -1040,8 +1353,15 @@ objQuoteBean={
 'pricesGstInclude':$scope.customerQuote.pricesGstInclude,
 'notes':$scope.customerQuote.notes,
 'productList':$scope.customerQuote.productList,
+// 'productList':$scope.jsonOfProductList($scope.customerQuote),
 'serviceList':$scope.serviceList,
 'termConditionList':$scope.termConditionList,
+'userId':$rootScope.userData.userId,
+}
+if ($scope.customerQuote.saveWithAlternative) {
+	console.log("saveWithAlternative")
+	objQuoteBean.alternativeArray=$scope.createAlternativeArray();
+	objQuoteBean.saveWithAlternative=$scope.customerQuote.saveWithAlternative;
 }
 // console.log(JSON.stringify(objQuoteBean))
 // return JSON.stringify(objQuoteBean);
@@ -1102,7 +1422,7 @@ if ($scope.form.addCustomerQuote.$valid) {
 		}else{
 			console.log(JSON.stringify($scope.jsonToCreateQuote()));
 			$rootScope.showSpinner();
-			SQUserHomeServices.UpdateQuote1(JSON.stringify($scope.jsonToCreateQuote()));
+			SQQuoteServices.UpdateQuote(JSON.stringify($scope.jsonToCreateQuote()));
 		}
 	}else{
 		$log.debug("please add products");
@@ -1130,7 +1450,8 @@ if (data.code) {
 	  // animation: "slide-from-top",
 	},
 	function(){
-  	 $scope.cancelCreateQuote();
+  	 // $scope.cancelCreateQuote();
+  	 $scope.resetUpdateQuote();
   	 $scope.initViewEditQuote();
   	 // $scope.init();	
 	});
@@ -1142,7 +1463,7 @@ if (data.code) {
 };
 
 var cleanupEventCreateQuoteDone = $scope.$on("QuoteSessionTimeOut", function(event, message){     
-$scope.cancelCreateQuote();
+$scope.resetUpdateQuote();
 $rootScope.$broadcast('SessionTimeOut', message); 		
 $rootScope.alertSessionTimeOutOnQuote();
 });
@@ -1225,8 +1546,8 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventAddCommentNotDone();
 	// cleanupEventGetProductDetailsDone();
 	// cleanupEventGetProductDetailsNotDone();
-	cleanupEventGetProductListDone();
-	cleanupEventGetProductListNotDone();
+	// cleanupEventGetProductListDone();
+	// cleanupEventGetProductListNotDone();
 	cleanupEventUpdateQuoteDone();
 	cleanupEventUpdateQuoteNotDone();
 	cleanupEventGetQuoteViewDone();

@@ -1,12 +1,46 @@
+<style type="text/css" media="screen">
+	.alt-product{
+	background: rgba(245, 9, 4, 0.03);
+}
+.price{
+	text-align: right;
+}
+.t_head{
+	text-align: left;
+	font-size: 12px;
+	color: #333;
+	font-weight: bold;
+	/* padding: 0px 0px 0px 5px; */
+	padding: 5px;
+}
+.t_data{
+	text-align: left;
+	font-size: 12px;
+	color: #333;
+	/* padding: 0px 0px 0px 5px; */
+	padding: 5px;
+}
+#productTable .col-md-12{
+padding: 0px;
+}
+.panel-heading {
+    padding: 5px 10px;
+}
+</style>
 <div class="row">
-		<div class="col-md-12" style="margin-bottom: 5px;"><button ng-click="cancelCreateQuote()" class="btn btn-default" style="border-radius: 0px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</button></div>
+		<div class="col-md-12" style="margin-bottom: 5px;">
+		<button ng-click="cancelCreateQuote()" class="btn btn-default" style="border-radius: 0px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</button>
+		<label class="sub-label" style="text-transform: uppercase;float: right;">Quote Id : {{customerQuote.quoteId}} &nbsp;&nbsp;</label>
+		</div>
 </div>
 <div class="row">
 <div class="col-md-12">
 <form name="form.addCustomerQuote" novalidate>
 
 <div class="panel panel-default">
-<div class="panel-heading"><label class="sub-label" style="text-transform: uppercase;">Customer Information</label></div>
+<div class="panel-heading">
+<label class="sub-label" style="text-transform: uppercase;">Customer Information</label>
+</div>
 <div class="panel-body">	
 <div class="row row-control">
 	<div class="col-md-6">
@@ -179,7 +213,7 @@
 	<i class="	glyphicon glyphicon-plus"></i> Add Product
 	</a>
 	</div>
-	<div class="panel-body" style="padding: 0px;font-size: 12px;">	
+	<!-- <div class="panel-body" style="padding: 0px;font-size: 12px;">	
 	 <table class="table row-border table-hover">
     <thead >
       <tr style="background: rgba(245, 245, 245, 0.3);">
@@ -245,7 +279,103 @@
     </tbody>
   </table>
 
+	</div> -->
+<div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
+<!-- {{customerQuote.productList}} -->
+	<div class="col-md-12">
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="padding: 0px;">
+		<div class="col-md-2 t_head">Pro Code</div>
+		<div class="col-md-4 t_head">Pro Name</div>
+		<div class="col-md-1 t_head">UOM</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Cost</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Qty</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Current Price</div>
+		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="">
+		<!-- <div class="col-md-2 t_head">Current Price</div> -->
+		<div class="col-md-2 t_head" style="text-align: right;">Current Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Supplier GP(%)</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Jaybel Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Jaybel Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Jaybel GP(%)</div>
+		<div class="col-md-1 t_head">Savings (%)</div>
+		<div class="col-md-1 t_head">GST Y/N</div>
+		<div class="col-md-2 t_head" style="text-align:center;">Action</div>
+		</div>	
+		</div>	
+		</div>
 	</div>
+	<div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList" ng-class="{'alt-product':product.isAlternate}">
+		<div class="col-md-12" style="padding: 0px;">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data"><span data-ng-bind="product.itemCode"></span></div>
+		<div class="col-md-4 t_data"><span data-ng-bind="product.itemDescription"></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.unit"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.avgcost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="product.itemQty"></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.quotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.total.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.gpRequired)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.savings)"></span></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.gstFlag"></span></div>
+		<div class="col-md-2 t_data" style="text-align:center;">
+		<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index,product.itemCode);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
+        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></span>
+        </div>
+		</div>	
+		</div>	
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.altProductCode">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.altProductCode" style="background: rgba(245, 9, 4, 0.03);padding: 0px;">
+		<!-- {{product.altProd}} -->
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data"><span data-ng-bind="product.altProd.altProductCode"></span></div>
+		<div class="col-md-4 t_data"><span data-ng-bind="product.altProd.altProductDesc"></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.altProd.altProductUnit"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductAvgCost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductItemQty"></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierPrice)"></span></div>
+		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierTotal)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierGP)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductQuotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductTotal.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductGpRequired)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductSavings)"></span></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.altProd.altProductGstFlag"></span></div>
+		<div class="col-md-2 t_data">
+        </div>
+		</div>	
+		</div>	
+		</div>
+
+	</div>
+	</div>
+</div>
+
 </div>
 <div class="row row-control">
 	<div class="col-md-1">
@@ -343,7 +473,7 @@
 	</div>
 	</div>
 	<div class="col-md-2">
-	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteCustomer()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+
 	<button id="create" ng-click="updateQuote()" class="btn  btn-block button-ok" style="margin-top: 0px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>	
 	</div>
 	<div class="col-md-2">

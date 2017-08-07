@@ -124,7 +124,11 @@ th{cursor:pointer;}
 				<tr dir-paginate="product in productListView|filter:page.search|itemsPerPage:itemsPerPage|orderBy:sortKey:reverse" pagination-id="prod" on-finish-render="rowsChange({{(productListView | filter:page.search).length}})" current-page="currentPage">
 				<td ><span data-ng-bind="product.itemCode"></span></td>
                 <td ><span data-ng-bind="product.productGroupCode"></span></td>
-                <td style="word-break:break-all;"><span data-ng-bind="product.itemDescription"></span></td>
+                <td style="word-break:break-all;">
+                <span data-ng-bind="product.itemDescription"></span>
+                <span ng-if="product.description2!=''&&product.description2!='-'"> , {{product.description2}}</span>
+                <span ng-if="product.description3!=''&&product.description3!='-'"> , {{product.description3}}</span>
+                </td>
                 <td ><span data-ng-bind="product.unit"></span></td>
                 <td ><span data-ng-bind="product.price0exGST"></span></td>
                 <td ><span data-ng-bind="product.avgcost"></span></td>

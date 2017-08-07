@@ -12,6 +12,8 @@
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="assets/libs/js/angular-ui-switch/angular-ui-switch.css">
   <!-- <link rel="stylesheet" type="text/css" href="assets/libs/angucomplete/angucomplete.css"> -->
+<link rel="stylesheet" type="text/css" href="assets/libs/angucomplete-alt/angucomplete-alt.css">
+  
   <!-- This is what you need -->
   
 
@@ -26,7 +28,6 @@
   <link rel="stylesheet" href="assets/libs/typeahead/angular-typeahead.css">
   <!--.......................-->
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-
 
 </head>
 <body ng-controller="SmartQuoteDesktopController" ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}"> 
@@ -90,7 +91,11 @@
   <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
   <script type="text/javascript" src="assets/libs/js/angular/angular.min.js"></script>
 
+  <!-- <script type="text/javascript" src="assets/libs/zip/zip.js"></script> -->
+
    <!-- This is what you need For typehead-->
+   <!-- <script data-require="jquery@*" data-semver="2.0.3" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
+
   <script data-require="typeahead.js@*" data-semver="0.10.0" src="assets/libs/typeahead/typeahead.bundle.js"></script>
   <script data-require="bloodhound.js@*" data-semver="0.10.0" src="assets/libs/typeahead/bloodhound.js"></script>
   <script src="assets/libs/typeahead/angular-typeahead.js"></script>
@@ -106,8 +111,8 @@
   <!-- <script type="text/javascript" src="assets/libs/js/bootbox.min.js"></script> -->
   <script type="text/javascript" src="assets/libs/pagination/dirPagination.js"></script>
   
-  <script type="text/javascript" src="assets/libs/angucomplete/angucomplete.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-touch/1.5.7/angular-touch.min.js"></script>
+    <script src="assets/libs/angucomplete-alt/angucomplete-alt.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-touch.min.js"></script>
 
  <!--  <script type="text/javascript" src="assets/libs/data-table/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="assets/libs/data-table/dataTables.bootstrap.js"></script> -->
@@ -119,6 +124,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
  
  
+  
   <script type="text/javascript" src="SQ/SQApp.js"></script>
   <script type="text/javascript" src="SQ/SQAppRoute.js"></script>
   <script type="text/javascript" src="SQ/Home/js/SQHomeController.js"></script>
@@ -126,6 +132,8 @@
   <script type="text/javascript" src="SQ/Home/js/SQHomeServices.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQUserHomeController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/js/SQUserHomeServices.js"></script>
+
+  <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/services/SQManageMenuSevices.js"></script>
   <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageUserGroupController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageUserController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageCustomerController.js"></script>
@@ -135,9 +143,12 @@
   <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageTermsConditionsController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageServicesController.js"></script>
   
+  <script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageAlternateProduct.js"></script>
+  
   <script type="text/javascript" src="SQ/UserHome/Quote/js/SQCreateQuoteController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/Quote/js/SQViewEditQuoteController.js"></script>
   <script type="text/javascript" src="SQ/UserHome/Quote/js/SQAddProductModalController.js"></script>
+  <script type="text/javascript" src="SQ/UserHome/Quote/js/services/SQQuoteServices.js"></script>
 
  
  
