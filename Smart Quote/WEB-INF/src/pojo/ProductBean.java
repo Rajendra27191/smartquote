@@ -2,6 +2,8 @@ package pojo;
 
 import java.util.ArrayList;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
+
 public class ProductBean {
 	private String itemCode;
 	private String itemDescription;
@@ -33,19 +35,23 @@ public class ProductBean {
 	private String gstFlag;
 	private double savings;
 	private int quoteId;
+	private int quoteDetailId;
 	private String isNewProduct;
+	private String isAlternative;
+	private int altForQuoteDetailId;
 //	private boolean isAlternativeProductAdded;
-	private ArrayList<AlternateProductBean> alternativeProducts;
+//	private ArrayList<AlternateProductBean> alternativeProducts;
+	private ArrayList<ProductBean> alternativeProductList;
+	private ProductBean altProd;
 
 
-
-	public ArrayList<AlternateProductBean> getAlternativeProducts() {
-		return alternativeProducts;
-	}
-
-	public void setAlternativeProducts(ArrayList<AlternateProductBean> alternativeProducts) {
-		this.alternativeProducts = alternativeProducts;
-	}
+//	public ArrayList<AlternateProductBean> getAlternativeProducts() {
+//		return alternativeProducts;
+//	}
+//
+//	public void setAlternativeProducts(ArrayList<AlternateProductBean> alternativeProducts) {
+//		this.alternativeProducts = alternativeProducts;
+//	}
 
 	public int getQuoteId() {
 		return quoteId;
@@ -295,6 +301,60 @@ public class ProductBean {
 		this.isNewProduct = isNewProduct;
 	}
 
+	public ArrayList<ProductBean> getAlternativeProductList() {
+		return alternativeProductList;
+	}
+
+	public void setAlternativeProductList(ArrayList<ProductBean> alternativeProductList) {
+		this.alternativeProductList = alternativeProductList;
+	}
+
+	public String getIsAlternative() {
+		return isAlternative;
+	}
+
+	public void setIsAlternative(String isAlternative) {
+		this.isAlternative = isAlternative;
+	}
+
+	public ProductBean getAltProd() {
+		return altProd;
+	}
+
+	public void setAltProd(ProductBean altProd) {
+		this.altProd = altProd;
+	}
+
+	@Override
+	public String toString() {
+		return "ProductBean [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", description2=" + description2
+				+ ", description3=" + description3 + ", unit=" + unit + ", qtyBreak0=" + qtyBreak0 + ", price0exGST=" + price0exGST
+				+ ", qtyBreak1=" + qtyBreak1 + ", price1exGST=" + price1exGST + ", qtyBreak2=" + qtyBreak2 + ", price2exGST=" + price2exGST
+				+ ", qtyBreak3=" + qtyBreak3 + ", price3exGST=" + price3exGST + ", qtyBreak4=" + qtyBreak4 + ", price4exGST=" + price4exGST
+				+ ", avgcost=" + avgcost + ", taxCode=" + taxCode + ", created_by=" + created_by + ", itemQty=" + itemQty + ", total="
+				+ total + ", quotePrice=" + quotePrice + ", currentSupplierPrice=" + currentSupplierPrice + ", currentSupplierGP="
+				+ currentSupplierGP + ", currentSupplierTotal=" + currentSupplierTotal + ", gpRequired=" + gpRequired
+				+ ", productGroupCode=" + productGroupCode + ", productGroupName=" + productGroupName + ", gstFlag=" + gstFlag
+				+ ", savings=" + savings + ", quoteId=" + quoteId + ", isNewProduct=" + isNewProduct + ", isAlternative=" + isAlternative
+				+ ", alternativeProductList=" + alternativeProductList + ", altProd=" + altProd + "]";
+	}
+
+	public int getAltForQuoteDetailId() {
+		return altForQuoteDetailId;
+	}
+
+	public void setAltForQuoteDetailId(int altForQuoteDetailId) {
+		this.altForQuoteDetailId = altForQuoteDetailId;
+	}
+
+	public int getQuoteDetailId() {
+		return quoteDetailId;
+	}
+
+	public void setQuoteDetailId(int quoteDetailId) {
+		this.quoteDetailId = quoteDetailId;
+	}
+
 //	public boolean isAlternativeProductAdded() {
 //		return isAlternativeProductAdded;
 //	}
@@ -302,5 +362,6 @@ public class ProductBean {
 //	public void setAlternativeProductAdded(boolean isAlternativeProductAdded) {
 //		this.isAlternativeProductAdded = isAlternativeProductAdded;
 //	}
+	
 
 }

@@ -1,4 +1,5 @@
 package action;
+
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,11 +20,12 @@ import responseBeans.QuoteTermServiceResponseBean;
 import com.google.gson.Gson;
 import com.opensymphony.xwork2.ActionSupport;
 
+import dao.AlternateProductDao;
 import dao.CustomerDao;
 import dao.ProductDao;
 import dao.QuoteDao;
-@SuppressWarnings("serial")
 
+@SuppressWarnings("serial")
 public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	private HttpServletRequest request;
 	private EmptyResponseBean objEmptyResponse;
@@ -64,8 +66,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		return objSupplierResponse;
 	}
 
-	public void setObjSupplierResponse(
-			CurrentSupplierResponse objSupplierResponse) {
+	public void setObjSupplierResponse(CurrentSupplierResponse objSupplierResponse) {
 		this.objSupplierResponse = objSupplierResponse;
 	}
 
@@ -73,8 +74,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		this.salesPersonList = salesPersonList;
 	}
 
-	public void setCurrentSupplierList(
-			ArrayList<KeyValuePairBean> currentSupplierList) {
+	public void setCurrentSupplierList(ArrayList<KeyValuePairBean> currentSupplierList) {
 		this.currentSupplierList = currentSupplierList;
 	}
 
@@ -85,13 +85,12 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	public void setObjEmptyResponse(EmptyResponseBean objEmptyResponse) {
 		this.objEmptyResponse = objEmptyResponse;
 	}
-	
+
 	public QuoteTermServiceResponseBean getQuoteTermServiceResponseBean() {
 		return quoteTermServiceResponseBean;
 	}
 
-	public void setQuoteTermServiceResponseBean(
-			QuoteTermServiceResponseBean quoteTermServiceResponseBean) {
+	public void setQuoteTermServiceResponseBean(QuoteTermServiceResponseBean quoteTermServiceResponseBean) {
 		this.quoteTermServiceResponseBean = quoteTermServiceResponseBean;
 	}
 
@@ -112,11 +111,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 
 		QuoteBean objQuoteBean = new QuoteBean();
 		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
-
-		System.out.println("CUST PRESENT : "
-				+ objQuoteBean.getIsNewCustomer().toLowerCase());
-		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes")
-				|| objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
+		
+		System.out.println("objQuoteBean.toString : ");
+		System.out.println(objQuoteBean.toString());
+		System.out.println("CUST PRESENT : " + objQuoteBean.getIsNewCustomer().toLowerCase());
+		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
 			CustomerBean objBean = new CustomerBean();
 			objBean.setCustomerCode(objQuoteBean.getCustCode());
 			objBean.setCustomerName(objQuoteBean.getCustName());
@@ -131,68 +130,83 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objDao1.commit();
 			objDao1.closeAll();
 		}
-		
+
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
 			System.out.println("SaveCurrentSupplier :>>");
 			System.out.println(objQuoteBean.getCurrentSupplierId());
-			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean
-					.getCurrentSupplierName());
+			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
 			objQuoteBean.setCurrentSupplierId(supplierId);
 		}
-//		if (objQuoteBean.getSalesPersonId() == 0) {
-//			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
-//					.getSalesPerson());
-//			objQuoteBean.setSalesPersonId(salesPersonId);
-//		}
-		
-		for (int i =0; i< objQuoteBean.getProductList().size(); i++){
-			
-			if(objQuoteBean.getProductList().get(i).getIsNewProduct() != null && objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")){
-				boolean isProductCreated=false;
-				ProductDao objDao1 = new ProductDao();
+		// if (objQuoteBean.getSalesPersonId() == 0) {
+		// salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
+		// .getSalesPerson());
+		// objQuoteBean.setSalesPersonId(salesPersonId);
+		// }
+
+		for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			ProductDao objDao1 = new ProductDao();
+			if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
+					&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
+				boolean isProductCreated = false;
 				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
-				System.out.println("new product added ::::::::"+isProductCreated);
+				System.out.println("new product added ::::::::" + isProductCreated);
 				objDao1.commit();
 				objDao1.closeAll();
+				String projectPath = request.getSession().getServletContext().getRealPath("/");
+				CommonLoadAction.createProductFile(projectPath);
+
 			}
 			
-			/*boolean isProductCreated=false, isProductExist = false;
-			ProductDao objProductDao = new ProductDao();
-			isProductExist = objProductDao.isProductExist(objQuoteBean.getProductList().get(i).getItemCode());
-			objProductDao.commit();
-			objProductDao.closeAll();
-			if (!isProductExist) {
-				ProductDao objDao1 = new ProductDao();
-				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
-				System.out.println("new product added ::::::::"+isProductCreated);
-				objDao1.commit();
-				objDao1.closeAll();
-			}*/
+
+		}
+		if (objQuoteBean.isSaveWithAlternative()) {
+			System.out.println("ALTERNATIVES");
+			AlternateProductDao altProductDao = new AlternateProductDao();
+			String mainId, alternativeId;
+			boolean isAlternateSaved = false;
+			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
+				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
+				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductCode();
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
+			}
+			System.out.println("isAlternateSaved : " + isAlternateSaved);
+			altProductDao.commit();
+			altProductDao.closeAll();
 		}
 		
-		String status="SAVED";
-		boolean isQuoteSaved=false;
+
+		String status = "SAVED";
+		boolean isQuoteSaved = false;
 		boolean istermSaved;
 		boolean isServiceSaved;
-		int quoteId = objQuoteDao.saveQuote(objQuoteBean, userId,status);
+		int quoteId = 0;
+		int quoteDetailId=0;
+		quoteId = objQuoteDao.saveQuote(objQuoteBean, userId, status);
 		System.out.print("quoteId  : " + quoteId);
-		if(quoteId>0){
-		isQuoteSaved = objQuoteDao.saveQuoteDetails(
-				objQuoteBean.getProductList(), quoteId);
-		System.out.println("SAVED  : " + isQuoteSaved);
-		
-		istermSaved = objQuoteDao.saveTermsAndConditionDetails(
-				objQuoteBean.getTermConditionList(), quoteId); 
-		System.out.println("SAVED terms and condition  : " + istermSaved);
-		
-		isServiceSaved = objQuoteDao.saveServiceDetails(
-				objQuoteBean.getServiceList(), quoteId); 
-		System.out.println("SAVED terms and condition  : " + isServiceSaved);
+		if (quoteId > 0) {
+			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			objQuoteBean.getProductList().get(i).setQuoteDetailId(0);
+			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), quoteId);
+			System.out.println("SAVED Quote Detail quote detail id : " + quoteDetailId);
+				if(objQuoteBean.isSaveWithAlternative() && quoteDetailId>0){
+					if(objQuoteBean.getProductList().get(i).getAltProd()!=null){
+						System.out.println("ALTERNATIVE : ");
+						System.out.println(objQuoteBean.getProductList().get(i).getAltProd().toString());;
+						objQuoteBean.getProductList().get(i).getAltProd().setQuoteDetailId(quoteDetailId);
+						quoteDetailId=objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i).getAltProd(),quoteId);
+						System.out.println("new alternate product added quote detail id ::::::::" + quoteDetailId);
+					}
+				}
+			}
+			istermSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), quoteId);
+			System.out.println("SAVED terms and condition  : " + istermSaved);
+			isServiceSaved = objQuoteDao.saveServiceDetails(objQuoteBean.getServiceList(), quoteId);
+			System.out.println("SAVED terms and condition  : " + isServiceSaved);
 
-		objQuoteDao.commit();
-		objQuoteDao.closeAll();
+			objQuoteDao.commit();
+			objQuoteDao.closeAll();
 		}
-		if (isQuoteSaved && quoteId>0) {
+		if (quoteDetailId>0 && quoteId > 0) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("quote_saved"));
 		} else {
@@ -224,8 +238,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			e.printStackTrace();
 			objSupplierResponse.setCode("common_error");
 			objSupplierResponse.setResult(currentSupplierList);
-			objSupplierResponse
-					.setMessage(getText("error_supplier_list_loaded"));
+			objSupplierResponse.setMessage(getText("error_supplier_list_loaded"));
 		}
 		return SUCCESS;
 	}
@@ -244,8 +257,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			e.printStackTrace();
 			objSupplierResponse.setCode("common_error");
 			objSupplierResponse.setResult(salesPersonList);
-			objSupplierResponse
-					.setMessage(getText("error_sales_person_list_loaded"));
+			objSupplierResponse.setMessage(getText("error_sales_person_list_loaded"));
 		}
 		return SUCCESS;
 	}
@@ -309,16 +321,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		int supplierId = 0, salesPersonId = 0;
 		String quoteDetails = request.getParameter("objQuoteBean");
 		QuoteDao objQuoteDao = new QuoteDao();
-//		String quoteDetails = "{\"quoteId\":6,\"custCode\":\"TEST1\",\"custName\":\"Pradnya\",\"address\":\"Unit 11, 1472 Boundary Road, Wacol, QLD, 4076\",\"email\":\"mark@jaybel.com.au\",\"faxNo\":\"0\",\"phone\":\"0734235888\",\"monthlyAvgPurchase\":\"0\",\"isNewCustomer\":\"no\",\"quoteAttn\":\"Quote Updated\",\"currentSupplierName\":\"Supplier\",\"currentSupplierId\":1,\"competeQuote\":\"yes\",\"salesPerson\":\"\",\"salesPersonId\":\"15\",\"pricesGstInclude\":false,\"notes\":\"\",\"productList\":[{\"avgcost\":1.106,\"created_by\":\"1\",\"currentSupplierGP\":9.894,\"currentSupplierPrice\":11,\"currentSupplierTotal\":11,\"description2\":\"SPOONS PK100\",\"description3\":\"** PLASTIC ** DESSERT SPOONS *\",\"gpRequired\":0,\"itemCode\":\"ACO-733060\",\"itemDescription\":\"DISPOSABLE PLASTIC DESSERT\",\"itemQty\":1,\"price0exGST\":3.22,\"price1exGST\":2.92,\"price2exGST\":2.68,\"price3exGST\":2.48,\"price4exGST\":2.48,\"productGroupCode\":null,\"productGroupName\":null,\"qtyBreak1\":3,\"qtyBreak2\":6,\"qtyBreak3\":12,\"qtyBreak4\":999999999,\"quotePrice\":\"3.22\",\"taxCode\":null,\"total\":3.22,\"unit\":\"PACK\",\"$$hashKey\":\"object:552\"}]}";
+		// String quoteDetails =
+		// "{\"quoteId\":6,\"custCode\":\"TEST1\",\"custName\":\"Pradnya\",\"address\":\"Unit 11, 1472 Boundary Road, Wacol, QLD, 4076\",\"email\":\"mark@jaybel.com.au\",\"faxNo\":\"0\",\"phone\":\"0734235888\",\"monthlyAvgPurchase\":\"0\",\"isNewCustomer\":\"no\",\"quoteAttn\":\"Quote Updated\",\"currentSupplierName\":\"Supplier\",\"currentSupplierId\":1,\"competeQuote\":\"yes\",\"salesPerson\":\"\",\"salesPersonId\":\"15\",\"pricesGstInclude\":false,\"notes\":\"\",\"productList\":[{\"avgcost\":1.106,\"created_by\":\"1\",\"currentSupplierGP\":9.894,\"currentSupplierPrice\":11,\"currentSupplierTotal\":11,\"description2\":\"SPOONS PK100\",\"description3\":\"** PLASTIC ** DESSERT SPOONS *\",\"gpRequired\":0,\"itemCode\":\"ACO-733060\",\"itemDescription\":\"DISPOSABLE PLASTIC DESSERT\",\"itemQty\":1,\"price0exGST\":3.22,\"price1exGST\":2.92,\"price2exGST\":2.68,\"price3exGST\":2.48,\"price4exGST\":2.48,\"productGroupCode\":null,\"productGroupName\":null,\"qtyBreak1\":3,\"qtyBreak2\":6,\"qtyBreak3\":12,\"qtyBreak4\":999999999,\"quotePrice\":\"3.22\",\"taxCode\":null,\"total\":3.22,\"unit\":\"PACK\",\"$$hashKey\":\"object:552\"}]}";
 		System.out.println("Quote Details: " + quoteDetails);
 		objEmptyResponse = new EmptyResponseBean();
 		QuoteBean objQuoteBean = new QuoteBean();
 		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
 
-		System.out.println("New Cust: "
-				+ objQuoteBean.getIsNewCustomer().toLowerCase());
-		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes")
-				|| objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
+		System.out.println("New Cust: " + objQuoteBean.getIsNewCustomer().toLowerCase());
+		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
 			CustomerBean objBean = new CustomerBean();
 			objBean.setCustomerCode(objQuoteBean.getCustCode());
 			objBean.setCustomerName(objQuoteBean.getCustName());
@@ -335,68 +346,91 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
-			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean
-					.getCurrentSupplierName());
+			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
 			objQuoteBean.setCurrentSupplierId(supplierId);
 		}
 		if (objQuoteBean.getSalesPersonId() == 0) {
-			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
-					.getSalesPerson());
+			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean.getSalesPerson());
 			objQuoteBean.setSalesPersonId(salesPersonId);
 		}
-		
-			for (int i =0; i< objQuoteBean.getProductList().size(); i++){
-			if(objQuoteBean.getProductList().get(i).getIsNewProduct() != null && objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")){
-				boolean isProductCreated=false;
+
+		for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
+					&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
+				boolean isProductCreated = false;
 				ProductDao objDao1 = new ProductDao();
 				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
-				System.out.println("new product added ::::::::"+isProductCreated);
+				System.out.println("new product added ::::::::" + isProductCreated);
 				objDao1.commit();
 				objDao1.closeAll();
+				String projectPath = request.getSession().getServletContext().getRealPath("/");
+				CommonLoadAction.createProductFile(projectPath);
 			}
-			
-			/*boolean isProductCreated=false, isProductExist = false;
-			ProductDao objProductDao = new ProductDao();
-			isProductExist = objProductDao.isProductExist(objQuoteBean.getProductList().get(i).getItemCode());
-			objProductDao.commit();
-			objProductDao.closeAll();
-			if (!isProductExist) {
-				ProductDao objDao1 = new ProductDao();
-				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
-				System.out.println("new product added ::::::::"+isProductCreated);
-				objDao1.commit();
-				objDao1.closeAll();
-			}*/
+
+			/*
+			 * boolean isProductCreated=false, isProductExist = false;
+			 * ProductDao objProductDao = new ProductDao(); isProductExist =
+			 * objProductDao
+			 * .isProductExist(objQuoteBean.getProductList().get(i).
+			 * getItemCode()); objProductDao.commit(); objProductDao.closeAll();
+			 * if (!isProductExist) { ProductDao objDao1 = new ProductDao();
+			 * isProductCreated =
+			 * objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
+			 * System
+			 * .out.println("new product added ::::::::"+isProductCreated);
+			 * objDao1.commit(); objDao1.closeAll(); }
+			 */
 		}
 
 		// objQuoteDao.deleteQuote(objQuoteBean.getQuoteId());
+		if (objQuoteBean.isSaveWithAlternative()) {
+			System.out.println("ALTERNATIVES FROM EDIT QUOTE");
+			AlternateProductDao altProductDao = new AlternateProductDao();
+			String mainId, alternativeId;
+			boolean isAlternateSaved = false;
+			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
+				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
+				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductCode();
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
+			}
+			System.out.println("isAlternateSaved : " + isAlternateSaved);
+			altProductDao.commit();
+			altProductDao.closeAll();
+		}
 		objQuoteBean.setUserId(Integer.parseInt(userId));
-		String status="UPDATED";
-		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean,status);
+		String status = "UPDATED";
+		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean, status);
 		boolean isQuoteSaved = false;
 		boolean isTermsSaved = false;
 		boolean isServiceSaved = false;
 		if (isQuoteUpdated) {
 			objQuoteDao.deleteQuoteDetails(objQuoteBean.getQuoteId());
-			isQuoteSaved = objQuoteDao.saveQuoteDetails(
-					objQuoteBean.getProductList(), objQuoteBean.getQuoteId());
+			int quoteDetailId=0;
+			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			objQuoteBean.getProductList().get(i).setQuoteDetailId(0);	
+			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), objQuoteBean.getQuoteId());
 			System.out.println("Quote Updated Successfully...!");
-			
+			if(objQuoteBean.isSaveWithAlternative()){
+					if(objQuoteBean.getProductList().get(i).getAltProd()!=null){
+						System.out.println("ALTERNATIVE : ");
+						System.out.println(objQuoteBean.getProductList().get(i).getAltProd().toString());;
+						objQuoteBean.getProductList().get(i).getAltProd().setQuoteDetailId(quoteDetailId);
+						quoteDetailId=objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i).getAltProd(),objQuoteBean.getQuoteId());
+					}
+					System.out.println("new alternate product added ::::::::" + quoteDetailId);
+					}
+			}
 			objQuoteDao.deleteTermsDetails(objQuoteBean.getQuoteId());
-			isTermsSaved = objQuoteDao.saveTermsAndConditionDetails(
-					objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
-			System.out.println("Terms Updated Successfully...!"+isTermsSaved);
-			
-			
+			isTermsSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
+			System.out.println("Terms Updated Successfully...!" + isTermsSaved);
+
 			objQuoteDao.deleteServiceDetails(objQuoteBean.getQuoteId());
-			isServiceSaved = objQuoteDao.saveServiceDetails(
-					objQuoteBean.getServiceList(), objQuoteBean.getQuoteId());
-			System.out.println("Service Updated Successfully...!"+isServiceSaved);
-			
-			
+			isServiceSaved = objQuoteDao.saveServiceDetails(objQuoteBean.getServiceList(), objQuoteBean.getQuoteId());
+			System.out.println("Service Updated Successfully...!" + isServiceSaved);
+
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
-			if (isQuoteSaved) {
+			if (quoteDetailId>0) {
 				objEmptyResponse.setCode("success");
 				objEmptyResponse.setMessage(getText("quote_updated"));
 			} else {
@@ -406,20 +440,18 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		return SUCCESS;
 	}
-	
-	
+
 	public String getTermsAndServiceList() {
 		httpSession = request.getSession(true);
 		int quoteId = Integer.parseInt(request.getParameter("quoteId"));
 		QuoteBean quoteBean = new QuoteBean();
 		try {
 			quoteTermServiceResponseBean = new QuoteTermServiceResponseBean();
-			
-			
+
 			QuoteDao objQuoteDao = new QuoteDao();
-			//quoteList = objQuoteDao.getQuoteList();
-			quoteBean= objQuoteDao.getTermsServiceList(quoteId);
-			//System.out.println("Quote List : " + quoteList.size());
+			// quoteList = objQuoteDao.getQuoteList();
+			quoteBean = objQuoteDao.getTermsServiceList(quoteId);
+			// System.out.println("Quote List : " + quoteList.size());
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
 			quoteTermServiceResponseBean.setCode("success");
@@ -433,6 +465,6 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			quoteTermServiceResponseBean.setResult(quoteBean);
 		}
 		return SUCCESS;
-		
+
 	}
 }

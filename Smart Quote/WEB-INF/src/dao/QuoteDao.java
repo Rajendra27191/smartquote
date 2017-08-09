@@ -174,28 +174,38 @@ public class QuoteDao {
 		return quoteId;
 	}
 
-	public boolean saveQuoteDetails(ArrayList<ProductBean> productList,
+	public int saveQuoteDetails(ProductBean objProductBean,
 			int quoteId) {
+		System.out.println("PRODUCTBEAN>>>");
+		System.out.println(objProductBean);
 		boolean quoteSaved = false;
+		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				+ " current_supplier_gp,current_supplier_total,gp_required ,savings) "
-				+ " values(?,?,?,?,?,?,?,?,?,?);";
+				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for) "
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt = conn.prepareStatement(saveData);
-			for (int i = 0; i < productList.size(); i++) {
+//			for (int i = 0; i < productList.size(); i++) {
 				pstmt.setInt(1, quoteId);
-				pstmt.setString(2, productList.get(i).getItemCode());
-				pstmt.setInt(3, productList.get(i).getItemQty());
-				pstmt.setDouble(4, productList.get(i).getTotal());
-				pstmt.setDouble(5, productList.get(i).getQuotePrice());
-				pstmt.setDouble(6, productList.get(i).getCurrentSupplierPrice());
-				pstmt.setDouble(7, productList.get(i).getCurrentSupplierGP());
-				pstmt.setDouble(8, productList.get(i).getCurrentSupplierTotal());
-				pstmt.setDouble(9, productList.get(i).getGpRequired());
-				pstmt.setDouble(10, productList.get(i).getSavings());
-				pstmt.addBatch();
-			}
-			pstmt.executeBatch();
+				pstmt.setString(2, objProductBean.getItemCode());
+				pstmt.setInt(3, objProductBean.getItemQty());
+				pstmt.setDouble(4, objProductBean.getTotal());
+				pstmt.setDouble(5, objProductBean.getQuotePrice());
+				pstmt.setDouble(6, objProductBean.getCurrentSupplierPrice());
+				pstmt.setDouble(7, objProductBean.getCurrentSupplierGP());
+				pstmt.setDouble(8, objProductBean.getCurrentSupplierTotal());
+				pstmt.setDouble(9, objProductBean.getGpRequired());
+				pstmt.setDouble(10, objProductBean.getSavings());
+				pstmt.setString(11, objProductBean.getIsAlternative());
+				pstmt.setInt(12, objProductBean.getQuoteDetailId());
+//				pstmt.addBatch();
+//			}
+//			pstmt.executeBatch();
+			pstmt.executeUpdate();
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next())
+				quoteDetailId = rs.getInt(1);
+			System.out.println("Last Inserted quote detail Id = " + quoteDetailId);
 			quoteSaved = true;
 		} catch (Exception e) {
 			try {
@@ -205,7 +215,8 @@ public class QuoteDao {
 			}
 			e.printStackTrace();
 		}
-		return quoteSaved;
+//		return quoteSaved;
+		return quoteDetailId;
 	}
 
 	public ArrayList<QuoteBean> getQuoteList() {
@@ -225,7 +236,7 @@ public class QuoteDao {
 				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 				+ "left outer join user_master um on cq.sales_person_id = um.user_id "
-				+ "order by created_date desc;";
+				+ "order by quote_id desc;";
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();
@@ -357,7 +368,7 @@ public class QuoteDao {
 		String getData = "select quote_detail_id,quote_id,product_id,item_description,product_qty,avg_cost,quote_price,total, "
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST, tax_code "
+				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
 				+ " where quote_id=" + quoteId;
 		try {
@@ -366,6 +377,7 @@ public class QuoteDao {
 			// System.out.println("Quote Details : " + pstmt);
 			while (rs1.next()) {
 				objProductBean = new ProductBean();
+				objProductBean.setQuoteDetailId(rs1.getInt("quote_detail_id"));
 				objProductBean.setQuoteId(rs1.getInt("quote_id"));
 				objProductBean.setItemCode(rs1.getString("product_id"));
 				objProductBean.setItemDescription(rs1
@@ -395,6 +407,8 @@ public class QuoteDao {
 				objProductBean.setQtyBreak4(rs1.getDouble("qty_break4"));
 				objProductBean.setPrice4exGST(rs1.getDouble("price4exGST"));
 				objProductBean.setTaxCode(rs1.getString("tax_code"));
+				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
+				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
 				productList.add(objProductBean);
 			}
 		} catch (Exception e) {

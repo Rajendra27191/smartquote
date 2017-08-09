@@ -202,14 +202,14 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			objAlternativesResponseList.setCode("error");
 			objAlternativesResponseList.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
-			ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
-			arrayAlternateProductBeans= objDao.getAlternatives(productCode);
+			ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
+			arrayProductBeans= objDao.getAlternatives(productCode);
 			objDao.commit();
 			objDao.closeAll();
-			if (arrayAlternateProductBeans.size()>0) {
+			if (arrayProductBeans.size()>0) {
 				objAlternativesResponseList.setCode("success");
 				objAlternativesResponseList.setMessage(getText("details_loaded"));
-				objAlternativesResponseList.setObjAlternateProductBeans(arrayAlternateProductBeans);
+				objAlternativesResponseList.setArrayProductBeans(arrayProductBeans);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -102,8 +102,11 @@ public class CommonLoadAction extends ActionSupport {
 		int quoteId = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
 		System.out.println("SAVED Quote id : " + quoteId);
 		if (quoteId > 0) {
-			isQuoteSaved = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList(), quoteId);
-			System.out.println("SAVED  : " + isQuoteSaved);
+			int quoteDetailId=0;
+			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), quoteId);
+			System.out.println("SAVED  : " + quoteDetailId);
+			}
 
 			istermSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), quoteId);
 			System.out.println("SAVED terms and condition  : " + istermSaved);
@@ -169,9 +172,11 @@ public class CommonLoadAction extends ActionSupport {
 
 		if (isQuoteUpdated) {
 			objQuoteDao.deleteQuoteDetails(objQuoteBean.getQuoteId());
-			isQuoteSaved = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList(), objQuoteBean.getQuoteId());
+			int quoteDetailId=0;
+			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
+			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), objQuoteBean.getQuoteId());
 			System.out.println("Quote Updated Successfully...!");
-
+			}
 			objQuoteDao.deleteTermsDetails(objQuoteBean.getQuoteId());
 			isTermsSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
 			System.out.println("Terms Updated Successfully...!" + isTermsSaved);
@@ -198,6 +203,7 @@ public class CommonLoadAction extends ActionSupport {
 		}else{
 			try {
 				file.delete();
+				System.out.println("File deleted");
 				file.createNewFile();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -227,16 +227,16 @@ public class ProductDao {
 				objBean.setCreated_by(rs.getString("created_by"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
 			}
-			ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+			ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
 			boolean isAltAdded=false;
-			arrayAlternateProductBeans=getAlternatives(productCode);
-			if(arrayAlternateProductBeans.size()>0){
+			arrayProductBeans=getAlternatives(productCode);
+			if(arrayProductBeans.size()>0){
 				isAltAdded=true;
 			}
 			if (isAltAdded) {
 //				System.out.println("If rs.next");
 //				objBean.setAlternativeProductAdded(true);	
-				objBean.setAlternativeProducts(arrayAlternateProductBeans);
+				objBean.setAlternativeProductList(arrayProductBeans);
 			}
 			
 		} catch (Exception e) {
@@ -249,10 +249,11 @@ public class ProductDao {
 		}
 		return objBean;
 	}
-	public ArrayList<AlternateProductBean> getAlternatives(String productCode) {
+	public ArrayList<ProductBean> getAlternatives(String productCode) {
 		System.out.println("GET Alternatives...");
 		System.out.println("Product Code"+productCode);
-		ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+//		ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
+		ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
 		String getAlternatives="SELECT a.alternative_product_id 'alt_product_id', "
 				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
@@ -265,29 +266,29 @@ public class ProductDao {
 			pstmt = conn.prepareStatement(getAlternatives);
 			pstmt.setString(1, productCode);
 			rs = pstmt.executeQuery();
-			AlternateProductBean objAltBean=null;
+			ProductBean objProductBean=null;
 			while (rs.next()) {
-				objAltBean=new AlternateProductBean();
-				objAltBean.setAltProductCode(rs.getString("alt_product_id"));
+				objProductBean=new ProductBean();
+				objProductBean.setItemCode(rs.getString("alt_product_id"));
 //				System.out.println("alt_product_id >>"+rs.getString("alt_product_id"));
-				objAltBean.setAltProductDesc(rs.getString("alt_item_desc"));
-				objAltBean.setAltProductDesc2(rs.getString("alt_item_desc2"));
-				objAltBean.setAltProductDesc3(rs.getString("alt_item_desc3"));
-				objAltBean.setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
-				objAltBean.setAltProductUnit(rs.getString("alt_unit"));
-				objAltBean.setAltProductPrice0exGST(rs.getDouble("alt_price0exGST"));
-				objAltBean.setAltProductPrice1exGST(rs.getDouble("alt_price1exGST"));
-				objAltBean.setAltProductPrice2exGST(rs.getDouble("alt_price2exGST"));
-				objAltBean.setAltProductPrice3exGST(rs.getDouble("alt_price3exGST"));
-				objAltBean.setAltProductPrice4exGST(rs.getDouble("alt_price4exGST"));
-				objAltBean.setAltProductGstFlag(rs.getString("alt_gst_flag"));
-				arrayAlternateProductBeans.add(objAltBean);
+				objProductBean.setItemDescription(rs.getString("alt_item_desc"));
+				objProductBean.setDescription2(rs.getString("alt_item_desc2"));
+				objProductBean.setDescription3(rs.getString("alt_item_desc3"));
+				objProductBean.setAvgcost(rs.getDouble("alt_avg_cost"));
+				objProductBean.setUnit(rs.getString("alt_unit"));
+				objProductBean.setPrice0exGST(rs.getDouble("alt_price0exGST"));
+				objProductBean.setPrice1exGST(rs.getDouble("alt_price1exGST"));
+				objProductBean.setPrice2exGST(rs.getDouble("alt_price2exGST"));
+				objProductBean.setPrice3exGST(rs.getDouble("alt_price3exGST"));
+				objProductBean.setPrice4exGST(rs.getDouble("alt_price4exGST"));
+				objProductBean.setGstFlag(rs.getString("alt_gst_flag"));
+				arrayProductBeans.add(objProductBean);
 			}
-			System.out.println("GET Alternatives List Size ..."+arrayAlternateProductBeans.size());
+			System.out.println("GET Alternatives List Size ..."+arrayProductBeans.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return arrayAlternateProductBeans;
+		return arrayProductBeans;
 	}
 	public boolean updateProduct(ProductBean objBean) {
 		boolean isCustomerUpdated = false;

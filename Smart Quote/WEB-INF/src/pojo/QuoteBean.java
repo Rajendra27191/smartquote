@@ -29,6 +29,8 @@ public class QuoteBean {
 	
 	private ArrayList<KeyValuePairBean> termConditionList;
 	private ArrayList<KeyValuePairBean> serviceList;
+	private boolean saveWithAlternative;
+	private ArrayList<AlternateProductBean> alternativeArray;
 
 	public String getStatus() {
 		return status;
@@ -230,6 +232,22 @@ public class QuoteBean {
 		this.serviceList = serviceList;
 	}
 
+	public boolean isSaveWithAlternative() {
+		return saveWithAlternative;
+	}
+
+	public void setSaveWithAlternative(boolean saveWithAlternative) {
+		this.saveWithAlternative = saveWithAlternative;
+	}
+
+	public ArrayList<AlternateProductBean> getAlternativeArray() {
+		return alternativeArray;
+	}
+
+	public void setAlternativeArray(ArrayList<AlternateProductBean> alternativeArray) {
+		this.alternativeArray = alternativeArray;
+	}
+
 	@Override
 	public String toString() {
 		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
@@ -238,7 +256,8 @@ public class QuoteBean {
 				+ ", productList=" + productList + ", currentSupplierName=" + currentSupplierName + ", competeQuote=" + competeQuote
 				+ ", salesPerson=" + salesPerson + ", currentSupplierId=" + currentSupplierId + ", salesPersonId=" + salesPersonId
 				+ ", userId=" + userId + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", status=" + status
-				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList + "]";
+				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList
+				+ ", saveWithAlternative=" + saveWithAlternative + ", alternativeArray=" + alternativeArray + "]";
 	}
 	
 	
