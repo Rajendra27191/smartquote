@@ -2,8 +2,6 @@ package pojo;
 
 import java.util.ArrayList;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 public class ProductBean {
 	private String itemCode;
 	private String itemDescription;
@@ -41,9 +39,9 @@ public class ProductBean {
 	private int altForQuoteDetailId;
 	private ArrayList<ProductBean> alternativeProductList;
 	private ProductBean altProd;
-//-----------------------------------
 	private double altDefaultPrice;
-	
+	private double promoPrice;
+
 	public int getQuoteId() {
 		return quoteId;
 	}
@@ -353,6 +351,13 @@ public class ProductBean {
 	public void setAltDefaultPrice(double altDefaultPrice) {
 		this.altDefaultPrice = altDefaultPrice;
 	}
-	
+
+	public double getPromoPrice() {
+		return promoPrice;
+	}
+
+	public void setPromoPrice(double promoPrice) {
+		this.promoPrice = promoPrice;
+	}
 
 }

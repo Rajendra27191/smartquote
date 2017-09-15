@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import pojo.AlternateProductBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
 import pojo.ProductGroupBean;
@@ -60,10 +59,6 @@ public class ProductDao {
 		System.out.println(getProdustList);
 		try {
 			pstmt = conn.prepareStatement(getProdustList);
-//			pstmt.setString(1, productLike);
-//			pstmt.setString(2, productLike);
-//			pstmt.setString(3, productLike);
-//			pstmt.setString(4, productLike);
 			rs = pstmt.executeQuery();
 			int rsCount = 0;
 			while (rs.next()) {
@@ -157,7 +152,7 @@ public class ProductDao {
 		String getUserGroups = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'No') gst_flag "
+				+ " ifnull(gst_flag, 'No') gst_flag, promo_price as promoPrice "
 				+ " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -183,6 +178,7 @@ public class ProductDao {
 				objBean.setTaxCode(rs.getString("tax_code"));
 				objBean.setCreated_by(rs.getString("created_by"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
+				objBean.setPromoPrice(rs.getDouble("promoPrice"));
 			}
 		} catch (Exception e) {
 			try {
@@ -199,7 +195,7 @@ public class ProductDao {
 		String getProductDetails="SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'No') gst_flag "
+				+ " ifnull(gst_flag, 'No') gst_flag, promo_price as promoPrice "
 				+ " FROM product_master WHERE item_code = ?";
 		
 		try {
@@ -226,6 +222,7 @@ public class ProductDao {
 				objBean.setTaxCode(rs.getString("tax_code"));
 				objBean.setCreated_by(rs.getString("created_by"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
+				objBean.setPromoPrice(rs.getDouble("promoPrice"));
 			}
 			ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
 			boolean isAltAdded=false;
@@ -258,7 +255,8 @@ public class ProductDao {
 				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
 				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
-				+ "p.price4exGST 'alt_price4exGST',p.gst_flag 'alt_gst_flag' "
+				+ "p.price4exGST 'alt_price4exGST',"
+				+ "ifnull(p.gst_flag, 'No') 'alt_gst_flag', promo_price as promoPrice "
 				+ "FROM alternative_product_master a, product_master p "
 				+ "WHERE a.main_product_id = ? AND p.item_code=a.alternative_product_id;";
 		
@@ -283,6 +281,7 @@ public class ProductDao {
 				objProductBean.setPrice3exGST(rs.getDouble("alt_price3exGST"));
 				objProductBean.setPrice4exGST(rs.getDouble("alt_price4exGST"));
 				objProductBean.setGstFlag(rs.getString("alt_gst_flag"));
+				objProductBean.setPromoPrice(rs.getDouble("promoPrice"));
 				
 				arrayProductBeans.add(objProductBean);
 			}
@@ -445,7 +444,9 @@ public class ProductDao {
 				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
-				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, "
+				+ " created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'No') gst_flag, "
+				+ " promo_price as promoPrice "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " order by 1, 2 limit " + fromLimit + "," + toLimit + "";
 		try {
@@ -474,6 +475,7 @@ public class ProductDao {
 				objBean.setProductGroupCode(rs.getString("product_group_code"));
 				objBean.setProductGroupName(rs.getString("product_group_name"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
+				objBean.setPromoPrice(rs.getDouble("promoPrice"));
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {
@@ -498,7 +500,7 @@ public class ProductDao {
 				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
-				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,gst_flag "
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'No') gst_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " WHERE item_code like ? OR item_description like ?" + " order by 1, 2 ";
 		try {

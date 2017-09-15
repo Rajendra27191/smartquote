@@ -158,6 +158,9 @@ $scope.handleGetProductDetailsDoneResponse=function(data){
 				console.log(data.objProductResponseBean);
 				$scope.productDetails=data.objProductResponseBean;
 				$scope.productDetails.isMainProduct=false;
+				//---Promo price 
+				$scope.productDetails.defaultPrice=$scope.productDetails.promoPrice;
+				//---Promo price 
 				$scope.pushDetailsToAlternateProductList($scope.productDetails);
 				$scope.resetSearch();
 				$rootScope.hideSpinner();

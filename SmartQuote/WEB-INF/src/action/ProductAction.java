@@ -14,7 +14,6 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import pojo.AlternateProductBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;

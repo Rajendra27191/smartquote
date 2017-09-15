@@ -394,6 +394,17 @@ th{cursor:pointer;}
 	</span>
 	</div>
 	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Promo Price</label>  </div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="promoPrice" ng-model="manageProduct.promoPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.promoPrice.$dirty && form.manageProduct.promoPrice.$invalid) 
+		  || (form.manageProduct.promoPrice.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.promoPrice.$error.required">*Please enter average cost.</small>
+		<small ng-show="form.manageProduct.promoPrice.$invalid &&(!form.manageProduct.avgcost.$error.required)">*average cost is invalid.</small>
+	</span>
+	</div>
+	</div>
 
 <!-- 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Tax Code</label></div>

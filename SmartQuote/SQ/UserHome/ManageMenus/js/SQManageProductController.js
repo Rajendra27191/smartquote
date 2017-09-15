@@ -385,6 +385,7 @@ $scope.jsonToSaveProduct=function(){
 		"avgcost":$scope.manageProduct.avgcost,
 		"taxCode":$scope.manageProduct.taxCode,
 		"gstFlag":$scope.manageProduct.gstFlag,
+		"promoPrice":$scope.manageProduct.promoPrice,
 	};
 return JSON.stringify(product);
 };
