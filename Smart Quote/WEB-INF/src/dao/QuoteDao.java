@@ -142,8 +142,7 @@ public class QuoteDao {
 		String saveData = " insert into create_quote (custcode,quote_attn,prices_gst_include,notes,created_date,user_id,current_supplier_id,compete_quote,sales_person_id,status) "
 				+ " values(?,?,?,?,now(),?,?,?,?,?)";
 		try {
-			pstmt = conn
-					.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
+			pstmt = conn.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
 
 			pstmt.setString(1, quoteBean.getCustCode());
 			pstmt.setString(2, quoteBean.getQuoteAttn());
@@ -184,7 +183,7 @@ public class QuoteDao {
 				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for) "
 				+ " values(?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
-			pstmt = conn.prepareStatement(saveData);
+			pstmt = conn.prepareStatement(saveData,pstmt.RETURN_GENERATED_KEYS);
 //			for (int i = 0; i < productList.size(); i++) {
 				pstmt.setInt(1, quoteId);
 				pstmt.setString(2, objProductBean.getItemCode());
@@ -203,6 +202,7 @@ public class QuoteDao {
 //			pstmt.executeBatch();
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
+			
 			if (rs.next())
 				quoteDetailId = rs.getInt(1);
 			System.out.println("Last Inserted quote detail Id = " + quoteDetailId);
@@ -240,7 +240,7 @@ public class QuoteDao {
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();
-			// System.out.println("Quote : "+pstmt);
+//			 System.out.println("Quote : "+pstmt);
 			while (rs.next()) {
 				objQuoteBean = new QuoteBean();
 				objQuoteBean.setQuoteId(rs.getInt("quote_id"));
@@ -270,8 +270,7 @@ public class QuoteDao {
 				objQuoteBean.setStatus(rs.getString("status"));
 				productList = getProductDetails(rs.getInt("quote_id"));
 				objQuoteBean.setProductList(productList);
-				objQuoteBean.setCommentList(getCommentList(rs
-						.getInt("quote_id")));
+				objQuoteBean.setCommentList(getCommentList(rs.getInt("quote_id")));
 				//objQuoteBean.setTermConditionList(getTermAndConditionList(rs.getInt("quote_id")));
 				//objQuoteBean.setServiceList(getServiceList(rs.getInt("quote_id")));
 				quoteList.add(objQuoteBean);
@@ -345,7 +344,7 @@ public class QuoteDao {
 			pstmt = conn.prepareStatement(getData);
 			pstmt.setInt(1, quoteId);
 			rs1 = pstmt.executeQuery();
-			// System.out.println("Comment List :" + pstmt);
+//			 System.out.println("Comment List :" + pstmt);
 			while (rs1.next()) {
 				objBean = new CommentBean();
 				objBean.setQuoteId(rs1.getInt("quote_id"));
@@ -365,16 +364,19 @@ public class QuoteDao {
 	public ArrayList<ProductBean> getProductDetails(int quoteId) {
 		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 		ProductBean objProductBean = null;
+		
 		String getData = "select quote_detail_id,quote_id,product_id,item_description,product_qty,avg_cost,quote_price,total, "
-				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,gst_flag, "
+				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
+				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
 				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
-				+ " where quote_id=" + quoteId;
+				+ " where quote_id= ? ;";
 		try {
 			pstmt = conn.prepareStatement(getData);
+			pstmt.setInt(1, quoteId);
 			rs1 = pstmt.executeQuery();
-			// System.out.println("Quote Details : " + pstmt);
+//			 System.out.println("Quote Details : " + pstmt);
 			while (rs1.next()) {
 				objProductBean = new ProductBean();
 				objProductBean.setQuoteDetailId(rs1.getInt("quote_detail_id"));

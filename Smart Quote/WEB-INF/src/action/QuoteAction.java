@@ -11,6 +11,7 @@ import pojo.CommentBean;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
+import pojo.ProductBean;
 import pojo.QuoteBean;
 import responseBeans.CommentResponseBean;
 import responseBeans.CurrentSupplierResponse;
@@ -154,27 +155,23 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				objDao1.closeAll();
 				String projectPath = request.getSession().getServletContext().getRealPath("/");
 				CommonLoadAction.createProductFile(projectPath);
-
 			}
-			
-
 		}
 		if (objQuoteBean.isSaveWithAlternative()) {
 			System.out.println("ALTERNATIVES");
 			AlternateProductDao altProductDao = new AlternateProductDao();
 			String mainId, alternativeId;
+			double altDefaultPrice=0;
 			boolean isAlternateSaved = false;
 			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
 				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
-				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductCode();
-				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
+				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductObj().getAltProductCode();
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId,alternativeId,altDefaultPrice);
 			}
 			System.out.println("isAlternateSaved : " + isAlternateSaved);
 			altProductDao.commit();
 			altProductDao.closeAll();
 		}
-		
-
 		String status = "SAVED";
 		boolean isQuoteSaved = false;
 		boolean istermSaved;
@@ -187,21 +184,21 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 			objQuoteBean.getProductList().get(i).setQuoteDetailId(0);
 			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), quoteId);
-			System.out.println("SAVED Quote Detail quote detail id : " + quoteDetailId);
+//			System.out.println("SAVED Quote Detail quote detail id : " + quoteDetailId);
 				if(objQuoteBean.isSaveWithAlternative() && quoteDetailId>0){
 					if(objQuoteBean.getProductList().get(i).getAltProd()!=null){
-						System.out.println("ALTERNATIVE : ");
-						System.out.println(objQuoteBean.getProductList().get(i).getAltProd().toString());;
+//						System.out.println("ALTERNATIVE : ");
+//						System.out.println(objQuoteBean.getProductList().get(i).getAltProd().toString());;
 						objQuoteBean.getProductList().get(i).getAltProd().setQuoteDetailId(quoteDetailId);
 						quoteDetailId=objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i).getAltProd(),quoteId);
-						System.out.println("new alternate product added quote detail id ::::::::" + quoteDetailId);
+//						System.out.println("new alternate product added quote detail id ::::::::" + quoteDetailId);
 					}
 				}
 			}
 			istermSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), quoteId);
-			System.out.println("SAVED terms and condition  : " + istermSaved);
+//			System.out.println("SAVED terms and condition  : " + istermSaved);
 			isServiceSaved = objQuoteDao.saveServiceDetails(objQuoteBean.getServiceList(), quoteId);
-			System.out.println("SAVED terms and condition  : " + isServiceSaved);
+//			System.out.println("SAVED terms and condition  : " + isServiceSaved);
 
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
@@ -270,6 +267,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			System.out.println("Quote List : " + quoteList.size());
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
+						
 			quoteResponseBean.setCode("success");
 			quoteResponseBean.setMessage("quote_list_loaded");
 			quoteResponseBean.setResult(quoteList);
@@ -344,15 +342,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objDao1.commit();
 			objDao1.closeAll();
 		}
-
+		System.out.println("CurrentSupplierId"+objQuoteBean.getCurrentSupplierId());
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
 			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
 			objQuoteBean.setCurrentSupplierId(supplierId);
 		}
-		if (objQuoteBean.getSalesPersonId() == 0) {
-			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean.getSalesPerson());
-			objQuoteBean.setSalesPersonId(salesPersonId);
-		}
+//		if (objQuoteBean.getSalesPersonId() == 0) {
+//			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean.getSalesPerson());
+//			objQuoteBean.setSalesPersonId(salesPersonId);
+//		}
 
 		for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 			if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
@@ -366,20 +364,6 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				String projectPath = request.getSession().getServletContext().getRealPath("/");
 				CommonLoadAction.createProductFile(projectPath);
 			}
-
-			/*
-			 * boolean isProductCreated=false, isProductExist = false;
-			 * ProductDao objProductDao = new ProductDao(); isProductExist =
-			 * objProductDao
-			 * .isProductExist(objQuoteBean.getProductList().get(i).
-			 * getItemCode()); objProductDao.commit(); objProductDao.closeAll();
-			 * if (!isProductExist) { ProductDao objDao1 = new ProductDao();
-			 * isProductCreated =
-			 * objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
-			 * System
-			 * .out.println("new product added ::::::::"+isProductCreated);
-			 * objDao1.commit(); objDao1.closeAll(); }
-			 */
 		}
 
 		// objQuoteDao.deleteQuote(objQuoteBean.getQuoteId());
@@ -387,11 +371,12 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			System.out.println("ALTERNATIVES FROM EDIT QUOTE");
 			AlternateProductDao altProductDao = new AlternateProductDao();
 			String mainId, alternativeId;
+			double altDefaultPrice=0;
 			boolean isAlternateSaved = false;
 			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
 				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
-				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductCode();
-				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
+				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductObj().getAltProductCode();
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId,altDefaultPrice);
 			}
 			System.out.println("isAlternateSaved : " + isAlternateSaved);
 			altProductDao.commit();

@@ -3,7 +3,8 @@
 
  <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
 	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
-	driverClassName="com.mysql.jdbc.Driver"
+	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true"
+    removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
 	url="jdbc:mysql://janta.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/>
 
 </Context> 

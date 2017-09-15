@@ -250,11 +250,11 @@ public class ProductDao {
 		return objBean;
 	}
 	public ArrayList<ProductBean> getAlternatives(String productCode) {
-		System.out.println("GET Alternatives...");
-		System.out.println("Product Code"+productCode);
+//		System.out.println("GET Alternatives...");
+//		System.out.println("Product Code"+productCode);
 //		ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
 		ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
-		String getAlternatives="SELECT a.alternative_product_id 'alt_product_id', "
+		String getAlternatives="SELECT a.alternative_product_id 'alt_product_id', a.alternative_default_price 'alt_default_price', "
 				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
 				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
@@ -270,6 +270,7 @@ public class ProductDao {
 			while (rs.next()) {
 				objProductBean=new ProductBean();
 				objProductBean.setItemCode(rs.getString("alt_product_id"));
+				objProductBean.setAltDefaultPrice(rs.getDouble("alt_default_price"));
 //				System.out.println("alt_product_id >>"+rs.getString("alt_product_id"));
 				objProductBean.setItemDescription(rs.getString("alt_item_desc"));
 				objProductBean.setDescription2(rs.getString("alt_item_desc2"));
@@ -282,9 +283,10 @@ public class ProductDao {
 				objProductBean.setPrice3exGST(rs.getDouble("alt_price3exGST"));
 				objProductBean.setPrice4exGST(rs.getDouble("alt_price4exGST"));
 				objProductBean.setGstFlag(rs.getString("alt_gst_flag"));
+				
 				arrayProductBeans.add(objProductBean);
 			}
-			System.out.println("GET Alternatives List Size ..."+arrayProductBeans.size());
+//			System.out.println("GET Alternatives List Size ..."+arrayProductBeans.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

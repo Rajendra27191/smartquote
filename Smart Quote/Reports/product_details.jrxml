@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
-	<property name="ireport.zoom" value="1.2100000000000057"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="650" pageHeight="802" columnWidth="620" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
+	<property name="ireport.zoom" value="1.000000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
@@ -27,14 +27,12 @@
 			<style backcolor="#F8F4F3"/>
 		</conditionalStyle>
 	</style>
+	<style name="alternate" mode="Opaque" forecolor="#808080" backcolor="#FFFFFF"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
 	<field name="class" class="java.lang.Class">
 		<fieldDescription><![CDATA[class]]></fieldDescription>
-	</field>
-	<field name="productCode" class="java.lang.String">
-		<fieldDescription><![CDATA[productCode]]></fieldDescription>
 	</field>
 	<field name="productCurrentPriceExGST" class="java.lang.Double">
 		<fieldDescription><![CDATA[productCurrentPriceExGST]]></fieldDescription>
@@ -42,20 +40,26 @@
 	<field name="productCurrentPriceTotalExGST" class="java.lang.Double">
 		<fieldDescription><![CDATA[productCurrentPriceTotalExGST]]></fieldDescription>
 	</field>
-	<field name="productDescription" class="java.lang.String">
-		<fieldDescription><![CDATA[productDescription]]></fieldDescription>
-	</field>
 	<field name="productJaybelPriceExGST" class="java.lang.Double">
 		<fieldDescription><![CDATA[productJaybelPriceExGST]]></fieldDescription>
 	</field>
 	<field name="productJaybelPriceTotalExGST" class="java.lang.Double">
 		<fieldDescription><![CDATA[productJaybelPriceTotalExGST]]></fieldDescription>
 	</field>
+	<field name="productSavings" class="java.lang.Double">
+		<fieldDescription><![CDATA[productSavings]]></fieldDescription>
+	</field>
 	<field name="productQty" class="java.lang.Integer">
 		<fieldDescription><![CDATA[productQty]]></fieldDescription>
 	</field>
-	<field name="productSavings" class="java.lang.Double">
-		<fieldDescription><![CDATA[productSavings]]></fieldDescription>
+	<field name="isAlternative" class="java.lang.String">
+		<fieldDescription><![CDATA[isAlternative]]></fieldDescription>
+	</field>
+	<field name="productCode" class="java.lang.String">
+		<fieldDescription><![CDATA[productCode]]></fieldDescription>
+	</field>
+	<field name="productDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[productDescription]]></fieldDescription>
 	</field>
 	<field name="productUOM" class="java.lang.String">
 		<fieldDescription><![CDATA[productUOM]]></fieldDescription>
@@ -193,12 +197,28 @@
 				</textElement>
 				<text><![CDATA[Product Savings]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="0c3c1f1b-852e-4fc3-9ca7-ea498fcf5533" style="table_TH" mode="Opaque" x="555" y="0" width="49" height="65" forecolor="#FFFFFF" backcolor="#EE3024"/>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Alternative]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="43" splitType="Stretch">
+		<band height="31" splitType="Stretch">
 			<textField>
-				<reportElement uuid="1c9b1e12-b644-4afd-99c4-a6db72e62a6a" style="table_TD" mode="Opaque" x="81" y="0" width="132" height="43"/>
+				<reportElement uuid="1c9b1e12-b644-4afd-99c4-a6db72e62a6a" mode="Opaque" x="81" y="0" width="132" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -212,7 +232,9 @@
 				<textFieldExpression><![CDATA[$F{productDescription}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="724ec8a4-91fc-44fc-ab54-cea347178e82" style="table_TD" mode="Opaque" x="455" y="0" width="51" height="43"/>
+				<reportElement uuid="724ec8a4-91fc-44fc-ab54-cea347178e82" mode="Opaque" x="455" y="0" width="51" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -221,12 +243,14 @@
 					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="false" isUnderline="false"/>
+					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceTotalExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="dcb22f35-7d6d-44f4-8f96-b48dfd164a3d" style="table_TD" mode="Opaque" x="213" y="0" width="49" height="43"/>
+				<reportElement uuid="dcb22f35-7d6d-44f4-8f96-b48dfd164a3d" mode="Opaque" x="213" y="0" width="49" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -240,7 +264,9 @@
 				<textFieldExpression><![CDATA[$F{productUOM}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c0f7e1da-3585-4c7e-b38e-18dac7276c12" style="table_TD" mode="Opaque" x="261" y="0" width="48" height="43" forecolor="#000000"/>
+				<reportElement uuid="c0f7e1da-3585-4c7e-b38e-18dac7276c12" mode="Opaque" x="261" y="0" width="48" height="30" forecolor="#000000" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -254,7 +280,9 @@
 				<textFieldExpression><![CDATA[$F{productQty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a8cdd7c0-4b75-4740-8f00-83d93895989f" style="table_TD" mode="Opaque" x="308" y="0" width="48" height="43"/>
+				<reportElement uuid="a8cdd7c0-4b75-4740-8f00-83d93895989f" mode="Opaque" x="308" y="0" width="48" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -268,7 +296,9 @@
 				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="b08fa362-12a9-4015-be1f-ce40d98350b3" style="table_TD" mode="Opaque" x="355" y="0" width="48" height="43"/>
+				<reportElement uuid="b08fa362-12a9-4015-be1f-ce40d98350b3" mode="Opaque" x="355" y="0" width="48" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -282,7 +312,9 @@
 				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceTotalExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8bfa870e-eac9-4bfe-b412-09b880a607db" style="table_TD" mode="Opaque" x="403" y="0" width="52" height="43"/>
+				<reportElement uuid="8bfa870e-eac9-4bfe-b412-09b880a607db" mode="Opaque" x="403" y="0" width="52" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -291,12 +323,14 @@
 					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="false" isUnderline="false"/>
+					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" style="table_TD" mode="Opaque" x="506" y="0" width="49" height="43"/>
+				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" mode="Opaque" x="506" y="0" width="49" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -305,12 +339,14 @@
 					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10" isBold="false" isUnderline="false"/>
+					<font size="10" isBold="true" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productSavings}+" %"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3e80cb0f-77c0-4a3e-92a3-1f69a69e5e40" style="table_TD" mode="Opaque" x="0" y="0" width="81" height="43"/>
+				<reportElement uuid="3e80cb0f-77c0-4a3e-92a3-1f69a69e5e40" mode="Opaque" x="0" y="0" width="81" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -323,12 +359,188 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" mode="Opaque" x="555" y="0" width="49" height="30" backcolor="#D9D9D9">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{isAlternative}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" mode="Opaque" x="506" y="0" width="49" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productSavings}+" %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4d91b1cb-14bb-4495-b2a2-2e2c6abfb105" mode="Opaque" x="555" y="0" width="49" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{isAlternative}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dcb22f35-7d6d-44f4-8f96-b48dfd164a3d" mode="Opaque" x="213" y="0" width="49" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productUOM}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8bfa870e-eac9-4bfe-b412-09b880a607db" mode="Opaque" x="403" y="0" width="52" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b08fa362-12a9-4015-be1f-ce40d98350b3" mode="Opaque" x="355" y="0" width="48" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceTotalExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="724ec8a4-91fc-44fc-ab54-cea347178e82" mode="Opaque" x="455" y="0" width="51" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceTotalExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a8cdd7c0-4b75-4740-8f00-83d93895989f" mode="Opaque" x="308" y="0" width="47" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c0f7e1da-3585-4c7e-b38e-18dac7276c12" mode="Opaque" x="261" y="0" width="47" height="30" forecolor="#000000" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="false" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productQty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3e80cb0f-77c0-4a3e-92a3-1f69a69e5e40" mode="Opaque" x="0" y="0" width="81" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1c9b1e12-b644-4afd-99c4-a6db72e62a6a" mode="Opaque" x="81" y="0" width="132" height="30" backcolor="#E6E6E6">
+					<printWhenExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("no")]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productDescription}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<lastPageFooter>
-		<band height="28">
+		<band height="22">
 			<staticText>
-				<reportElement uuid="1330c291-7407-4e6e-bff8-7ace2b431081" x="29" y="0" width="557" height="20" forecolor="#999999"/>
+				<reportElement uuid="1330c291-7407-4e6e-bff8-7ace2b431081" x="47" y="0" width="557" height="20" forecolor="#999999"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>

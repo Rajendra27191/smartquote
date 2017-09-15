@@ -10,7 +10,22 @@ private double productCurrentPriceTotalExGST;
 private double productJaybelPriceExGST;
 private double productJaybelPriceTotalExGST;
 private double productSavings;
+private String isAlternative;
+private int quoteDetailId;
+private int altForQuoteDetailId;
 
+public int getAltForQuoteDetailId() {
+	return altForQuoteDetailId;
+}
+public void setAltForQuoteDetailId(int altForQuoteDetailId) {
+	this.altForQuoteDetailId = altForQuoteDetailId;
+}
+public int getQuoteDetailId() {
+	return quoteDetailId;
+}
+public void setQuoteDetailId(int quoteDetailId) {
+	this.quoteDetailId = quoteDetailId;
+}
 public String getProductCode() {
 	return productCode;
 }
@@ -64,6 +79,19 @@ public double getProductSavings() {
 }
 public void setProductSavings(double productSavings) {
 	this.productSavings = productSavings;
+}
+public String getIsAlternative() {
+	return isAlternative;
+}
+public void setIsAlternative(String isAlternative) {
+	this.isAlternative = isAlternative;
+}
+@Override
+public String toString() {
+	return "PDFSubReportBean [productCode=" + productCode + ", productDescription=" + productDescription + ", productUOM=" + productUOM
+			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
+			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
+			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + "]";
 }
 
 

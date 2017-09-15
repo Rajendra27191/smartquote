@@ -39,20 +39,11 @@ public class ProductBean {
 	private String isNewProduct;
 	private String isAlternative;
 	private int altForQuoteDetailId;
-//	private boolean isAlternativeProductAdded;
-//	private ArrayList<AlternateProductBean> alternativeProducts;
 	private ArrayList<ProductBean> alternativeProductList;
 	private ProductBean altProd;
-
-
-//	public ArrayList<AlternateProductBean> getAlternativeProducts() {
-//		return alternativeProducts;
-//	}
-//
-//	public void setAlternativeProducts(ArrayList<AlternateProductBean> alternativeProducts) {
-//		this.alternativeProducts = alternativeProducts;
-//	}
-
+//-----------------------------------
+	private double altDefaultPrice;
+	
 	public int getQuoteId() {
 		return quoteId;
 	}
@@ -355,13 +346,13 @@ public class ProductBean {
 		this.quoteDetailId = quoteDetailId;
 	}
 
-//	public boolean isAlternativeProductAdded() {
-//		return isAlternativeProductAdded;
-//	}
-//
-//	public void setAlternativeProductAdded(boolean isAlternativeProductAdded) {
-//		this.isAlternativeProductAdded = isAlternativeProductAdded;
-//	}
+	public double getAltDefaultPrice() {
+		return altDefaultPrice;
+	}
+
+	public void setAltDefaultPrice(double altDefaultPrice) {
+		this.altDefaultPrice = altDefaultPrice;
+	}
 	
 
 }

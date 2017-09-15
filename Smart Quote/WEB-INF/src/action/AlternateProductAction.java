@@ -40,17 +40,22 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 
 	public String createAlternateProducts(){
 	String alternateProductDetails=request.getParameter("alternateProductDetails");
-//	System.out.println("alternateProductDetails : "+alternateProductDetails);
+	System.out.println("alternateProductDetails : "+alternateProductDetails);
 	AlternateProductBean objBean = new AlternateProductBean();
 	objBean = new Gson().fromJson(alternateProductDetails, AlternateProductBean.class);
 	boolean isDataSaved=false;
 	AlternateProductDao objDao=new AlternateProductDao();
-	String mainId,alternativeId;
-	if (objBean.getAlternativeProductCodeList().size()>0) {
-		for (int i = 0; i < objBean.getAlternativeProductCodeList().size(); i++) {
+	String mainId,altId;
+	double altDefaultPrice;
+//	System.out.println("ObjBean : "+ objBean.getMainProductCode());
+//	System.out.println("ObjBean : "+ objBean.getAlternativeProductList().size());
+	if (objBean.getAlternativeProductList().size()>0) {
+		System.out.println("Inside IF");
+		for (int i = 0; i < objBean.getAlternativeProductList().size(); i++) {
 			mainId=objBean.getMainProductCode();
-			alternativeId=objBean.getAlternativeProductCodeList().get(i);
-			isDataSaved=objDao.saveAlternateProducts(mainId,alternativeId);
+			altId=objBean.getAlternativeProductList().get(i).getAltProductCode();
+			altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
+			isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);
 		}
 	}
 	objDao.commit();
@@ -65,6 +70,43 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 	
 	return SUCCESS;	
 	};
+	
+	public String updateAlternateProducts(){
+		String alternateProductDetails=request.getParameter("alternateProductDetails");
+		System.out.println("alternateProductDetails : "+alternateProductDetails);
+		AlternateProductBean objBean = new AlternateProductBean();
+		objBean = new Gson().fromJson(alternateProductDetails, AlternateProductBean.class);
+		boolean isDataSaved=false;
+		AlternateProductDao objDao=new AlternateProductDao();
+		String mainId,altId;
+		double altDefaultPrice;
+//		System.out.println("ObjBean : "+ objBean.getMainProductCode());
+//		System.out.println("ObjBean : "+ objBean.getAlternativeProductList().size());
+		if (objBean.getAlternativeProductList().size()>0) {
+			System.out.println("Inside IF");
+			for (int i = 0; i < objBean.getAlternativeProductList().size(); i++) {
+				mainId=objBean.getMainProductCode();
+				altId=objBean.getAlternativeProductList().get(i).getAltProductCode();
+				altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
+				boolean isDataDeleted=false;
+				isDataDeleted=objDao.deleteAlternateProduct(mainId, altId);
+				if (isDataDeleted) {
+					isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);	
+				}
+			}
+		}
+		objDao.commit();
+		objDao.closeAll();
+		if (isDataSaved) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("alternate_product_updated"));
+		} else {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("common_error"));
+		}
+		
+		return SUCCESS;	
+		};
 	
 	public String deleteAlternateProduct(){
 		String mainId=request.getParameter("mainProductId");

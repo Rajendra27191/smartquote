@@ -7,11 +7,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import pojo.AlternateProductBean;
+import pojo.AlternateProductDetailBean;
 import connection.ConnectionFactory;
 
 public class AlternateProductDao {
 	Connection conn = null;
-	ResultSet rs = null;
+	ResultSet rs,rs1 = null;
 	PreparedStatement pstmt = null;
 	public AlternateProductDao() {
 		try {
@@ -40,15 +41,18 @@ public class AlternateProductDao {
 			e.printStackTrace();
 		}
 	}
-	public boolean saveAlternateProducts(String mainId, String alternativeId) {
+	public boolean saveAlternateProducts(String mainId, String altId, double altDefaultPrice) {
 		boolean isProductCreated = false;
+//		System.out.println("IN saveAlternateProducts");
 		try {
-			String insertQuery= "INSERT IGNORE INTO alternative_product_master (main_product_id, alternative_product_id) "
-					+ " VALUES(?, ?)";
+			String insertQuery= "INSERT IGNORE INTO alternative_product_master (main_product_id, alternative_product_id,alternative_default_price) "
+					+ " VALUES(?,?,?)";
 			pstmt = conn.prepareStatement(insertQuery);
 			pstmt.setString(1,mainId);
-			pstmt.setString(2,alternativeId);
-			pstmt.executeUpdate();
+			pstmt.setString(2,altId);
+			pstmt.setDouble(3,altDefaultPrice);
+			int result=pstmt.executeUpdate();
+//			System.out.println("Result :"+result+" "+pstmt);
 			isProductCreated = true;
 		} catch (Exception e) {
 			try {
@@ -80,31 +84,55 @@ public class AlternateProductDao {
 		}
 		return isProductDeleted;
 	}
+
 	public ArrayList<AlternateProductBean> getAlternateProductsList(){
 		ArrayList<AlternateProductBean> arrayListBeans=new ArrayList<AlternateProductBean>();
 		AlternateProductBean objBean=null;
+		AlternateProductDetailBean altProductObj=null;
 		String query="SELECT "
-				+ "b.item_code 'main_product_id', b.item_description 'main_item_desc', "
-				+ "b.avg_cost 'main_avg_cost', b.unit 'main_unit', "
-				+ "c.item_code 'alt_product_id', c.item_description 'alt_item_desc', "
-				+ "c.avg_cost 'alt_avg_cost', c.unit 'alt_unit' "
-				+ "FROM alternative_product_master a, product_master b, product_master c "
-				+ "WHERE a.main_product_id = b.item_code AND a.alternative_product_id = c.item_code;";
+		+ "b.item_code 'main_product_id', b.item_description 'main_item_desc', "
+		+ "b.avg_cost 'main_avg_cost', b.unit 'main_unit',b.price0exGST 'main_product_price', "
+		+ "c.item_code 'alt_product_id', c.item_description 'alt_item_desc', "
+		+ "c.avg_cost 'alt_avg_cost', c.unit 'alt_unit',c.price0exGST 'alt_product_price' ,a.alternative_default_price "
+		+ "FROM alternative_product_master a, product_master b, product_master c "
+		+ "WHERE a.main_product_id = b.item_code AND a.alternative_product_id = c.item_code;";
 		try {
 			pstmt=conn.prepareStatement(query);
 			rs=pstmt.executeQuery();
 			while(rs.next()){
+				String mainID=rs.getString("main_product_id");
 				objBean=new AlternateProductBean();
-				objBean.setMainProductCode(rs.getString("main_product_id"));
+				objBean.setMainProductCode(mainID);
 				objBean.setMainProductDesc(rs.getString("main_item_desc"));
 				objBean.setMainProductAvgCost(rs.getDouble("main_avg_cost"));
 				objBean.setMainProductUnit(rs.getString("main_unit"));
-				objBean.setAltProductCode(rs.getString("alt_product_id"));
-				objBean.setAltProductDesc(rs.getString("alt_item_desc"));
-				objBean.setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
-				objBean.setAltProductUnit(rs.getString("alt_unit"));
+				objBean.setMainProductPrice(rs.getDouble("main_product_price"));
+				//---------------------
+				objBean.getAltProductObj().setAltProductCode(rs.getString("alt_product_id"));
+				objBean.getAltProductObj().setAltProductDesc(rs.getString("alt_item_desc"));
+				objBean.getAltProductObj().setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
+				objBean.getAltProductObj().setAltProductUnit(rs.getString("alt_unit"));
+				objBean.getAltProductObj().setAltProductPrice0exGST(rs.getDouble("alt_product_price"));
+				objBean.getAltProductObj().setAltProductDefaultPrice(rs.getDouble("alternative_default_price"));
+//				altProductObj=new AlternateProductDetailBean();
+//				altProductObj.setAltProductCode(rs.getString("alt_product_id"));
+//				altProductObj.setAltProductDesc(rs.getString("alt_item_desc"));
+//				altProductObj.setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
+//				altProductObj.setAltProductUnit(rs.getString("alt_unit"));
+//				altProductObj.setAltProductPrice0exGST(rs.getDouble("alt_product_price"));
+//				altProductObj.setAltProductDefaultPrice(rs.getDouble("alternative_default_price"));
+//				objBean.setAltProductObj(altProductObj);
+				
+//				objBean.setAltProductCode(rs.getString("alt_product_id"));
+//				objBean.setAltProductDesc(rs.getString("alt_item_desc"));
+//				objBean.setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
+//				objBean.setAltProductUnit(rs.getString("alt_unit"));
+//				objBean.setAltProductPrice0exGST(rs.getDouble("alt_product_price"));
+//				objBean.setAltProductDefaultPrice(rs.getDouble("alternative_default_price"));
 				arrayListBeans.add(objBean);	
+
 			}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
