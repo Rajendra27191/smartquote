@@ -1,0 +1,91 @@
+<style type="text/css">
+	.login-error{/*color: #FF5252;*/color: crimson;float: left;font-weight: bold;}
+	.div-topmargin{margin-top: 40px;}
+	.form-control{height: 34px;padding: 6px 12px;font-size: 14px;}
+</style>
+<!-- home starts -->
+<div id="signin">
+<div class="container">
+<div class="row ">
+<div class="col-lg-3 col-md-3"></div>
+<div class="col-lg-6 col-md-6">
+<form name="form.loginUser" novalidate>
+<div class="div-trans text-center" ng-if="!isForgotPasswordOn">
+<div class="col-lg-12 col-md-12 col-sm-12 div-topmargin" >
+<div class="form-group">
+	<span ng-show="invalidEmailPassword" class="login-error">
+	<small ng-bind="errormsg"></small> ! 
+	</span>
+	<div class="inner-addon  right-addon">
+		
+    <input type="text" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" autocomplete="off" focus-me="true" required>
+
+    <span ng-show="((form.loginUser.emailid.$dirty && form.loginUser.emailid.$invalid) || (form.loginUser.emailid.$invalid && form.loginUser.submitted))" class="login-error">
+    	<i ng-if="form.loginUser.emailid.$error.required" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
+    	<i ng-if="form.loginUser.emailid.$error.pattern" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter valid email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
+	</span>
+	</div>
+
+</div>
+<div class="form-group">
+	<div class="inner-addon  right-addon">
+    <input type="password" name="password" ng-model="user.userPassword" class="form-control" placeholder="Password" autocomplete="off" required>
+     <span ng-show="((form.loginUser.password.$dirty && form.loginUser.password.$invalid) || (form.loginUser.password.$invalid && form.loginUser.submitted))" class="login-error">
+     	<i ng-if="form.loginUser.password.$error.required" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter password." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;font-size:15px;"></i>
+		<!-- <small ng-show="form.loginUser.password.$error.required">*Please enter password.</small> -->
+	</span>
+    </div>
+    <a href="" ng-click="forgotPasswordClicked()" class="link-forgot" data-toggle="modal" data-target="#myModal">Forgot password?</a>
+    <br>
+</div>
+
+<div class="form-group">
+    <button ng-click="userSignin();" class="btn button-login">
+     LOGIN</button>
+</div>
+</div>
+</div>
+</form>
+<div class="div-trans text-center" ng-if="isForgotPasswordOn" style="min-height: 200px;">
+<div class="col-lg-12 col-md-12 col-sm-12 div-topmargin">
+<form name="form.forgotPassword" novalidate>
+<div class="form-group">
+	<span ng-show="invalidEmailPassword" class="login-error">
+	<small ng-bind="errormsg"></small>
+	</span>
+    <div class="inner-addon  right-addon">
+    <input type="text" id="forgotEmail" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" autocomplete="off" focus-me="true" required>
+     
+     <span ng-show="((form.forgotPassword.emailid.$dirty && form.forgotPassword.emailid.$invalid) || (form.forgotPassword.emailid.$invalid && form.forgotPassword.submitted))" class="login-error">
+    	<i ng-if="form.forgotPassword.emailid.$error.required" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
+    	<i ng-if="form.forgotPassword.emailid.$error.pattern" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter valid email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
+	</span>
+    <!-- <span ng-show="((form.forgotPassword.emailid.$dirty && form.forgotPassword.emailid.$invalid) || (form.forgotPassword.emailid.$invalid && form.forgotPassword.submitted))" class="login-error">
+		<small ng-show="form.forgotPassword.emailid.$error.required">*Please enter email id.</small>
+		<small ng-show="form.forgotPassword.emailid.$error.pattern">*Please enter valid email id.</small>
+	</span> -->
+	</div>
+
+</div>
+	<div class="form-group">
+	<div class="col-md-1"></div>
+	<div class="col-md-10">
+	<div class="col-md-6">
+	<button ng-click="cancelForgetPassword();" class="btn button-login">
+     Cancel</button></div>
+	<div class="col-md-6">
+	<button ng-click="submitForgetPassword();" class="btn button-login">
+     Submit</button>
+	</div>
+	</div>
+	<div class="col-md-1"></div>
+    
+</div>
+</form>
+</div>
+<div class="col-lg-3 col-md-3"></div>
+</div>
+</div>
+</div>
+</div>
+<!--home ends-->

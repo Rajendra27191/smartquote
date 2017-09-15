@@ -1,0 +1,47 @@
+<style type="text/css">
+	.form-control{
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+	}
+</style>
+
+<div class="container" onload=""> 
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<!-- <form name="form.myForm" method="POST" enctype="multipart/form-data" action="http://192.169.1.118:8080/smartquote/uploadProductByXlsx" novalidate> -->
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage Product File</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'file' class = 'form-control' ng-file-select = "onExcelSelect($files)"  id = 'fileTypeExcelHost' name="productFile" required>
+	<span class="invalid-control">
+	<small ng-show="isRequired" style="color: red;">*Please select file to upload.</small>
+	<small ng-show="isValid" style="color: red;">*Please select valid file (only .xlsx).</small>
+	</span>
+	<!-- ngf-pattern="'.xls,.csv,.xlsx'" accept=".xls,.csv,.xlsx" ngf-max-size="20MB" -->
+	</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-md-8"></div>
+		<div class="col-md-4">
+		<button id="create" ng-click="addExcelToServer()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> Upload</button>	
+		<!-- <input type="submit" class="btn btn-primary" value="Submit"
+							style="width: 100px;"> -->
+		</div>
+	</div>
+
+<!-- </form> -->
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</div>
+
+
+

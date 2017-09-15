@@ -1,0 +1,437 @@
+<style type="text/css">
+	.main-label {   
+    margin: 3% 0% 0% 0%;
+	}
+	.sweet-alert button.confirm:hover {
+    background-color: #7ecff4;
+    }
+	.animate-enter, 
+.animate-leave
+{ 
+    -webkit-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 400ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+} 
+.sortorder:after {
+  content: '\25b2';   
+  /* // BLACK UP-POINTING TRIANGLE */
+}
+.sortorder.reverse:after {
+  content: '\25bc';   
+  /* // BLACK DOWN-POINTING TRIANGLE */
+}
+.pagination>li>a, .pagination>li>span {
+   color: #000;
+   /* border: none; */
+       margin-left: 2px;
+}
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+    /* color: #000; */
+	color: #333 !important;
+    border: 1px solid #cacaca;
+    background-color: white;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #dcdcdc));
+    background: -webkit-linear-gradient(top, white 0%, #dcdcdc 100%);
+    background: -moz-linear-gradient(top, white 0%, #dcdcdc 100%);
+    background: -ms-linear-gradient(top, white 0%, #dcdcdc 100%);
+    background: -o-linear-gradient(top, white 0%, #dcdcdc 100%);
+    background: linear-gradient(to bottom, white 0%, #dcdcdc 100%);
+
+}
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    color: white !important;
+    border: 1px solid #111;
+    background-color: #585858;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));
+    background: -webkit-linear-gradient(top, #585858 0%, #111 100%);
+    background: -moz-linear-gradient(top, #585858 0%, #111 100%);
+    background: -ms-linear-gradient(top, #585858 0%, #111 100%);
+    background: -o-linear-gradient(top, #585858 0%, #111 100%);
+    background: linear-gradient(to bottom, #585858 0%, #111 100%);
+}
+th{cursor:pointer;}
+</style>
+<div class="container">
+<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage Product</label></center></div>
+</div>
+<div  style="padding-bottom: 40px;" class="row" ng-if="addProductBtnShow">
+		<div class="col-md-11" style="width: 84%;"></div>
+		<div class="col-md-1" style="width: 16%;">
+			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addProductBtnClicked()" popover-placement="top" uib-popover="Click to add product."  popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Product</button>
+		</div>
+</div>
+<!-- class="content-area sample-show-hide" -->
+<div id="customerTable"  ng-if="isProductTableView" ng-animate="'animate'" style="font-size: 12px;"><!-- productListView.length>0 -->
+
+		<div class="row">
+		<div class="col-md-4">
+		<label>Show
+		<select name=""  ng-model="itemsPerPage" ng-options="itemEntries as itemEntries for itemEntries in entries">
+		</select>
+		entries
+		</label>
+		</div>
+		<div class="col-md-5"></div>
+		<div class="col-md-3">
+		<!-- <label style="float: right;">Search : <input type="search" name="search" ng-model="search"></label> -->
+		<form class="form-inline" style="float: right;">
+			<div class="form-group">
+				<label >Search</label>
+				<input type="search" name='search' ng-model="page.search"  placeholder="Search">
+			</div>
+		</form>
+		</div>
+		</div>
+
+		<table class="table table-hover" style="margin-bottom: 0px;border-bottom: 1px solid #111;">
+			<thead class="table-header">
+				<tr>
+				<th ng-click="sort('itemCode')">Item Code 
+				<span class="glyphicon sort-icon" ng-show="sortKey=='itemCode'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>
+                <th ng-click="sort('productGroupCode')">Product Group
+				<span class="glyphicon sort-icon" ng-show="sortKey=='productGroupCode'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                </th>
+				<th style="word-break:break-all;" ng-click="sort('itemDescription')">Item Description
+				<span class="glyphicon sort-icon" ng-show="sortKey=='itemDescription'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>						
+				<th ng-click="sort('unit')">Unit
+				<span class="glyphicon sort-icon" ng-show="sortKey=='unit'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>
+				<th ng-click="sort('price0exGST')">Price 0(Ex GST)
+				<span class="glyphicon sort-icon" ng-show="sortKey=='price0exGST'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>
+				<th ng-click="sort('avgcost')">Avg Cost
+				<span class="glyphicon sort-icon" ng-show="sortKey=='avgcost'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>
+			<!-- 	<th ng-click="sort('taxCode')">Tax Code  
+				<span class="glyphicon sort-icon" ng-show="sortKey=='taxCode'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th> -->
+				<th ng-click="sort('gstFlag')"> GST Exempt
+				<span class="glyphicon sort-icon" ng-show="sortKey=='gstFlag'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+				</th>
+				<th >Action</th>
+				
+				</tr>
+			</thead>
+			<tbody>
+			<!-- |filter:page.search| |filter:{itemCode:page.search.itemCode||''}|filter:{productGroupCode:page.search.productGroupCode||''}|filter:{itemDescription:page.search.itemDescription||''}|filter:{itemCode:page.search.itemCode}|filter:{productGroupCode:page.search.productGroupCode}|filter:{itemDescription:page.search.itemDescription} -->
+				<tr dir-paginate="product in productListView|filter:page.search|itemsPerPage:itemsPerPage|orderBy:sortKey:reverse" pagination-id="prod" on-finish-render="rowsChange({{(productListView | filter:page.search).length}})" current-page="currentPage">
+				<td ><span data-ng-bind="product.itemCode"></span></td>
+                <td ><span data-ng-bind="product.productGroupCode"></span></td>
+                <td style="word-break:break-all;">
+                <span data-ng-bind="product.itemDescription"></span>
+                <span ng-if="product.description2!=''&&product.description2!='-'"> , {{product.description2}}</span>
+                <span ng-if="product.description3!=''&&product.description3!='-'"> , {{product.description3}}</span>
+                </td>
+                <td ><span data-ng-bind="product.unit"></span></td>
+                <td ><span data-ng-bind="product.price0exGST"></span></td>
+                <td ><span data-ng-bind="product.avgcost"></span></td>
+                <td ><span data-ng-bind="product.gstFlag"></span></td>
+                <td >
+                <span style="cursor: pointer;float: left;margin: 0px 5px;" ng-click="editProductBtnClicked(product)" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>
+                <span style="cursor: pointer;float: right;margin:0px 5px;" ng-click="deleteProduct(product,$index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-trash"></i></span>
+                </td>
+				</tr>
+				<tr ng-if="(productListView | filter:page.search).length == 0 && productListView.length>0" style="font-size: 14px;">
+                <td ></td>
+                <td >{{rowsChange((productListView | filter:page.search).length)}}</td>
+                <td style="word-break:break-all;"></td>
+                <td >Product not available in current list.<a href="#" ng-click="searchProductInOtherList(page.search)"><b>Click here</b></a> to search in other list</td>
+                <td ></td>
+                <td ></td>
+                <td ></td>
+                <td ></td>
+        		</tr>
+        		<tr ng-hide="productListView.length>0" style="font-size: 14px;">
+                <td ></td>
+                <td ></td>
+                <td style="word-break:break-all;"></td>
+                <td >No data available in table</td>
+                <td ></td>
+                <td ></td>
+                <td ></td>
+                <td ></td>
+        		</tr>
+			</tbody>
+		</table> 
+<div class="row">
+<div class="col-md-7">
+	{{rowsChange((productListView | filter:page.search).length,currentPage,itemsPerPage)}}
+	<span ng-if="!searchingEnabled">Showing {{showingFrom | number}} to {{showingTo | number}} of {{productListView.length}} entries</span> 
+	<span ng-if="selectedRows==0">Showing 0 to 0 of 0  (filtered from {{productListView.length}} total entries)</span> 
+	<span ng-if="searchingEnabled && !pageEnd && selectedRows>0">Showing {{(currentPage*itemsPerPage)-(itemsPerPage-1)}} to {{(currentPage*itemsPerPage)}} of {{(productListView | filter:page.search).length}} (filtered from {{productListView.length}} total entries)</span>
+	<span ng-show="searchingEnabled && pageEnd && selectedRows>0">
+	Showing {{(currentPage*itemsPerPage)-(itemsPerPage-1)}} to {{toPageEnd}} of {{(productListView | filter:page.search).length}} (filtered from {{productListView.length}} total entries)</span>
+
+
+</div>
+<div class="col-md-5">
+<!-- <ul style="float: right;" uib-pagination total-items="page.totalItems" ng-model="page.currentPage" items-per-page="page.itemsPerPage" ng-change="pageChange()"  max-size="maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true" ></ul>	 -->
+<dir-pagination-controls max-size="5" direction-links="true" boundary-links="true" style="float:right;" on-page-change="pageChange(newPageNumber,itemsPerPage)" pagination-id="prod"></dir-pagination-controls>
+</div>
+</div>
+<div class="row">
+	<div class="col-md-2"><button type="button" class="btn btn-default btn-block" style="color:#337ab7;border-radius: 18px;outline: none;" ng-click="getPreviousProducts()" ng-disabled="countProducts==0" popover-placement="top" uib-popover="Click to get previous 1000 products."  popover-trigger="'mouseenter'"><< Previous Products</button></div>
+	<div class="col-md-8"><span style="color: #337ab7;font-size: 14px;font-weight: bold;"><center>Displaying records between {{fromLimit | number}} to {{toLimit | number}}</center></span></div>
+	<div class="col-md-2"><button type="button" class="btn btn-default btn-block" style="color:#337ab7;border-radius: 18px;outline: none;" ng-click="getNextProducts()" popover-placement="top" uib-popover="Click to get next 1000 products."  popover-trigger="'mouseenter'" ng-disabled="disabledNext">Next Products >></button></div>
+</div>
+</div>
+
+<!-- <div ng-hide="productListView.length>0" style="font-size: 12px;">
+ 	<div style="padding:40px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);background-color:#F1F1F1; letter-spacing: 1px; margin:10px;" class="row">
+        <div class="col-md-12">
+          <div class="no-message">
+            <center>
+              <p style="font-size: 14px; font-weight:bold;">As of now there are no products available.</p>   
+               <p style="font-size: 12px;">You can add, delete product and other product related details will be shown here.</p>   
+              </center>
+          </div>
+        </div>
+  </div>
+</div>
+ -->
+<div id="customerTable" ng-if="isProductAddView" style="margin-top: 3%;">
+	<form name="form.manageProduct" novalidate>
+	<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Item Code</label>  <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'text' id="targetItemCode" name="itemCode" class = 'form-control' ng-model = 'manageProduct.itemCode' focus-me="true" ng-disabled="buttonstatus=='edit'" required>
+	<!-- uib-typeahead = 'productList as productList.value for productList in productList | filter:$viewValue' typeahead-on-select="getProductDetails(manageProduct.itemCode)" ng-keyup="resetOnBackspace($event)" -->
+	<span ng-show="((form.manageProduct.itemCode.$dirty && form.manageProduct.itemCode.$invalid) 
+	|| (form.manageProduct.itemCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
+	<small>*Please select product code.</small>
+	</span>
+    </div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Product Group</label>  <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<select type="text" name="productGroupCode" class="form-control" ng-options="productGroup as productGroup.code+' ('+productGroup.value+')' for productGroup in productGroupList" ng-model="manageProduct.productGroupCode" required>
+	<option value="">Select Product Group</option>
+	<!-- <option selected ng-if="buttonstatus=='edit">{{manageUser.userType}}</option> -->
+	</select>
+	<span ng-show="((form.manageProduct.productGroupCode.$dirty && form.manageProduct.productGroupCode.$invalid) || (form.manageProduct.productGroupCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
+	<small>*Please select product type.</small>
+	</span>
+	</span>
+    </div>
+	</div>
+	
+	
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Item Description</label>  <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'manageProduct.itemDescription' autocomplete="off" required>
+	<span ng-show="((form.manageProduct.itemDescription.$dirty&&form.manageProduct.itemDescription.$invalid) 
+		  || (form.manageProduct.itemDescription.$invalid && form.manageProduct.submitted))" class="invalid-control">
+	<small>*Please enter item description.</small>
+	</span>
+	</div>
+	</div>
+	
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Description 2</label></div>
+	<div class="col-md-8">
+	<input type="text"  class = 'form-control' name="description2" ng-model="manageProduct.description2">
+	<span ng-show="((form.manageProduct.description2.$dirty && form.manageProduct.description2.$invalid) 
+		  || (form.manageProduct.description2.$invalid && form.description2.submitted))" class="invalid-control">
+	<small></small> 
+	</span>
+	</div>
+	</div>
+	
+	
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Description 3</label></div>
+	<div class="col-md-8">
+	<input type="text"  class = 'form-control' name="description3" ng-model="manageProduct.description3">
+	<span ng-show="((form.manageProduct.description3.$dirty && form.manageProduct.description3.$invalid) 
+		  || (form.manageProduct.description3.$invalid && form.description3.submitted))" class="invalid-control">
+		<small></small> 
+	</span>
+	</div>
+	</div>
+	
+	
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Unit</label>  <span class="asteric">*</span></div>
+	<div class="col-md-8"><input type="text" class = 'form-control' name="unit" ng-model="manageProduct.unit"  required>
+	<span ng-show="((form.manageProduct.unit.$dirty && form.manageProduct.unit.$invalid) 
+		  || (form.manageProduct.unit.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.unit.$error.required">*Please enter unit.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 0</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak0" ng-model="manageProduct.qtyBreak0" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.qtyBreak0.$dirty && form.manageProduct.qtyBreak0.$invalid) 
+		  || (form.manageProduct.qtyBreak0.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak0.$invalid">*qty break0 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 0(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class='form-control' name="price0exGST" ng-model="manageProduct.price0exGST" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.price0exGST.$dirty && form.manageProduct.price0exGST.$invalid) 
+		  || (form.manageProduct.price0exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price0exGST.$invalid">*price0 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 1</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak1" ng-model="manageProduct.qtyBreak1" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.qtyBreak1.$dirty && form.manageProduct.qtyBreak1.$invalid) 
+		  || (form.manageProduct.qtyBreak1.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak1.$invalid">*qty break1 is invalid.</small>
+	</span>
+	</div>
+	</div>
+	
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 1(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price1exGST" ng-model="manageProduct.price1exGST" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.price1exGST.$dirty && form.manageProduct.price1exGST.$invalid) 
+		  || (form.manageProduct.price1exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price1exGST.$invalid">*price1 is invalid.</small>
+	</span>
+	</div>
+	</div>
+	
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 2</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak2" ng-model="manageProduct.qtyBreak2" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.qtyBreak2.$dirty && form.manageProduct.qtyBreak2.$invalid) 
+		  || (form.manageProduct.qtyBreak2.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak2.$invalid">*qty break2 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 2</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price2exGST" ng-model="manageProduct.price2exGST" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.price2exGST.$dirty && form.manageProduct.price2exGST.$invalid) 
+		  || (form.manageProduct.price2exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price2exGST.$invalid">*price2 is invalid.</small>
+	</span>
+	</div>
+	</div>
+	
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 3</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak3" ng-model="manageProduct.qtyBreak3"  ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.qtyBreak3.$dirty && form.manageProduct.qtyBreak3.$invalid) 
+		  || (form.manageProduct.qtyBreak3.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak3.$invalid">*qty break3 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 3(ex GST)</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="price3exGST" ng-model="manageProduct.price3exGST" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.price3exGST.$dirty && form.manageProduct.price3exGST.$invalid) 
+		  || (form.manageProduct.price3exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.price3exGST.$invalid">*price3 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Qty Break 4</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="qtyBreak4" ng-model="manageProduct.qtyBreak4" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct.qtyBreak4.$dirty && form.manageProduct.qtyBreak4.$invalid) 
+		  || (form.manageProduct.qtyBreak4.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.qtyBreak4.$invalid">*qty break4 is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Price 4</label></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name=" price4exGST" ng-model="manageProduct. price4exGST" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<span ng-show="((form.manageProduct. price4exGST.$dirty && form.manageProduct. price4exGST.$invalid) 
+		  || (form.manageProduct. price4exGST.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct. price4exGST.$invalid">*price4 is invalid.</small>
+	</span>
+	</div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Avg Cost</label>  <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type="number" class = 'form-control' name="avgcost" ng-model="manageProduct.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
+	<span ng-show="((form.manageProduct.avgcost.$dirty && form.manageProduct.avgcost.$invalid) 
+		  || (form.manageProduct.avgcost.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.avgcost.$error.required">*Please enter average cost.</small>
+		<small ng-show="form.manageProduct.avgcost.$invalid &&(!form.manageProduct.avgcost.$error.required)">*average cost is invalid.</small>
+	</span>
+	</div>
+	</div>
+
+<!-- 	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Tax Code</label></div>
+	<div class="col-md-8">
+	<input type="text" class = 'form-control' name="taxCode" ng-model="manageProduct.taxCode">
+	<span ng-show="((form.manageProduct.taxCode.$dirty && form.manageProduct.taxCode.$invalid) 
+		  || (form.manageProduct.taxCode.$invalid && form.manageProduct.submitted))" class="invalid-control">
+		<small ng-show="form.manageProduct.taxCode.$error.required">*Please enter tax code.</small>
+	</span>
+	</div>
+	</div> -->
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">GST Exempt</label></div>
+	<div class="col-md-8">
+	<input type="checkbox" name="gstFlag" ng-model="manageProduct.gstFlag"  ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;">
+	
+	</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+    	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteProduct()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+    	<button ng-click="cancelAddProduct()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+    	</div>
+		<div class="col-md-4">
+		<button id="create" ng-click="saveProductDetails()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+
+</div>
+
+</div>

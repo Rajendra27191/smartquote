@@ -1,0 +1,37 @@
+<div id="notification" class="gmail-template">
+
+	<style>
+		.gmail-template {
+			position:fixed;
+			left:50%;
+			top:0px;
+			z-index: 9999;
+			width:30%;
+			text-align: center;
+			min-height : 30px;
+			border-radius: 0px;
+			/*color: #3c763d;*/
+			color: #113654;
+			font-size: 120%;
+   			font-weight: bold;
+			margin-bottom: 2px;	
+			margin-top:5%;	
+
+
+			/*border:1px solid rgb(60,118,61);*/
+			/*background-color : rgba(223,240,216, 1);*/
+			/*background-color : #CFDFE6;*/
+		
+			padding:5px 5px 5px 5px;
+			
+			-webkit-transition: top 0.5s ease-out,opacity 0.4s ease-out 1s; /* 4 sec delay for longer message visibility */
+			-moz-transition: top 0.5s ease-out,opacity 0.5s ease-out 1s;
+			-o-transition: top 0.5s ease-out,opacity 0.5s ease-out 1s;
+			transition: top 0.5s ease-out,opacity 0.5s ease-out 1s;
+		}
+
+	</style>
+
+	<span><i class="glyphicon glyphicon-ok-circle"></i> {{message}}</span>
+
+</div>

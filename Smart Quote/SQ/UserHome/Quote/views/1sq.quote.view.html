@@ -1,0 +1,493 @@
+<style type="text/css" media="screen">
+	.alt-product{
+	background: rgba(245, 9, 4, 0.03);
+}
+.price{
+	text-align: right;
+}
+.t_head{
+	text-align: left;
+	font-size: 12px;
+	color: #333;
+	font-weight: bold;
+	/* padding: 0px 0px 0px 5px; */
+	padding: 5px;
+}
+.t_data{
+	text-align: left;
+	font-size: 12px;
+	color: #333;
+	/* padding: 0px 0px 0px 5px; */
+	padding: 5px;
+}
+#productTable .col-md-12{
+padding: 0px;
+}
+.panel-heading {
+    padding: 5px 10px;
+}
+</style>
+<div class="row">
+		<div class="col-md-12" style="margin-bottom: 5px;">
+		<button ng-click="cancelCreateQuote()" class="btn btn-default" style="border-radius: 0px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</button>
+		<label class="sub-label" style="text-transform: uppercase;float: right;">Quote Id : {{customerQuote.quoteId}} &nbsp;&nbsp;</label>
+		</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<form name="form.addCustomerQuote" novalidate>
+
+<div class="panel panel-default">
+<div class="panel-heading">
+<label class="sub-label" style="text-transform: uppercase;">Customer Information</label>
+</div>
+<div class="panel-body">	
+<div class="row row-control">
+	<div class="col-md-6">
+	<div class="col-md-4">
+	<label class="sub-label">Customer Code</label> <span class="asteric">*</span>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="customerCode" id="customerCode" class = 'form-control' ng-model = 'customerQuote.custCode' ng-disabled="buttonstatus=='edit'" uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off"  placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)" required readonly><!-- ng-keydown="resetOnBackspace($event)" ng-change="customerCodeChanged()"-->
+	<!-- getCustomerDetails(customerQuote.customerCode); -->
+	<span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>* please enter customer code.</small>
+	</span>	
+	<!-- <span ng-show="isCustomerInvalid && !form.addCustomerQuote.customerCode.$invalid" class="invalid-control"><small>*Please select customer from list.</small></span> -->
+	</div>		
+
+	</div>
+	<div class="col-md-6">
+	<div class="col-md-4">
+	<label class="sub-label">Customer Name</label> <span class="asteric">*</span>		
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'customerQuote.custName' ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+	<span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>* please enter customer name.</small>
+	</span>
+		
+	</div>
+	</div>
+</div>
+
+<div class="row row-control">
+	<div class="col-md-6">
+	<div class="col-md-4">
+	<label class="sub-label">Address</label>
+	</div>
+	<div class="col-md-8">
+	<textarea name="address" class="form-control" style="padding: 11px 5px;" rows="2" ng-model = 'customerQuote.address' ng-disabled="!isNewCustomer"></textarea>
+	<span ng-show="((form.addCustomerQuote.address.$dirty && form.addCustomerQuote.address.$invalid) || (form.addCustomerQuote.address.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>* please enter customer address.</small>
+	</span>		
+	</div>
+	</div>
+	<div class="col-md-6">
+	<div class="col-md-12 row-control" style="padding:0px;">
+		<div class="col-md-4">
+		<label class="sub-label">Phone No</label>		
+		</div>
+		<div class="col-md-8">
+		<input type = 'text' name="phoneNo" class = 'form-control' ng-model = 'customerQuote.phone'  ng-pattern="/^[0-9]{5,12}$/" ng-disabled="!isNewCustomer">
+		<span ng-show="((form.addCustomerQuote.phoneNo.$dirty && form.addCustomerQuote.phoneNo.$invalid) || (form.addCustomerQuote.phoneNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-show="form.addCustomerQuote.phoneNo.$error.pattern">* please enter valid phone no.</small>
+		</span>		
+		</div>
+	</div>
+	<div class="col-md-12" style="padding:0px;">
+		<div class="col-md-4">
+		<label class="sub-label">Email</label> <span class="asteric">*</span>
+			
+		</div>
+		<div class="col-md-8">
+		<input type = 'text' name="email" class = 'form-control' ng-model = 'customerQuote.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+		<span ng-show="((form.addCustomerQuote.email.$dirty && form.addCustomerQuote.email.$invalid) || (form.addCustomerQuote.email.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-show="form.addCustomerQuote.email.$error.required">* please enter email id.</small>
+			<small ng-show="form.addCustomerQuote.email.$error.pattern">* please enter valid email id.</small>
+		</span>		
+		</div>
+	</div>
+
+	</div>
+</div>
+ <div class="row row-control">
+ 	<div class="col-md-6">
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Fax</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+			<input type = 'text' name="faxNo" class = 'form-control' ng-model = 'customerQuote.faxNo' ng-disabled="!isNewCustomer">
+			<span ng-show="((form.addCustomerQuote.faxNo.$dirty && form.addCustomerQuote.faxNo.$invalid) || (form.addCustomerQuote.faxNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>* please enter fax no.</small>
+			</span>	
+			</div>
+	 	</div>
+
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Current Supplier Name</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-change="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" autocomplete="off" typeahead-min-length="0">
+
+			<span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">* please enter supplier name.</small>
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">* supplier already exist please select from list.</small>
+			</span>		
+			</div>
+	 	</div>
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+			<div class="col-md-4">
+			<label class="sub-label">Sales Person</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList" required>
+			<option value="">Select Sales Person</option>
+			</select>
+			<!-- {{customerQuote.salesPerson}} -->
+			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.salesPerson.$error.required">* please select sales person.</small>
+			</span>	
+			<!-- 	<input type = 'text' id="salesPerson" name="salesPerson" class = 'form-control' ng-model = 'customerQuote.salesPerson'  uib-typeahead = 'salesPersonList as salesPersonList.value for salesPersonList in salesPersonList | filter:$viewValue' typeahead-on-select="" autocomplete="off" >
+			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.salesPerson.$error.required && !form.addCustomerQuote.salesPerson.$invalid">* please enter supplier name.</small>
+			<small ng-if="form.addCustomerQuote.salesPerson.$invalid">* sales person already exist please select from list.</small>
+			</span>	 -->
+			</div>
+		</div>
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Prices GST Incl</label> 
+			</div>
+			<div class="col-md-8" >	
+			<input type="checkbox" name="priceGstInclude" ng-model="customerQuote.pricesGstInclude" ng-change="calculateAllInformation()" style="height: 15px; width: 15px;">&nbsp;&nbsp;&nbsp;		
+			</div>
+	 	</div>
+ 	</div>
+ 	<div class="col-md-6">
+ 		 		
+ 		  <div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Compete Quote</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+
+			<select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required>
+			<option value="">Select compete</option>
+			</select>
+			<span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please select compete quote.</small>
+			</span>	
+			</div>
+ 		  </div>
+
+ 		   <div class="col-md-12 row-control" style="padding: 0px;">
+		 	<div class="col-md-4">
+			<label class="sub-label">Quote Attn</label> <span class="asteric">*</span>		
+			</div>
+			<div class="col-md-8">
+			<input type = 'text' id="quoteAttn" name="quoteAttn" class = 'form-control' ng-model = 'customerQuote.quoteAttn' required>
+			<span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please enter quote attn.</small>
+			</span>		
+			</div>
+ 		 </div>
+ 	</div>
+ </div>
+
+</div>
+</div>
+<br>
+<div class="row">
+<div class="col-md-6"></div>
+<div class="col-md-6">
+<span ng-show="showAddProductError" class="invalid-control" style="float: right;"><small>*Please add products before save.</small></span>	
+</div>	
+</div>
+<div class="panel panel-default" style="border-radius:0px; margin-bottom: 1%;">
+	<div class="panel-heading">
+	<label class="sub-label" style="text-transform: uppercase;">Added Products : <span ng-if="customerQuote.productList">{{customerQuote.productList.length}}</span></label>
+	<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'">
+	<i class="	glyphicon glyphicon-plus"></i> Add Product
+	</a>
+	</div>
+	<!-- <div class="panel-body" style="padding: 0px;font-size: 12px;">	
+	 <table class="table row-border table-hover">
+    <thead >
+      <tr style="background: rgba(245, 245, 245, 0.3);">
+        <th>Pro Code</th>
+        <th>Product Name</th>
+        
+        <th>UOM</th>
+        <th>Cost Price</th>
+        <th>Qty</th>
+        
+        <th>Current Price</th>
+        <th>Current Total</th>
+        <th>Supplier GP %</th>
+        
+        <th>Jaybel Price</th>
+        <th>Jaybel Price Total</th>
+        <th>Jaybel GP %</th>
+        <th>Saving %</th>
+        
+        <th>GST Y/N</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList">
+        <td><span data-ng-bind="product.itemCode"></span></td>
+        <td><span data-ng-bind="product.itemDescription"></span></td>
+        
+        <td><span data-ng-bind="product.unit"></span></td>
+        <td><span data-ng-bind="product.avgcost"></span></td>
+        <td><span data-ng-bind="product.itemQty"></span></td>
+        
+        <td><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></td>
+        <td><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></td>
+        <td><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></td>
+        
+        <td><span data-ng-bind="getPrice(product.quotePrice)"></span></td>
+        <td><span data-ng-bind="product.total.toFixed(2)"></span></td>
+        <td><span data-ng-bind="getPrice(product.gpRequired)"></span></td>
+        <td><span data-ng-bind="product.savings"></span></td>
+        <td><span data-ng-bind="product.gstFlag"></span></td>
+        <td style="padding: 8px 0px ;">
+        	<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
+            <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></span>
+        </td>
+      </tr>
+	  <tr ng-if="!customerQuote.productList.length>0">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>no data available</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+	</div> -->
+<div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
+<!-- {{customerQuote.productList}} -->
+	<div class="col-md-12">
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="padding: 0px;">
+		<div class="col-md-2 t_head">Pro Code</div>
+		<div class="col-md-4 t_head">Pro Name</div>
+		<div class="col-md-1 t_head">UOM</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Cost</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Qty</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Current Price</div>
+		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="">
+		<!-- <div class="col-md-2 t_head">Current Price</div> -->
+		<div class="col-md-2 t_head" style="text-align: right;">Current Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Supplier GP(%)</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Jaybel Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;">Jaybel Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;">Jaybel GP(%)</div>
+		<div class="col-md-1 t_head">Savings (%)</div>
+		<div class="col-md-1 t_head">GST Y/N</div>
+		<div class="col-md-2 t_head" style="text-align:center;">Action</div>
+		</div>	
+		</div>	
+		</div>
+	</div>
+	<div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList" ng-class="{'alt-product':product.isAlternate}">
+		<div class="col-md-12" style="padding: 0px;">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data"><span data-ng-bind="product.itemCode"></span></div>
+		<div class="col-md-4 t_data"><span data-ng-bind="product.itemDescription"></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.unit"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.avgcost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="product.itemQty"></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.quotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.total.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.gpRequired)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.savings)"></span></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.gstFlag"></span></div>
+		<div class="col-md-2 t_data" style="text-align:center;">
+		<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index,product.itemCode);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>
+        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="fa fa-trash-o fa-lg" aria-hidden="true"></i></span>
+        </div>
+		</div>	
+		</div>	
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.altProductCode">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.altProductCode" style="background: rgba(245, 9, 4, 0.03);padding: 0px;">
+		<!-- {{product.altProd}} -->
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data"><span data-ng-bind="product.altProd.altProductCode"></span></div>
+		<div class="col-md-4 t_data"><span data-ng-bind="product.altProd.altProductDesc"></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.altProd.altProductUnit"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductAvgCost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductItemQty"></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierPrice)"></span></div>
+		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierTotal)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductCurrentSupplierGP)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductQuotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;"><span data-ng-bind="product.altProd.altProductTotal.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductGpRequired)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.altProductSavings)"></span></div>
+		<div class="col-md-1 t_data"><span data-ng-bind="product.altProd.altProductGstFlag"></span></div>
+		<div class="col-md-2 t_data">
+        </div>
+		</div>	
+		</div>	
+		</div>
+
+	</div>
+	</div>
+</div>
+
+</div>
+<div class="row row-control">
+	<div class="col-md-1">
+	<label class="sub-label">Notes</label>
+	</div>
+	<div class="col-md-11">
+	<textarea name="notes" rows="1" class="form-control" ng-model="customerQuote.notes"></textarea>
+	</div>
+
+</div>
+<hr>
+<div class="row row-control" style="margin-bottom: 5%;">
+	<div class="col-md-12">
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default sub-label" style="color: #fff;">Current Supplier Information</label></legend>
+			<!-- <span data-ng-bind="supplierInformation"></span> -->
+			<p class="para"><label>Subtotal </label>: {{getPrice(supplierInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: 
+			<span ng-if="customerQuote.pricesGstInclude"> {{getPrice(supplierInformation.gstTotal)}}</span> 
+			<span ng-if="!customerQuote.pricesGstInclude"> {{getPrice(0)}}</span> 
+			</p>
+			<p class="para"><label>Total </label>: {{getPrice(supplierInformation.total)}} </p>
+			
+		</fieldset>
+	</div>	
+	<div class="col-md-3">
+		<fieldset style="border: 1px solid #cccccc;padding: 17px 15px;">
+			<legend><label class="label label-default sub-label" style="color: #fff;">GP Information</label></legend>
+			<p class="para"><label>Avg of GP Required </label>: {{getPrice(gpInformation.avgGpRequired)}}</p>
+			<p class="para"><label>Avg of Cur Supplier GP </label>: {{getPrice(gpInformation.avgCurrentSupplierGp)}}</p>		
+			<br>	
+		</fieldset>
+	</div>
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default sub-label" style="color: #fff;">Total Information</label></legend>
+			<p class="para"><label>Subtotal  </label>: {{getPrice(totalInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: {{getPrice(totalInformation.gstTotal)}}</p>		
+			<p class="para"><label>Total </label>: {{getPrice(totalInformation.total)}}</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="totalInformation.total<=supplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default sub-label" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			 {{(getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)}}</span>
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span ng-if="!((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{(((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)}}</span> 
+			<span ng-if="((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			{{((getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)*12).toFixed(2)}}
+			</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="totalInformation.total>supplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default sub-label" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			<span> {{getPrice(0)}}</span>  
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span> {{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			<span>{{getPrice(0)}}</span>
+			</p>		
+		</fieldset>
+	</div>
+	</div>
+</div>
+<div class="row" style="">
+	<div class="col-md-8">
+	<div class="col-md-4">
+	<div class="col-md-12"><label>Services</label></div>
+	<div class="col-md-12">
+	<p ng-repeat="service in serviceList">
+	<input type="checkbox" name="service" ng-model="serviceList[$index].code" ng-change="" style="height: 15px; width: 15px;"> <label class="sub-label">{{service.value}}</label>
+	<!--  customerQuote.serviceList[$index].value=service.value;customerQuote.serviceList[$index].key=service.key;  -->
+	<!-- {{serviceList[$index]}} -->
+	</p>
+	</div>
+	</div>	
+	<div class="col-md-4">
+	<div class="col-md-12"><label>Terms & Conditions</label></div>
+	<div class="col-md-12">
+	<p ng-repeat="term in termConditionList">
+	<input type="checkbox" name="term" ng-model="termConditionList[$index].code"  style="height: 15px; width: 15px;"> <label class="sub-label">{{term.value}}</label>
+	<!-- {{termConditionList[$index]}} -->
+	<!-- customerQuote.termConditionList[$index].value=term.value;customerQuote.termConditionList[$index].key=term.key; -->
+	</p>
+	</div>
+	</div>
+	</div>
+	<div class="col-md-2">
+
+	<button id="create" ng-click="updateQuote()" class="btn  btn-block button-ok" style="margin-top: 0px;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>	
+	</div>
+	<div class="col-md-2">
+	<button ng-click="cancelCreateQuote()" class="btn  btn-block button-delete" style="margin-top: 0px;"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+	</div>
+</div>
+
+
+</form>
+</div>
+<!-- <div class="col-md-1"></div> -->
+</div>
+</div>
+
+
+<!-- <div ng-include="'SQ/UserHome/Quote/views/sq.add_product_into_quote_modal.html'"></div> -->
+<div ng-include="'SQ/UserHome/Quote/views/addproduct-uib-modal.html'"></div>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pronto_xls_report" language="groovy" pageWidth="950" pageHeight="752" columnWidth="950" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8fdc509b-00ab-4051-952b-6f3ecd4e7473">
+	<property name="ireport.zoom" value="0.620921323059155"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.wrap.text" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.text.truncate.at.char" value="false"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.break.after.row" value="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/radhika/git/smartquote/Smart Quote/Reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subreportPath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="arrayPdfSubReportBean" class="org.apache.struts2.views.jasperreports.ValueStackDataSource">
+		<fieldDescription><![CDATA[arrayPdfSubReportBean]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="44" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="b54ee47b-219c-4e48-8900-57cef631cde0" x="0" y="0" width="950" height="41"/>
+				<dataSourceExpression><![CDATA[$F{arrayPdfSubReportBean}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{subreportPath} + "pronto_xls_report_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

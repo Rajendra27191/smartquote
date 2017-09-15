@@ -1,0 +1,337 @@
+<style type="text/css" media="screen">
+.borderBox {
+	border: 1px solid #EEE8E8;
+	padding: 12px;
+	border-radius: 6px;
+}
+
+.borderTable {
+	border: 1px solid #EEE8E8;;
+	border-radius: 0px;
+}
+
+.main-label {
+	margin: 3% 0% 1% 0%;
+}
+
+.form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control
+	{ /* background-color: #f3f3f3; */
+	/* opacity: 1; */
+	background: rgba(243, 243, 243, 0.5);
+}
+
+textarea {
+	resize: none;
+}
+
+[class|=col-md-4] {
+	padding-right: 0px;
+}
+
+.col-panel {
+	padding: 0px;
+}
+
+fieldset {
+	border: 1px solid gray;
+	/* background: #ddd; */
+	border-radius: 5px;
+	padding: 15px;
+}
+
+legend {
+	display: block;
+	width: auto;
+	border-bottom: none;
+	margin-bottom: 0px;
+	font-size: 15px;
+}
+
+.table>thead>tr>th {
+	padding: 5px;
+	/*text-align: center;*/
+}
+
+.para {
+	margin: 0px;
+	/* color:rgba(119, 117, 117, 0.8); */
+}
+
+legend>label {
+	color: #113654;
+}
+
+.commentBox {
+	background: gray;
+	position: relative;
+	background: #FFF;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 250px;
+	height: 150px
+}
+
+.commentBox:before {
+	content: "";
+	position: absolute;
+	top: 60px;
+	left: -30px;
+	z-index: 1;
+	border: solid 15px transparent;
+	border-right-color: #FFF;
+}
+
+table.dataTable tbody th,table.dataTable tbody td {
+	padding: 8px 3px;
+}
+
+.viewQuote {
+	margin-right: 5%;
+	margin-left: 5%;
+}
+/* .fa-lg{ font-size: 1.4em;color: rgba(15, 70, 116, 0.84);} */
+</style>
+<div class="viewQuote">
+	<div class="row">
+		<div class="col-md-12">
+			<center>
+				<label class="main-label">View / Edit Quote</label>
+			</center>
+		</div>
+	</div>
+
+	<div id="quoteTable" style="font-size: 12px;"
+		ng-if="!showEditQuoteView">
+		<!-- && customerListView.length>0 -->
+		<table datatable="ng" class="table row-border hover table-responsive">
+			<thead class="table-header">
+				<tr>
+					<th style="width: 5%;text-align:center;">Sr No &nbsp;</th>
+					<th style="width: 7%;text-align:center;">Quote Id&nbsp;</th>
+					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
+					<th style="width: 17%;">Cust Name &nbsp;</th>
+					<!-- <th style="width: 10%;">Phone &nbsp;</th> -->
+					<th style="width: 13%;">Email &nbsp;</th>
+					<th style="width: 10%;">Sales Person &nbsp;</th>
+					<th style="width: 10%;">Supplier &nbsp;</th>
+					<!-- <th style="width: 5%;">Atten &nbsp;</th> -->
+					<th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
+					<th style="width: 8%;">Status &nbsp;</th>
+					<th style="width: 10%;text-align:center;">Action &nbsp;</th>
+				</tr>
+			</thead>
+			<tbody>
+
+				<tr ng-repeat="quote in quoteListView" ng-click="testingClick(name)">
+					<td style="text-align:center;">{{$index+1}}</td>
+					<td style="text-align:center;">
+						<!-- <span data-ng-bind="quote.quoteId"></span> -->
+						{{::quote.quoteId}}
+					</td>
+					<td style="text-align:center;">
+						<!-- <span data-ng-bind="quote.createdDate"></span> -->
+						{{::quote.createdDate}}
+					</td>
+					<td >
+						<!-- <span data-ng-bind="quote.custName"></span> -->
+						{{::quote.custName}}
+					</td>
+					<!-- <td><span data-ng-bind="quote.phone"></span></td> -->
+					<td>
+						<!-- <span data-ng-bind="quote.email"></span> -->
+						{{::quote.email}}
+					</td>
+					<td>
+						<!-- <span data-ng-bind="quote.salesPerson" ng-if="quote.salesPerson!=''"></span>  -->
+						{{::quote.salesPerson}}
+						<span ng-if="quote.salesPerson==''"> --- </span>
+					</td>
+					<td>
+						<!-- <span data-ng-bind="quote.currentSupplierName"ng-if="quote.currentSupplierName!=''"></span>  -->
+						{{::quote.currentSupplierName}}
+						<span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null">--- </span>
+					</td>
+					<!-- <td><span data-ng-bind="quote.quoteAttn"></span></td> -->
+					<td style="text-align:center;">
+						<!-- <span data-ng-bind="quote.modifiedDate"></span> -->
+						{{::quote.modifiedDate}}
+					</td>
+					<td>
+						<!-- <span data-ng-bind="quote.status"></span> -->
+						{{::quote.status}}
+					</td>
+					<td style="text-align:center;"><span style="cursor: pointer; margin: 0px 0px;"
+						ng-click="viewDetailInformation(quote)" popover-placement="left"
+						uib-popover="Click to view/edit quote."
+						popover-trigger="'mouseenter'"><i
+							class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
+						<span style="cursor: pointer; margin: 0px 0px;"
+						ng-click="showCommentModal(quote)" popover-placement="left"
+						uib-popover="Click to add comment on quote."
+						popover-trigger="'mouseenter'"><i
+							class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
+						<span style="cursor: pointer;margin: 0px 0px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
+						<span style="cursor: pointer; margin: 0px 0px;"
+						ng-click="exportToPronto(quote)" popover-placement="left"
+						uib-popover="Click to export to pronto contract.xls"
+						popover-trigger="'mouseenter'"><i class="fa fa-table fa-lg"
+							aria-hidden="true"></i></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- <div  ng-if="showEditQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.quote.view.html'"></div> -->
+	<div ng-if="showEditQuoteView"
+		ng-include="'SQ/UserHome/Quote/views/sq.create_quote.view.html'"></div>
+
+	<div class="modal fade-scale" id="commentModal" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document"
+			style="width: 80%; font-size: 12px;">
+			<div class="modal-content">
+				<div class="modal-header" style="padding-bottom: 0px; border: none;">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close" ng-click="closeCommentModal()">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+						<center>Quote Info</center>
+					</h4>
+				</div>
+				<div class="modal-body" style="padding: 25px 15px;">
+					<div class="panel panel-default"
+						style="border-radius: 0px; margin-bottom: 1%;">
+						<!-- <div class="panel-heading"><label class="sub-label" style="text-transform: uppercase;"></label></div> -->
+						<div class="panel-body" style="padding: 10px 0px;">
+							<div class="col-md-12">
+								<div class="col-md-2">
+									<label>Quote No</label>: <span
+										data-ng-bind="customerQuote.quoteId"></span>
+								</div>
+								<div class="col-md-3">
+									<label>Created Date</label>: <span
+										data-ng-bind="customerQuote.createdDate"></span>
+								</div>
+								<div class="col-md-4">
+									<label>Customer Name</label>: <span
+										data-ng-bind="customerQuote.custName"></span>
+								</div>
+								<div class="col-md-3">
+									<label>Quote Attention</label>: <span
+										data-ng-bind="customerQuote.quoteAttn"></span>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-2">
+									<label>Phone No</label>: <span
+										data-ng-bind="customerQuote.phone"></span>
+								</div>
+								<div class="col-md-3">
+									<label>Email</label>: <span data-ng-bind="customerQuote.email"></span>
+								</div>
+								<div class="col-md-4">
+									<label>Supplier</label>: <span
+										data-ng-bind="customerQuote.currentSupplierName"></span>
+								</div>
+								<div class="col-md-3">
+									<label>Sales Person</label>: <span
+										data-ng-bind="customerQuote.salesPerson"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<style type="text/css" media="screen">
+.popover-example .popover {
+	position: relative;
+	display: block;
+	margin: 5px;
+	max-width: 100%;
+}
+</style>
+					<!-- <hr style="margin: 0px;">  -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="col-md-8">
+								<h4 class="modal-title" id="myModalLabel">
+									&nbsp;&nbsp;Comments</h4>
+							</div>
+						</div>
+						<br>
+						<div class="col-md-12">
+							<div class="col-md-12" ng-if="customerQuote.commentList.length>0"
+								ng-repeat="commentList in customerQuote.commentList track by $index">
+								<div class="col-md-2" style="padding-right: 0px;">
+									<p style="margin: 0 0 0px; padding: 15px 0px;">
+										<span style="font-weight: bold;"
+											ng-bind="commentList.userName"></span><br> <span
+											ng-bind="commentList.email"></span>
+									</p>
+								</div>
+								<div class="col-md-6" style="padding-left: 0px;">
+									<div class="popover-example">
+										<div class="popover right">
+											<div class="arrow"></div>
+											<div class="popover-content" style="padding: 5px;">
+												<p style="margin: 0 0 0px;">
+													<span ng-bind="commentList.comment"></span>
+												</p>
+												<p
+													style="margin: 0 0 0px; text-align: right; color: #999; font-size: 13px;">
+													<span ng-bind="commentList.date"></span>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6" ng-if="customerQuote.commentList.length<=0">
+								<div class="popover-example">
+									<div class="popover right">
+										<div class="arrow"></div>
+										<div class="popover-content" style="padding: 5px;">
+											<p style="margin: 0 0 0px;">Comments not added yet...</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<br>
+					<form name="form.commentForm" novalidate>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="col-md-6"></div>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input type="text" class="form-control" name="comment"
+											placeholder="Write comment here..."
+											style="height: 32px; padding: 10px 15px; font-size: 13px;"
+											ng-model="comment" ng-enter="addComment()" required>
+										<span class="input-group-btn">
+											<button class="btn btn-default" type="button"
+												ng-click="addComment()"
+												style="height: 32px; padding: 5px 15px;">Add
+												Comment</button>
+										</span>
+									</div>
+									<!-- /input-group -->
+									<span
+										ng-show="((form.commentForm.comment.$dirty && form.commentForm.comment.$invalid) 
+		  		|| (form.commentForm.comment.$invalid && form.commentForm.submitted))"
+										class="invalid-control"> <small
+										ng-show="form.commentForm.comment.$invalid">*please
+											enter comment.</small>
+									</span>
+								</div>
+							</div>
+						</div>
+					</form>
+
+				</div>
+
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>

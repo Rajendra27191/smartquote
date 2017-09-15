@@ -1,0 +1,108 @@
+<style type="text/css" media="screen">
+.main-label{
+	margin: 3% 0% 3% 0%;
+}	
+</style>
+<div class="container">
+<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Create/Edit Services</label></center></div>
+</div>
+<form name="form.manageServices" novalidate>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<div class="row row-control">
+	<div class="col-md-3">
+	<label class="sub-label">Service</label> <span class="asteric">*</span>
+	</div>
+	<div class="col-md-9">
+	<input type = 'text' name="service" id="service" class = 'form-control' ng-model = 'manageService.service' focus-me="true" autocomplete="off" focus-me="focus" required>
+	<span ng-show="((form.manageServices.service.$dirty && form.manageServices.service.$invalid) || (form.manageServices.service.$invalid && form.manageServices.submitted))" class="invalid-control">
+	<small>* please enter service.</small>
+	</span>	
+	</div>		
+	</div>
+	<div class="row row-control">
+		<div class="col-md-5"></div>
+		<div class="col-md-4">
+    	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteUserGroupMenu()" class="btn btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+    	</div>
+		<div class="col-md-3">
+		<button id="create" ng-click="saveService()" class="btn btn-block button-ok" style="margin-top: 10%;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>	
+		</div>
+	</div>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+</form>
+<br>
+<!-- <div class="row">
+	<div class="col-md-12"><center><label>- : Existings Terms & Conditions : -</label></center></div>
+</div> -->
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<table  class="table table-bordered hover table-responsive">
+	<caption>- : Existing Services : -</caption>
+	<thead>
+		<tr>
+			<th><center>Sr No</center></th>
+			<th><center>Services</center></th>
+			<th><center>Action</center></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="service in servicesList" ng-if="servicesList.length>0">
+			<td><center>{{$index+1}}</center></td>
+			<td>
+			<div class="col-md-12" ng-hide = 'editing[$index]'>
+			<span>{{service.value}}</span>					
+			</div>
+			<div class="col-md-12" ng-show="editing[$index]">
+			<div class="col-md-10" style="padding: 0px;">
+			<input type="text" class="form-control" focus-me="true" name="" value="" placeholder="please add service" ng-model="service.value" style="border-radius: 0px;">
+			</div>
+			<div class="col-md-2" style="padding: 0px;">
+			<span style="cursor: pointer;margin: 0px 5px;color:green;" ng-click="updateService(service,$index)"><i class="fa fa-check-circle-o fa-lg" aria-hidden="true"></i></span>
+		    <span style="cursor: pointer;margin: 0px 5px;color:red;" ng-click="stop($index)"><i class="fa fa-times-circle-o fa-lg" aria-hidden="true"></i></span>
+			</div>
+			</div>
+			</td>
+			<td>
+			<center>
+			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editServiceBtnClicked(servicesList,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
+			<!-- popover-placement="left" uib-popover="Click to edit term."  popover-trigger="'mouseenter'" -->
+		    <span style="cursor: pointer;margin: 0px 5px;" ng-click="deleteService(service)"  tooltip-placement="top" uib-tooltip="Click to delete term."><i class="glyphicon glyphicon-trash"></i></span>
+		    </center>
+		    </td>
+		</tr>
+		<tr  ng-if="!servicesList.length>0">
+			<td></td>
+			<td>
+			<div class="col-md-12">
+			<center>services not added.</center>					
+			</div>
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+<!-- <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="row-border hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>FirstName</th>
+            <th>LastName</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="person in persons">
+            <td>{{ person.id }}</td>
+            <td>{{ person.firstName }}</td>
+            <td>{{ person.lastName }}</td>
+        </tr>
+        </tbody>
+    </table> -->
+<!-- <table datatable="" dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover" width="100%"></table> -->
+</div>
