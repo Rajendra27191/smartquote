@@ -25,8 +25,7 @@ public class QuoteBean {
 	private String createdDate;
 	private String modifiedDate;
 	private String status;
-	private ArrayList<CommentBean> commentList;
-	
+	private ArrayList<CommentBean> commentList;	
 	private ArrayList<KeyValuePairBean> termConditionList;
 	private ArrayList<KeyValuePairBean> serviceList;
 	private boolean saveWithAlternative;
