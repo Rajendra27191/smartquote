@@ -35,11 +35,11 @@
         /* margin: 40% 35%; */
     }
     .progress{
-        height: 30px;
+        height: 20px;
         margin-bottom: 0px;
     }
     .progress-bar{
-        padding: 5px;
+        padding: 0px;
     }
 /* .round-progress-wrapper{
 -webkit-logical-width: 80%;
@@ -69,13 +69,29 @@ div p{
 }
 
 .col-md-8 .dropdown-menu {
-    max-height: 136px;
+    max-height: 250px;
     /* max-width: 500px; */
     overflow-y: auto;
     /* overflow-x: auto; */
 }
 .twitter-typeahead{
     width: 100%;
+}
+/* Flash class and keyframe animation */
+.flashit{
+  color:#b8860b;
+    -webkit-animation: flash linear 2s infinite;
+    animation: flash linear 2s infinite;
+}
+@-webkit-keyframes flash {
+    0% { opacity: 1; } 
+    50% { opacity: .1; } 
+    100% { opacity: 1; }
+}
+@keyframes flash {
+    0% { opacity: 1; } 
+    50% { opacity: .1; } 
+    100% { opacity: 1; }
 }
 
 </style>
@@ -172,9 +188,9 @@ div p{
     </span>             
 </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='yes'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
     <div class="col-md-4">
-        <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote=='yes'">*</span>
+        <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
     </div>
     <div class="col-md-8">
         <!-- {{customerQuote.competeQuote!='yes'}} -->
@@ -188,7 +204,7 @@ div p{
     </span>
 </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='yes'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
     <div class="col-md-4">
         <label class="sub-label">Supplier Gp %</label>
     </div>
@@ -196,7 +212,7 @@ div p{
         <input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
     </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
     <div class="col-md-4">
         <label class="sub-label">Gp Required %</label>
     </div>
@@ -208,7 +224,7 @@ div p{
     </span>
 </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
     <!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
     <div class="col-md-4">
         <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
@@ -255,7 +271,7 @@ div p{
 </div>
 </div>
 
-<div class="row row-control" ng-hide="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
     <div class="col-md-4">
         <label class="sub-label">Gp Required %</label>
     </div>
@@ -267,7 +283,7 @@ div p{
     </span>
 </div>
 </div>
-<div class="row row-control" ng-hide="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
     <div class="col-md-4">
         <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
     </div>
@@ -400,9 +416,9 @@ div p{
             </span>             
         </div>
     </div>
-    <div class="row row-control" ng-if="customerQuote.competeQuote=='yes'">
+    <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
         <div class="col-md-4">
-            <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote=='yes'">*</span>
+            <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
         </div>
         <div class="col-md-8">
             <!-- {{customerQuote.competeQuote!='yes'}} -->
@@ -416,7 +432,7 @@ div p{
         </span>
     </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='yes'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
     <div class="col-md-4">
         <label class="sub-label">Supplier Gp %</label>
     </div>
@@ -424,7 +440,7 @@ div p{
         <input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
     </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
     <div class="col-md-4">
         <label class="sub-label">Gp Required %</label>
     </div>
@@ -436,7 +452,7 @@ div p{
     </span>
 </div>
 </div>
-<div class="row row-control" ng-if="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
     <!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
     <div class="col-md-4">
         <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
@@ -454,7 +470,7 @@ div p{
 
 </div>
 <div class="col-md-6">
-    <div class="row row-control" ng-hide="customerQuote.competeQuote=='no'">
+    <div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
         <div class="col-md-4">
             <label class="sub-label">Gp Required %</label>
         </div>
@@ -466,7 +482,7 @@ div p{
         </span>
         </div>
 </div>
-<div class="row row-control" ng-hide="customerQuote.competeQuote=='no'">
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
     <div class="col-md-4">
         <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
     </div>
@@ -497,7 +513,7 @@ div p{
     <div class="col-md-4">
     </div>
     <div class="col-md-1" style="padding-right: 0px;">
-        <input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;">
+        <input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-init="'No'" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;">
     </div>
     <div class="col-md-3" style="padding: 0px;">
         <label class="sub-label">GST Exempt</label>
@@ -576,7 +592,8 @@ div p{
                 </div>
             </div>
             </div>
-        </div>
+        
+            </div>
            <div class="row">
             <div class="col-md-6">
             <div class="row row-control">
@@ -632,7 +649,7 @@ div p{
                         <label class="sub-label">Alt Gp Required %</label>
                     </div>
                     <div class="col-md-8">
-                        <input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote=='no'">
+                        <input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote.toLowerCase()=='no'">
                         <span ng-show="((form.addProductIntoQuote.altGpRequired.$dirty && form.addProductIntoQuote.altGpRequired.$invalid) 
                         || (form.addProductIntoQuote.altGpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
                         <small ng-if="form.addProductIntoQuote.altGpRequired.$error.min || form.addProductIntoQuote.altGpRequired.$error.max">*gpRequired should be in range 0-100.</small>
@@ -731,7 +748,7 @@ div p{
         <div class="col-md-5" style="padding:0px;">
             <fieldset>
                 <legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
-                <div class="row" style="margin: 10px 0px;">
+                <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-5">
                         <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price0exGST"></span> <br>
@@ -739,6 +756,7 @@ div p{
                         <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price2exGST"></span> <br>
                         <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price3exGST"></span> <br>
                         <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price4exGST"></span> <br>
+                        <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
                     </div>
                     <div class="col-md-5">
                         <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
@@ -755,21 +773,31 @@ div p{
             <fieldset>
                 <legend><label class="label label-default sub-label" style="color:#fff;">Product Savings</label></legend>
                 <!-- <span style="font-weight: 700;font-size: 20px;position: absolute;margin: 30% 26%;color: #337ab7;text-align: center;">{{productSavings()}} %</span> -->
-
-                <div id="bigCircle">
+            
+                <div id="bigCircle" ng-hide="productSavings()<=0">
                     <div class="progress-wrapper">
-                        <div class="progress1 ng-cloak" ng-style="getStyle()">{{productSavings()}} <span style="font-size:15px;">%</span></div>
+                        <div class="progress1 ng-cloak" ng-style="getStyle()" >{{productSavings()}} <span style="font-size:15px;">%</span></div>
                         <round-progress max="100" current="productSavings()" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
                         rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
                         animation-delay="0">
-                    </round-progress>
+                        </round-progress>
+                    </div>
                 </div>
-            </div>
+                <div id="bigCircle" ng-if="productSavings()<=0">
+                    <div class="progress-wrapper">
+                        <div class="progress1 ng-cloak" ng-style="getStyle()"  style="color:#ed143d;">{{productSavings()}} <span style="font-size:15px;">%</span></div>
+                        <round-progress max="100" current="productSavingsNegative()" color="#ed143d" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+                        rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+                        animation-delay="0">
+                        </round-progress>
+                    </div>
+                </div>
         </fieldset>
     </div>
 </div> 
 </div>  
 </div>
+                        
 <div class="row row-control" id="productInfo" ng-if="!productInfo && !addProduct.isLinkedExact">
     <div class="col-md-12">
         <div class="col-md-5" style="padding:0px;">
@@ -806,6 +834,7 @@ div p{
         <fieldset style="padding: 15px 15px;" id="productInfo" ng-if="addProduct">
             <legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Main Product Info</label></legend>
             <div class="col-md-6" style="padding: 0px;padding-right: 5px;">
+                <div class="col-md-12" style="padding: 0px;">
                 <label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemCode"></span><br>
                 <label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemDescription"></span><br>
                 <label>Desc2 :</label> 
@@ -819,7 +848,18 @@ div p{
                 <span ng-if="addProduct.description3==null">-</span>
                 </span> <br>
                 <label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.unit"></span><br>
-                <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.gstFlag"></span><br>            
+                <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.gstFlag"></span><br>
+                </div> 
+                <div class="col-md-12" style="padding: 0px;">
+                <label style="color:#337ab7;">Product Savings</label>
+                <uib-progressbar class="progress-striped active" value="getSavingStyle()" type="info" max="110" ng-hide="productSavings()<=0">
+                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
+                </uib-progressbar>
+                <uib-progressbar class="progress-striped active" value="productSavingsNegativeForProgress()" type="danger" max="110" ng-if="productSavings()<=0">
+                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
+                </uib-progressbar>
+                <!-- {{productSavingsNegativeForProgress()}} -->
+                </div>           
             </div>
             <div class="col-md-6" style="padding: 0px;">
             <div class="col-md-12" style="padding: 0px;">
@@ -829,6 +869,7 @@ div p{
                 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price2exGST"></span> <br>
                 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price3exGST"></span> <br>
                 <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br>
+                <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
             </div>
             <div class="col-md-6" style="padding:0px;">
                 <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
@@ -838,12 +879,7 @@ div p{
                 <label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br>
             </div> 
             </div>   
-            <div class="col-md-12" style="padding: 0px;">
-            <label style="color:#337ab7;">Product Savings</label>
-            <uib-progressbar class="progress-striped active" value="getSavingStyle()" type="info" max="110">
-            <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
-            </uib-progressbar>
-            </div>
+          
             </div>
                
         </fieldset>
@@ -856,8 +892,7 @@ div p{
         <fieldset style="padding: 15px 15px;" id="altProductInfo" ng-if="addProduct.altProd">
             <legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Alt Product Info</label></legend>
             <div class="col-md-6" style="padding: 0px;padding-right: 5px;">
-                <!-- <label>Code :</label> <span style=" word-break: break-all;" ng-bind="altProductInfo.altProductCode"></span><br> -->
-                <!-- <label>Name :</label> <span style=" word-break: break-all;" ng-bind="altProductInfo.altProductDesc"></span><br> -->
+                <div class="col-md-12" style="padding: 0px;">
                 <label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemCode"></span><br>
                 <label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemDescription"></span><br>
                 <label>Desc2 :</label> 
@@ -871,7 +906,18 @@ div p{
                 <span ng-if="addProduct.altProd.description3==null">-</span>
                 </span> <br>
                 <label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.unit"></span><br>
-                <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.gstFlag"></span><br>            
+                <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.gstFlag"></span><br>   
+                </div> 
+                <div class="col-md-12" style="padding: 0px;">
+                <label style="color:#337ab7;">Alt Product Savings</label>
+                <uib-progressbar class="progress-striped active" value="getAltSavingStyle()" type="info" max="110" ng-hide="altProductSavings()<=0">
+                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
+                </uib-progressbar>
+                <uib-progressbar class="progress-striped active" value="getNegativeAltSavingStyle()" type="danger" max="110" ng-if="altProductSavings()<=0">
+                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
+                </uib-progressbar>
+                <!-- {{getNegativeAltSavingStyle()}} -->
+                </div>        
             </div>
             <div class="col-md-6" style="padding: 0px;">
             <div class="col-md-12" style="padding: 0px;">
@@ -881,6 +927,7 @@ div p{
                 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price2exGST"></span> <br>
                 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price3exGST"></span> <br>
                 <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br>
+                <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.promoPrice"></span> <br>
             </div>
             <div class="col-md-6" style="padding:0px;">
                 <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
@@ -890,12 +937,7 @@ div p{
                 <label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br>
             </div> 
             </div>   
-            <div class="col-md-12" style="padding: 0px;">
-            <label style="color:#337ab7;">Alt Product Savings</label>
-            <uib-progressbar class="progress-striped active" value="getAltSavingStyle()" type="info" max="110">
-            <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
-            </uib-progressbar>
-            </div>
+            
             </div>
                
         </fieldset>

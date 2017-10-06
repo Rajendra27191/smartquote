@@ -41,16 +41,17 @@ public class AlternateProductDao {
 			e.printStackTrace();
 		}
 	}
-	public boolean saveAlternateProducts(String mainId, String altId, double altDefaultPrice) {
+	public boolean saveAlternateProducts(String mainId, String altId) {
 		boolean isProductCreated = false;
-//		System.out.println("IN saveAlternateProducts");
+		System.out.println("IN saveAlternateProducts");
+		System.out.println("mainID : "+mainId+" altId : "+altId);
 		try {
-			String insertQuery= "INSERT IGNORE INTO alternative_product_master (main_product_id, alternative_product_id,alternative_default_price) "
-					+ " VALUES(?,?,?)";
+			String insertQuery= "INSERT IGNORE INTO alternative_product_master (main_product_id, alternative_product_id) "
+					+ " VALUES(?,?)";
 			pstmt = conn.prepareStatement(insertQuery);
 			pstmt.setString(1,mainId);
 			pstmt.setString(2,altId);
-			pstmt.setDouble(3,altDefaultPrice);
+//			pstmt.setDouble(3,altDefaultPrice);
 			int result=pstmt.executeUpdate();
 //			System.out.println("Result :"+result+" "+pstmt);
 			isProductCreated = true;
@@ -93,7 +94,9 @@ public class AlternateProductDao {
 		+ "b.item_code 'main_product_id', b.item_description 'main_item_desc', "
 		+ "b.avg_cost 'main_avg_cost', b.unit 'main_unit',b.price0exGST 'main_product_price', "
 		+ "c.item_code 'alt_product_id', c.item_description 'alt_item_desc', "
-		+ "c.avg_cost 'alt_avg_cost', c.unit 'alt_unit',c.price0exGST 'alt_product_price' ,a.alternative_default_price "
+		+ "c.avg_cost 'alt_avg_cost', c.unit 'alt_unit',c.price0exGST 'alt_product_price',"
+		+ "c.promo_price 'alt_promo_price' "
+//		+ "a.alternative_default_price "
 		+ "FROM alternative_product_master a, product_master b, product_master c "
 		+ "WHERE a.main_product_id = b.item_code AND a.alternative_product_id = c.item_code;";
 		try {
@@ -113,7 +116,9 @@ public class AlternateProductDao {
 				objBean.getAltProductObj().setAltProductAvgCost(rs.getDouble("alt_avg_cost"));
 				objBean.getAltProductObj().setAltProductUnit(rs.getString("alt_unit"));
 				objBean.getAltProductObj().setAltProductPrice0exGST(rs.getDouble("alt_product_price"));
-				objBean.getAltProductObj().setAltProductDefaultPrice(rs.getDouble("alternative_default_price"));
+				objBean.getAltProductObj().setAltPromoPrice(rs.getDouble("alt_promo_price"));
+//				System.out.println("ALt promo price :"+rs.getDouble("alt_promo_price"));
+//				objBean.getAltProductObj().setAltProductDefaultPrice(rs.getDouble("alternative_default_price"));
 //				altProductObj=new AlternateProductDetailBean();
 //				altProductObj.setAltProductCode(rs.getString("alt_product_id"));
 //				altProductObj.setAltProductDesc(rs.getString("alt_item_desc"));

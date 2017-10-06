@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices', 'DTOptionsBuilder', 'DTColumnDefBuilder',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices, DTOptionsBuilder, DTColumnDefBuilder){
+.controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices', 'DTOptionsBuilder', 'DTColumnDefBuilder','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices, DTOptionsBuilder, DTColumnDefBuilder,$upload){
 console.log('initialise SQManageCustomerController controller');
 $scope.form={};
 $scope.manageCustomer={};
@@ -151,62 +151,92 @@ $scope.editCustomerBtnClicked=function(customer){
 	$scope.isCustomerAddView=true;
 };
 
-// /*=============GET CUSTOMER LIST==================*/
-// $scope.handleGetCustomerListDoneResponse=function(data){
-// if(data){
-// if (data.code) {
-//   if(data.code.toUpperCase()=='SUCCESS'){
-//   $scope.customerList=data.result;
-//   console.log($scope.customerList)
-// }
-// $rootScope.hideSpinner();
-// }
-// }
-// };
+/*===============CUSTOMER LOGO==================*/
+var latestFile;
+$scope.errorMessage=[];
+$scope.upload={};
+$scope.file = {};
+var logoFile;
 
-// var cleanupEventGetCustomerListDone = $scope.$on("GetCustomerListDone", function(event, message){
-// $scope.handleGetCustomerListDoneResponse(message);      
-// });
-
-// var cleanupEventGetCustomerListNotDone = $scope.$on("GetCustomerListNotDone", function(event, message){
-// $rootScope.alertServerError("Server error");
-// $rootScope.hideSpinner();
-// });
-
-// /*===================GET CUSTOMER DETAILS=================*/
-
-// $scope.getCustomerDetails=function(customer){
-// console.log(customer);
-// $rootScope.showSpinner();
-// SQUserHomeServices.GetCustomerDetails(customer.code);
-// };
-
-// $scope.handleGetCustomerDetailsDoneResponse=function(data){
-// if(data){
-// if (data.code) {
-//   if(data.code.toUpperCase()=='SUCCESS'){
-//   	var manageCustomer=data.objResponseBean; 		
-//   	$scope.manageCustomer=manageCustomer;
-//   	$scope.buttonstatus='edit';
-//   	$scope.iscustomerCodeSelected=true;
-//   	if ($scope.manageCustomer.address1!=='') {
-//   		// console.log("collapseDiv");
-//   		$scope.collapseDiv();
-//   	}
-// 	}
-//  $rootScope.hideSpinner();
-// }}
-// };
-
-// var cleanupEventGetCustomerDetailsDone = $scope.$on("GetCustomerDetailsDone", function(event, message){
-// $scope.handleGetCustomerDetailsDoneResponse(message);      
-// });
-
-// var cleanupEventGetCustomerDetailsNotDone = $scope.$on("GetCustomerDetailsNotDone", function(event, message){
-// $rootScope.alertServerError("Server error");
-// $rootScope.hideSpinner();
-// });
-
+$scope.onFileSelect = function($files){
+console.log("onFileSelect");
+console.log($files);
+     for (var i = 0; i < $files.length; i++) {
+      if(($files[i].name.split('.').pop() == 'jpg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+       console.log("valid file");
+       latestFile = $files[i];
+       $scope.file=latestFile
+       console.log("File",latestFile.size+" bytes");
+       console.log("File",(latestFile.size / 1024)+" kb");
+       console.log("")
+	      if ((latestFile.size / 1024) <=50) {//6144
+		  $scope.invalidFileSize=false;		      	
+	      logoFile=latestFile;
+	      }else{
+			console.log("invalid file size");
+			$scope.invalidFileSize=true;
+			// $rootScope.alertError("File size must ne less than 15KB"); 
+	      }
+      }else{
+       console.log("invalid file");
+       $scope.isInvalid=true;
+       $timeout(function() {
+       $scope.isInvalid=false;
+       }, 3000);
+       // console.log('Please upload valid excel file.');
+       $scope.invalidFile=true;
+       latestFile = {};
+       document.getElementById('fileTypeExcelHost').value = '';
+       }
+   }
+ };
+$scope.createCustomer = function(){
+  var uploadUrl="/smartquote/createCustomer";
+  var fd= new FormData();
+  if(logoFile){
+  console.log(logoFile)
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('customerDetails',$scope.jsonToSaveCustomer());
+  $http.post(uploadUrl, fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+  		if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('CreateCustomerDone', data); 
+        }
+  })
+  .error(function(data, status, header, config){
+  	 $rootScope.$broadcast('CreateCustomerNotDone', data);
+   });
+};
+$scope.updateCustomer = function(){
+  var uploadUrl="/smartquote/updateCustomerDetails";
+  var fd= new FormData();
+  if(logoFile){
+  console.log(logoFile)
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('customerDetails',$scope.jsonToSaveCustomer());
+  $http.post(uploadUrl, fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+    if (data.code=="sessionTimeOut") {
+    $rootScope.$broadcast('SessionTimeOut', data);   
+    }else{
+    $rootScope.$broadcast('UpdateCustomerDone', data); 
+    }
+  }).error(function(data, status, header, config){
+    $rootScope.$broadcast('UpdateCustomerNotDone', data);
+  });
+}
 /*===============CREATE CUSTOMER==================*/
 $scope.jsonToSaveCustomer=function(){
 	var customer={
@@ -225,12 +255,14 @@ $scope.jsonToSaveCustomer=function(){
 		"avgPurchase":$scope.manageCustomer.avgPurchase,
 		"industryType":$scope.manageCustomer.industryType
 	};
+	if ($scope.buttonstatus=='edit') {
+		customer.custId=$scope.manageCustomer.custId;
+	};
 return JSON.stringify(customer);
 };
 $scope.saveCustomer=function(){
 if($scope.form.manageCustomer.$valid){
 	console.log("valid");
-
 	if ($scope.buttonstatus=='add'){
 	var customerExist=false;
 	$scope.customerList.forEach(function(element,index){
@@ -242,14 +274,16 @@ if($scope.form.manageCustomer.$valid){
 	 	$rootScope.alertError("Customer code already exist");
 	}else{
 		$rootScope.showSpinner();
-		SQUserHomeServices.CreateCustomer($scope.jsonToSaveCustomer());
+		// SQUserHomeServices.CreateCustomer($scope.jsonToSaveCustomer());
+		$scope.createCustomer();
 	}	
 	}else if($scope.buttonstatus=='edit'){
 		$rootScope.showSpinner();
-		SQUserHomeServices.UpdateCustomer($scope.jsonToSaveCustomer());
+		console.log($scope.jsonToSaveCustomer());
+		$scope.updateCustomer();
+		// SQUserHomeServices.UpdateCustomer($scope.jsonToSaveCustomer());
 	}
-	// console.log($scope.jsonToSaveCustomer());
-	
+	// console.log($scope.jsonToSaveCustomer());	
 }else{
 	$scope.form.manageCustomer.submitted=true;
 }
@@ -296,7 +330,6 @@ if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// $rootScope.alertSuccess("Successfully updated customer");
-  	
 	swal({
 	  title: "Success",
 	  text: "Successfully updated customer!",
@@ -309,9 +342,6 @@ if (data.code) {
 	$scope.init();
 	$scope.initCustomer();
 	});
-
-  	
-	
 	}else{
 		$rootScope.alertError(data.message);
 	}
@@ -388,10 +418,6 @@ $rootScope.hideSpinner();
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventGetCustomerListViewDone();
 	cleanupEventGetCustomerListViewNotDone();
-	// cleanupEventGetCustomerListDone();
-	// cleanupEventGetCustomerListNotDone();
-	// cleanupEventGetCustomerDetailsDone();
-	// cleanupEventGetCustomerDetailsNotDone();
 	cleanupEventCreateCustomerDone();
 	cleanupEventCreateCustomerNotDone();
 	cleanupEventUpdateCustomerDone();
@@ -401,4 +427,25 @@ $scope.$on('$destroy', function(event, message) {
 
 });
 
-}]);
+}])
+
+.directive("fileinput", [function() {
+    return {
+      scope: {
+        fileinput: "=",
+        filepreview: "="
+      },
+      link: function(scope, element, attributes) {
+        element.bind("change", function(changeEvent) {
+          scope.fileinput = changeEvent.target.files[0];
+          var reader = new FileReader();
+          reader.onload = function(loadEvent) {
+            scope.$apply(function() {
+              scope.filepreview = loadEvent.target.result;
+            });
+          }
+          reader.readAsDataURL(scope.fileinput);
+        });
+      }
+    }
+  }]);

@@ -39,7 +39,7 @@ public class ProductBean {
 	private int altForQuoteDetailId;
 	private ArrayList<ProductBean> alternativeProductList;
 	private ProductBean altProd;
-	private double altDefaultPrice;
+//	private double altDefaultPrice;
 	private double promoPrice;
 
 	public int getQuoteId() {
@@ -344,13 +344,13 @@ public class ProductBean {
 		this.quoteDetailId = quoteDetailId;
 	}
 
-	public double getAltDefaultPrice() {
-		return altDefaultPrice;
-	}
-
-	public void setAltDefaultPrice(double altDefaultPrice) {
-		this.altDefaultPrice = altDefaultPrice;
-	}
+//	public double getAltDefaultPrice() {
+//		return altDefaultPrice;
+//	}
+//
+//	public void setAltDefaultPrice(double altDefaultPrice) {
+//		this.altDefaultPrice = altDefaultPrice;
+//	}
 
 	public double getPromoPrice() {
 		return promoPrice;

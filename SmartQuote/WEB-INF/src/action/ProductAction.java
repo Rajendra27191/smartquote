@@ -3,7 +3,11 @@ package action;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,10 +17,12 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
+import pojo.ProductCodeUpdateBean;
 import pojo.ProductGroupBean;
 import responseBeans.AlternativeProductResponseBean;
 import responseBeans.ProductDetailResponseList;
@@ -217,9 +223,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	}
 
 	public String updateProductDetails() {
+//		System.out.println("updateProductDetails init :::"+df.format(dateobj));
 		String productDetails = request.getParameter("productDetails");
-		// productDetails =
-		// "{\"productCode\":\"PROD342PEN\",\"productName\":\"BALL-PEN\",\"productGroupId\":1,\"unit\":\"Piece\",\"selligPrice1\":\"15\",\"selligPrice2\":\"16\",\"selligPrice3\":\"17\",\"selligPrice4\":\"18\",\"cost\":\"16\",\"gstFlag\":\"Y\",\"createdBy\":\"0\"}";
 		ProductBean objBean = new ProductBean();
 		objBean = new Gson().fromJson(productDetails, ProductBean.class);
 		boolean isProductUpdated = false;
@@ -316,7 +321,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					if (isFileUploaded) {
 						objEmptyResponse.setCode("success");
 						objEmptyResponse.setMessage(getText("product_file_uploaded"));
-						CommonLoadAction.createProductFile(projectPath);
+//						CommonLoadAction.createProductFile(projectPath);
 					} else {
 						objEmptyResponse.setCode("error");
 						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
@@ -329,26 +334,28 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				}
 			}
 			if (objEmptyResponse.getCode() == "success") {
+				
+				CommonLoadAction.createProductFile(projectPath);
+				
 				File fileToDelete = new File(projectPath + "ExcelFiles");
 				ExcelFileSplit.delete(fileToDelete);
-
 				ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList<ProductGroupBean>();
 				distinctProductGroupList = objProductDao.getDistinctProductGroupList();
-				// objProductDao.commit();
-				// objProductDao.closeAll();
+				
 				System.out.println("Distinct Product Group List Size :" + distinctProductGroupList.size());
 				if (distinctProductGroupList.size() > 0) {
 					ProductGroupDao objProductGroupDao = new ProductGroupDao();
 					boolean isNewProductGroupsUploaded = objProductGroupDao.insertProductGroupByFile(distinctProductGroupList);
 					if (isNewProductGroupsUploaded) {
 						System.out.println("New Product Group inserted successfully...");
-						objProductDao.closeAll();
 					} else {
 						System.out.println("New Product Group insertion unsuccessfully...");
 					}
 				}
+				objProductDao.commit();
+				objProductDao.closeAll();	 
 			}
-
+			
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -374,7 +381,120 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		return SUCCESS;
 	}
+	
+	public String uploadProductPromoPriceByXlsx() {
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+		GlsFileReader objFileReader = new test.FileReader();
 
+		try {
+			System.out.println("Product File With Promo Price: " + productFile);
+			String filename = "dataFile.xlsx";
+			File fileToCreate = new File(filename);
+			FileUtils.copyFile(productFile, fileToCreate);
+			JSONArray fileString = objFileReader.readFile(filename);
+			System.out.println("File Content: " + fileString);
+			
+			ArrayList<ProductBean> productList = null;
+			ProductDao objProductDao = null;
+			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
+			}.getType());
+			System.out.println("Total Products: " + productList.size());
+			objProductDao= new ProductDao();
+			boolean isFileUploaded=false;
+			isFileUploaded = objProductDao.uploadProductPromoPrice(productList);
+			if (isFileUploaded) {
+				objEmptyResponse.setCode("success");
+				objEmptyResponse.setMessage(getText("promo_price_updated"));
+			} else {
+				objEmptyResponse.setCode("error");
+				objEmptyResponse.setMessage(getText("promo_price_not_updated"));
+			}
+		} catch (FileNotFoundException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("product_file_not_found"));
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_file_format"));
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_file_parse"));
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_numeric_cell"));
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done");
+
+		return SUCCESS;
+	};
+
+	public String uploadNewProductCodeByXlsx() {
+//		System.out.println("uploadNewProductCodeByXlsx :::");
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+		GlsFileReader objFileReader = new test.FileReader();
+		try {
+			System.out.println("Product File With Promo Price: " + productFile);
+			String filename = "dataFile.xlsx";
+			File fileToCreate = new File(filename);
+			FileUtils.copyFile(productFile, fileToCreate);
+			JSONArray fileString = objFileReader.readFile(filename);
+			System.out.println("File Content: " + fileString);
+			ArrayList<ProductCodeUpdateBean> productCodeList = null;
+			ProductDao objProductDao = null;
+			JSONObject jsonObject=fileString.getJSONObject(0);
+			if (jsonObject.has("newItemCode") && jsonObject.has("oldItemCode")) {
+				productCodeList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductCodeUpdateBean>>() {
+				}.getType());
+				objProductDao=new ProductDao();
+				boolean isFileUploaded=false;
+				isFileUploaded=objProductDao.updateProductCode(productCodeList);
+				if (isFileUploaded) {
+					objEmptyResponse.setCode("success");
+					objEmptyResponse.setMessage(getText("product_code_updated"));
+					String projectPath = request.getSession().getServletContext().getRealPath("/");
+					CommonLoadAction.createProductFile(projectPath);
+				} else {
+					objEmptyResponse.setCode("error");
+					objEmptyResponse.setMessage(getText("product_code_not_updated"));
+				}
+			}else{
+				objEmptyResponse.setCode("error");
+				objEmptyResponse.setMessage("Column names are invalid. Column names should be 'Old Item Code' & 'New Item Code'");
+			}
+			
+		}catch (FileNotFoundException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("product_file_not_found"));
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_file_format"));
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_file_parse"));
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("error_numeric_cell"));
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done");
+		return SUCCESS;
+	}
 	public String getProductListView() {
 		try {
 			ProductDao objDao = new ProductDao();

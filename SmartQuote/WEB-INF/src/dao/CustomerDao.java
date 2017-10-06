@@ -91,13 +91,15 @@ public class CustomerDao {
 		return isRegisterdUser;
 	}
 
-	public boolean saveCustomer(CustomerBean objBean) {
+	public int saveCustomer(CustomerBean objBean) {
 		boolean isUserCreated = false;
+		int custId=0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO customer_master (customer_code, customer_name, state, postal_code, "
 					+ " add1, add2, phone, contact_person, fax_no, email, total_staff, avg_purchase, industry_type,suburb) "
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement pstmt = conn.prepareStatement(createUserQuery);
+			PreparedStatement pstmt=null;
+			pstmt= conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, objBean.getCustomerCode());
 			pstmt.setString(2, objBean.getCustomerName());
 			pstmt.setString(3, objBean.getState());
@@ -113,6 +115,9 @@ public class CustomerDao {
 			pstmt.setString(13, objBean.getIndustryType());
 			pstmt.setString(14, objBean.getSuburb());
 			pstmt.executeUpdate();
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next())
+				custId = rs.getInt(1);
 			isUserCreated = true;
 		} catch (Exception e) {
 			try {
@@ -122,12 +127,12 @@ public class CustomerDao {
 			}
 			e.printStackTrace();
 		}
-		return isUserCreated;
+		return custId;
 	}
 
 	public CustomerBean getCustomerDetails(String customerCode) {
 		CustomerBean objBean = null;
-		String getUserGroups = "SELECT customer_code, customer_name, state, postal_code, add1, add2, phone, contact_person, "
+		String getUserGroups = "SELECT cust_id, customer_code, customer_name, state, postal_code, add1, add2, phone, contact_person, "
 				+ " fax_no, email, total_staff, avg_purchase, industry_type "
 				+ " FROM customer_master WHERE customer_code = ?";
 		try {
@@ -137,6 +142,7 @@ public class CustomerDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objBean = new CustomerBean();
+				objBean.setCustId(rs.getInt("cust_id"));
 				objBean.setCustomerCode(rs.getString("customer_code"));
 				objBean.setCustomerName(rs.getString("customer_name"));
 				objBean.setState(rs.getString("state"));
@@ -161,6 +167,7 @@ public class CustomerDao {
 		}
 		return objBean;
 	}
+
 
 	public boolean updateCustomer(CustomerBean objBean) {
 		boolean isCustomerUpdated = false;
@@ -220,7 +227,7 @@ public class CustomerDao {
 	public ArrayList<CustomerBean> getAllCustomerDetails() {
 		ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
 		CustomerBean objBean = null;
-		String getUserGroups = "SELECT customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
+		String getUserGroups = "SELECT cust_id, customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
 				+ " ifnull(postal_code, '') postal_code, ifnull(add1, '') add1, ifnull(add2, '') add2, ifnull(phone, '') phone, "
 				+ " ifnull(contact_person, '') contact_person, ifnull(fax_no, '') fax_no, ifnull(email, '') email, "
 				+ " ifnull(total_staff, '0') total_staff, ifnull(avg_purchase, '0.0') avg_purchase, ifnull(industry_type, '') industry_type, suburb "
@@ -231,6 +238,7 @@ public class CustomerDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objBean = new CustomerBean();
+				objBean.setCustId(rs.getInt("cust_id"));
 				objBean.setCustomerCode(rs.getString("customer_code"));
 				objBean.setCustomerName(rs.getString("customer_name"));
 				objBean.setState(rs.getString("state"));

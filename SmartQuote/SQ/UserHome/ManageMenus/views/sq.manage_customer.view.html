@@ -25,17 +25,17 @@ width: 62.666667%;
 <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="table row-border hover table-responsive" id="customerDataTable">
                 <thead class="table-header">
                     <tr>
-		                <th>Cust Code</th>
-		                <th>Cust Name</th>
-		                <th>Phone No</th>
-		                <th>Cont Person</th>
+		                <th style="width:10%;">Cust Code</th>
+		                <th style="width:10%;">Cust Name</th>
+		                <th style="width:10%;">Phone No</th>
+		                <th style="width:10%;">Contact Person</th>
 		                <!-- <th>Address</th> -->
-		                <th>Fax</th>
-		                <th>Email</th>
-		                <th>Total Staff</th>
-		                <th>Monthly Avg Purchs</th>
-		                <th>Industry Type</th>
-		                <th>Action</th>
+		                <th style="width:10%;">Fax</th>
+		                <th style="width:10%;">Email</th>
+		                <th style="width:10%;">Total Staff</th>
+		                <th style="width:10%;">Monthly Avg Purchs</th>
+		                <th style="width:10%;">Industry Type</th>
+		                <th style="width:5%;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,6 +221,20 @@ width: 62.666667%;
 	<span ng-show="((form.manageCustomer.industryType.$dirty && form.manageCustomer.industryType.$invalid) || (form.manageCustomer.industryType.$invalid && form.manageCustomer.submitted))" class="invalid-control">
 	<small>*Please enter monthly industry type.</small>
 	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Customer Logo</label> </div>
+	<div class="col-md-8">
+	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview">
+	<span class="invalid-control">
+	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 15KB.</small>
+	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.gif).</small>
+	</span>
+	<!-- <div ng-hide="invalidFileSize || isInvalid">
+ 	<img ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview" style="height: 50px;width:50px;"/>	
+	</div> -->
 	</div>
 	</div>
 

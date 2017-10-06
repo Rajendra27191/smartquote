@@ -13,6 +13,7 @@ private double productSavings;
 private String isAlternative;
 private int quoteDetailId;
 private int altForQuoteDetailId;
+private String gstExempt;
 
 public int getAltForQuoteDetailId() {
 	return altForQuoteDetailId;
@@ -92,6 +93,12 @@ public String toString() {
 			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
 			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
 			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + "]";
+}
+public String getGstExempt() {
+	return gstExempt;
+}
+public void setGstExempt(String gstExempt) {
+	this.gstExempt = gstExempt;
 }
 
 

@@ -288,6 +288,22 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="uploadProductPromoPriceByXlsx" class="action.ProductAction"
+			method="uploadProductPromoPriceByXlsx">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="uploadNewProductCodeByXlsx" class="action.ProductAction"
+			method="uploadNewProductCodeByXlsx">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="getCustomerListView" class="action.CustomerAction"
 			method="getCustomerListView">

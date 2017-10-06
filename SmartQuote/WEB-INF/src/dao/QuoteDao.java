@@ -139,8 +139,11 @@ public class QuoteDao {
 	@SuppressWarnings("static-access")
 	public int saveQuote(QuoteBean quoteBean, String userId,String status) {
 		int quoteId = 0;
+		java.text.SimpleDateFormat sdf =  new java.text.SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(quoteBean.getCreatedDate());
+		System.out.println("QuoteCtreatedDate: "+currentTime);
 		String saveData = " insert into create_quote (custcode,quote_attn,prices_gst_include,notes,created_date,user_id,current_supplier_id,compete_quote,sales_person_id,status) "
-				+ " values(?,?,?,?,now(),?,?,?,?,?)";
+				+ " values(?,?,?,?,?,?,?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
 
@@ -149,19 +152,19 @@ public class QuoteDao {
 			if (quoteBean.getPricesGstInclude())
 				pstmt.setString(3, "Yes");
 			else
-				pstmt.setString(3, "No");
+			pstmt.setString(3, "No");
 			pstmt.setString(4, quoteBean.getNotes());
-			pstmt.setString(5, userId);
-			pstmt.setInt(6, quoteBean.getCurrentSupplierId());
-			pstmt.setString(7, quoteBean.getCompeteQuote());
-			pstmt.setInt(8, quoteBean.getSalesPersonId());
-			pstmt.setString(9,status);
+			pstmt.setString(5, currentTime);
+			pstmt.setString(6, userId);
+			pstmt.setInt(7, quoteBean.getCurrentSupplierId());
+			pstmt.setString(8, quoteBean.getCompeteQuote());
+			pstmt.setInt(9, quoteBean.getSalesPersonId());
+			pstmt.setString(10,status);
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
 				quoteId = rs.getInt(1);
 			System.out.println("Last Inserted Id = " + quoteId);
-
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -173,18 +176,18 @@ public class QuoteDao {
 		return quoteId;
 	}
 
+	@SuppressWarnings("static-access")
 	public int saveQuoteDetails(ProductBean objProductBean,
 			int quoteId) {
 		System.out.println("PRODUCTBEAN>>>");
 		System.out.println(objProductBean);
-		boolean quoteSaved = false;
 		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
 				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for) "
 				+ " values(?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
-			pstmt = conn.prepareStatement(saveData,pstmt.RETURN_GENERATED_KEYS);
-//			for (int i = 0; i < productList.size(); i++) {
+			pstmt = conn
+					.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
 				pstmt.setInt(1, quoteId);
 				pstmt.setString(2, objProductBean.getItemCode());
 				pstmt.setInt(3, objProductBean.getItemQty());
@@ -197,16 +200,11 @@ public class QuoteDao {
 				pstmt.setDouble(10, objProductBean.getSavings());
 				pstmt.setString(11, objProductBean.getIsAlternative());
 				pstmt.setInt(12, objProductBean.getQuoteDetailId());
-//				pstmt.addBatch();
-//			}
-//			pstmt.executeBatch();
-			pstmt.executeUpdate();
-			rs = pstmt.getGeneratedKeys();
-			
-			if (rs.next())
-				quoteDetailId = rs.getInt(1);
-			System.out.println("Last Inserted quote detail Id = " + quoteDetailId);
-			quoteSaved = true;
+				pstmt.executeUpdate();
+				rs = pstmt.getGeneratedKeys();
+				if (rs.next())
+					quoteDetailId = rs.getInt(1);
+				System.out.println("Last Inserted quote detail Id = " + quoteDetailId);
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -215,7 +213,6 @@ public class QuoteDao {
 			}
 			e.printStackTrace();
 		}
-//		return quoteSaved;
 		return quoteDetailId;
 	}
 
@@ -258,8 +255,8 @@ public class QuoteDao {
 					objQuoteBean.setPricesGstInclude(false);
 				objQuoteBean.setNotes(rs.getString("notes"));
 				objQuoteBean.setUserId(rs.getInt("user_id"));
-				objQuoteBean.setCreatedDate(rs.getString("created_date"));
-				objQuoteBean.setModifiedDate(rs.getString("modified_date"));
+				objQuoteBean.setCreatedDate(rs.getDate("created_date"));
+				objQuoteBean.setModifiedDate(rs.getDate("modified_date"));
 				objQuoteBean.setCurrentSupplierId(rs
 						.getInt("current_supplier_id"));
 				objQuoteBean.setCurrentSupplierName(rs
@@ -493,12 +490,12 @@ public class QuoteDao {
 
 	public boolean updateQuote(QuoteBean quoteBean,String status) {
 		boolean isQuoteUpdated = false;
-		/*String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
-				+ " notes = ?, created_date = now(), user_id = ?, current_supplier_id = ?, compete_quote = ?, "
-				+ " sales_person_id = ?, status = 'UPDATED' WHERE quote_id = ?";*/
+		java.text.SimpleDateFormat sdf =  new java.text.SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+		String currentTime = sdf.format(quoteBean.getModifiedDate());
+		System.out.println("QuoteModifiedDate : "+currentTime);
 		String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
 				+ " notes = ?, user_id = ?, current_supplier_id = ?, compete_quote = ?, "
-				+ " sales_person_id = ?, status = ?,modified_date = now() WHERE quote_id = ?";
+				+ " sales_person_id = ?, status = ?,modified_date = ? WHERE quote_id = ?";
 		try {
 			pstmt = conn.prepareStatement(saveData);
 
@@ -514,7 +511,8 @@ public class QuoteDao {
 			pstmt.setString(7, quoteBean.getCompeteQuote());
 			pstmt.setInt(8, quoteBean.getSalesPersonId());
 			pstmt.setString(9,status);
-			pstmt.setInt(10, quoteBean.getQuoteId());
+			pstmt.setString(10, currentTime);
+			pstmt.setInt(11, quoteBean.getQuoteId());
 			System.out.println("Update Quote: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isQuoteUpdated = true;

@@ -173,7 +173,7 @@ public class ExcelFileSplit implements GlsFileReader {
 				}
 
 				rows.put(jRow);
-				if (rowCount == 5000) {
+				if (rowCount == 10000) {
 					if(!file.exists()){	
 						System.out.println("Directory is created!");
 						file.mkdir();

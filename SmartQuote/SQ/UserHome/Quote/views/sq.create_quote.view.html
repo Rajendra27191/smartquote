@@ -82,6 +82,9 @@ padding: 0px;
 .col-md-8 {
 padding-left:0px; 
 }
+.input-group-btn .btn {
+    padding: 3px 12px;
+  }
 </style>
 <div class="container" style="padding-right: 25px;padding-left: 25px;">
  <!-- <shortcut></shortcut> -->
@@ -90,8 +93,16 @@ padding-left:0px;
 </div>
 <div class="row" ng-if="showEditQuoteView">
 		<div class="col-md-12" style="margin-bottom: 5px;">
+		<div class="col-md-2" style="padding:0px;">
 		<button ng-click="cancelCreateQuote()" class="btn btn-default" style="border-radius: 0px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</button>
-		<label class="sub-label" style="text-transform: uppercase;float: right;">Quote Id : {{customerQuote.quoteId}} &nbsp;&nbsp;</label>
+		</div>
+		<div class="col-md-8" style="padding:0px;"></div>
+		<div class="col-md-2" style="padding:0px;">
+		<span style="font-weight: 600;">
+		<p class="sub-label">Quote Id : {{customerQuote.quoteId}}</p>
+		<p class="sub-label">Created Date : {{getFormattedDate(customerQuote.createdDate)}}</p>
+		</span>	
+		</div>
 		</div>
 </div>
 <div class="row">
@@ -289,7 +300,25 @@ padding-left:0px;
 			<small>*Please enter quote attn.</small>
 			</span>		
 			</div>
- 		 </div>
+ 		 	</div>
+
+ 		 	<div class="col-md-12 row-control" style="padding: 0px;">
+			<div class="col-md-4"><label class="sub-label">Date</label></div>
+			<div class="col-md-8">
+			<p class="input-group" id="createdDate" ng-if="!showEditQuoteView">
+	          <input type="text" name="createdDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.createdDate" ng-change="quoteDateChanged(customerQuote.createdDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <span class="input-group-btn">
+	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          </span>
+		    </p>
+		    <p class="input-group" id="modefiedDate" ng-if="showEditQuoteView">
+	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="quoteDateChanged(customerQuote.modefiedDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <span class="input-group-btn">
+	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          </span>
+		    </p>
+			</div>
+ 			</div>
  	</div>
  </div>
 

@@ -42,13 +42,13 @@
         <tr>
             	<th style="width: 10%;">Product Code</th>
 				<th style="width: 15%;">Description</th>
-				<th style="width: 10%;">Cost</th>
+				<th style="width: 10%;text-align: right;padding-right: 25px;">Cost</th>
 				<th style="width: 5%;">Unit</th>
 				<th style="width: 15%;">Alt Product Code</th>
 				<th style="width: 15%;">Alt Description</th>
-				<th style="width: 10%;">Alt Cost</th>
+				<th style="width: 10%;text-align: right;padding-right: 25px;">Alt Cost</th>
 				<th style="width: 5%;">Alt Unit</th>
-				<th style="width: 10%;">Default Price</th>
+				<th style="width: 10%;text-align: right;padding-right: 25px;">Promo Price</th>
 				<th style="width: 5%;"></th>
         </tr>
     </thead>
@@ -60,14 +60,15 @@
 				<span data-ng-bind="altProduct.mainProductDesc"></span>
 				<!-- <div class="col-md-12" ng-show="editing[$index]">hiii</div>	 -->
 				</td>
-				<td><span data-ng-bind="altProduct.mainProductAvgCost"></span></td>
+				<td style="text-align: right;padding-right: 25px;"><span data-ng-bind="altProduct.mainProductAvgCost"></span></td>
 				<td><span data-ng-bind="altProduct.mainProductUnit"></span></td>
 
 				<td><span data-ng-bind="altProduct.altProductObj.altProductCode"></span></td>
 				<td><span data-ng-bind="altProduct.altProductObj.altProductDesc"></span></td>
-				<td><span data-ng-bind="altProduct.altProductObj.altProductAvgCost"></span></td>
+				<td style="text-align: right;padding-right: 25px;"><span data-ng-bind="altProduct.altProductObj.altProductAvgCost"></span></td>
 				<td><span data-ng-bind="altProduct.altProductObj.altProductUnit"></span></td>
-				<td><span data-ng-bind="altProduct.altProductObj.altProductDefaultPrice"></span></td>
+				<!-- <td><span data-ng-bind="altProduct.altProductObj.altProductDefaultPrice"></span></td> -->
+				<td style="text-align: right;padding-right: 25px;"><span data-ng-bind="altProduct.altProductObj.altPromoPrice"></span></td>
 			
 				<td>
 				<span style="cursor: pointer;margin: 0px 5x; float: left;" ng-click="editAlternateProductBtnClicked($index,altProduct)" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>		
@@ -135,16 +136,16 @@
           		      <input type="radio" ng-click="setMainProduct(item)" ng-checked="item.isMainProduct" style="height: 20px;width: 17px;vertical-align: middle;" ng-disabled="buttonstatus=='edit'">
 					</center>
  					</td>
-					<td>
-					<div ng-if="!item.isMainProduct">
+					<td style="text-align: right;"> 
+					{{item.promoPrice}}	
+					<!-- <div ng-if="!item.isMainProduct">
 					<input id="price" type="number" class = 'form-control' name="defaultPrice" ng-model="item.defaultPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="item.isMainProduct" ng-required="!item.isMainProduct" style="width: 100px;float: left;" ng-min="item.avgcost"> 
-					<!-- <small class="invalid-control" ng-show="productForm.defaultPrice.$invalid">*enter default price</small> -->
 					<span ng-show="((productForm.defaultPrice.$dirty && productForm.defaultPrice.$invalid) 
 					|| (productForm.defaultPrice.$invalid && form.edit.submitted))" class="invalid-control" style="word-break: break-word;">
 					<small ng-show="productForm.defaultPrice.$error.required"><i class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Enter default price." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;font-size: 14px;margin: 5px;"></i></small>
 					<small ng-show="productForm.defaultPrice.$error.min"><i class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Price should be greater or equal to cost." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;font-size: 14px;margin: 5px;"></i></small>
 					</span>
-					</div>
+					</div> -->
 					</td>
 					<td>
 					<center ng-hide="item.isMainProduct&&buttonstatus=='edit'">

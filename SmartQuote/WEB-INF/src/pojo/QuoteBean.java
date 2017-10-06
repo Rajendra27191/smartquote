@@ -1,6 +1,7 @@
 package pojo;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class QuoteBean {
 	private int quoteId;
@@ -22,10 +23,12 @@ public class QuoteBean {
 	private int currentSupplierId;
 	private int salesPersonId;
 	private int userId;
-	private String createdDate;
-	private String modifiedDate;
+
+	private Date createdDate;
+	private Date modifiedDate;
+
 	private String status;
-	private ArrayList<CommentBean> commentList;	
+	private ArrayList<CommentBean> commentList;
 	private ArrayList<KeyValuePairBean> termConditionList;
 	private ArrayList<KeyValuePairBean> serviceList;
 	private boolean saveWithAlternative;
@@ -37,22 +40,6 @@ public class QuoteBean {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getModifiedDate() {
-		return modifiedDate;
-	}
-
-	public void setModifiedDate(String modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public String getCreatedDate() {
-		return createdDate;
-	}
-
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
 	}
 
 	public int getUserId() {
@@ -247,18 +234,20 @@ public class QuoteBean {
 		this.alternativeArray = alternativeArray;
 	}
 
-	@Override
-	public String toString() {
-		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
-				+ email + ", faxNo=" + faxNo + ", phone=" + phone + ", quoteAttn=" + quoteAttn + ", isNewCustomer=" + isNewCustomer
-				+ ", monthlyAvgPurchase=" + monthlyAvgPurchase + ", notes=" + notes + ", pricesGstInclude=" + pricesGstInclude
-				+ ", productList=" + productList + ", currentSupplierName=" + currentSupplierName + ", competeQuote=" + competeQuote
-				+ ", salesPerson=" + salesPerson + ", currentSupplierId=" + currentSupplierId + ", salesPersonId=" + salesPersonId
-				+ ", userId=" + userId + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", status=" + status
-				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList
-				+ ", saveWithAlternative=" + saveWithAlternative + ", alternativeArray=" + alternativeArray + "]";
+	public Date getCreatedDate() {
+		return createdDate;
 	}
-	
-	
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 
 }

@@ -3,9 +3,10 @@ package action;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.ArrayList;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
+import pojo.KeyValuePairBean;
 import pojo.QuoteBean;
 
 import com.google.gson.Gson;
@@ -72,7 +73,7 @@ public class CommonLoadAction extends ActionSupport {
 			objBean.setEmail(objQuoteBean.getEmail());
 			objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
 			CustomerDao objDao1 = new CustomerDao();
-			boolean isCustomerCreated = objDao1.saveCustomer(objBean);
+			int isCustomerCreated = objDao1.saveCustomer(objBean);
 			System.out.println("isCustomerCreated : " + isCustomerCreated);
 			objDao1.commit();
 			objDao1.closeAll();
@@ -138,7 +139,7 @@ public class CommonLoadAction extends ActionSupport {
 			objBean.setEmail(objQuoteBean.getEmail());
 			objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
 			CustomerDao objDao1 = new CustomerDao();
-			boolean isCustomerCreated = objDao1.saveCustomer(objBean);
+			int isCustomerCreated = objDao1.saveCustomer(objBean);
 			System.out.println("isCustomerCreated: " + isCustomerCreated);
 			objDao1.commit();
 			objDao1.closeAll();
@@ -192,7 +193,7 @@ public class CommonLoadAction extends ActionSupport {
 	}
 
 	public static void createProductFile(String projectPath) {
-
+//		System.out.println("CommonLoadAction createProductFile init :::");
 		File file = new File(projectPath + "/products.json");
 		if (!file.exists()) {
 			try {
@@ -206,14 +207,14 @@ public class CommonLoadAction extends ActionSupport {
 				System.out.println("File deleted");
 				file.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		try {
 			FileWriter fw = new FileWriter(file);
 			ProductDao productDao = new ProductDao();
-			fw.write(new Gson().toJson(productDao.getProductList("")));
+			ArrayList<KeyValuePairBean> obj = productDao.getProductList("");
+			fw.write(new Gson().toJson(obj));
 			fw.close();
 			System.out.println("File created");
 		} catch (IOException e) {

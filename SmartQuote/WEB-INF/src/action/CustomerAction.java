@@ -1,9 +1,12 @@
 package action;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.CustomerBean;
@@ -26,7 +29,9 @@ public class CustomerAction extends ActionSupport implements
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private CustomerDetailsResponseBean customerDetailsResponse = new CustomerDetailsResponseBean();
 	private CustomerDetailResponseList customerDetailResponseList = new CustomerDetailResponseList();
-
+	
+	public File logoFile;
+	
 	public UserGroupResponse getData() {
 		return data;
 	}
@@ -78,25 +83,43 @@ public class CustomerAction extends ActionSupport implements
 		}
 		return SUCCESS;
 	}
-
+	public boolean createLogo(String imageName,File logoImage){
+		File fileToCreate = new File(getText("customer_logo_folder_path")+imageName);
+//		File file = new File(getText("customer_logo_folder_path"));
+		try {
+			FileUtils.copyFile(logoImage, fileToCreate);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 	public String createCustomer() {
 		String customerDetails = request.getParameter("customerDetails");
-		// customerDetails =
-		// "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		System.out.println("customerDetails ::: "+customerDetails);
+		System.out.println("Logo file ::: " + logoFile);
 		CustomerBean objBean = new CustomerBean();
 		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerCreated = false, isCustomerExist = false;
-
+		
 		CustomerDao objDao = new CustomerDao();
 		isCustomerExist = objDao.isCustomerExist(objBean.getCustomerCode());
 		objDao.commit();
 		objDao.closeAll();
+		int custId=0;
 		if (!isCustomerExist) {
 			CustomerDao objDao1 = new CustomerDao();
-			isCustomerCreated = objDao1.saveCustomer(objBean);
+			custId = objDao1.saveCustomer(objBean);
 			objDao1.commit();
 			objDao1.closeAll();
-			if (isCustomerCreated) {
+			if (custId>0){
+			if (logoFile!=null) {
+//				System.out.println(logoFile.);
+				String filename = "CustId_" + custId + ".png";
+				boolean isLogoSaved=createLogo(filename, logoFile);
+				System.out.println("LOGO saved ::: "+filename);
+			}
 				objEmptyResponse.setCode("success");
 				objEmptyResponse.setMessage(getText("customer_created"));
 			} else {
@@ -136,8 +159,9 @@ public class CustomerAction extends ActionSupport implements
 		objEmptyResponse.setMessage(getText("error_creating_user_group"));
 
 		String customerDetails = request.getParameter("customerDetails");
-		// customerDetails =
-		// "{\"customerCode\":\"SHR6799AUN\",\"customerName\":\"Shrujan Systems PVT. LTD.\",\"state\":\"MH\",\"postalCode\":\"411007\",\"address1\":\"Aundh\",\"address2\":\"Aundh\",\"phone\":\"6523489\",\"contactPerson\":\"Divyesh Shah\",\"fax\":\"\",\"email\":\"divyesh@giantleapsystems.com\",\"totalStaff\":\"36\",\"avgPurchase\":\"5318462\",\"industryType\":\"IT\"}";
+		System.out.println("customerDetails Update ::: "+customerDetails);
+		System.out.println("Logo file ::: " + logoFile);
+		
 		CustomerBean objBean = new CustomerBean();
 		objBean = new Gson().fromJson(customerDetails, CustomerBean.class);
 		boolean isCustomerUpdated = false;
@@ -147,6 +171,19 @@ public class CustomerAction extends ActionSupport implements
 		objDao1.commit();
 		objDao1.closeAll();
 		if (isCustomerUpdated) {
+			if (logoFile!=null) {
+				String filename = "CustId_" + objBean.getCustId() + ".png";
+				File file = new File(filename);
+				boolean isLogoSaved=false;
+				if (!file.exists()) {
+					isLogoSaved=createLogo(filename, logoFile);
+					System.out.println("1.LOGO saved ::: "+filename);
+				}else{
+					file.delete();
+					isLogoSaved=createLogo(filename, logoFile);
+					System.out.println("2.LOGO saved ::: "+filename);
+				}
+			}
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("customer_updated"));
 		} else {

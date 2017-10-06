@@ -131,7 +131,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 					</td>
 					<td style="text-align:center;">
 						<!-- <span data-ng-bind="quote.createdDate"></span> -->
-						{{::quote.createdDate}}
+						{{:: getFormattedDate(quote.createdDate)}}
 					</td>
 					<td >
 						<!-- <span data-ng-bind="quote.custName"></span> -->
@@ -155,7 +155,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 					<!-- <td><span data-ng-bind="quote.quoteAttn"></span></td> -->
 					<td style="text-align:center;">
 						<!-- <span data-ng-bind="quote.modifiedDate"></span> -->
-						{{::quote.modifiedDate}}
+						{{::getFormattedDate(quote.modifiedDate)}}
 					</td>
 					<td>
 						<!-- <span data-ng-bind="quote.status"></span> -->
@@ -171,6 +171,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 						uib-popover="Click to add comment on quote."
 						popover-trigger="'mouseenter'"><i
 							class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
+						<!-- <a target="_blank" href="/smartquote/custComparison?quoteId={{quote.quoteId}}">email me</a> -->
 						<span style="cursor: pointer;margin: 0px 0px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
 						<span style="cursor: pointer; margin: 0px 0px;"
 						ng-click="exportToPronto(quote)" popover-placement="left"

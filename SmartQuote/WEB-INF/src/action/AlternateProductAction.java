@@ -54,8 +54,9 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 		for (int i = 0; i < objBean.getAlternativeProductList().size(); i++) {
 			mainId=objBean.getMainProductCode();
 			altId=objBean.getAlternativeProductList().get(i).getAltProductCode();
-			altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
-			isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);
+//			altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
+//			isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);
+			isDataSaved=objDao.saveAlternateProducts(mainId,altId);
 		}
 	}
 	objDao.commit();
@@ -87,11 +88,11 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 			for (int i = 0; i < objBean.getAlternativeProductList().size(); i++) {
 				mainId=objBean.getMainProductCode();
 				altId=objBean.getAlternativeProductList().get(i).getAltProductCode();
-				altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
+//				altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
 				boolean isDataDeleted=false;
 				isDataDeleted=objDao.deleteAlternateProduct(mainId, altId);
 				if (isDataDeleted) {
-					isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);	
+					isDataSaved=objDao.saveAlternateProducts(mainId,altId);	
 				}
 			}
 		}
@@ -135,6 +136,11 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 			AlternateProductDao objDao=new AlternateProductDao();
 			alternateProductBeans=objDao.getAlternateProductsList();
 //			System.out.println("alternateProductBeans"+alternateProductBeans.size());
+//			for (int i = 0; i < alternateProductBeans.size(); i++) {
+//				System.out.println("Alt Price : "+ alternateProductBeans.get(i).getAltProductObj().getAltPromoPrice());
+//			}
+			
+			
 			objDao.commit();
 			objDao.closeAll();
 			data.setCode("success");

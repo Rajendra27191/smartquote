@@ -1,6 +1,7 @@
 package pojo;
 
 public class CustomerBean {
+	private int custId;
 	private String customerCode;
 	private String customerName;
 	private String state;
@@ -128,6 +129,14 @@ public class CustomerBean {
 
 	public void setIndustryType(String industryType) {
 		this.industryType = industryType;
+	}
+
+	public int getCustId() {
+		return custId;
+	}
+
+	public void setCustId(int custId) {
+		this.custId = custId;
 	}
 
 }

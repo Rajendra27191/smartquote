@@ -11,7 +11,6 @@ import pojo.CommentBean;
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
-import pojo.ProductBean;
 import pojo.QuoteBean;
 import responseBeans.CommentResponseBean;
 import responseBeans.CurrentSupplierResponse;
@@ -19,6 +18,7 @@ import responseBeans.QuoteResponseBean;
 import responseBeans.QuoteTermServiceResponseBean;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.opensymphony.xwork2.ActionSupport;
 
 import dao.AlternateProductDao;
@@ -99,7 +99,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		System.out.println("userId : " + userId);
-		int supplierId = 0, salesPersonId = 0;
+		int supplierId = 0;//salesPersonId = 0;
 		String quoteDetails = request.getParameter("objQuoteBean");
 		System.out.println("Quote Details: " + quoteDetails);
 		QuoteDao objQuoteDao = new QuoteDao();
@@ -111,11 +111,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("param : " + quoteDetails);
 
 		QuoteBean objQuoteBean = new QuoteBean();
-		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		objQuoteBean=gson.fromJson(quoteDetails, QuoteBean.class);
+//		System.out.println("Quote Date ::"+ objQuoteBean.getCreatedDate());
+//		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
 		
 		System.out.println("objQuoteBean.toString : ");
 		System.out.println(objQuoteBean.toString());
 		System.out.println("CUST PRESENT : " + objQuoteBean.getIsNewCustomer().toLowerCase());
+		//----------------
 		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
 			CustomerBean objBean = new CustomerBean();
 			objBean.setCustomerCode(objQuoteBean.getCustCode());
@@ -126,7 +130,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objBean.setEmail(objQuoteBean.getEmail());
 			objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
 			CustomerDao objDao1 = new CustomerDao();
-			boolean isCustomerCreated = objDao1.saveCustomer(objBean);
+			int isCustomerCreated = objDao1.saveCustomer(objBean);
 			System.out.println("isCustomerCreated : " + isCustomerCreated);
 			objDao1.commit();
 			objDao1.closeAll();
@@ -144,6 +148,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		// objQuoteBean.setSalesPersonId(salesPersonId);
 		// }
 
+		//----------------
 		for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 			ProductDao objDao1 = new ProductDao();
 			if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
@@ -161,21 +166,21 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			System.out.println("ALTERNATIVES");
 			AlternateProductDao altProductDao = new AlternateProductDao();
 			String mainId, alternativeId;
-			double altDefaultPrice=0;
+//			double altDefaultPrice=0;
 			boolean isAlternateSaved = false;
 			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
 				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
 				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductObj().getAltProductCode();
-				isAlternateSaved = altProductDao.saveAlternateProducts(mainId,alternativeId,altDefaultPrice);
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId,alternativeId);
 			}
 			System.out.println("isAlternateSaved : " + isAlternateSaved);
 			altProductDao.commit();
 			altProductDao.closeAll();
 		}
 		String status = "SAVED";
-		boolean isQuoteSaved = false;
-		boolean istermSaved;
-		boolean isServiceSaved;
+//		boolean isQuoteSaved = false;
+		boolean istermSaved=false;
+		boolean isServiceSaved=false;
 		int quoteId = 0;
 		int quoteDetailId=0;
 		quoteId = objQuoteDao.saveQuote(objQuoteBean, userId, status);
@@ -184,22 +189,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 			objQuoteBean.getProductList().get(i).setQuoteDetailId(0);
 			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), quoteId);
-//			System.out.println("SAVED Quote Detail quote detail id : " + quoteDetailId);
 				if(objQuoteBean.isSaveWithAlternative() && quoteDetailId>0){
 					if(objQuoteBean.getProductList().get(i).getAltProd()!=null){
-//						System.out.println("ALTERNATIVE : ");
-//						System.out.println(objQuoteBean.getProductList().get(i).getAltProd().toString());;
 						objQuoteBean.getProductList().get(i).getAltProd().setQuoteDetailId(quoteDetailId);
 						quoteDetailId=objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i).getAltProd(),quoteId);
-//						System.out.println("new alternate product added quote detail id ::::::::" + quoteDetailId);
 					}
 				}
 			}
 			istermSaved = objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), quoteId);
-//			System.out.println("SAVED terms and condition  : " + istermSaved);
 			isServiceSaved = objQuoteDao.saveServiceDetails(objQuoteBean.getServiceList(), quoteId);
-//			System.out.println("SAVED terms and condition  : " + isServiceSaved);
-
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
 		}
@@ -316,7 +314,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		System.out.println("userId : " + userId);
-		int supplierId = 0, salesPersonId = 0;
+		int supplierId = 0; // salesPersonId = 0;
 		String quoteDetails = request.getParameter("objQuoteBean");
 		QuoteDao objQuoteDao = new QuoteDao();
 		// String quoteDetails =
@@ -324,7 +322,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("Quote Details: " + quoteDetails);
 		objEmptyResponse = new EmptyResponseBean();
 		QuoteBean objQuoteBean = new QuoteBean();
-		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		objQuoteBean=gson.fromJson(quoteDetails, QuoteBean.class);
+		
+		System.out.println("Modefied date before format ::"+objQuoteBean.getModifiedDate());
+//		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
 
 		System.out.println("New Cust: " + objQuoteBean.getIsNewCustomer().toLowerCase());
 		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
@@ -337,7 +339,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objBean.setEmail(objQuoteBean.getEmail());
 			objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
 			CustomerDao objDao1 = new CustomerDao();
-			boolean isCustomerCreated = objDao1.saveCustomer(objBean);
+			int isCustomerCreated = objDao1.saveCustomer(objBean);
 			System.out.println("isCustomerCreated: " + isCustomerCreated);
 			objDao1.commit();
 			objDao1.closeAll();
@@ -371,12 +373,12 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			System.out.println("ALTERNATIVES FROM EDIT QUOTE");
 			AlternateProductDao altProductDao = new AlternateProductDao();
 			String mainId, alternativeId;
-			double altDefaultPrice=0;
+//			double altDefaultPrice=0;
 			boolean isAlternateSaved = false;
 			for (int i = 0; i < objQuoteBean.getAlternativeArray().size(); i++) {
 				mainId = objQuoteBean.getAlternativeArray().get(i).getMainProductCode();
 				alternativeId = objQuoteBean.getAlternativeArray().get(i).getAltProductObj().getAltProductCode();
-				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId,altDefaultPrice);
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
 			}
 			System.out.println("isAlternateSaved : " + isAlternateSaved);
 			altProductDao.commit();
@@ -385,7 +387,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		objQuoteBean.setUserId(Integer.parseInt(userId));
 		String status = "UPDATED";
 		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean, status);
-		boolean isQuoteSaved = false;
+//		boolean isQuoteSaved = false;
 		boolean isTermsSaved = false;
 		boolean isServiceSaved = false;
 		if (isQuoteUpdated) {

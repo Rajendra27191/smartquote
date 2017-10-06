@@ -1,4 +1,4 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','angularFileUpload','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt'])
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload'])
 .config(function($logProvider){
   $logProvider.debugEnabled(true);
   
@@ -240,18 +240,8 @@ var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, me
 
 /*===============SESSION TIME OUT ENDS=====================*/
 $rootScope.moveToTop=function(){
-    //   $('html, body').animate({
-    //     scrollTop: $("#top").offset().top
-    // }, 1000);
-    // $(window).scrollTop(0);
-    // $(window).scrollTop(100);
-     // $window.pageYOffset;
-   // $anchorScroll();
    $window.scrollTo(0,0);
-     // $anchorScroll.yOffset = 100
-     // $location.hash('top');
-    // $anchorScroll();
-  }
+}
 
 $rootScope.SQNotify = function(message,flag)
   {

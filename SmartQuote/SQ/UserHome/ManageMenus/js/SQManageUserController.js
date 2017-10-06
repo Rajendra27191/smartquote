@@ -11,12 +11,12 @@ $scope.today = function() {
     return $scope.dt;
 };
 
-
 $scope.init=function(){
 $rootScope.showSpinner();
 SQUserHomeServices.GetUserList();
 SQHomeServices.GetUserGroupInfo();
 };
+
 /*Get User Group starts*/
 $scope.handleGetUserGroupInfoDoneResponse=function(data){
   if(data){
@@ -38,8 +38,8 @@ var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", 
   $rootScope.alertServerError("Server error");
   $rootScope.hideSpinner();
 });
-/*Get User Group ends*/
 
+/*Get User Group ends*/
 $scope.reset=function(){
 $scope.manageUser={};
 $scope.popup1={};

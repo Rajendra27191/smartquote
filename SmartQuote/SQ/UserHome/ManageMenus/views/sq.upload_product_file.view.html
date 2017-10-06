@@ -4,6 +4,48 @@
     padding: 6px 12px;
     font-size: 14px;
 	}
+	/* Floating Social Media Bar Style Starts Here */
+.fl-fl {
+  background: cadetblue;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  padding: 4px;
+  width: 100px;
+  position: fixed;
+  right: -60px;
+  z-index: 1000;
+  font: normal normal 10px Arial;
+  -webkit-transition: all .25s ease;
+  -moz-transition: all .25s ease;
+  -ms-transition: all .25s ease;
+  -o-transition: all .25s ease;
+  transition: all .25s ease;
+}
+
+/*.fa {
+  font-size: 20px;
+  color: #fff;
+  padding: 10px 0;
+  width: 40px;
+  margin-left: 8px;
+}
+*/
+.fl-fl:hover {
+  right: 0;
+}
+
+.fl-fl a {
+  color: #fff !important;
+  text-decoration: none;
+  text-align: center;
+  line-height: 43px!important;
+  vertical-align: top!important;
+}
+
+.float-fb {
+  top: 160px;
+}
+
 </style>
 
 <div class="container" onload=""> 
@@ -15,8 +57,8 @@
 	</div>
 	<br>
 	<div class="row row-control">
-	<div class="col-md-4"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
-	<div class="col-md-8">
+	<div class="col-md-3"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
+	<div class="col-md-9">
 	<input type = 'file' class = 'form-control' ng-file-select = "onExcelSelect($files)"  id = 'fileTypeExcelHost' name="productFile" required>
 	<span class="invalid-control">
 	<small ng-show="isRequired" style="color: red;">*Please select file to upload.</small>
@@ -25,6 +67,20 @@
 	<!-- ngf-pattern="'.xls,.csv,.xlsx'" accept=".xls,.csv,.xlsx" ngf-max-size="20MB" -->
 	</div>
 	</div>
+	<br>
+	<div class="row row-control">
+		<div class="col-md-3"><label class="sub-label">Type</label> <span class="asteric">*</span></div>
+		<div class="col-md-4"  tooltip-placement="top" uib-tooltip="upload file with product details."  tooltip-trigger="'mouseenter'"><input type="radio"  ng-model="upload.type" value="products" style="cursor: pointer;"> <label> Products</label></div>		
+	</div>
+	<div class="row row-control">
+		<div class="col-md-3"></div>
+		<div class="col-md-4" tooltip-placement="top" uib-tooltip="upload file with promo price"  tooltip-trigger="'mouseenter'"><input type="radio"  ng-model="upload.type" value="promoPrice" style="cursor: pointer;"> <label> Promo Price</label></div>
+	</div>
+	<div class="row row-control">
+		<div class="col-md-3"></div>
+		<div class="col-md-4" tooltip-placement="top" uib-tooltip="upload file with new product code"  tooltip-trigger="'mouseenter'"><input type="radio"  ng-model="upload.type" value="newProductCode" style="cursor: pointer;"> <label> New Product Code</label></div>
+	</div>
+	<!-- {{upload.type}} -->
 	<br>
 	<div class="row">
 		<div class="col-md-8"></div>
@@ -36,12 +92,17 @@
 	</div>
 
 <!-- </form> -->
-
-
 </div>
 <div class="col-md-3"></div>
 </div>
 </div>
 
+<!-- Floating Social Media bar Starts -->
+<!-- <div class="float-sm">
+  <div class="fl-fl float-fb">
+    <i class="fa fa-facebook" style="font-size: 20px;color: #fff; padding: 10px 0;"></i>
+    <a href="" target="_blank"> Like us!</a>
+  </div>
+</div> -->
 
 

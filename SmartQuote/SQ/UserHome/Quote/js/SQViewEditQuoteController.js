@@ -19,11 +19,52 @@ var isSupplierExist=false;
 $scope.isAddProductModalShow=false;
 $scope.isEditViewShow=false;
 
-$scope.competeQuote=["yes","no"];
+$scope.competeQuote=["Yes","No"];
 $scope.currentSupplierList=[];
 $scope.salesPersonList=[];
 $scope.userList=[];
 $scope.isAlternateAdded=false;
+
+//=============== init date========================
+$scope.today = function() {
+	$scope.dt = new Date();
+	console.log($scope.dt)
+	return $scope.dt;
+
+};
+$scope.open1 = function() {
+$scope.popup1.opened = true;
+};
+
+$scope.initDate=function(){
+$scope.popup1={};
+$scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
+$scope.format = $scope.formats[1];
+$scope.dateOptions = {
+formatYear: 'yy',
+startingDay: 1,
+showWeeks: false
+};
+$scope.customerQuote.modefiedDate=$scope.today();
+};
+
+$scope.quoteDateChanged=function(quoteDate){
+// console.log("quoteDateChanged");
+// console.log(quoteDate);
+// console.log(moment(quoteDate).format());
+// console.log(moment(quoteDate).format());
+// console.log(moment(quoteDate).format('YYYY-MM-DD,h:mm:ss a'));
+};
+$scope.getFormattedDate=function(date){
+var dt = new Date(date);
+// console.log("date ::: ",dt)
+var fDate= moment(dt).format('YYYY-MM-DD');
+// console.log("getFormattedDate : "+fDate);
+// console.log(moment(fDate).format('YYYY-MM-DD'))
+// return moment(fDate).format('yyyy-MM-dd');
+return fDate;
+};
+
 //initialising Search======================
 $scope.initAuotoComplete=function(){
 // $scope.selectedProduct=null;
@@ -33,7 +74,11 @@ products = new Bloodhound({
 	prefetch: {
 		url: "/smartquote/products.json?query=%QUERY",
 		cache: false,
+		beforeSend: function(xhr){
+        $rootScope.showSpinner();
+        },
 		filter: function (devices) {
+			$rootScope.hideSpinner();
 			return $.map(devices, function (device) {
 				return {
 					code: device.code,
@@ -43,6 +88,7 @@ products = new Bloodhound({
 		}
 	},
 });
+products.clearPrefetchCache();
 products.initialize();
 $rootScope.productsDataset = {
 	displayKey: 'value',
@@ -55,11 +101,10 @@ $rootScope.exampleOptions = {
 	displayKey: 'title',
 	highlight: true
 };
-
-$timeout(function() {
-	$rootScope.hideSpinner();
-}, 1000);
-}
+// $timeout(function() {
+// 	$rootScope.hideSpinner();
+// }, 1000);
+};
 // $scope.initAuotoComplete=function(){
 // 	$scope.selectedProduct=null;
 // 	 products = new Bloodhound({
@@ -498,8 +543,11 @@ console.log("closeEditProducts");
 
 $scope.viewDetailInformation=function(quote){
 	console.log(quote);
-	$scope.showEditQuoteView=true;
 	var currentQuote=angular.copy(quote);
+	// var dt = new Date(currentQuote.createdDate);
+	// console.log("date ::: ",dt)
+	
+	$scope.showEditQuoteView=true;
 	if (currentQuote.competeQuote.toUpperCase=='NO') {
 	$scope.isCurrentSupplierNameRequired=false;
 	}else if (currentQuote.competeQuote.toUpperCase=='YES') {
@@ -517,10 +565,14 @@ $scope.viewDetailInformation=function(quote){
 	currentQuote.salesPerson=salesPerson;
 	$scope.customerQuote=currentQuote;
 	$scope.customerQuote.productList=$scope.getProductsListArray(currentQuote.productList);
+    // $scope.customerQuote.createdDate=dt;
+
 	$scope.initEditQuote(quote);
 	$scope.calculateAllInformation();
 	$scope.checkAlternativeAdded();
 	$rootScope.isQuoteActivated=true;
+	$scope.initDate();
+	
 
 };
 // ===============****************************=================================
@@ -611,7 +663,7 @@ $scope.checkIfProductExist=function(){
 // ===================== RESET & CANCEL=====================
 
 $scope.resetUpdateQuote=function(){
-	$rootScope.moveToTop();
+	// $rootScope.moveToTop();
 	$log.debug("cancelCreateQuote call");
 	$scope.customerQuote={};
 	$scope.addedProductList=[];
@@ -620,7 +672,7 @@ $scope.resetUpdateQuote=function(){
 	$scope.gpInformation={'avgGpRequired':0,'avgCurrentSupplierGp':0};
 	isSupplierExist=false;
 	isSalesPersonExist=false;
-	$scope.customerQuote.competeQuote="no";
+	$scope.customerQuote.competeQuote="No";
 	// $scope.serviceList=[];
 	// $scope.termConditionList=[];
 	$scope.isEditViewShow=false;
@@ -629,6 +681,7 @@ $scope.resetUpdateQuote=function(){
 	$scope.showEditQuoteView=false;
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
+	$scope.initDate();
 }
 $scope.cancelCreateQuote=function(){
 var previousWindowKeyDown = window.onkeydown;
@@ -640,8 +693,6 @@ var previousWindowKeyDown = window.onkeydown;
   cancelButtonText:"Stay on Page",
   confirmButtonText:"Leave Page"
   }, function (isConfirm) {
-    console.log("isConfirm >" + isConfirm)
-  // window.onkeydown = previousWindowKeyDown;
   if (isConfirm) {
     $scope.resetUpdateQuote();
   } 
@@ -679,21 +730,21 @@ var previousWindowKeyDown = window.onkeydown;
     if (isConfirm) {
       $scope.resetCurrentSupplier();
     }else{
-      $scope.customerQuote.competeQuote='yes';	
+      $scope.customerQuote.competeQuote='Yes';	
     } 
   });
 };
 $scope.currentSupplierNameChanged=function(){
 	if ($scope.customerQuote.currentSupplierName!='') {
-		$scope.customerQuote.competeQuote='yes';	
+		$scope.customerQuote.competeQuote='Yes';	
 	}
 	if($scope.customerQuote.currentSupplierName==''){
-		$scope.customerQuote.competeQuote='no';
+		$scope.customerQuote.competeQuote='No';
 	}
 }
 $scope.competeQuoteChanged=function(){
 console.log($scope.customerQuote.competeQuote)
-if ($scope.customerQuote.competeQuote=='no'){
+if ($scope.customerQuote.competeQuote=='No'){
 	// if ($scope.customerQuote.productList.length>0) {
 	// $scope.showConfirmationWindow();	
 	// };	
@@ -712,7 +763,7 @@ if ($scope.customerQuote.competeQuote=='no'){
 	}
 	$scope.calculateAllInformation();
 }
-if ($scope.customerQuote.competeQuote=='yes'){
+if ($scope.customerQuote.competeQuote=='Yes'){
 	$scope.isCurrentSupplierNameRequired=true;
 }
 }
@@ -911,112 +962,7 @@ $scope.calculateAllInformation=function(){
   	$scope.getTotalInformation();	
   	$scope.calculateAlternativeProductsInformation();
 };
-//===========================
-// $scope.altSupplierInformation={'subtotal':0,'gstTotal':0,'total':0};
-// $scope.getAltSupplierInformation=function(){
-// 	var subtotal=0;
-// 	var gstTotal=0;
-// 	if ($scope.customerQuote.productList.length>0) {
-// 		angular.forEach($scope.customerQuote.productList, function(value, key){
-// 			if (value.isLinkedExact) {
-// 			if (value.altProd.currentSupplierTotal) {	
-// 			// subtotal=subtotal+parseFloat(value.currentSupplierTotal);	
-// 			subtotal=subtotal+parseFloat(value.altProd.currentSupplierTotal);		
-// 			}
-// 			}else{
-// 			subtotal=subtotal+parseFloat(value.currentSupplierTotal);
-// 			}
-// 			if ($scope.customerQuote.pricesGstInclude) {	
-// 				if (value.isLinkedExact) {
-// 				if (value.altProd.currentSupplierTotal && value.altProd.gstFlag.toUpperCase()=='YES') {	
-// 				gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.currentSupplierTotal))		
-// 				}
-// 				}else{
-// 				if (value.gstFlag.toUpperCase()=='YES') {
-// 				gstTotal=gstTotal+((10/100)*parseFloat(value.currentSupplierTotal))
-// 				}
-// 				}
-// 			}
-// 		});
-// 		$scope.altSupplierInformation.subtotal=subtotal;
-// 		$scope.altSupplierInformation.gstTotal=gstTotal;
-// 		$scope.altSupplierInformation.total=$scope.altSupplierInformation.subtotal+$scope.altSupplierInformation.gstTotal;
-// 	}else{
-// 		$scope.altSupplierInformation={'subtotal':0,'gstTotal':0,'total':0};
-// 	}
-// };
-
-// $scope.altGpInformation={'avgGpRequired':0,'avgCurrentSupplierGp':0};
-// $scope.getAltGpInformation=function(){
-// // console.log("getSupplierInformation")
-// var gpRequiredSubtotal=0;
-// var currentSupplierGPSubtotal=0;
-// var countGpRequired=0;
-// var countcurrentSupplierGP=0;
-// if ($scope.customerQuote.productList.length>0) {
-// 	angular.forEach($scope.customerQuote.productList, function(value, key){	
-// 		if (value.isLinkedExact) {
-// 		if (value.altProd.gpRequired) {
-// 		gpRequiredSubtotal=gpRequiredSubtotal+parseFloat(value.altProd.gpRequired);
-// 		countGpRequired++;	
-// 		}
-// 		}else{
-// 		gpRequiredSubtotal=gpRequiredSubtotal+parseFloat(value.gpRequired);
-// 		countGpRequired++;
-// 		}
-// 	});
-// 	angular.forEach($scope.customerQuote.productList, function(value, key){
-// 		if (value.isLinkedExact) {
-// 		if (value.altProd.currentSupplierGP) {	
-// 		currentSupplierGPSubtotal=currentSupplierGPSubtotal+parseFloat(value.altProd.currentSupplierGP);
-// 		countcurrentSupplierGP++;	
-// 		}
-// 		}else{
-// 		currentSupplierGPSubtotal=currentSupplierGPSubtotal+parseFloat(value.currentSupplierGP);
-// 		countcurrentSupplierGP++;
-// 		}
-// 	});
-// $scope.altGpInformation.avgGpRequired=gpRequiredSubtotal/countGpRequired;
-// $scope.altGpInformation.avgCurrentSupplierGp=currentSupplierGPSubtotal/countcurrentSupplierGP;
-// }else{
-// 	$scope.altGpInformation={'avgGpRequired':0,'avgCurrentSupplierGp':0};	
-// }
-// };
-
-// $scope.altTotalInformation={'subtotal':0,'gstTotal':0,'total':0};
-// $scope.getAltTotalInformation=function(){
-// console.log("getAltTotalInformation")
-// var subtotal=0;
-// var gstTotal=0;
-// if ($scope.customerQuote.productList.length>0) {
-// 	angular.forEach($scope.customerQuote.productList, function(value, key){
-// 		// console.log(value)
-// 		if (value.isLinkedExact) {
-// 			if (value.altProd.total) {	
-// 			subtotal=subtotal+parseFloat(value.altProd.total);		
-// 			}
-// 		}else{
-// 			subtotal=subtotal+parseFloat(value.total);
-// 		}
-// 		if ($scope.customerQuote.pricesGstInclude) {
-// 			if (value.isLinkedExact) {
-// 				if (value.altProd.total && value.altProd.gstFlag.toUpperCase()=='YES') {	
-// 				gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.total))		
-// 				}
-// 			}else{
-// 				if (value.gstFlag.toUpperCase()=='YES') {
-// 				gstTotal=gstTotal+((10/100)*parseFloat(value.total))
-// 				}
-// 			}
-// 		}
-// 	});
-// 	$scope.altTotalInformation.subtotal=subtotal;
-// 	$scope.altTotalInformation.gstTotal=gstTotal;
-// 	$scope.altTotalInformation.total=$scope.altTotalInformation.subtotal+$scope.altTotalInformation.gstTotal;
-// }else{
-// 	$scope.altTotalInformation={'subtotal':0,'gstTotal':0,'total':0};
-// }
-// };
+//=============Calculation==========================
 $scope.altSupplierInformation={'subtotal':0,'gstTotal':0,'total':0};
 $scope.getAltSupplierInformation=function(){
 $scope.altSupplierInformation=CalculationFactory.getAltSupplierInformation($scope.customerQuote);
@@ -1073,11 +1019,13 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 	var product;
 	product=angular.copy($scope.addProduct);
 	// console.log(product);
-	if (product.currentSupplierPrice>0 && product.currentSupplierPrice>product.quotePrice) {
-	product.savings=$scope.getPriceInPercentage(product.currentSupplierPrice,product.quotePrice);	
-	}else{
+	if (product.currentSupplierPrice>0 && product.quotePrice>0) {//product.currentSupplierPrice>product.quotePrice
+	if (product.currentSupplierPrice==product.quotePrice) {
 	product.savings=0;	
+	}else{
+	product.savings=$scope.getPriceInPercentage(product.currentSupplierPrice,product.quotePrice);	
 	}
+	};
 	if (product.currentSupplierPrice>0) {
 	product.currentSupplierGP=$scope.getPriceInPercentage(product.currentSupplierPrice,product.avgcost);	
 	}else{
@@ -1112,11 +1060,13 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 			if (product.isLinkedExact) {	
 			if(product.altProd!=null){
 			// newProduct.isLinkedExact=product.isLinkedExact
-			if (product.altProd.currentSupplierPrice>0 && product.altProd.currentSupplierPrice>product.altProd.quotePrice) {
-			product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.quotePrice);	
+			if (product.altProd.currentSupplierPrice>0 && product.altProd.quotePrice>0) {//product.altProd.currentSupplierPrice>product.altProd.quotePrice
+			if (product.altProd.currentSupplierPrice==product.altProd.quotePrice) {
+			product.altProd.savings=0;		
 			}else{
-			product.altProd.savings=0;	
+			product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.quotePrice);	
 			}
+			};
 			if (product.altProd.currentSupplierPrice>0) {
 			product.altProd.currentSupplierGP=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.avgcost);	
 			}else{
@@ -1305,25 +1255,14 @@ $scope.exportToPronto=function(quote){
 
 //==============================================Update Quote=======================================
 $scope.createAlternativeArray=function(product){
-// var alternativeArray=[];
-// var obj={};
-// obj.mainProductCode='';
-// obj.altProductCode='';
-// angular.forEach($scope.customerQuote.productList, function(value, key){
-// 	if (value.altProd) {
-// 	if (value.altProd.itemCode) {
-// 		obj={"mainProductCode":value.itemCode,"altProductCode":value.altProd.itemCode}
-// 		alternativeArray.push(obj);
-// 	}
-// 	}
-// });
 var alternativeArray=[];
-var obj={};
-obj.mainProductCode='';
-obj.alternativeProductList=[];
+// obj.mainProductCode='';
+// obj.alternativeProductList=[];
 angular.forEach($scope.customerQuote.productList, function(value, key){
 	if (value.altProd) {
 		if (value.altProd.itemCode) {
+			var obj={};
+			var product={};
 			product={altProductCode:value.altProd.itemCode, altProductDefaultPrice :0 }
 			obj.mainProductCode=value.itemCode;
 			obj.altProductObj=product;
@@ -1488,6 +1427,8 @@ objQuoteBean={
 'quoteAttn':$scope.customerQuote.quoteAttn,
 'currentSupplierName':supplierName,
 'currentSupplierId':supplierId,
+
+'modifiedDate':moment($scope.customerQuote.modefiedDate).format('YYYY-MM-DD HH:mm:ss'),
 'competeQuote':$scope.customerQuote.competeQuote,
 'salesPerson':salesPerson,
 'salesPersonId':salesPersonId,

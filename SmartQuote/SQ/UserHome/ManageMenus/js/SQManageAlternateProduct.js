@@ -40,7 +40,7 @@ $scope.setMainProduct= function(product) {
   $scope.alternateProductList.forEach(function(prod){
   	prod.isMainProduct=product===prod;
   	if (prod.isMainProduct) {
-  	prod.defaultPrice=null;	
+  	// prod.defaultPrice=null;	
   	};
   });
   // console.log($scope.alternateProductList)
@@ -53,7 +53,11 @@ $scope.initAuotoComplete=function(){
 		prefetch: {
 			url: "/smartquote/products.json?query=%QUERY",
 			cache: false,
+			beforeSend: function(xhr){
+          	$rootScope.showSpinner()
+        	},
 			filter: function (devices) {
+				$rootScope.hideSpinner();
 				return $.map(devices, function (device) {
 					return {
 						code: device.code,
@@ -63,6 +67,8 @@ $scope.initAuotoComplete=function(){
 			}
 		},
 	});
+	// products.clearRemoteCache();
+	products.clearPrefetchCache();
 	products.initialize();
 	$rootScope.productsDataset = {
 		displayKey: 'value',
@@ -75,9 +81,9 @@ $scope.initAuotoComplete=function(){
 		highlight: true
 	};
 	
-	$timeout(function() {
-		$rootScope.hideSpinner();
-	}, 500);
+	// $timeout(function() {
+	// 	$rootScope.hideSpinner();
+	// }, 500);
 }
 //================================================================================================
 $scope.resetSearch=function(){
@@ -159,7 +165,7 @@ $scope.handleGetProductDetailsDoneResponse=function(data){
 				$scope.productDetails=data.objProductResponseBean;
 				$scope.productDetails.isMainProduct=false;
 				//---Promo price 
-				$scope.productDetails.defaultPrice=$scope.productDetails.promoPrice;
+				// $scope.productDetails.defaultPrice=$scope.productDetails.promoPrice;
 				//---Promo price 
 				$scope.pushDetailsToAlternateProductList($scope.productDetails);
 				$scope.resetSearch();
@@ -187,16 +193,17 @@ $scope.jsonToSaveAlternateProducts=function(){
 			// product={mainProductId:value.itemCode}
 			obj.mainProductCode=angular.copy(value.itemCode);
 		} else {
-			// product={alternateProductId:value.itemCode, }
+			product={altProductCode:value.itemCode}
 			// obj.alternativeProductList.push(value.itemCode);
-			product={altProductCode:value.itemCode, altProductDefaultPrice :value.defaultPrice }
+			// product={altProductCode:value.itemCode, altProductDefaultPrice :value.defaultPrice }
 			obj.alternativeProductList.push(product);
 		}
 	});
 	return obj;
 };
 $scope.createAlternateProducts=function(){
-	console.log("createAlternateProducts")
+	console.log("createAlternateProducts");
+	// console.log(JSON.stringify($scope.jsonToSaveAlternateProducts()));
 	$rootScope.showSpinner();
 	SQManageMenuServices.CreateAlternateProducts(JSON.stringify($scope.jsonToSaveAlternateProducts()))
 }
@@ -411,23 +418,30 @@ $scope.createEditAlternativeArray=function(product){
 				'itemCode':product.mainProductCode,'itemDescription': product.mainProductDesc,
 				'unit':product.mainProductUnit,'price0exGST':product.mainProductPrice,
 				'avgcost':product.mainProductAvgCost,
-				'defaultPrice':null,'isMainProduct':true};
+				'promoPrice':null,
+				'isMainProduct':true};
 	array.push(mainProduct);
     angular.forEach($scope.alternateProductListView, function(listProd, key){
     		if (listProd.mainProductCode==product.mainProductCode) {
+    			// console.log(listProd);
     			altProduct={
 				'itemCode':listProd.altProductObj.altProductCode,'itemDescription': listProd.altProductObj.altProductDesc,
 				'unit':listProd.altProductObj.altProductUnit,'price0exGST':listProd.altProductObj.altProductPrice0exGST,
-				'avgcost':listProd.altProductObj.altProductAvgCost,'defaultPrice':listProd.altProductObj.altProductDefaultPrice,
+				'avgcost':listProd.altProductObj.altProductAvgCost,
+				// 'defaultPrice':listProd.altProductObj.altProductDefaultPrice,
+				'promoPrice':listProd.altProductObj.altPromoPrice,
 				'isMainProduct':false};
 				array.push(altProduct);
     		}
     });
+
+    // console.log(array)
 	return array;
 };
 
 $scope.editAlternateProductBtnClicked=function(index,product){
 console.log("editMainAlternateProductInList");
+// console.log(product);
 $scope.editAlternativeObject={};
 $scope.addAlternateProductBtnShow=false;
 $scope.isAlternateProductTableView=false;
@@ -459,7 +473,6 @@ $scope.handleUpdateAlternativeProductDoneResponse=function(data){
 				},function(){
 					$scope.alternateProductList=[];
 					$scope.resetAlternateProducts();
-
 				});
 				$rootScope.hideSpinner();
 			};

@@ -163,15 +163,13 @@ console.log(error);
 $rootScope.$broadcast('GetAltProductDetailsNotDone', error);
 });
 };
-
-
 return quote;
 }])
 
 // quote.GetStandardCalculations = function (){
 // console.log("GetStandardCalculations")
 // quote={'key1':"val1"}
-// };
+// };org.apache.struts2.views.jasperreports.ValueStackDataSource
 .factory('CalculationFactory', function(){
     // var objectInfo={'subtotal':0,'gstTotal':0,'total':0};
     return {
@@ -188,9 +186,9 @@ return quote;
             angular.forEach(customerQuote.productList, function(value, key){
             subtotal=subtotal+parseFloat(value.currentSupplierTotal); 
             
-            if (value.gstFlag.toUpperCase()=='YES') {
+            if (value.gstFlag.toUpperCase()=='NO') {
             gstTotal=gstTotal+((10/100)*value.currentSupplierTotal)
-            console.log("gstTotal : "+gstTotal);
+            // console.log("gstTotal : "+gstTotal);
             } 
             });
 
@@ -241,7 +239,7 @@ return quote;
             if (customerQuote.productList.length>0) {
               angular.forEach(customerQuote.productList, function(value, key){
                 subtotal=subtotal+parseFloat(value.total);
-                if (value.gstFlag.toUpperCase()=='YES') {
+                if (value.gstFlag.toUpperCase()=='NO') {
                   gstTotal=gstTotal+((10/100)*parseFloat(value.total))
                 }
               });
@@ -272,13 +270,13 @@ return quote;
             if (value.altProd.currentSupplierTotal) { 
             subtotal=subtotal+parseFloat(value.altProd.currentSupplierTotal);   
             }
-            if (value.altProd.currentSupplierTotal && value.altProd.gstFlag.toUpperCase()=='YES') { 
+            if (value.altProd.currentSupplierTotal && value.altProd.gstFlag.toUpperCase()=='NO') { 
             gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.currentSupplierTotal))   
             }
 
           }else{
             subtotal=subtotal+parseFloat(value.currentSupplierTotal);
-            if (value.gstFlag.toUpperCase()=='YES') {
+            if (value.gstFlag.toUpperCase()=='NO') {
             gstTotal=gstTotal+((10/100)*parseFloat(value.currentSupplierTotal))
             }
           }
@@ -342,20 +340,20 @@ return quote;
           var gstTotal=0;
           if (customerQuote.productList.length>0) {
             angular.forEach(customerQuote.productList, function(value, key){
-              console.log(value)
+              // console.log(value)
               if (value.isLinkedExact) {
                 if (value.altProd.total) {  
                   subtotal=subtotal+parseFloat(value.altProd.total);    
                 }
                 //------
-                if (value.altProd.total && value.altProd.gstFlag.toUpperCase()=='YES') {  
+                if (value.altProd.total && value.altProd.gstFlag.toUpperCase()=='NO') {  
                     gstTotal=gstTotal+((10/100)*parseFloat(value.altProd.total))    
                 }
 
               }else{
                 subtotal=subtotal+parseFloat(value.total);
                 //---
-                if (value.gstFlag.toUpperCase()=='YES') {
+                if (value.gstFlag.toUpperCase()=='NO') {
                     gstTotal=gstTotal+((10/100)*parseFloat(value.total))
                 }
 
