@@ -154,8 +154,9 @@ table.dataTable tbody th,table.dataTable tbody td {
 					</td>
 					<!-- <td><span data-ng-bind="quote.quoteAttn"></span></td> -->
 					<td style="text-align:center;">
-						<!-- <span data-ng-bind="quote.modifiedDate"></span> -->
+						<span ng-if="quote.modifiedDate!=null" > 
 						{{::getFormattedDate(quote.modifiedDate)}}
+						</span>
 					</td>
 					<td>
 						<!-- <span data-ng-bind="quote.status"></span> -->

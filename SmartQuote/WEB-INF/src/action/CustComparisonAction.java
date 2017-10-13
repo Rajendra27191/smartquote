@@ -147,7 +147,12 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		
 		objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(currentTotal-jaybelTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal((currentTotal-jaybelTotal)*12));
-		objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
+		if(currentTotal>0){
+			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
+		}else{
+			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(0));
+		}
+		
 //		objPdfMasterReportBean.setAltSavingInPercentage(getTwoDecimal(((getAltCurrentTotal(productList)-getAltJaybelTotal(productList))/getAltCurrentTotal(productList))*100));
 		return obj;
 	};
@@ -210,7 +215,12 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		
 		objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(currentTotal-jaybelTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal((currentTotal-jaybelTotal)*12));
-		objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
+		if(currentTotal>0){
+			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
+		}else{
+			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(0));
+		}
+		
 		return obj;
 	}
 	
@@ -229,38 +239,20 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			}
 			//--getStandardCalculation()
 			objPdfMasterReportBean=getStandardCalculation(objPdfMasterReportBean);
-			objPdfMasterReportBean=getAlternativeCalculation(objPdfMasterReportBean);
-						
+			if (objPdfMasterReportBean.isAlternativeAdded()) {
+				objPdfMasterReportBean=getAlternativeCalculation(objPdfMasterReportBean);
+			}
 			System.out.println("objPdfMasterReportBean :: "+objPdfMasterReportBean);
-			
-//			objPdfMasterReportBean.setCurrentTotal(getTwoDecimal(getCurrentTotal(productList)));
-//			System.out.println("getCurrentTotal : "+getTwoDecimal(getCurrentTotal(productList)));
-//			objPdfMasterReportBean.setJaybelTotal(getTwoDecimal(getJaybelTotal(productList)));
-//			System.out.println("getJaybelTotal : "+getTwoDecimal(getJaybelTotal(productList)));
-//			objPdfMasterReportBean.setAltCurrentTotal(getTwoDecimal(getAltCurrentTotal(productList)));
-//			System.out.println("getAltCurrentTotal : "+getTwoDecimal(getAltCurrentTotal(productList)));
-//			objPdfMasterReportBean.setAltJaybelTotal(getTwoDecimal(getAltJaybelTotal(productList)));
-//			System.out.println("getAltJaybelTotal : "+getTwoDecimal(getAltJaybelTotal(productList)));
-			
-//			if (getCurrentTotal(productList)>getJaybelTotal(productList)) {
-//				objPdfMasterReportBean.setSaving(getTwoDecimal(getCurrentTotal(productList)-getJaybelTotal(productList)));
-//				objPdfMasterReportBean.setAnnualSaving(getTwoDecimal((getCurrentTotal(productList)-getJaybelTotal(productList))*12));
-//				objPdfMasterReportBean.setSavingInPercentage(getTwoDecimal(((getCurrentTotal(productList)-getJaybelTotal(productList))/getCurrentTotal(productList))*100));
-//			}
-//			if (getAltCurrentTotal(productList)>getAltJaybelTotal(productList)) {
-//				objPdfMasterReportBean.setAltSaving(getTwoDecimal(getAltCurrentTotal(productList)-getAltJaybelTotal(productList)));
-//				objPdfMasterReportBean.setAltAnnualSaving(getTwoDecimal((getAltCurrentTotal(productList)-getAltJaybelTotal(productList))*12));
-//				objPdfMasterReportBean.setAltSavingInPercentage(getTwoDecimal(((getAltCurrentTotal(productList)-getAltJaybelTotal(productList))/getAltCurrentTotal(productList))*100));
-//			}
 			
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath=request.getSession().getServletContext().getRealPath("/Images");
 			exportParameters.put("headerImg1Path", imgDirPath + "/header_img1.png");
 			exportParameters.put("headerImg2Path", imgDirPath + "/header_img2.png");
-			exportParameters.put("headerImg3Path", imgDirPath + "/header_img3.png");
-			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
-			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
+//			exportParameters.put("headerImg3Path", imgDirPath + "/header_img3.png");
+//			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
+//			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
+			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
 			String custLogoPath=getText("customer_logo_folder_path");;
 			File file = new File(custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId()+".png");
 			if (!file.exists()) {
@@ -301,6 +293,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 	}
 	
 	public double convertToTwoDecimal(double value){
+//		System.out.println("Double :" +value);
 		Double objDouble = new Double(value);
 		String str=decimalFormat.format(objDouble);
 		return Double.parseDouble(str);

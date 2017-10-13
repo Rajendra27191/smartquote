@@ -43,7 +43,7 @@ $scope.popup1.opened = true;
 $scope.initDate=function(){
 $scope.popup1={};
 $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
-$scope.format = $scope.formats[1];
+$scope.format = "dd-MM-yyyy"//$scope.formats[1];
 $scope.dateOptions = {
 formatYear: 'yy',
 startingDay: 1,
@@ -778,7 +778,9 @@ if (product) {
 		} else{
 		product.savings=$scope.getPriceInPercentage(product.currentSupplierPrice,product.quotePrice);	
 		}
-	};
+	}else{
+		product.savings=0;	
+	}
 	if (product.currentSupplierPrice>0) {
 		product.currentSupplierGP=$scope.getPriceInPercentage(product.currentSupplierPrice,product.avgcost);	
 	}else{
@@ -797,7 +799,9 @@ if (product.isLinkedExact) {
 		} else{
 		product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.quotePrice);	
 		}
-		};
+		}else{
+			product.savings=0;	
+		}
 		if (product.altProd.currentSupplierPrice>0) {
 		product.altProd.currentSupplierGP=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.avgcost);	
 		}else{

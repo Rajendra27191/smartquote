@@ -267,7 +267,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public String uploadProductByXlsx() {
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
-
 		// GlsFileReader objFileReader = new test.FileReader();
 		ExcelFileSplit objFileSplit = new ExcelFileSplit();
 		try {
@@ -399,6 +398,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objProductDao = null;
 			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
 			}.getType());
+			
 			System.out.println("Total Products: " + productList.size());
 			objProductDao= new ProductDao();
 			boolean isFileUploaded=false;

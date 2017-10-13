@@ -48,5 +48,6 @@
 	<classpathentry exported="true" kind="lib" path="WEB-INF/lib/itext-xtra-5.5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="WEB-INF/lib/itextpdf-5.5.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="WEB-INF/lib/jasperreports-5.1.2.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/Avant Garde Bk BT Book.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

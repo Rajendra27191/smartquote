@@ -2,10 +2,7 @@
 /connection
 /dao
 /email
-/global.properties
-/global_es.properties
 /interceptor
 /pojo
 /responseBeans
 /responseStructure
-/struts.xml

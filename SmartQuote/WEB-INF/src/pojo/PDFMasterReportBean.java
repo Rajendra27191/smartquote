@@ -9,7 +9,7 @@ public class PDFMasterReportBean {
 	private String Contact;
 	private String email;
 	private int quoteId;
-	private Date quoteDate;
+	private String quoteDate;
 	private String proposalFor;
 	private String submittedBy;
 	private String quoteAttn;
@@ -44,11 +44,11 @@ public class PDFMasterReportBean {
 		this.quoteId = quoteId;
 	}
 
-	public Date getQuoteDate() {
+	public String getQuoteDate() {
 		return quoteDate;
 	}
 
-	public void setQuoteDate(Date quoteDate) {
+	public void setQuoteDate(String quoteDate) {
 		this.quoteDate = quoteDate;
 	}
 

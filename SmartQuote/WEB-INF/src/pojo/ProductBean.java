@@ -29,6 +29,7 @@ public class ProductBean {
 	private double currentSupplierTotal;
 	private double gpRequired;
 	private String productGroupCode;
+	private String group;
 	private String productGroupName;
 	private String gstFlag;
 	private double savings;
@@ -41,6 +42,7 @@ public class ProductBean {
 	private ProductBean altProd;
 //	private double altDefaultPrice;
 	private double promoPrice;
+	private double lastBuyPrice;
 
 	public int getQuoteId() {
 		return quoteId;
@@ -358,6 +360,22 @@ public class ProductBean {
 
 	public void setPromoPrice(double promoPrice) {
 		this.promoPrice = promoPrice;
+	}
+
+	public double getLastBuyPrice() {
+		return lastBuyPrice;
+	}
+
+	public void setLastBuyPrice(double lastBuyPrice) {
+		this.lastBuyPrice = lastBuyPrice;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 }
