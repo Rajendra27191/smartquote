@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
@@ -50,7 +52,9 @@ public class CustComparisonDao {
 		
 		PDFSubReportBean objPdfSubReportBean = null;
 		
-		String getData = "select quote_detail_id,quote_id,product_id,item_description,description2,description3,product_qty,avg_cost,quote_price,total, "
+		String getData = "select quote_detail_id,quote_id,product_id,item_description,"
+				+ "ifnull(description2, '')description2,"
+				+ "ifnull(description3, '')description3,product_qty,avg_cost,quote_price,total, "
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,gst_flag,"
 				+ " ifnull(is_alternate, 'no') is_alternate, ifnull(alternate_for, 0) alternate_for,"
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
@@ -64,7 +68,15 @@ public class CustComparisonDao {
 			while (rs.next()) {
 				objPdfSubReportBean = new PDFSubReportBean();
 				objPdfSubReportBean.setProductCode(rs.getString("product_id"));
-				objPdfSubReportBean.setProductDescription(rs.getString("item_description")+" "+rs.getString("description2")+" "+rs.getString("description3"));
+				String desc=rs.getString("item_description");
+				if (!rs.getString("description2").equals("-")&& !rs.getString("description2").equals("")) {
+					desc=desc+" "+rs.getString("description2"); 
+				}
+				if (!rs.getString("description3").equals("-")&&!rs.getString("description3").equals("")) {
+					desc=desc+" "+rs.getString("description3"); 
+				}
+			
+				objPdfSubReportBean.setProductDescription(desc);
 				objPdfSubReportBean.setProductUOM(rs.getString("unit"));
 				objPdfSubReportBean.setProductQty(rs.getInt("product_qty"));
 				objPdfSubReportBean.setProductCurrentPriceExGST(getTwoDecimal(rs.getDouble("current_supplier_price")));
@@ -90,19 +102,12 @@ public class CustComparisonDao {
 	public PDFMasterReportBean getQuoteInfo(int quoteId) {
 		ArrayList<PDFSubReportBean> productList = new ArrayList<PDFSubReportBean>();
 		PDFMasterReportBean objPdfMasterReportBean=null;
-//		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, user_id,"
-//				+ " DATE(ifnull(modified_date,created_date)) quoteDate,"
-//				+ " DATE(created_date) created_date,"
-//				+ " DATE(modified_date) modified_date,"
-//				+ " cq.current_supplier_id,current_supplier_name,compete_quote, "
-//				+ " cq.sales_person_id,sales_person_name,status "
-//				+ " from create_quote cq left outer join customer_master cm on cq.custcode=cm.customer_code "
-//				+ " left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
-//				+ " left outer join sales_person sp on cq.sales_person_id = sp.sales_person_id" + " WHERE quote_id=?"
-//				+ " order by created_date desc;";
+		DateFormat sdf =  new java.text.SimpleDateFormat("dd/MM/YYYY");
+
 		String getQuoteDetail="SELECT "
 				+ "cq.quote_id,cq.custcode,cm.customer_name 'proposalFor',cm.add1,cm.phone,cm.email,cm.fax_no,"
 				+ "cq.quote_attn 'quoteAttn',cq.prices_gst_include,cq.notes,cq.user_id,"
+//				+ "DATE_FORMAT(ifnull(modified_date,created_date), '%d-%m-%Y') as quoteDate,"
 				+ "DATE(ifnull(modified_date,created_date)) quoteDate,"
 				+ "cq.current_supplier_id,cs.current_supplier_name,"
 				+ "usr.user_id 'sales_person_id',usr.user_name 'sales_person_name' ,compete_quote,status,"
@@ -120,11 +125,17 @@ public class CustComparisonDao {
 			while (rs.next()) {
 				objPdfMasterReportBean = new PDFMasterReportBean();
 //				objPdfMasterReportBean.setDedicatedAccountManager(rs.getString("customer_name"));
-				objPdfMasterReportBean.setContact(rs.getString("phone"));
+//				objPdfMasterReportBean.setContact(rs.getString("phone"));
 				objPdfMasterReportBean.setEmail(rs.getString("email"));
 				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));
 				objPdfMasterReportBean.setGstInclusive(rs.getBoolean("prices_gst_include"));
-				objPdfMasterReportBean.setQuoteDate(rs.getDate("quoteDate"));
+//				Date parsed = sdf.parse(sdf.format(rs.getDate("quoteDate")));
+//		        java.sql.Date sql = new java.sql.Date(parsed.get);
+				objPdfMasterReportBean.setQuoteDate(sdf.format(rs.getDate("quoteDate")));
+				System.out.println("Quote Date ::"+rs.getDate("quoteDate"));
+				System.out.println("Quote parsed ::"+sdf.format(rs.getDate("quoteDate")));
+//				System.out.println("sql Date ::"+sql);
+
 				objPdfMasterReportBean.setProposalFor(rs.getString("proposalFor"));
 				objPdfMasterReportBean.setSubmittedBy(rs.getString("sales_person_name"));
 				objPdfMasterReportBean.setQuoteAttn(rs.getString("quoteAttn"));

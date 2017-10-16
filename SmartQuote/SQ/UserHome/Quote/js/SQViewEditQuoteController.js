@@ -39,7 +39,7 @@ $scope.popup1.opened = true;
 $scope.initDate=function(){
 $scope.popup1={};
 $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
-$scope.format = $scope.formats[1];
+$scope.format = "dd-MM-yyyy";//$scope.formats[1];
 $scope.dateOptions = {
 formatYear: 'yy',
 startingDay: 1,
@@ -58,7 +58,8 @@ $scope.quoteDateChanged=function(quoteDate){
 $scope.getFormattedDate=function(date){
 var dt = new Date(date);
 // console.log("date ::: ",dt)
-var fDate= moment(dt).format('YYYY-MM-DD');
+// var fDate= moment(dt).format('YYYY-MM-DD');
+var fDate= moment(dt).format("DD-MM-YYYY");
 // console.log("getFormattedDate : "+fDate);
 // console.log(moment(fDate).format('YYYY-MM-DD'))
 // return moment(fDate).format('yyyy-MM-dd');

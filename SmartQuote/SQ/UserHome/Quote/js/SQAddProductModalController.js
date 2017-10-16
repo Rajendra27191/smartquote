@@ -95,8 +95,10 @@
 	prodObj.altProd.gpRequired=$scope.getPriceInPercentage(prodObj.altProd.quotePrice,prodObj.altProd.avgcost);
 	// prodObj.altProd.altForQuoteDetailId=0;
 	// prodObj.altProd.altForQuoteDetailId=0;
-	if (prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && prodObj.altProd.currentSupplierPrice>0) {
+	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
 	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
+	}else{
+	prodObj.altProd.savings=0;
 	}
 	}
 	}

@@ -159,7 +159,7 @@ public class ProductDao {
 		String getUserGroups = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'No') gst_flag, promo_price as promoPrice "
+				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice "
 				+ " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -202,7 +202,7 @@ public class ProductDao {
 		String getProductDetails="SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'No') gst_flag, promo_price as promoPrice "
+				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice "
 				+ " FROM product_master WHERE item_code = ?";
 		
 		try {
@@ -264,7 +264,7 @@ public class ProductDao {
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
 				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
 				+ "p.price4exGST 'alt_price4exGST',"
-				+ "ifnull(p.gst_flag, 'No') 'alt_gst_flag', p.promo_price as promoPrice "
+				+ "ifnull(p.gst_flag, 'NO') 'alt_gst_flag', p.promo_price as promoPrice "
 				+ "FROM alternative_product_master a, product_master p "
 				+ "WHERE a.main_product_id = ? AND p.item_code=a.alternative_product_id;";
 		
@@ -367,7 +367,7 @@ public class ProductDao {
 			String productQuery = "REPLACE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code,gst_flag) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?,?)";
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?)";
 			pstmt = conn.prepareStatement(productQuery);
 			final int batchSize = 5000;
 			int count = 0;
@@ -387,15 +387,16 @@ public class ProductDao {
 				pstmt.setDouble(12, productList.get(i).getPrice3exGST());
 				pstmt.setDouble(13, productList.get(i).getQtyBreak4());
 				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
-				pstmt.setDouble(15, productList.get(i).getAvgcost());
+//				pstmt.setDouble(15, productList.get(i).getAvgcost());
+				pstmt.setDouble(15, productList.get(i).getLastBuyPrice());
 				pstmt.setString(16, productList.get(i).getTaxCode());
-				pstmt.setDouble(17, productList.get(i).getQtyBreak0());
-				pstmt.setString(18, productList.get(i).getProductGroupCode());
+//				pstmt.setDouble(17, productList.get(i).getQtyBreak0());
+				pstmt.setString(17, productList.get(i).getGroup());
 				String gstExempt=productList.get(i).getTaxCode();
 				if (gstExempt.equalsIgnoreCase("E")) {
-					pstmt.setString(19,"YES");
+					pstmt.setString(18,"YES");
 				} else {
-					pstmt.setString(19,"NO");
+					pstmt.setString(18,"NO");
 				}
 //				System.out.println("Promo Price :: "+productList.get(i).getPromoPrice());
 //				pstmt.setDouble(20, productList.get(i).getPromoPrice());
@@ -586,7 +587,7 @@ public class ProductDao {
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, "
-				+ " created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'No') gst_flag, "
+				+ " created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'NO') gst_flag, "
 				+ " promo_price as promoPrice "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " order by 1, 2 limit " + fromLimit + "," + toLimit + "";
@@ -641,7 +642,7 @@ public class ProductDao {
 				+ " ifnull(qty_break2, '0.0') qty_break2, ifnull(price2exGST, '0.0') price2exGST, "
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
-				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'No') gst_flag, "
+				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'NO') gst_flag, "
 				+ " ifnull(promo_price, '0.0') promo_price"
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " WHERE item_code like ? OR item_description like ?" + " order by 1, 2 ";
