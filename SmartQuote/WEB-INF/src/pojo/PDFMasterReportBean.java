@@ -1,8 +1,6 @@
 package pojo;
 
-import java.sql.Date;
 import java.util.ArrayList;
-
 
 public class PDFMasterReportBean {
 	private String dedicatedAccountManager;
@@ -16,26 +14,9 @@ public class PDFMasterReportBean {
 	private int custId;
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
-//--
-//	private double currentTotal;
-//	private double jaybelTotal;
-//	private double saving;
-//	private double annualSaving;
-//	private double savingInPercentage;
-	
-	private CalculationBean objCalculationBean=new CalculationBean();
-	//--
-//	private double altCurrentTotal;
-//	private double altJaybelTotal;
-//	private double altSaving;
-//	private double altAnnualSaving;
-//	private double altSavingInPercentage;
-	//--
+	private CalculationBean objCalculationBean = new CalculationBean();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
-	
-	
-	
-	
+
 	public int getQuoteId() {
 		return quoteId;
 	}
@@ -76,49 +57,6 @@ public class PDFMasterReportBean {
 		this.quoteAttn = quoteAttn;
 	}
 
-//	public double getAltCurrentTotal() {
-//		return altCurrentTotal;
-//	}
-//
-//	public void setAltCurrentTotal(double altCurrentTotal) {
-//		this.altCurrentTotal = altCurrentTotal;
-//	}
-//
-//	public double getAltJaybelTotal() {
-//		return altJaybelTotal;
-//	}
-//
-//	public void setAltJaybelTotal(double altJaybelTotal) {
-//		this.altJaybelTotal = altJaybelTotal;
-//	}
-//
-//	public double getAltSaving() {
-//		return altSaving;
-//	}
-//
-//	public void setAltSaving(double altSaving) {
-//		this.altSaving = altSaving;
-//	}
-//
-//	public double getAltAnnualSaving() {
-//		return altAnnualSaving;
-//	}
-//
-//	public void setAltAnnualSaving(double altAnnualSaving) {
-//		this.altAnnualSaving = altAnnualSaving;
-//	}
-//
-//	public double getAltSavingInPercentage() {
-//		return altSavingInPercentage;
-//	}
-//
-//	public void setAltSavingInPercentage(double altSavingInPercentage) {
-//		this.altSavingInPercentage = altSavingInPercentage;
-//	}
-
-	
-	
-
 	public ArrayList<PDFSubReportBean> getArrayPdfSubReportBean() {
 		return arrayPdfSubReportBean;
 	}
@@ -151,46 +89,6 @@ public class PDFMasterReportBean {
 		this.email = email;
 	}
 
-//	public double getCurrentTotal() {
-//		return currentTotal;
-//	}
-//
-//	public void setCurrentTotal(double currentTotal) {
-//		this.currentTotal = currentTotal;
-//	}
-//
-//	public double getJaybelTotal() {
-//		return jaybelTotal;
-//	}
-//
-//	public void setJaybelTotal(double jaybelTotal) {
-//		this.jaybelTotal = jaybelTotal;
-//	}
-
-//	public double getSaving() {
-//		return saving;
-//	}
-//
-//	public void setSaving(double saving) {
-//		this.saving = saving;
-//	}
-//
-//	public double getAnnualSaving() {
-//		return annualSaving;
-//	}
-//
-//	public void setAnnualSaving(double annualSaving) {
-//		this.annualSaving = annualSaving;
-//	}
-//
-//	public double getSavingInPercentage() {
-//		return savingInPercentage;
-//	}
-//
-//	public void setSavingInPercentage(double savingInPercentage) {
-//		this.savingInPercentage = savingInPercentage;
-//	}
-
 	public boolean isAlternativeAdded() {
 		return isAlternativeAdded;
 	}
@@ -222,10 +120,5 @@ public class PDFMasterReportBean {
 	public void setGstInclusive(boolean isGstInclusive) {
 		this.isGstInclusive = isGstInclusive;
 	}
-
-	
-	
-
-	
 
 }
