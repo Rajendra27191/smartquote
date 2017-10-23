@@ -24,6 +24,7 @@ public class PDFMasterReportBean {
 //	private double savingInPercentage;
 	
 	private CalculationBean objCalculationBean=new CalculationBean();
+	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	//--
 //	private double altCurrentTotal;
 //	private double altJaybelTotal;
@@ -221,6 +222,14 @@ public class PDFMasterReportBean {
 
 	public void setGstInclusive(boolean isGstInclusive) {
 		this.isGstInclusive = isGstInclusive;
+	}
+
+	public ArrayList<CalculationBean> getListCalculationBean() {
+		return listCalculationBean;
+	}
+
+	public void setListCalculationBean(ArrayList<CalculationBean> listCalculationBean) {
+		this.listCalculationBean = listCalculationBean;
 	}
 
 	
