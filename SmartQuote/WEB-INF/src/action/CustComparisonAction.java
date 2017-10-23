@@ -1,16 +1,25 @@
 package action;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.apache.struts2.interceptor.ServletResponseAware;
 
 import pojo.EmptyResponseBean;
 import pojo.PDFMasterReportBean;
@@ -22,19 +31,25 @@ import com.opensymphony.xwork2.ActionSupport;
 import dao.CustComparisonDao;
 
 @SuppressWarnings("serial")
-public class CustComparisonAction extends ActionSupport implements ServletRequestAware {
+public class CustComparisonAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 	ArrayList<PDFMasterReportBean> arrayPdfMasterReportBeans = new ArrayList<PDFMasterReportBean>();
 	ArrayList<PDFSubReportBean> arrayPDFSubReportBeanForPronto = new ArrayList<PDFSubReportBean>();
 	String pattern = "#######.##";
 	DecimalFormat decimalFormat = new DecimalFormat(pattern);
-	
 
-	Map<String, String> exportParameters;
+	Map<String, Object> exportParameters;
 	ArrayList<String> list = new ArrayList<String>();
 	QuoteBean objQuoteBean;
 	int quoteId;
 	HttpServletRequest request;
+	HttpServletResponse response;
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
+
+	/**
+	 * 
+	 */
+	public CustComparisonAction() {
+	}
 
 	public EmptyResponseBean getObjEmptyResponse() {
 		return objEmptyResponse;
@@ -51,7 +66,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 	public void setArrayPdfMasterReportBeans(ArrayList<PDFMasterReportBean> arrayPdfMasterReportBeans) {
 		this.arrayPdfMasterReportBeans = arrayPdfMasterReportBeans;
 	}
-	
+
 	public ArrayList<PDFSubReportBean> getArrayPDFSubReportBeanForPronto() {
 		return arrayPDFSubReportBeanForPronto;
 	}
@@ -68,11 +83,11 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		this.quoteId = quoteId;
 	}
 
-	public Map<String, String> getExportParameters() {
+	public Map<String, Object> getExportParameters() {
 		return exportParameters;
 	}
 
-	public void setExportParameters(Map<String, String> exportParameters) {
+	public void setExportParameters(Map<String, Object> exportParameters) {
 		this.exportParameters = exportParameters;
 	}
 
@@ -91,188 +106,225 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 	public void setObjQuoteBean(QuoteBean objQuoteBean) {
 		this.objQuoteBean = objQuoteBean;
 	}
-	
+
 	public int isAlternativeAddedInQuote(ArrayList<PDFSubReportBean> productList) {
-		int count=0;
+		int count = 0;
 		for (int i = 0; i < productList.size(); i++) {
-			if(productList.get(i).getAltForQuoteDetailId()>0){
+			if (productList.get(i).getAltForQuoteDetailId() > 0) {
 				count++;
 			}
 		}
 		return count;
 	}
+
 	public double getGstInPercentage(double price) {
-		double gst=0;
-		gst=price*10/100;
-//		System.out.println("getGstInPercentage"+gst);
+		double gst = 0;
+		gst = price * 10 / 100;
+		// System.out.println("getGstInPercentage"+gst);
 		return gst;
 	}
-	
-	public PDFMasterReportBean getStandardCalculation(PDFMasterReportBean objPdfMasterReportBean){
-		PDFMasterReportBean obj=objPdfMasterReportBean;
-		double currentSubTotal=0,currentGstTotal=0,currentTotal=0;
-		//--Current Total
+
+	public PDFMasterReportBean getStandardCalculation(PDFMasterReportBean objPdfMasterReportBean) {
+		PDFMasterReportBean obj = objPdfMasterReportBean;
+		double currentSubTotal = 0, currentGstTotal = 0, currentTotal = 0;
+		// --Current Total
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
 			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("no")) {
-				currentSubTotal=currentSubTotal+obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();	
+				currentSubTotal = currentSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
-					currentGstTotal=currentGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());	
+					currentGstTotal = currentGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
 				}
 			}
 		}
-		if(obj.isGstInclusive()){
-			currentSubTotal=currentSubTotal-currentGstTotal;	
+		if (obj.isGstInclusive()) {
+			currentSubTotal = currentSubTotal - currentGstTotal;
 		}
-		currentTotal=currentSubTotal+currentGstTotal;
-		objPdfMasterReportBean.getObjCalculationBean().setCurrentSupplierSubtotal(convertToTwoDecimal(currentSubTotal));;
+		currentTotal = currentSubTotal + currentGstTotal;
+		objPdfMasterReportBean.getObjCalculationBean().setCurrentSupplierSubtotal(convertToTwoDecimal(currentSubTotal));
+		;
 		objPdfMasterReportBean.getObjCalculationBean().setCurrentSupplierGST(convertToTwoDecimal(currentGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setCurrentSupplierTotal(convertToTwoDecimal(currentTotal));
-		//--Jaybel Total
-		double jaybelSubTotal=0,jaybelGstTotal=0,jaybelTotal=0;
+		// --Jaybel Total
+		double jaybelSubTotal = 0, jaybelGstTotal = 0, jaybelTotal = 0;
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
 			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("no")) {
-				jaybelSubTotal=jaybelSubTotal+obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST();
+				jaybelSubTotal = jaybelSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST();
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
-					jaybelGstTotal=jaybelGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());
-				}				
+					jaybelGstTotal = jaybelGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());
+				}
 			}
 		}
-		if(obj.isGstInclusive()){
-			jaybelSubTotal=jaybelSubTotal-jaybelGstTotal;
+		if (obj.isGstInclusive()) {
+			jaybelSubTotal = jaybelSubTotal - jaybelGstTotal;
 		}
-		jaybelTotal=jaybelSubTotal+jaybelGstTotal;
-		objPdfMasterReportBean.getObjCalculationBean().setJaybelSubtotal(convertToTwoDecimal(jaybelSubTotal));;
+		jaybelTotal = jaybelSubTotal + jaybelGstTotal;
+		objPdfMasterReportBean.getObjCalculationBean().setJaybelSubtotal(convertToTwoDecimal(jaybelSubTotal));
+		;
 		objPdfMasterReportBean.getObjCalculationBean().setJaybelGST(convertToTwoDecimal(jaybelGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setJaybelTotal(convertToTwoDecimal(jaybelTotal));
-		
-		objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(currentTotal-jaybelTotal));
-		objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal((currentTotal-jaybelTotal)*12));
-		if(currentTotal>0){
-			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
-		}else{
+
+		objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
+		objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
+		if (currentTotal > 0) {
+			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(
+					convertToTwoDecimal(((currentTotal - jaybelTotal) / currentTotal) * 100));
+		} else {
 			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(0));
 		}
-		
-//		objPdfMasterReportBean.setAltSavingInPercentage(getTwoDecimal(((getAltCurrentTotal(productList)-getAltJaybelTotal(productList))/getAltCurrentTotal(productList))*100));
+
+		// objPdfMasterReportBean.setAltSavingInPercentage(getTwoDecimal(((getAltCurrentTotal(productList)-getAltJaybelTotal(productList))/getAltCurrentTotal(productList))*100));
 		return obj;
 	};
-	public PDFMasterReportBean getAlternativeCalculation(PDFMasterReportBean objPdfMasterReportBean){
-		PDFMasterReportBean obj=objPdfMasterReportBean;
-		double currentSubTotal=0,currentGstTotal=0,currentTotal=0;
-		//--Alt Current total
+
+	public PDFMasterReportBean getAlternativeCalculation(PDFMasterReportBean objPdfMasterReportBean) {
+		PDFMasterReportBean obj = objPdfMasterReportBean;
+		double currentSubTotal = 0, currentGstTotal = 0, currentTotal = 0;
+		// --Alt Current total
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
-			currentSubTotal=currentSubTotal+obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();	
-			if(obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("yes")){
+			currentSubTotal = currentSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();
+			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("yes")) {
 				for (int j = 0; j < obj.getArrayPdfSubReportBean().size(); j++) {
-					if(obj.getArrayPdfSubReportBean().get(j).getQuoteDetailId()== obj.getArrayPdfSubReportBean().get(i).getAltForQuoteDetailId()){
-						currentSubTotal=currentSubTotal-obj.getArrayPdfSubReportBean().get(j).getProductCurrentPriceTotalExGST();
+					if (obj.getArrayPdfSubReportBean().get(j).getQuoteDetailId() == obj.getArrayPdfSubReportBean().get(i).getAltForQuoteDetailId()) {
+						currentSubTotal = currentSubTotal - obj.getArrayPdfSubReportBean().get(j).getProductCurrentPriceTotalExGST();
 						if (obj.getArrayPdfSubReportBean().get(j).getGstExempt().equalsIgnoreCase("no")) {
-							currentGstTotal= currentGstTotal-getGstInPercentage(obj.getArrayPdfSubReportBean().get(j).getProductCurrentPriceTotalExGST());
-							currentGstTotal= currentGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());	
+							currentGstTotal = currentGstTotal
+									- getGstInPercentage(obj.getArrayPdfSubReportBean().get(j).getProductCurrentPriceTotalExGST());
+							currentGstTotal = currentGstTotal
+									+ getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
 						}
 					}
 				}
-			}else{
+			} else {
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
-					currentGstTotal=currentGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
+					currentGstTotal = currentGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
 				}
 			}
 		}
-		if(obj.isGstInclusive()){
-			currentSubTotal=currentSubTotal-currentGstTotal;
+		if (obj.isGstInclusive()) {
+			currentSubTotal = currentSubTotal - currentGstTotal;
 		}
-		currentTotal=currentSubTotal+currentGstTotal;
-		objPdfMasterReportBean.getObjCalculationBean().setAltCurrentSupplierSubtotal(convertToTwoDecimal(currentSubTotal));;
+		currentTotal = currentSubTotal + currentGstTotal;
+		objPdfMasterReportBean.getObjCalculationBean().setAltCurrentSupplierSubtotal(convertToTwoDecimal(currentSubTotal));
+		;
 		objPdfMasterReportBean.getObjCalculationBean().setAltCurrentSupplierGST(convertToTwoDecimal(currentGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setAltCurrentSupplierTotal(convertToTwoDecimal(currentTotal));
-		//--Alt Jaybel total
-		double jaybelSubTotal=0,jaybelGstTotal=0,jaybelTotal=0;
+		// --Alt Jaybel total
+		double jaybelSubTotal = 0, jaybelGstTotal = 0, jaybelTotal = 0;
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
-			jaybelSubTotal=jaybelSubTotal+obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST();	
-			if(obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("yes")){
+			jaybelSubTotal = jaybelSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST();
+			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("yes")) {
 				for (int j = 0; j < obj.getArrayPdfSubReportBean().size(); j++) {
-					if(obj.getArrayPdfSubReportBean().get(j).getQuoteDetailId()== obj.getArrayPdfSubReportBean().get(i).getAltForQuoteDetailId()){
-						jaybelSubTotal=jaybelSubTotal-obj.getArrayPdfSubReportBean().get(j).getProductJaybelPriceTotalExGST();
+					if (obj.getArrayPdfSubReportBean().get(j).getQuoteDetailId() == obj.getArrayPdfSubReportBean().get(i).getAltForQuoteDetailId()) {
+						jaybelSubTotal = jaybelSubTotal - obj.getArrayPdfSubReportBean().get(j).getProductJaybelPriceTotalExGST();
 						if (obj.getArrayPdfSubReportBean().get(j).getGstExempt().equalsIgnoreCase("no")) {
-							jaybelGstTotal= jaybelGstTotal-getGstInPercentage(obj.getArrayPdfSubReportBean().get(j).getProductJaybelPriceTotalExGST());
-							jaybelGstTotal= jaybelGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());	
+							jaybelGstTotal = jaybelGstTotal
+									- getGstInPercentage(obj.getArrayPdfSubReportBean().get(j).getProductJaybelPriceTotalExGST());
+							jaybelGstTotal = jaybelGstTotal
+									+ getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());
 						}
 					}
 				}
-			}else{
+			} else {
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
-					jaybelGstTotal= jaybelGstTotal+getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());
+					jaybelGstTotal = jaybelGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductJaybelPriceTotalExGST());
 				}
 			}
 		}
-		if(obj.isGstInclusive()){	
-			jaybelSubTotal=jaybelSubTotal-jaybelGstTotal;
+		if (obj.isGstInclusive()) {
+			jaybelSubTotal = jaybelSubTotal - jaybelGstTotal;
 		}
-		jaybelTotal=jaybelSubTotal+jaybelGstTotal;
-		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelSubtotal(convertToTwoDecimal(jaybelSubTotal));;
+		jaybelTotal = jaybelSubTotal + jaybelGstTotal;
+		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelSubtotal(convertToTwoDecimal(jaybelSubTotal));
+		;
 		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelGST(convertToTwoDecimal(jaybelGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelTotal(convertToTwoDecimal(jaybelTotal));
-		
-		objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(currentTotal-jaybelTotal));
-		objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal((currentTotal-jaybelTotal)*12));
-		if(currentTotal>0){
-			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(((currentTotal-jaybelTotal)/currentTotal)*100));
-		}else{
+
+		objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
+		objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
+		if (currentTotal > 0) {
+			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(
+					convertToTwoDecimal(((currentTotal - jaybelTotal) / currentTotal) * 100));
+		} else {
 			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(0));
 		}
-		
+
 		return obj;
 	}
-	
-	public String exportPDF() {
+
+	public void exportPDF() {
 		try {
-			exportParameters = new HashMap<String, String>();
+			exportParameters = new HashMap<String, Object>();
 			String dirPath = request.getSession().getServletContext().getRealPath("/Reports");
 			CustComparisonDao objCustComparisonDao = new CustComparisonDao();
 			PDFMasterReportBean objPdfMasterReportBean = objCustComparisonDao.getQuoteInfo(quoteId);
-			ArrayList<PDFSubReportBean> productList=objPdfMasterReportBean.getArrayPdfSubReportBean();
-			int count=isAlternativeAddedInQuote(productList);
-			if(count>0){
-				objPdfMasterReportBean.setAlternativeAdded(true);	
-			}else{
-				objPdfMasterReportBean.setAlternativeAdded(false);	
+			ArrayList<PDFSubReportBean> productList = objPdfMasterReportBean.getArrayPdfSubReportBean();
+			int count = isAlternativeAddedInQuote(productList);
+			if (count > 0) {
+				objPdfMasterReportBean.setAlternativeAdded(true);
+			} else {
+				objPdfMasterReportBean.setAlternativeAdded(false);
 			}
-			//--getStandardCalculation()
-			objPdfMasterReportBean=getStandardCalculation(objPdfMasterReportBean);
+			// --getStandardCalculation()
+			objPdfMasterReportBean = getStandardCalculation(objPdfMasterReportBean);
 			if (objPdfMasterReportBean.isAlternativeAdded()) {
-				objPdfMasterReportBean=getAlternativeCalculation(objPdfMasterReportBean);
+				objPdfMasterReportBean = getAlternativeCalculation(objPdfMasterReportBean);
 			}
-			System.out.println("objPdfMasterReportBean :: "+objPdfMasterReportBean);
+			System.out.println("objPdfMasterReportBean :: " + objPdfMasterReportBean);
 			
+			exportParameters.put("alternativeAdded", objPdfMasterReportBean.isAlternativeAdded());
+
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
 			exportParameters.put("subreportPath", dirPath + "/");
-			String imgDirPath=request.getSession().getServletContext().getRealPath("/Images");
+			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
 			exportParameters.put("headerImg1Path", imgDirPath + "/header_img1.png");
 			exportParameters.put("headerImg2Path", imgDirPath + "/header_img2.png");
-//			exportParameters.put("headerImg3Path", imgDirPath + "/header_img3.png");
-//			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
-//			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
-			String custLogoPath=getText("customer_logo_folder_path");;
-			File file = new File(custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId()+".png");
+			String custLogoPath = getText("customer_logo_folder_path");
+			File file = new File(custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			if (!file.exists()) {
-				exportParameters.put("customerLogoPath",imgDirPath + "/no-image.png");
-			}else{
-				exportParameters.put("customerLogoPath", custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId()+".png");
+				exportParameters.put("customerLogoPath", imgDirPath + "/no-image.png");
+			} else {
+				exportParameters.put("customerLogoPath", custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			}
+
+			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			JRBeanCollectionDataSource beanColDataSource2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getArrayPdfSubReportBean());
+			String sourceFileName = dirPath + "/MainHeaderPage.jasper";
+			String subreport1 = dirPath + "/ProductDetailsPage.jasper";
+
+			FileInputStream report1 = new FileInputStream(sourceFileName);
+			FileInputStream report2 = new FileInputStream(subreport1);
+			
+			exportParameters.put("objCalculationBean", arrayPdfMasterReportBeans.get(0).getObjCalculationBean());
+			exportParameters.put("pdfMasterBean", objPdfMasterReportBean);
+			
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
+			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, exportParameters, beanColDataSource2);
+			JRPdfExporter exp = new JRPdfExporter();
+			List<JasperPrint> list = new ArrayList<JasperPrint>();
+			list.add(jasperPrint);
+			list.add(jasperPrint2);
+
+			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
+			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
+//			exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
+//			response.setContentType("text/pdf");
+//	     	response.setHeader ("Content-Disposition", "attachment; filename=\""+"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf\"");
+			
+			exp.exportReport();
+			System.out.println("Done...!");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return SUCCESS;
 	}
-	
+
 	public String exportToPronto() {
 		try {
-			exportParameters = new HashMap<String, String>();
+			exportParameters = new HashMap<String, Object>();
 			String dirPath = request.getSession().getServletContext().getRealPath("/Reports");
 			CustComparisonDao objCustComparisonDao = new CustComparisonDao();
 			PDFMasterReportBean objMasterReportBean = objCustComparisonDao.getQuoteInfo(quoteId);
-			System.out.println("dirPath: "+ dirPath);
+			System.out.println("dirPath: " + dirPath);
 			exportParameters.put("subreportPath", dirPath + "/");
 			arrayPdfMasterReportBeans.add(objMasterReportBean);
 		} catch (Exception e) {
@@ -281,22 +333,67 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		return SUCCESS;
 	}
 
+	public void pdfDemo() {
+		try {
+			String dirPath = request.getSession().getServletContext().getRealPath("/Reports");
+			String sourceFileName = dirPath + "/demoPDFMaster.jasper";
+			String subreport1 = dirPath + "/demoReportPage2.jasper";
+
+			ArrayList<PDFMasterReportBean> objMList = new ArrayList<PDFMasterReportBean>();
+			PDFMasterReportBean objBean = new PDFMasterReportBean();
+			objMList.add(objBean);
+
+			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(objMList);
+			JRBeanCollectionDataSource beanColDataSource2 = new JRBeanCollectionDataSource(objMList);
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("subReportPath", dirPath);
+
+			FileInputStream report1 = new FileInputStream(sourceFileName);
+			FileInputStream report2 = new FileInputStream(subreport1);
+			JasperPrint jasperPrint = JasperFillManager.fillReport(report1, parameters, beanColDataSource);
+			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, parameters, beanColDataSource2);
+			JRPdfExporter exp = new JRPdfExporter();
+			List<JasperPrint> list = new ArrayList<JasperPrint>();
+			list.add(jasperPrint);
+			list.add(jasperPrint2);
+
+			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
+			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
+			exp.exportReport();
+			System.out.println("Done...!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
-	
-	public double getTwoDecimal(double total){
-		double roundTotal=0;	
-		roundTotal=Double.parseDouble(String.format( "%.2f", total));
+
+	public double getTwoDecimal(double total) {
+		double roundTotal = 0;
+		roundTotal = Double.parseDouble(String.format("%.2f", total));
 		return roundTotal;
 	}
-	
-	public double convertToTwoDecimal(double value){
-//		System.out.println("Double :" +value);
+
+	public double convertToTwoDecimal(double value) {
+		// System.out.println("Double :" +value);
 		Double objDouble = new Double(value);
-		String str=decimalFormat.format(objDouble);
+		String str = decimalFormat.format(objDouble);
 		return Double.parseDouble(str);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.apache.struts2.interceptor.ServletResponseAware#setServletResponse
+	 * (javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	public void setServletResponse(HttpServletResponse arg0) {
+		this.response = arg0;
 	}
 
 }

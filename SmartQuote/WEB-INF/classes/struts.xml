@@ -361,16 +361,16 @@
 		</action>
 
 		<action name="custComparison" class="action.CustComparisonAction" method="exportPDF">
-	      	<result name="success" type="jasper">
+	      	<!-- <result name="success" type="jasper">
 		            <param name="location">/Reports/quote_report.jasper</param>
 		            <param name="dataSource">arrayPdfMasterReportBeans</param>
 		            <param name="format">PDF</param>
 		            <param name="reportParameters">exportParameters</param>
-	      	</result>  
-	      	 <!-- <result name="success" type="json">
+	      	</result> -->  
+	      	 <result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
-			</result> --> 
+			</result> 
 		</action>
 		<action name="exportToPronto" class="action.CustComparisonAction" method="exportToPronto">
 	      	<!-- <result name="success" type="jasper">
@@ -502,6 +502,13 @@
 				<param name="root">data</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
+		</action>
+		
+		<action name="pdfDemo" class="action.CustComparisonAction" method="pdfDemo">
+	      	<result name="success" type="json">
+		       	<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+	      	</result>  
 		</action>
 
 	</package>
