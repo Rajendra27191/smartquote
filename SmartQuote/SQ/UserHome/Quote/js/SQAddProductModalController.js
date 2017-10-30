@@ -18,7 +18,7 @@
 	// $scope.productList=$rootScope.globalProductList;
 	// $scope.productGroupList=$rootScope.globalProductGroupList;
 	$scope.isAddProductModalShow=dataToModal.isAddProductModalShow;
-	$scope.addedProductCount=dataToModal.addedProductCount;
+	// $scope.addedProductCount=dataToModal.addedProductCount;
 	// $('#searchProduct').focus();	  
 
 	var quoteStatus=dataToModal.quoteStatus;
@@ -788,8 +788,10 @@
 	var products;
 	if ($scope.productButtonStatus=='edit') {
 	console.log("dataToModal")
-	console.log(dataToModal)
+	console.log(dataToModal);
 	$scope.addProduct=dataToModal.product;
+	// $scope.addProduct.lineComment=dataToModal.product.lineComment;
+
 	$scope.productInfo=dataToModal.product;
 
 	$scope.createArrayOfQuantityAndPrice(dataToModal.product);
@@ -828,7 +830,39 @@
 	// document.getElementById("#searchProduct").focus();
 
 	}
-
+	//================ADD Line Comment=====================
+	$scope.checkedLineComments=function(){
+	console.log("checkedLineComments")
+	if ($scope.addProduct.addComment) {
+	swal({
+	  title: "",
+	  text: "",
+	  type: "input",
+	  showCancelButton: true,
+	  closeOnConfirm: true,
+	  animation: "slide-from-top",
+	  inputPlaceholder: "Add Line Comment"
+	},
+	function(inputValue){
+	  if (inputValue === false){
+	  	console.log(" inputValue false")
+	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
+	  return false;
+	  } 
+	  if (inputValue === "") {
+	    swal.showInputError("You need to add line comment!");
+	    return false
+	  }
+	  $scope.addProduct.lineComment=inputValue;
+	  
+	  // swal("Nice!", "You wrote: " + inputValue, "success");
+	});
+	} else{
+		$scope.addProduct.lineComment="";
+	};
+	
+	};
+	
 	//================HOTKEYS=====================
 	hotkeys.bindTo($scope)
 	.add({

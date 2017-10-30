@@ -37,7 +37,7 @@ $rootScope.isUserSignIn=false;
 // $state.transitionTo('home.start');
 /*================ Check user is in sesssion========================*/
 $rootScope.$on("sesssion", function(event, data){
-    console.log("sesssion")
+    // console.log("sesssion")
     console.log(data)
     if(data.code=="success"){
       $state.transitionTo('userhome.start');
@@ -48,7 +48,7 @@ $rootScope.$on("sesssion", function(event, data){
       $rootScope.isUserSignIn=false;
       $('#mySpinner').hide();
     }
-    console.log("isUserInSession ",$rootScope.isUserSignIn);
+    // console.log("isUserInSession ",$rootScope.isUserSignIn);
 });
 
 // if ($rootScope.isUserSignIn) {

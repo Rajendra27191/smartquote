@@ -224,7 +224,7 @@ public class CustomerDao {
 		return isDeleted;
 	}
 
-	public ArrayList<CustomerBean> getAllCustomerDetails() {
+	public ArrayList<CustomerBean> getAllCustomerDetails(String customerLogoSrc) {
 		ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
 		CustomerBean objBean = null;
 		String getUserGroups = "SELECT cust_id, customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
@@ -253,6 +253,8 @@ public class CustomerDao {
 				objBean.setAvgPurchase(rs.getString("avg_purchase"));
 				objBean.setIndustryType(rs.getString("industry_type"));
 				objBean.setSuburb(rs.getString("suburb"));
+				String src=customerLogoSrc+"CustId_"+rs.getInt("cust_id")+".png";
+				objBean.setCustomerLogoSrc(src);
 				objCustomerBeans.add(objBean);
 			}
 		} catch (Exception e) {

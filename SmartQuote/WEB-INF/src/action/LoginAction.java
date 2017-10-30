@@ -1,10 +1,13 @@
 package action;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.I18nInterceptor;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -47,10 +50,10 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 	public String execute() throws Exception {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		
-//		email = "admin@gmail.com";
-//		password = "admin123";
-		
+
+		// email = "admin@gmail.com";
+		// password = "admin123";
+
 		UserBean objUserBean = null;
 		LoginDao objDao = new LoginDao();
 		objUserBean = objDao.isUserPresent(email, password);
@@ -67,8 +70,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 				locale = new Locale("es");
 			}
 			ActionContext.getContext().setLocale(locale);
-			httpSession.setAttribute(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE,
-					locale);
+			httpSession.setAttribute(I18nInterceptor.DEFAULT_SESSION_ATTRIBUTE, locale);
 			httpSession.setAttribute("password", password);
 			httpSession.setAttribute("userId", objUserBean.getUserId());
 			httpSession.setAttribute("language", objUserBean.getLanguage());
@@ -78,13 +80,20 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 
 			objLoginResponse.setCode("success");
 			objLoginResponse.setMessage("Login Successfully...!");
-
+//			File source = new File(getText("customer_logo_folder_path"));
+//			String projectPath = request.getSession().getServletContext().getRealPath("/");
+//			File dest = new File(projectPath + "/CustomerLogo");
+//			try {
+////				System.out.println("Copying images...");
+//				FileUtils.copyDirectory(source, dest);
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
 			try {
 				UserGroupDao objUserGroupDao = new UserGroupDao();
-				objLoginResponse.setResult(objUserGroupDao
-						.getAssignedAccess(objUserBean.getUserGroupId()));
+				objLoginResponse.setResult(objUserGroupDao.getAssignedAccess(objUserBean.getUserGroupId()));
 				objUserGroupDao.commit();
-				objLoginResponse.setUserData(objUserBean);;
+				objLoginResponse.setUserData(objUserBean);
 				objUserGroupDao.closeAll();
 			} catch (Exception e) {
 				objLoginResponse.setCode("error");

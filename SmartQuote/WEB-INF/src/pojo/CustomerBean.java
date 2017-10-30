@@ -16,6 +16,7 @@ public class CustomerBean {
 	private String avgPurchase;
 	private String industryType;
 	private String suburb;
+	private String customerLogoSrc;
 
 	
 	
@@ -137,6 +138,14 @@ public class CustomerBean {
 
 	public void setCustId(int custId) {
 		this.custId = custId;
+	}
+
+	public String getCustomerLogoSrc() {
+		return customerLogoSrc;
+	}
+
+	public void setCustomerLogoSrc(String customerLogoSrc) {
+		this.customerLogoSrc = customerLogoSrc;
 	}
 
 }

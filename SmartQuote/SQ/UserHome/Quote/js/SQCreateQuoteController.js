@@ -126,7 +126,7 @@ $scope.openMyModal = function (product,index) {
 						'customerQuote':$scope.customerQuote,
 						'productGroupList':$scope.productGroupList,
 						'isAddProductModalShow':$scope.isAddProductModalShow,
-						'addedProductCount': $scope.addedProductCount
+						// 'addedProductCount': $scope.addedProductCount
 					}
 				}else if ($scope.productButtonStatus=='edit') {
 					console.log("editProduct")
@@ -138,7 +138,7 @@ $scope.openMyModal = function (product,index) {
 						'productGroupList':$scope.productGroupList,
 						'isAddProductModalShow':$scope.isAddProductModalShow,
 						'product':$scope.editProduct,
-						'addedProductCount': $scope.addedProductCount
+						// 'addedProductCount': $scope.addedProductCount
 					}	
 				}
 				return dataToModal
@@ -731,16 +731,16 @@ $scope.calculateAlternativeProductsInformation=function(){
 };
 $scope.checkAlternativeAdded=function(){
 	var count=0;
-	$scope.addedProductCount=0;
+	$rootScope.addedProductCount=0;
 	if ($scope.customerQuote.productList.length>0) {
 		angular.forEach($scope.customerQuote.productList, function(value, key){
 			if (value.altProd) {
 				if (value.altProd.itemCode){
 					count++;
-					$scope.addedProductCount=$scope.addedProductCount+2;
+					$rootScope.addedProductCount=$rootScope.addedProductCount+2;
 				}
 			}else{
-				$scope.addedProductCount++;
+				$rootScope.addedProductCount++;
 			}
 		});
 	}	
@@ -833,6 +833,7 @@ if ($scope.isNewProduct) {
 		'isNewProduct':$scope.isNewProduct,
 		'gstFlag':product.gstFlag,
 		'isLinkedExact':product.isLinkedExact,
+		'lineComment':product.lineComment,
 		'isAlternative':'no'
 	};	
 	if (product.isLinkedExact) {	
@@ -901,112 +902,112 @@ $scope.createAlternativeArray=function(product){
 	console.log(alternativeArray)
 return alternativeArray;
 }
-$scope.jsonOfProductList=function(customerQuote){
-	var productList=[];
-	var product={};
-	console.log("customerQuote");
-	console.log(customerQuote);
-	if (customerQuote.saveWithAlternative) {
-		angular.forEach(customerQuote.productList, function(value, key){
-			if (value.altProd) {
-				if (value.altProd.itemCode) {	
-					product={
-						"avgcost":value.altProd.avgcost,
-						"itemCode": value.altProd.itemCode,
-						"currentSupplierGP": value.altProd.currentSupplierGP,
-						"currentSupplierPrice": value.altProd.currentSupplierPrice,
-						"currentSupplierTotal": value.altProd.currentSupplierTotal,
-						"itemDescription": value.altProd.itemDescription,
-						"description2": value.altProd.description2,
-						"description3": value.altProd.description3,
-						"gpRequired": value.altProd.gpRequired,
-						"gstFlag": value.altProd.gstFlag,
-						"itemQty": value.altProd.itemQty,
-						"price0exGST": value.altProd.price0exGST,
-						"price1exGST": value.altProd.price1exGST,
-						"price2exGST": value.altProd.price2exGST,
-						"price3exGST": value.altProd.price3exGST,
-						"price4exGST": value.altProd.price4exGST,
-						"quotePrice": value.altProd.quotePrice,
-						"savings": value.altProd.savings,
-						"total": value.altProd.total,
-						"unit": value.altProd.unit,
-					}
-					productList.push(product);
-				}
-			}else{
-				product={
-					"avgcost": value.avgcost,
-					"itemCode": value.itemCode,
-					"itemDescription": value.itemDescriptione,
-					"description2": value.description2,
-					"description3": value.description3,
-					"currentSupplierGP": value.currentSupplierGP,
-					"currentSupplierPrice": value.currentSupplierPrice,
-					"currentSupplierTotal": value.currentSupplierTotal,
-					"gpRequired": value.gpRequired,
-					"gstFlag": value.gstFlag,
-					"isNewProduct": value.isNewProduct,
-					"itemQty": value.itemQty,
-					"price0exGST": value.price0exGST,
-					"price1exGST": value.price1exGST,
-					"price2exGST": value.price2exGST,
-					"price3exGST": value.price3exGST,
-					"price4exGST": value.price4exGST,
-					"productGroupCode": value.productGroupCode,
-					"productGroupName": value.productGroupName,
-					"qtyBreak0": value.qtyBreak0,
-					"qtyBreak1": value.qtyBreak1,
-					"qtyBreak2": value.qtyBreak2,
-					"qtyBreak3": value.qtyBreak3,
-					"qtyBreak4": value.qtyBreak4,
-					"quotePrice": value.quotePrice,
-					"savings": value.savings,
-					"total": value.total,
-					"unit": value.unit,
-					"isLinkedExact": value.isLinkedExact,
-				}
-				productList.push(product);	
-			}
-		});
-	}else{
-		angular.forEach(customerQuote.productList, function(value, key){
-			product={
-				"avgcost": value.avgcost,
-				"itemCode": value.itemCode,
-				"itemDescription": value.itemDescriptione,
-				"description2": value.description2,
-				"description3": value.description3,
-				"currentSupplierGP": value.currentSupplierGP,
-				"currentSupplierPrice": value.currentSupplierPrice,
-				"currentSupplierTotal": value.currentSupplierTotal,
-				"gpRequired": value.gpRequired,
-				"gstFlag": value.gstFlag,
-				"isNewProduct": value.isNewProduct,
-				"itemQty": value.itemQty,
-				"price0exGST": value.price0exGST,
-				"price1exGST": value.price1exGST,
-				"price2exGST": value.price2exGST,
-				"price3exGST": value.price3exGST,
-				"price4exGST": value.price4exGST,
-				"productGroupCode": value.productGroupCode,
-				"productGroupName": value.productGroupName,
-				"qtyBreak0": value.qtyBreak0,
-				"qtyBreak1": value.qtyBreak1,
-				"qtyBreak2": value.qtyBreak2,
-				"qtyBreak3": value.qtyBreak3,
-				"qtyBreak4": value.qtyBreak4,
-				"quotePrice": value.quotePrice,
-				"savings": value.savings,
-				"total": value.total,
-				"unit": value.unit,
-				"isLinkedExact": value.isLinkedExact,
-			}
-			productList.push(product);
-		});
-	}
-	return productList;
-};
+// $scope.jsonOfProductList=function(customerQuote){
+// 	var productList=[];
+// 	var product={};
+// 	console.log("customerQuote");
+// 	console.log(customerQuote);
+// 	if (customerQuote.saveWithAlternative) {
+// 		angular.forEach(customerQuote.productList, function(value, key){
+// 			if (value.altProd) {
+// 				if (value.altProd.itemCode) {	
+// 					product={
+// 						"avgcost":value.altProd.avgcost,
+// 						"itemCode": value.altProd.itemCode,
+// 						"currentSupplierGP": value.altProd.currentSupplierGP,
+// 						"currentSupplierPrice": value.altProd.currentSupplierPrice,
+// 						"currentSupplierTotal": value.altProd.currentSupplierTotal,
+// 						"itemDescription": value.altProd.itemDescription,
+// 						"description2": value.altProd.description2,
+// 						"description3": value.altProd.description3,
+// 						"gpRequired": value.altProd.gpRequired,
+// 						"gstFlag": value.altProd.gstFlag,
+// 						"itemQty": value.altProd.itemQty,
+// 						"price0exGST": value.altProd.price0exGST,
+// 						"price1exGST": value.altProd.price1exGST,
+// 						"price2exGST": value.altProd.price2exGST,
+// 						"price3exGST": value.altProd.price3exGST,
+// 						"price4exGST": value.altProd.price4exGST,
+// 						"quotePrice": value.altProd.quotePrice,
+// 						"savings": value.altProd.savings,
+// 						"total": value.altProd.total,
+// 						"unit": value.altProd.unit,
+// 					}
+// 					productList.push(product);
+// 				}
+// 			}else{
+// 				product={
+// 					"avgcost": value.avgcost,
+// 					"itemCode": value.itemCode,
+// 					"itemDescription": value.itemDescriptione,
+// 					"description2": value.description2,
+// 					"description3": value.description3,
+// 					"currentSupplierGP": value.currentSupplierGP,
+// 					"currentSupplierPrice": value.currentSupplierPrice,
+// 					"currentSupplierTotal": value.currentSupplierTotal,
+// 					"gpRequired": value.gpRequired,
+// 					"gstFlag": value.gstFlag,
+// 					"isNewProduct": value.isNewProduct,
+// 					"itemQty": value.itemQty,
+// 					"price0exGST": value.price0exGST,
+// 					"price1exGST": value.price1exGST,
+// 					"price2exGST": value.price2exGST,
+// 					"price3exGST": value.price3exGST,
+// 					"price4exGST": value.price4exGST,
+// 					"productGroupCode": value.productGroupCode,
+// 					"productGroupName": value.productGroupName,
+// 					"qtyBreak0": value.qtyBreak0,
+// 					"qtyBreak1": value.qtyBreak1,
+// 					"qtyBreak2": value.qtyBreak2,
+// 					"qtyBreak3": value.qtyBreak3,
+// 					"qtyBreak4": value.qtyBreak4,
+// 					"quotePrice": value.quotePrice,
+// 					"savings": value.savings,
+// 					"total": value.total,
+// 					"unit": value.unit,
+// 					"isLinkedExact": value.isLinkedExact,
+// 				}
+// 				productList.push(product);	
+// 			}
+// 		});
+// 	}else{
+// 		angular.forEach(customerQuote.productList, function(value, key){
+// 			product={
+// 				"avgcost": value.avgcost,
+// 				"itemCode": value.itemCode,
+// 				"itemDescription": value.itemDescriptione,
+// 				"description2": value.description2,
+// 				"description3": value.description3,
+// 				"currentSupplierGP": value.currentSupplierGP,
+// 				"currentSupplierPrice": value.currentSupplierPrice,
+// 				"currentSupplierTotal": value.currentSupplierTotal,
+// 				"gpRequired": value.gpRequired,
+// 				"gstFlag": value.gstFlag,
+// 				"isNewProduct": value.isNewProduct,
+// 				"itemQty": value.itemQty,
+// 				"price0exGST": value.price0exGST,
+// 				"price1exGST": value.price1exGST,
+// 				"price2exGST": value.price2exGST,
+// 				"price3exGST": value.price3exGST,
+// 				"price4exGST": value.price4exGST,
+// 				"productGroupCode": value.productGroupCode,
+// 				"productGroupName": value.productGroupName,
+// 				"qtyBreak0": value.qtyBreak0,
+// 				"qtyBreak1": value.qtyBreak1,
+// 				"qtyBreak2": value.qtyBreak2,
+// 				"qtyBreak3": value.qtyBreak3,
+// 				"qtyBreak4": value.qtyBreak4,
+// 				"quotePrice": value.quotePrice,
+// 				"savings": value.savings,
+// 				"total": value.total,
+// 				"unit": value.unit,
+// 				"isLinkedExact": value.isLinkedExact,
+// 			}
+// 			productList.push(product);
+// 		});
+// 	}
+// 	return productList;
+// };
 $scope.jsonToCreateQuote=function(){
 	var objQuoteBean={};
 	var supplierName='';

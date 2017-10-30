@@ -163,12 +163,15 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		objPdfMasterReportBean.getObjCalculationBean().setJaybelGST(convertToTwoDecimal(jaybelGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setJaybelTotal(convertToTwoDecimal(jaybelTotal));
 
-		objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
-		objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
+		
 		if (currentTotal > 0) {
+			objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
+			objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
 			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(
 					convertToTwoDecimal(((currentTotal - jaybelTotal) / currentTotal) * 100));
 		} else {
+			objPdfMasterReportBean.getObjCalculationBean().setSaving(convertToTwoDecimal(0));
+			objPdfMasterReportBean.getObjCalculationBean().setAnnualSaving(convertToTwoDecimal(0));
 			objPdfMasterReportBean.getObjCalculationBean().setSavingInPercentage(convertToTwoDecimal(0));
 		}
 
@@ -235,16 +238,18 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		}
 		jaybelTotal = jaybelSubTotal + jaybelGstTotal;
 		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelSubtotal(convertToTwoDecimal(jaybelSubTotal));
-		;
 		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelGST(convertToTwoDecimal(jaybelGstTotal));
 		objPdfMasterReportBean.getObjCalculationBean().setAltJaybelTotal(convertToTwoDecimal(jaybelTotal));
-
-		objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
-		objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
+			
 		if (currentTotal > 0) {
+			objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(currentTotal - jaybelTotal));
+			objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal((currentTotal - jaybelTotal) * 12));
 			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(
 					convertToTwoDecimal(((currentTotal - jaybelTotal) / currentTotal) * 100));
+			
 		} else {
+			objPdfMasterReportBean.getObjCalculationBean().setAltSaving(convertToTwoDecimal(0));
+			objPdfMasterReportBean.getObjCalculationBean().setAltAnnualSaving(convertToTwoDecimal(0));
 			objPdfMasterReportBean.getObjCalculationBean().setAltSavingInPercentage(convertToTwoDecimal(0));
 		}
 
@@ -278,8 +283,17 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
 			exportParameters.put("headerImg1Path", imgDirPath + "/header_img1.png");
 			exportParameters.put("headerImg2Path", imgDirPath + "/header_img2.png");
+			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
+			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
-			String custLogoPath = getText("customer_logo_folder_path");
+			String pageFooterText="";
+			if(objPdfMasterReportBean.isGstInclusive()){
+				pageFooterText="All prices quoted are including GST. Pricing guaranteed for 6 months provided our supplier prices remain the same.";
+			}else{
+				pageFooterText="All prices quoted are excluding GST. Pricing guaranteed for 6 months provided our supplier prices remain the same.";
+			}
+			exportParameters.put("pageFooterText", pageFooterText);
+			String custLogoPath = System.getProperty("user.dir")+getText("customer_logo_folder_path");
 			File file = new File(custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			if (!file.exists()) {
 				exportParameters.put("customerLogoPath", imgDirPath + "/no-image.png");
@@ -288,22 +302,27 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			}
 
 			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			JRBeanCollectionDataSource beanColDataSource3 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSource2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getArrayPdfSubReportBean());
-			String sourceFileName = dirPath + "/MainHeaderPage.jasper";
-			String subreport1 = dirPath + "/ProductDetailsPage.jasper";
+			String sourceFileName1 = dirPath + "/MainHeaderPage.jasper";
+			String sourceFileName2 = dirPath + "/ProductDetailsPage.jasper";
+			String sourceFileName3 = dirPath + "/MainFooterPage.jasper";
 
-			FileInputStream report1 = new FileInputStream(sourceFileName);
-			FileInputStream report2 = new FileInputStream(subreport1);
+			FileInputStream report1 = new FileInputStream(sourceFileName1);
+			FileInputStream report2 = new FileInputStream(sourceFileName2);
+			FileInputStream report3 = new FileInputStream(sourceFileName3);
 			
 			exportParameters.put("objCalculationBean", arrayPdfMasterReportBeans.get(0).getObjCalculationBean());
 			exportParameters.put("pdfMasterBean", objPdfMasterReportBean);
 			
-			JasperPrint jasperPrint = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
+			JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
 			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, exportParameters, beanColDataSource2);
+			JasperPrint jasperPrint3 = JasperFillManager.fillReport(report3, exportParameters, beanColDataSource3);
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
-			list.add(jasperPrint);
+			list.add(jasperPrint1);
 			list.add(jasperPrint2);
+			list.add(jasperPrint3);
 
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
@@ -313,6 +332,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			
 			exp.exportReport();
 			System.out.println("Done...!");
+//			System.out.println("Export params ::"+exportParameters);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

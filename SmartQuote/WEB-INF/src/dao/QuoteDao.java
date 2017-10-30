@@ -183,8 +183,8 @@ public class QuoteDao {
 		System.out.println(objProductBean);
 		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for) "
-				+ " values(?,?,?,?,?,?,?,?,?,?,?,?);";
+				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment) "
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt = conn
 					.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
@@ -200,6 +200,7 @@ public class QuoteDao {
 				pstmt.setDouble(10, objProductBean.getSavings());
 				pstmt.setString(11, objProductBean.getIsAlternative());
 				pstmt.setInt(12, objProductBean.getQuoteDetailId());
+				pstmt.setString(13, objProductBean.getLineComment());
 				pstmt.executeUpdate();
 				rs = pstmt.getGeneratedKeys();
 				if (rs.next())
@@ -366,7 +367,7 @@ public class QuoteDao {
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for "
+				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for, comment"
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
 				+ " where quote_id= ? ;";
 		try {
@@ -408,6 +409,7 @@ public class QuoteDao {
 				objProductBean.setTaxCode(rs1.getString("tax_code"));
 				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
 				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
+				objProductBean.setLineComment(rs1.getString("comment"));
 				productList.add(objProductBean);
 			}
 		} catch (Exception e) {

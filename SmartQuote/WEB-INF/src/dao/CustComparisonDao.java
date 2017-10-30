@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
 import connection.ConnectionFactory;
@@ -124,18 +122,11 @@ public class CustComparisonDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objPdfMasterReportBean = new PDFMasterReportBean();
-				objPdfMasterReportBean.setDedicatedAccountManager(rs.getString("proposalFor"));
-//				objPdfMasterReportBean.setContact(rs.getString("phone"));
+				objPdfMasterReportBean.setDedicatedAccountManager(rs.getString("sales_person_name"));
 				objPdfMasterReportBean.setEmail(rs.getString("email"));
 				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));
 				objPdfMasterReportBean.setGstInclusive(rs.getBoolean("prices_gst_include"));
-//				Date parsed = sdf.parse(sdf.format(rs.getDate("quoteDate")));
-//		        java.sql.Date sql = new java.sql.Date(parsed.get);
 				objPdfMasterReportBean.setQuoteDate(sdf.format(rs.getDate("quoteDate")));
-				System.out.println("Quote Date ::"+rs.getDate("quoteDate"));
-				System.out.println("Quote parsed ::"+sdf.format(rs.getDate("quoteDate")));
-//				System.out.println("sql Date ::"+sql);
-
 				objPdfMasterReportBean.setProposalFor(rs.getString("proposalFor"));
 				objPdfMasterReportBean.setSubmittedBy(rs.getString("sales_person_name"));
 				objPdfMasterReportBean.setQuoteAttn(rs.getString("quoteAttn"));

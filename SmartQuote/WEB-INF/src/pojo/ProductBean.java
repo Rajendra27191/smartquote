@@ -43,6 +43,7 @@ public class ProductBean {
 //	private double altDefaultPrice;
 	private double promoPrice;
 	private double lastBuyPrice;
+	private String lineComment;
 
 	public int getQuoteId() {
 		return quoteId;
@@ -376,6 +377,14 @@ public class ProductBean {
 
 	public void setGroup(String group) {
 		this.group = group;
+	}
+
+	public String getLineComment() {
+		return lineComment;
+	}
+
+	public void setLineComment(String lineComment) {
+		this.lineComment = lineComment;
 	}
 
 }

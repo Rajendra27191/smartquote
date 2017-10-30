@@ -2,7 +2,9 @@ angular.module('sq.SmartQuoteDesktop')
 .controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices', 'DTOptionsBuilder', 'DTColumnDefBuilder','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices, DTOptionsBuilder, DTColumnDefBuilder,$upload){
 console.log('initialise SQManageCustomerController controller');
 $scope.form={};
+$scope.filepreview="";
 $scope.manageCustomer={};
+$scope.link="https://farm4.staticflickr.com/3261/2801924702_ffbdeda927_d.jpg"
 // $scope.buttonstatus='add';
 $scope.address='';
 $scope.isAddress=false;
@@ -142,6 +144,10 @@ $scope.resetForm();
 $scope.initCustomer();
 };
 
+function getTimeStamp(){
+	var timestamp = new Date().getTime();
+	return  timestamp;
+}
 $scope.editCustomerBtnClicked=function(customer){
 	console.log(customer)
   	$scope.manageCustomer=customer;
@@ -149,6 +155,7 @@ $scope.editCustomerBtnClicked=function(customer){
   	$scope.isCustomerTableView=false;
 	$scope.addCustomerBtnShow=false;
 	$scope.isCustomerAddView=true;
+	$scope.filepreview=$scope.manageCustomer.customerLogoSrc+"?"+getTimeStamp();//+ DateTime.Now.ToString("ddMMyyyyhhmmsstt");
 };
 
 /*===============CUSTOMER LOGO==================*/
@@ -161,8 +168,11 @@ var logoFile;
 $scope.onFileSelect = function($files){
 console.log("onFileSelect");
 console.log($files);
+console.log($files.length);
+// console.log($files.height);
+if ($files.length>0) {
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'jpg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
        console.log("valid file");
        latestFile = $files[i];
        $scope.file=latestFile
@@ -180,15 +190,18 @@ console.log($files);
       }else{
        console.log("invalid file");
        $scope.isInvalid=true;
-       $timeout(function() {
-       $scope.isInvalid=false;
-       }, 3000);
+       // $timeout(function() {
+       // $scope.isInvalid=false;
+       // }, 3000);
        // console.log('Please upload valid excel file.');
        $scope.invalidFile=true;
        latestFile = {};
        document.getElementById('fileTypeExcelHost').value = '';
        }
    }
+}else{
+	$scope.isFileNull=true;
+};
  };
 $scope.createCustomer = function(){
   var uploadUrl="/smartquote/createCustomer";
@@ -444,7 +457,11 @@ $scope.$on('$destroy', function(event, message) {
               scope.filepreview = loadEvent.target.result;
             });
           }
+          // console.log(scope.fileinput)
+          if (scope.fileinput) {
           reader.readAsDataURL(scope.fileinput);
+          }
+          	
         });
       }
     }

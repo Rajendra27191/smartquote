@@ -33,7 +33,7 @@ width: 62.666667%;
 		                <th style="width:10%;">Fax</th>
 		                <th style="width:10%;">Email</th>
 		                <th style="width:10%;">Total Staff</th>
-		                <th style="width:10%;">Monthly Avg Purchs</th>
+		                <th style="width:15%;">Monthly Avg Purchs</th>
 		                <th style="width:10%;">Industry Type</th>
 		                <th style="width:5%;">Action</th>
                     </tr>
@@ -226,19 +226,34 @@ width: 62.666667%;
 
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Customer Logo</label> </div>
-	<div class="col-md-8">
-	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview">
+	<div class="col-md-8" >
+	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview" style="margin-bottom: 2%;">
 	<span class="invalid-control">
-	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 15KB.</small>
-	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.gif).</small>
+	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 50KB.</small>
+	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
 	</span>
-	<!-- <div ng-hide="invalidFileSize || isInvalid">
- 	<img ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview" style="height: 50px;width:50px;"/>	
+	<!-- <i class="fa fa-eye" aria-hidden="true" uib-popover="Click to view added logo." popover-placement="top" popover-trigger="'mouseenter'"></i> -->
+	
+	</div>
+	<!-- <div class="col-md-1" style="padding:0px;" ng-if="!isInvalid&&!invalidFileSize">
+
+		<button type="button" class="" ng-click="isImageCollapsed = !isImageCollapsed" style="float: right;"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+	</div>-->
+	</div> 
+
+	<div class="row row-control" >
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="!invalidFileSize && !isInvalid && !isFileNull">	
+ 	<img class="img-thumbnail"  ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview"  style="height: 100px;width:100px;" alt-SRC src="Images/no-image.png" />	
+	</div>
+	</div>
+	<!-- <img class="img-thumbnail" ng-src="" class="img-responsive"  style="height: 100px;width:100px;"/>	 -->
+	<!-- <div class="row row-control">
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="manageCustomer.customerLogoSrc">
+ 	<img class="img-thumbnail" ng-src="{{manageCustomer.customerLogoSrc}}" class="img-responsive"  style="height: 100px;width:100px;"/>			
+	</div>	
 	</div> -->
-	</div>
-	</div>
-
-
 
 
 	<div class="row">

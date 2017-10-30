@@ -14,26 +14,9 @@ public class PDFMasterReportBean {
 	private int custId;
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
-//<<<<<<< HEAD
-//--
-//	private double currentTotal;
-//	private double jaybelTotal;
-//	private double saving;
-//	private double annualSaving;
-//	private double savingInPercentage;
-	
+
 	private CalculationBean objCalculationBean=new CalculationBean();
-	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
-	//--
-//	private double altCurrentTotal;
-//	private double altJaybelTotal;
-//	private double altSaving;
-//	private double altAnnualSaving;
-//	private double altSavingInPercentage;
-	//--
-//=======
-//	private CalculationBean objCalculationBean = new CalculationBean();
-//>>>>>>> refs/remotes/origin/SmartQuote-v3
+//	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
 
 	public int getQuoteId() {
@@ -139,21 +122,14 @@ public class PDFMasterReportBean {
 	public void setGstInclusive(boolean isGstInclusive) {
 		this.isGstInclusive = isGstInclusive;
 	}
-//<<<<<<< HEAD
 
-	public ArrayList<CalculationBean> getListCalculationBean() {
-		return listCalculationBean;
-	}
+//	public ArrayList<CalculationBean> getListCalculationBean() {
+//		return listCalculationBean;
+//	}
+//
+//	public void setListCalculationBean(ArrayList<CalculationBean> listCalculationBean) {
+//		this.listCalculationBean = listCalculationBean;
+//	}
 
-	public void setListCalculationBean(ArrayList<CalculationBean> listCalculationBean) {
-		this.listCalculationBean = listCalculationBean;
-	}
-
-	
-	
-
-	
-//=======
-//>>>>>>> refs/remotes/origin/SmartQuote-v3
 
 }
