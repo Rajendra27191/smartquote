@@ -1,10 +1,10 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices', 'DTOptionsBuilder', 'DTColumnDefBuilder','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices, DTOptionsBuilder, DTColumnDefBuilder,$upload){
+.controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQManageMenuServices', 'DTOptionsBuilder', 'DTColumnDefBuilder','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices, DTOptionsBuilder, DTColumnDefBuilder,$upload){
 console.log('initialise SQManageCustomerController controller');
 $scope.form={};
 $scope.filepreview="";
 $scope.manageCustomer={};
-$scope.link="https://farm4.staticflickr.com/3261/2801924702_ffbdeda927_d.jpg"
+// $scope.link="https://farm4.staticflickr.com/3261/2801924702_ffbdeda927_d.jpg"
 // $scope.buttonstatus='add';
 $scope.address='';
 $scope.isAddress=false;
@@ -21,9 +21,9 @@ $scope.address="address1"
 
 $scope.init=function(){
 $rootScope.showSpinner();
-SQUserHomeServices.GetCustomerListView();	
+SQManageMenuServices.GetCustomerListView();	
 //$rootScope.showSpinner();
-//SQUserHomeServices.GetCustomerList();
+//SQManageMenuServices.GetCustomerList();
 // $("#customerDataTable").dataTable({
 //   	"order":[[2,"desc"]]
 //   });
@@ -136,6 +136,7 @@ $scope.addCustomerBtnClicked=function(){
 	$scope.isCustomerTableView=false;
 	$scope.addCustomerBtnShow=false;
 	$scope.isCustomerAddView=true;
+	$scope.filepreview="";
 };
 
 $scope.cancelAddCustomer=function(){
@@ -287,14 +288,14 @@ if($scope.form.manageCustomer.$valid){
 	 	$rootScope.alertError("Customer code already exist");
 	}else{
 		$rootScope.showSpinner();
-		// SQUserHomeServices.CreateCustomer($scope.jsonToSaveCustomer());
+		// SQManageMenuServices.CreateCustomer($scope.jsonToSaveCustomer());
 		$scope.createCustomer();
 	}	
 	}else if($scope.buttonstatus=='edit'){
 		$rootScope.showSpinner();
 		console.log($scope.jsonToSaveCustomer());
 		$scope.updateCustomer();
-		// SQUserHomeServices.UpdateCustomer($scope.jsonToSaveCustomer());
+		// SQManageMenuServices.UpdateCustomer($scope.jsonToSaveCustomer());
 	}
 	// console.log($scope.jsonToSaveCustomer());	
 }else{
@@ -387,7 +388,7 @@ if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
 	window.onkeydown = previousWindowKeyDown;
 	if (isConfirm) {
 	 $rootScope.showSpinner();
-	 SQUserHomeServices.DeleteCustomer(customerCode);
+	 SQManageMenuServices.DeleteCustomer(customerCode);
 	} 
 	});
 }
@@ -442,27 +443,3 @@ $scope.$on('$destroy', function(event, message) {
 
 }])
 
-.directive("fileinput", [function() {
-    return {
-      scope: {
-        fileinput: "=",
-        filepreview: "="
-      },
-      link: function(scope, element, attributes) {
-        element.bind("change", function(changeEvent) {
-          scope.fileinput = changeEvent.target.files[0];
-          var reader = new FileReader();
-          reader.onload = function(loadEvent) {
-            scope.$apply(function() {
-              scope.filepreview = loadEvent.target.result;
-            });
-          }
-          // console.log(scope.fileinput)
-          if (scope.fileinput) {
-          reader.readAsDataURL(scope.fileinput);
-          }
-          	
-        });
-      }
-    }
-  }]);

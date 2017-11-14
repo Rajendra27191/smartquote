@@ -12,6 +12,7 @@ angular.module('sq.SmartQuoteDesktop')
         userLoginAPI:$resource('/smartquote/login?email=:email&password=:password', {}, {userLoginMethod :{method: 'GET'},params:{email:'@email',password:'@password'}}),
         userLogoutAPI:$resource('/smartquote/logout', {}, {userLogoutMethod :{method: 'POST'}}),
         userForgotPasswordAPI:$resource('/smartquote/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),
+        checkSessionActiveAPI:$resource('/smartquote/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}})
       };
     var home = {};
     home.GetUserGroupMenu = function () {
@@ -45,8 +46,8 @@ angular.module('sq.SmartQuoteDesktop')
 
     home.userLogIn = function (email,password) {
        HomeServices.userLoginAPI.userLoginMethod({email:email,password:password},function (success) {
-          // console.log("Login Success");
-        //console.log(data);
+        // console.log("Login Success");
+        // console.log(success);
         $rootScope.$broadcast('UserLogInDone', success); 
         }, function (error) {
           // console.log(error);
@@ -89,7 +90,8 @@ angular.module('sq.SmartQuoteDesktop')
     };
 
     home.apiCallToCheckUserSession=function(){
-       HomeServices.getUserGroupAPI.getUserGroupInfoMethod(function (success) {
+       // HomeServices.getUserGroupAPI.getUserGroupInfoMethod(function (success) {
+       HomeServices.checkSessionActiveAPI.checkSessionActiveMethod(function (success) {
         // console.log(success);
         $rootScope.$broadcast('sesssion', success);   
         }, function (error) {

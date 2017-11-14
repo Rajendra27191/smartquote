@@ -62,6 +62,10 @@ angular.module('sq.SmartQuoteDesktop')
       controller:'SQManageAlternateProductController',
       templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_alternate_product.view.html',
     })
+    .state('manageoffers', {
+     	controller:'SQManageOffersController',
+    	templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_offers.view.html',
+    })
    .state('createquote', {
       controller:'SQCreateQuoteController',
       templateUrl: 'SQ/UserHome/Quote/views/sq.create_quote.view.html',

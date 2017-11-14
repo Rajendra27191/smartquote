@@ -112,13 +112,13 @@ table.dataTable tbody th,table.dataTable tbody td {
 					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
 					<th style="width: 17%;">Cust Name &nbsp;</th>
 					<!-- <th style="width: 10%;">Phone &nbsp;</th> -->
-					<th style="width: 13%;">Email &nbsp;</th>
+					<th style="width: 12%;">Email &nbsp;</th>
 					<th style="width: 10%;">Sales Person &nbsp;</th>
 					<th style="width: 10%;">Supplier &nbsp;</th>
 					<!-- <th style="width: 5%;">Atten &nbsp;</th> -->
 					<th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
 					<th style="width: 8%;">Status &nbsp;</th>
-					<th style="width: 10%;text-align:center;">Action &nbsp;</th>
+					<th style="width: 11%;text-align:center;">Action &nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -162,9 +162,28 @@ table.dataTable tbody th,table.dataTable tbody td {
 						<!-- <span data-ng-bind="quote.status"></span> -->
 						{{::quote.status}}
 					</td>
-					<td style="text-align:center;"><span style="cursor: pointer; margin: 0px 0px;"
+
+					<td>
+					<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit quote" style="padding:0px 5px;">
+					<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+					</button>
+					<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment on quote" style="padding:0px 5px;">
+					<i class="fa fa-commenting-o" aria-hidden="true"></i>
+					</button>
+					<!-- <a target="_blank" class="btn btn-default" style="padding:0px 5px;" href="/smartquote/custComparison?quoteId={{quote.quoteId}}" tooltip-placement="top" uib-tooltip="Click to create pdf">
+						<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+					</a> -->
+					<button  class="btn btn-default" ng-click="saveAsPDF(quote)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
+					<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+					</button>	
+					<button  class="btn btn-default" ng-click="exportToPronto(quote)" tooltip-placement="top" uib-tooltip="click to export to pronto contract.xls" style="padding:0px 5px;">
+					<i class="fa fa-table" aria-hidden="true"></i>
+					</button>	
+						<!-- <span style="cursor: pointer; margin: 0px 0px;"
 						ng-click="viewDetailInformation(quote)" popover-placement="left"
-						uib-popover="Click to view/edit quote."
+						uib-popover="Click to view
+
+						/edit quote."
 						popover-trigger="'mouseenter'"><i
 							class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
 						<span style="cursor: pointer; margin: 0px 0px;"
@@ -172,13 +191,14 @@ table.dataTable tbody th,table.dataTable tbody td {
 						uib-popover="Click to add comment on quote."
 						popover-trigger="'mouseenter'"><i
 							class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
-						<!-- <a target="_blank" href="/smartquote/custComparison?quoteId={{quote.quoteId}}">email me</a> -->
+						<a target="_blank" href="/smartquote/custComparison?quoteId={{quote.quoteId}}">email me</a>
 						<span style="cursor: pointer;margin: 0px 0px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
 						<span style="cursor: pointer; margin: 0px 0px;"
 						ng-click="exportToPronto(quote)" popover-placement="left"
 						uib-popover="Click to export to pronto contract.xls"
 						popover-trigger="'mouseenter'"><i class="fa fa-table fa-lg"
-							aria-hidden="true"></i></span></td>
+							aria-hidden="true"></i></span> -->
+					</td>
 				</tr>
 			</tbody>
 		</table>

@@ -29,6 +29,7 @@ import pojo.QuoteBean;
 import com.opensymphony.xwork2.ActionSupport;
 
 import dao.CustComparisonDao;
+import dao.QuoteDao;
 
 @SuppressWarnings("serial")
 public class CustComparisonAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
@@ -131,6 +132,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
 			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("no")) {
 				currentSubTotal = currentSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();
+				System.out.println("obj.getArrayPdfSubReportBean().get(i)" +obj.getArrayPdfSubReportBean().get(i).toString());
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
 					currentGstTotal = currentGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
 				}
@@ -277,7 +279,6 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			System.out.println("objPdfMasterReportBean :: " + objPdfMasterReportBean);
 			
 			exportParameters.put("alternativeAdded", objPdfMasterReportBean.isAlternativeAdded());
-
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
@@ -300,13 +301,19 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			} else {
 				exportParameters.put("customerLogoPath", custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			}
-
+			
+			QuoteDao objQuoteDao=new QuoteDao();
+			objPdfMasterReportBean.setOfferList(objQuoteDao.getOfferList(objPdfMasterReportBean.getQuoteId(),getText("offer_template_url")));
+			objQuoteDao.closeAll();
+//			System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList());
+			
 			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSource3 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSource2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getArrayPdfSubReportBean());
 			String sourceFileName1 = dirPath + "/MainHeaderPage.jasper";
 			String sourceFileName2 = dirPath + "/ProductDetailsPage.jasper";
 			String sourceFileName3 = dirPath + "/MainFooterPage.jasper";
+			
 
 			FileInputStream report1 = new FileInputStream(sourceFileName1);
 			FileInputStream report2 = new FileInputStream(sourceFileName2);
@@ -318,12 +325,25 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
 			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, exportParameters, beanColDataSource2);
 			JasperPrint jasperPrint3 = JasperFillManager.fillReport(report3, exportParameters, beanColDataSource3);
+			
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
 			list.add(jasperPrint1);
 			list.add(jasperPrint2);
+	
+			JRBeanCollectionDataSource beanColDataSource4=null;String sourceFileName4="";
+			JasperPrint jasperPrint4=null;FileInputStream report4=null;
+			if (objPdfMasterReportBean.getOfferList().size()>0) {
+				beanColDataSource4 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getOfferList());
+				sourceFileName4 = dirPath + "/OfferDetailsPage.jasper";
+				report4 = new FileInputStream(sourceFileName4);
+				jasperPrint4 = JasperFillManager.fillReport(report4, exportParameters, beanColDataSource4);
+				list.add(jasperPrint4);
+			}
 			list.add(jasperPrint3);
-
+			
+			
+			
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
 //			exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
@@ -332,6 +352,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			
 			exp.exportReport();
 			System.out.println("Done...!");
+			objCustComparisonDao.closeAll();
 //			System.out.println("Export params ::"+exportParameters);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -347,6 +368,8 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			System.out.println("dirPath: " + dirPath);
 			exportParameters.put("subreportPath", dirPath + "/");
 			arrayPdfMasterReportBeans.add(objMasterReportBean);
+//			objCustComparisonDao.commit();
+			objCustComparisonDao.closeAll();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -282,26 +282,11 @@
   border-radius: 0px;
   margin-bottom: 30%;
   }
-  /*.div-trans .form-group input{
-  color: #fff;
-  }
-  .div-trans .form-group input::-webkit-input-placeholder{
-  color: #fff;
-  }
-  .div-trans .form-group input::-moz-placeholder{
-  color: #fff;
-  }*/
   .div-trans i {
   margin-left: 10px; 
   margin-right: 15px; 
   color: #fff;
   }
-  /*.div-trans span {
-  color: #ff0000;
-  }*/
-  /*#signin .form-control {
-  background-color:transparent;
-  }*/
   .fade-scale {
   transform: scale(0);
   opacity: 0;
@@ -321,11 +306,9 @@
   font-size: 16px;
   color: #113654;
   margin: 6% 0% 6% 0%
-
   }
   .sub-label{
   text-transform: capitalize;
-  /* color: #777575; */
   color: #6f6767;
   font-size: 15px;
   margin-bottom: 0px; 
@@ -335,7 +318,6 @@
   color: red; 
   }
   .container-box{
-  /*border: 1px solid #c3b9b9;*/
   padding: 12px;
   border-radius: 6px;
   box-shadow: 0px 2px 10px 2px lightgrey;
@@ -486,34 +468,90 @@
   font-style: italic;
   text-decoration: underline;
   }
-  /*Shrink navbar*/
-  /*nav a {
-  padding-top: 20px !important;
-  padding-bottom: 20px !important;
-  font-size: 18px;
-  }
+  /*========== Move Top Button ==========*/
+.moveTop{
+  position:fixed;
+  text-align:center;
+  bottom:25px;
+  background-color: #B4B1AB;
+  width:3%;
+  height:35px;
+  right:10px;
+  color:#fff;
+  padding:5px;
+  font-size:18px;
+  cursor:pointer;
+}
 
-  nav .navbar-toggle {
-  margin: 13px 15px 13px 0;
-  }
-  .navbar-brand {
-  font-size: 30px;
-  }
-  nav.navbar.shrink {
-  min-height: 35px;
-  }
-
-  nav.shrink a {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-  font-size: 15px;
-  }
-
-  nav.shrink .navbar-brand {
-  font-size: 25px;
-  }
-
-  nav.shrink .navbar-toggle {
-  padding: 4px 5px;
-  margin: 8px 15px 8px 0;
-  }*/
+.moveTop:hover{
+  position:fixed;
+  text-align:center;
+  bottom:25px;
+  background-color:#113654;
+  width:3%;
+  height:35px;
+  right:10px;
+  color:#fff;
+  padding:5px;
+  font-size:18px;
+  cursor:pointer;
+}
+  /*=============Callout CSS Starts=============*/
+  .bs-callout {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+.bs-callout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-callout p:last-child {
+    margin-bottom: 0;
+}
+.bs-callout code {
+    border-radius: 3px;
+}
+.bs-callout+.bs-callout {
+    margin-top: -5px;
+}
+.bs-callout-default {
+    border-left-color: #777;
+}
+.bs-callout-default h4 {
+    color: #777;
+}
+.bs-callout-primary {
+    border-left-color: #428bca;
+}
+.bs-callout-primary h4 {
+    color: #428bca;
+}
+.bs-callout-success {
+    border-left-color: #5cb85c;
+}
+.bs-callout-success h4 {
+    color: #5cb85c;
+}
+.bs-callout-danger {
+    border-left-color: #d9534f;
+}
+.bs-callout-danger h4 {
+    color: #d9534f;
+}
+.bs-callout-warning {
+    border-left-color: #f0ad4e;
+}
+.bs-callout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-callout-info {
+    border-left-color: #5bc0de;
+}
+.bs-callout-info h4 {
+    color: #5bc0de;
+}
+  /*=============Callout CSS Ends=============*/
+  

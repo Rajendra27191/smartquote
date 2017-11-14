@@ -1,91 +1,108 @@
 <style type="text/css" media="screen">
-	.borderBox{
-		border: 1px solid #EEE8E8; padding : 0px ;border-radius: 6px;
-	}
-	.borderTable{
-		border: 1px solid #EEE8E8;;border-radius: 0px;
-	}
-	.main-label{
-		margin: 3% 0% 1% 0%;
-	}
-	.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
-    /* background-color: #f3f3f3; */
-    /* opacity: 1; */
-    background: rgba(243, 243, 243, 0.5);
-	}
-	textarea {
-    resize: none;
-	}
-	[class|=col-md-4]{
-		padding-right: 0px;
-	}
+.borderBox{
+border: 1px solid #EEE8E8; padding : 0px ;border-radius: 6px;
+}
+.borderTable{
+border: 1px solid #EEE8E8;;border-radius: 0px;
+}
+.main-label{
+margin: 3% 0% 1% 0%;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+/* background-color: #f3f3f3; */
+/* opacity: 1; */
+background: rgba(243, 243, 243, 0.5);
+}
+textarea {
+resize: none;
+}
+[class|=col-md-4]{
+padding-right: 0px;
+}
 
-	.col-panel{
-		padding: 0px;
-	}
-	fieldset {
-    border: 1px solid gray;
-    /* background: #ddd; */
-    border-radius: 5px; 
-    padding: 15px;
+.col-panel{
+padding: 0px;
+}
+fieldset {
+border: 1px solid gray;
+border-radius: 0px; 
+/*border-radius: 5px; */
+padding: 15px;
 }
 legend {
-    display: block;
-    width: auto;
-    border-bottom: none;
-    margin-bottom: 0px;
-    font-size: 15px;
+display: block;
+width: auto;
+border-bottom: none;
+margin-bottom: 0px;
+font-size: 15px;
 }
 .table>thead>tr>th {
-    padding: 5px;
+padding: 5px;
 }
 
 .para{
 margin: 0px;
-/* color:rgba(119, 117, 117, 0.8); */
 }
 
 .label-default{
-	font-size: 14px;
+font-size: 14px;
 
 }
 .alt-product{
-	background: rgba(245, 9, 4, 0.03);
+background: rgba(245, 9, 4, 0.03);
 }
 .price{
-	text-align: right;
+text-align: right;
 }
 .t_head{
-	text-align: left;
-	font-size: 12px;
-	color: #333;
-	font-weight: bold;
-	/* padding: 0px 0px 0px 5px; */
-	padding: 5px;
-	cursor: pointer;;
+text-align: left;
+font-size: 12px;
+color: #333;
+font-weight: bold;
+padding: 5px;
+cursor: pointer;;
 }
 .t_data{
-	text-align: left;
-	font-size: 12px;
-	color: #333;
-	/* padding: 0px 0px 0px 5px; */
-	padding: 5px;
+text-align: left;
+font-size: 12px;
+color: #333;
+padding: 5px;
 }
 #productTable .col-md-12{
 padding: 0px;
 }
 .panel-heading {
-    padding: 5px 10px;
+padding: 5px 10px;
 }
-/*.row-control{
-	padding: 0px 15px;
-}*/
+
 .col-md-8 {
 padding-left:0px; 
 }
 .input-group-btn .btn {
-    padding: 3px 12px;
-  }
+padding: 3px 12px;
+}
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    color: #6f6767;
+}
+#offerPanel .panel-body {
+    padding: 10px;
+    min-height: 110px;
+    max-height: 110px;
+    overflow-y: scroll
+
+}
+.checkbox, .radio {
+    margin-top: 0px; 
+}
+.switch {
+	top:0px;
+}
+.panel {
+     margin-bottom: 1%; 
+}
 </style>
 <div class="container" style="padding-right: 25px;padding-left: 25px;">
  <!-- <shortcut></shortcut> -->
@@ -114,7 +131,7 @@ padding-left:0px;
 </div> -->
 
 
-<div class="panel panel-default" style="border-radius:4px 4px 0px 0px">
+<div class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
 <div class="panel-heading"><label class="sub-label" style="text-transform: uppercase;">Customer Information</label></div>
 <div class="panel-body">	
 <div class="row row-control">
@@ -230,7 +247,7 @@ padding-left:0px;
 			</div>
 			<div class="col-md-8">
 		
-			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList" required>
+			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList" required ng-disabled="disableSalesPersonSelect">
 			<option value="">Select Sales Person</option>
 			</select>
 			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
@@ -325,14 +342,13 @@ padding-left:0px;
 
 </div>
 </div>
-<br>
-<div class="row">
+<div class="row" ng-if="showAddProductError">
 <div class="col-md-6"></div>
 <div class="col-md-6">
 <span ng-show="showAddProductError" class="invalid-control" style="float: right;"><small>*Please add products before save.</small></span>	
 </div>	
 </div>
-<div class="panel panel-default" style="border-radius:0px; margin-bottom: 1%;">
+<div class="panel panel-default" style="border-radius:0px;">
 	<div class="panel-heading">
 	<div class="row">
 	<div class="col-md-4">
@@ -340,7 +356,7 @@ padding-left:0px;
 	</div>
 	<div class="col-md-6"></div>
 	<div class="col-md-2">
-		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product
+		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products into quote. [ctrl+shift+a]" > <i class="glyphicon glyphicon-plus"></i> Add Product
 		</a>
 		<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
 		<!-- <a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="openMyModal()" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product Modal
@@ -392,8 +408,8 @@ padding-left:0px;
 		<div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.unit"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.avgcost"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.itemQty"></div>
-		<div class="col-md-1 t_data" style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
-		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
 		</div>	
 		</div>	
 		<div class="col-md-6" style="padding: 0px;">
@@ -405,11 +421,11 @@ padding-left:0px;
 		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.savings)"></span></div>
 		<div class="col-md-1 t_data" style="text-align:center;width:11%;"><span data-ng-bind="product.gstFlag"></span></div>
 		<div class="col-md-1 t_data" style="text-align:center;width:10%;">
-		<span ng-if="product.lineComment!=null" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:blue;"></i> </span>	
+		<span ng-if="product.lineComment!=null&&product.lineComment!=''" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:#31708f;"></i> </span>	
 		</div>
 		<div class="col-md-2 t_data" style="text-align:center;width:17%;">
-		<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" popover-placement="left" uib-popover="Click to edit product."  popover-trigger="'mouseenter'"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" style="color:blue;"></i></span>
-        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" popover-placement="left" uib-popover="Click to delete product."  popover-trigger="'mouseenter'"><i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color:blue;"></i></span>
+		<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" tooltip-placement="top" uib-tooltip="Click To Edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
+        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" tooltip-placement="top" uib-tooltip="Click To Delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
         </div>
 		</div>	
 		</div>	
@@ -588,45 +604,93 @@ padding-left:0px;
 	</div>	
 </div>
 
-<div class="row" style="margin-top: 3%;">
-	<div class="col-md-8" style="padding: 0px;">
-	<div class="col-md-3" style="padding: 0px;">
-	<div class="col-md-12"><label>Services</label></div>
-	<div class="col-md-12" >
-	<p ng-repeat="service in serviceList">
-	<input type="checkbox" name="service" ng-model="serviceList[$index].code" ng-change="" ng-init="serviceList[$index].code=false;" style="height: 15px; width: 15px;"> <label class="sub-label">{{service.value}}</label>
-	<!--  customerQuote.serviceList[$index].value=service.value;customerQuote.serviceList[$index].key=service.key;  -->
-	<!-- {{serviceList[$index]}} -->
-	</p>
+<div class="row" style="margin-top: 1%;" id="offerPanel">
+	<div class="col-md-12">
+	<div class="col-md-3" style="padding: 0px;padding-right: 5px;">
+	<div class="panel panel-default" style="border-radius:0px 0px 0px 4px;;">
+	<div class="panel-heading"><label class="sub-label">Services</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="service in serviceArray">
+	<label>
+	<input type="checkbox" name="service" ng-model="serviceArray[$index].code" ng-init="serviceArray[$index].code=false;" style="height: 15px; width: 15px;" ng-if="!showEditQuoteView">		
+	<input type="checkbox" name="service" ng-model="serviceArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+	{{service.value}}
+	</label>
+	</div>
+	</div>
 	</div>
 	</div>	
-	<div class="col-md-3" style="padding: 0px;">
-	<div class="col-md-12" style="padding: 0px;"><label>Terms & Conditions</label></div>
+	<div class="col-md-4" style="padding: 0px;padding-right: 5px;">
+	<div class="panel panel-default" style="border-radius:0px;">
+	<div class="panel-heading"><label class="sub-label">Terms & Conditions</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="term in termConditionArray">
+		<label >
+		<input type="checkbox" name="term" ng-model="termConditionArray[$index].code" ng-init="termConditionArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView">
+		<input type="checkbox" name="term" ng-model="termConditionArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+		{{term.value}}
+		</label>
+		</div>
+	</div>
+	</div>
+	</div>
+	<div class="col-md-5" style="padding: 0px;">
+	<div class="panel panel-default" style="border-radius:0px 0px 4px 0px;">
+	<div class="panel-heading"><label class="sub-label">Offers</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="offer in offerArray">
+	<label>	
+	<input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
+	<input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+	{{offer.offerName}}
+	</label>
+	</div>	
+	</div>
+	</div>
+	<!-- 	<uib-accordion>
+		<div uib-accordion-group class=" panel panel-default" ng-init="isOpen=true;"  is-open="isOpen">
+		<uib-accordion-heading>
+		<label >Offers</label>
+		<i class="pull-right glyphicon glyphicon-chevron-right" ng-show="!isOpen"></i>
+		<i class="pull-right glyphicon glyphicon-chevron-down" ng-show="isOpen"></i>
+		</uib-accordion-heading>
+		<div class="checkbox" ng-repeat="offer in offerArray">
+		<label>	
+		<input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
+		<input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+		{{offer.offerName}}</label>
+		</div>
+		</div>
+		</uib-accordion> -->
+	</div>
+	<!--  -->
+
+	</div>
+
+</div>
+<div class="row" style="margin-top: 1%;">
 	<div class="col-md-12" style="padding: 0px;">
-	<p ng-repeat="term in termConditionList">
-	<input type="checkbox" name="term" ng-model="termConditionList[$index].code" ng-init="termConditionList[$index].code=false;"  style="height: 15px; width: 15px;"> <label class="sub-label">{{term.value}}</label>
-	<!-- {{termConditionList[$index]}} -->
-	<!-- customerQuote.termConditionList[$index].value=term.value;customerQuote.termConditionList[$index].key=term.key; -->
-	</p>
-	</div>
-	</div>
-	<div class="col-md-3" style="padding: 0px;" ng-if="isAlternateAdded">
-		<div class="col-md-12" style="padding: 0px;"><label>Save With Alternative</label></div>
-	<div class="col-md-12" style="padding: 0px;">
-	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No"></switch> 
-	<!-- ng-change="saveWithAlternativeChecked(customerQuote.saveWithAlternative)" -->
-	</div>
+	
+	<div class="col-md-6"></div>
+	<!--  -->
+	<div class="col-md-2" style="padding: 0px;padding-left:10px;" >
+	<div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
+	<label class="sub-label">Save With Alternative</label>
+	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save Quote With Alternatives"></switch>
 	</div>
 	</div>
 	<div class="col-md-4" style="padding: 0px;">
 	<div class="col-md-6">
-	<button id="create" ng-click="createQuote()" class="btn  btn-block button-ok" style="margin-top: 0px;" ng-if="!showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
-	<button id="create" ng-click="updateQuote()" class="btn  btn-block button-ok" style="margin-top: 0px;" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>	
-	</div>
+	<button id="create" ng-click="createQuote()" class="btn btn-block button-ok" style="" ng-if="!showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
+	<button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>
+	</div>	
 	<div class="col-md-6">
-	<button id='cancel' ng-click="cancelCreateQuote()" class="btn  btn-block button-delete" style="margin-top: 0px;"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+	<button id='cancel' ng-click="cancelCreateQuote()" class="btn btn-block button-delete" style=""><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
+	</div>		
 	</div>
-	</div>
+
+	</div> 
+
 </div>
 
 
@@ -637,29 +701,12 @@ padding-left:0px;
 </div>
 
 
+<!-- <div class="row" ng-if="!showEditQuoteView">
+  <div class="moveTop" ng-click="moveToCustomerInfo();" uib-tooltip="Move To Top" tooltip-placement="top">
+   <i class="glyphicon glyphicon-chevron-up"></i>
+  </div>
+</div> -->
 <!-- <div ng-include="'SQ/UserHome/Quote/views/add_product_modal.html'" ng-if="productList.length>0"></div> -->
 <!-- <div ng-include="'SQ/UserHome/Quote/views/sq.add_product_into_quote_modal.html'"></div> -->
 <div ng-include="'SQ/UserHome/Quote/views/addproduct-uib-modal.html'"></div>
 
-<!-- Modal -->
-<!-- <div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-         <div class="input-group">
-                <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
-                <input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(selectedProduct)" style="padding: 6px 6px;" autofocus>
-          </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div> -->

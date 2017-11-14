@@ -87,18 +87,20 @@ public String getIsAlternative() {
 public void setIsAlternative(String isAlternative) {
 	this.isAlternative = isAlternative;
 }
-@Override
-public String toString() {
-	return "PDFSubReportBean [productCode=" + productCode + ", productDescription=" + productDescription + ", productUOM=" + productUOM
-			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
-			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
-			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + "]";
-}
+
 public String getGstExempt() {
 	return gstExempt;
 }
 public void setGstExempt(String gstExempt) {
 	this.gstExempt = gstExempt;
+}
+@Override
+public String toString() {
+	return "PDFSubReportBean [productCode=" + productCode + ", productDescription=" + productDescription + ", productUOM=" + productUOM
+			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
+			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
+			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + ", quoteDetailId="
+			+ quoteDetailId + ", altForQuoteDetailId=" + altForQuoteDetailId + ", gstExempt=" + gstExempt + "]";
 }
 
 

@@ -42,46 +42,38 @@ $scope.confirmChangeView=function(subMenuName){
   if(subMenuName.toLowerCase()==='home'){
    $state.transitionTo('userhome.start');
   }
-
   if(subMenuName.toLowerCase()==='manage user group'){
   // $state.transitionTo('manageusergroup');  
   $state.go('manageusergroup', {}, {reload: true});
   }
-  
   if(subMenuName.toLowerCase()==='manage user'){
-  $state.go('manageuser', {}, {reload: true});  
-  // $state.transitionTo('manageuser');   
+  $state.go('manageuser', {}, {reload: true});     
   }
   if(subMenuName.toLowerCase()==='manage customer'){
    $state.go('managecustomer', {}, {reload: true});  
-  // $state.transitionTo('managecustomer');    
   }
   if(subMenuName.toLowerCase()==='manage product group'){
-    $state.go('manageproductgroup', {}, {reload: true});  
-  // $state.transitionTo('manageproductgroup');    
+    $state.go('manageproductgroup', {}, {reload: true});   
   }
   if(subMenuName.toLowerCase()==='manage product'){
     $state.go('manageproduct', {}, {reload: true});  
-  // $state.transitionTo('manageproduct');    
   } 
   if(subMenuName.toLowerCase()==='upload product file'){
-  // $state.transitionTo('uploadproductfile');    
   $state.go('uploadproductfile', {}, {reload: true}); 
   }
-  if(subMenuName.toLowerCase()==='create/edit terms and conditions'){
-  // $state.transitionTo('managetermsconditions');   
+  if(subMenuName.toLowerCase()==='create/edit terms and conditions'){  
   $state.go('managetermsconditions', {}, {reload: true});  
   }
   if(subMenuName.toLowerCase()==='create/edit services'){
-  // $state.transitionTo('manageservices');    
   $state.go('manageservices', {}, {reload: true});  
   }
   if(subMenuName.toLowerCase()==='manage alternate product'){
-  // $state.transitionTo('manageservices');    
   $state.go('managealternateproduct', {}, {reload: true});  
   }
+  if(subMenuName.toLowerCase()==='create/edit offers'){
+	  $state.go('manageoffers', {}, {reload: true});  
+  }
   if(subMenuName.toLowerCase()==='create quote'){
-  // $state.transitionTo('createquote');  
   $state.go('createquote', {}, {reload: true});    
   } 
   if(subMenuName.toLowerCase()==='view/edit quote'){
@@ -317,6 +309,21 @@ if (product) {
 //   name: 'states',
 //   source: substringMatcher(states)
 // });
+
+
+
+$scope.colors = ["rgb(159,204,0)","rgb(250,109,33)","rgb(154,154,154)"];
+// $scope.labels = ["Green", "Orange", "Grey"];
+// $scope.data = [300, 500,300];
+
+
+$scope.labels = ['2006', '2007', '2008'];
+// $scope.series = ['Series A', 'Series B'];
+
+$scope.data = [
+[65, 59, 80, 81],
+[28, 48, 40, 19]
+];
 
 $scope.$on('$destroy', function(event, message) {
 	

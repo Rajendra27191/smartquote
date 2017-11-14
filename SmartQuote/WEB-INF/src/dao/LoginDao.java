@@ -50,9 +50,15 @@ public class LoginDao {
 		UserBean objBean = null;
 		ResultSet rs = null;
 		try {
-			String isUserPresentQuery = "SELECT user_id, user_group_id, user_name, email, password, "
-					+ " contact, valid_from, valid_to FROM user_master"
-					+ " WHERE email = ? AND password = ?";
+//			String isUserPresentQuery = "SELECT user_id, user_group_id, user_name, email, password, "
+//					+ " contact, valid_from, valid_to FROM user_master"
+//					+ " WHERE email = ? AND password = ?";
+			String isUserPresentQuery="SELECT a.user_id, b.user_group_id,b.user_group_name, "
+					+ "a.user_name, a.email, a.password,a.contact, a.valid_from, a.valid_to "
+					+ "FROM user_master a "
+					+ "LEFT OUTER JOIN user_group b ON a.user_group_id=b.user_group_id "
+					+ "WHERE a.email = ? AND a.password = ?;";
+			
 			PreparedStatement pstmt = conn.prepareStatement(isUserPresentQuery);
 			pstmt.setString(1, email);
 			pstmt.setString(2, password);
@@ -62,9 +68,10 @@ public class LoginDao {
 				objBean = new UserBean();
 				objBean.setUserId(rs.getInt("user_id"));
 				objBean.setUserGroupId(rs.getInt("user_group_id"));
+				objBean.setUserType(rs.getString("user_group_name"));
 				objBean.setUserName(rs.getString("user_name"));
 				objBean.setEmailId(email);
-				objBean.setPassword(password);
+//				objBean.setPassword(password);
 				objBean.setContact(rs.getString("contact"));
 				objBean.setValidFrom(rs.getDate("valid_from"));
 				objBean.setValidTo(rs.getDate("valid_to"));

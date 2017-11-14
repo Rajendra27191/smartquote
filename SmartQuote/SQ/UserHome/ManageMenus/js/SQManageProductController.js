@@ -18,7 +18,7 @@ angular.module('sq.SmartQuoteDesktop')
         }
     }
 })
-.controller('SQManageProductController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','SQUserHomeServices','filterFilter',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,SQUserHomeServices,filterFilter){
+.controller('SQManageProductController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','SQManageMenuServices','filterFilter',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,SQManageMenuServices,filterFilter){
 console.log('initialise SQManageProductController controller');
 $window.pageYOffset;
 
@@ -32,9 +32,9 @@ $scope.disabledNext=false;
 
 // $scope.init=function(prodLike){
 // // $rootScope.showSpinner();
-// // SQUserHomeServices.GetProductList(prodLike);
+// // SQManageMenuServices.GetProductList(prodLike);
 // $rootScope.showSpinner();
-// SQUserHomeServices.GetProductGroupList();
+// SQManageMenuServices.GetProductGroupList();
 
 // };
 // $scope.init("");
@@ -80,7 +80,7 @@ $scope.toLimit=1000;
 
 $scope.init=function(from,to){
 $rootScope.showSpinner();
-SQUserHomeServices.GetProductListView(from,to);
+SQManageMenuServices.GetProductListView(from,to);
 };
 
 $scope.init(from,to);
@@ -97,7 +97,7 @@ $scope.getPreviousProducts=function(){
  // to=to-100;
 
  $rootScope.showSpinner();
- SQUserHomeServices.GetProductListView(from,to);
+ SQManageMenuServices.GetProductListView(from,to);
  $timeout(function() {
  $scope.toLimit=$scope.toLimit-1000;
  $scope.fromLimit=from;
@@ -115,7 +115,7 @@ $scope.getNextProducts=function(){
  to=1000;
  
  $rootScope.showSpinner();
- SQUserHomeServices.GetProductListView(from,to);
+ SQManageMenuServices.GetProductListView(from,to);
  $timeout(function() {
  $scope.toLimit=$scope.toLimit+1000;
  $scope.fromLimit=from;
@@ -194,7 +194,7 @@ console.log("searchProductInOtherList");
 console.log(search);
 var prodLike=search;
 $rootScope.showSpinner();
-SQUserHomeServices.GetSearchedProductListView(prodLike);
+SQManageMenuServices.GetSearchedProductListView(prodLike);
 
 };
 // /*=============GET PRODUCT  LIST==================*/
@@ -259,7 +259,7 @@ if(data){
   	}
   }
   $rootScope.showSpinner();
-  SQUserHomeServices.GetProductGroupList();
+  SQManageMenuServices.GetProductGroupList();
   }
   }
 }
@@ -406,12 +406,12 @@ $scope.saveProductDetails=function(){
 	 	$rootScope.alertError("Item code already exist");
 	}else{
 		$rootScope.showSpinner();
-		SQUserHomeServices.CreateProduct($scope.jsonToSaveProduct());
+		SQManageMenuServices.CreateProduct($scope.jsonToSaveProduct());
 	}	
 	}else if($scope.buttonstatus=='edit'){
 		$rootScope.showSpinner();
 		// console.log($scope.jsonToSaveProduct())
-		SQUserHomeServices.UpdateProductDetails($scope.jsonToSaveProduct());
+		SQManageMenuServices.UpdateProductDetails($scope.jsonToSaveProduct());
 	}
 }else{
 	$rootScope.moveToTop();
@@ -493,33 +493,38 @@ $rootScope.hideSpinner();
 });
 
 // /*==================DELETE CUSTOMER RESPONSE===================*/
-$scope.deleteFromProductListView=function(index){
-console.log(index);
+$scope.deleteFromProductListView=function(product){
+console.log("deleteFromProductListView")	
+// console.log(index);
+console.log(product);
 console.log($scope.productListView.length);
-$scope.productListView.splice(index,1);
+objIndex = $scope.productListView.findIndex((obj => obj.itemCode == product.itemCode));
+$scope.productListView.splice(objIndex,1);
 console.log($scope.productListView.length);
 $timeout(function() {
 $rootScope.hideSpinner();
 }, 3000);
 };
 
+var deleteProductObj={};
 $scope.deleteProduct=function(product,index){
+// console.log("$scope.productListView.length"+$scope.productListView.length);
+deleteProductObj={};
 var productCode=product.itemCode;
-console.log(product);
-console.log(index);
-$scope.deleteProductIndex=index;
 if (productCode!==''&&productCode!==undefined&&productCode!==null) {
 var previousWindowKeyDown = window.onkeydown;
 swal({
 title: 'Are you sure?',
 text: "You will not be able to recover this product!",
 showCancelButton: true,
-closeOnConfirm: false,
+closeOnConfirm: true,
 }, function (isConfirm) {
 window.onkeydown = previousWindowKeyDown;
 if (isConfirm) {
+	// $scope.deleteFromProductListView(product);
 $rootScope.showSpinner();
-SQUserHomeServices.DeleteProduct(productCode);
+SQManageMenuServices.DeleteProduct(productCode);
+deleteProductObj=product;
 } 
 });
 }
@@ -531,9 +536,6 @@ $scope.handleDeleteProductDoneResponse=function(data){
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
-  	// $rootScope.alertSuccess("Successfully deleted product");
-  	// $scope.reset();
-	// $scope.resetForm();
 	var previousWindowKeyDown = window.onkeydown;
 	swal({
 	title: 'Success',
@@ -544,9 +546,8 @@ if (data.code) {
 	if (isConfirm) {
 	// $scope.init();
 	$scope.initProduct();
-	$scope.deleteFromProductListView($scope.deleteProductIndex);
+	$scope.deleteFromProductListView(deleteProductObj);
 	// $scope.deleteFromProductListView($scope.deleteProductIndex);
-	
 	} 
 	});
 	}else{
@@ -574,7 +575,7 @@ $rootScope.hideSpinner();
 // $scope.getProductDetails=function(product){
 // //console.log(product);
 // $rootScope.showSpinner();
-// SQUserHomeServices.GetProductDetails(product.code);
+// SQManageMenuServices.GetProductDetails(product.code);
 // };
 
 // $scope.handleGetProductDetailsDoneResponse=function(data){

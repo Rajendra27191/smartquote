@@ -91,14 +91,17 @@ public class TermServicesDao {
 		return isTermConditionExist;
 	}
 
-	public boolean saveTermCondition(String termCondition) {
-		boolean isTermCreated = false;
+	@SuppressWarnings("static-access")
+	public int saveTermCondition(String termCondition) {
+		int termId = 0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO term_condition_master (term_condition) VALUES (?)";
-			pstmt = conn.prepareStatement(createUserQuery);
+			pstmt = conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, termCondition);
 			pstmt.executeUpdate();
-			isTermCreated = true;
+			rs=pstmt.getGeneratedKeys();
+			if(rs.next())
+			termId = rs.getInt(1);
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -107,7 +110,7 @@ public class TermServicesDao {
 			}
 			e.printStackTrace();
 		}
-		return isTermCreated;
+		return termId;
 	}
 
 	public boolean isTermConditionExistForUpdate(String termCondition, int id) {
@@ -237,14 +240,19 @@ public class TermServicesDao {
 		return isTermConditionExist;
 	}
 
-	public boolean saveService(String service) {
-		boolean isTermCreated = false;
+	@SuppressWarnings("static-access")
+	public int saveService(String service) {
+//		boolean isTermCreated = false;
+		int serviceId=0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO service_master (service) VALUES (?)";
-			pstmt = conn.prepareStatement(createUserQuery);
+			pstmt = conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, service);
 			pstmt.executeUpdate();
-			isTermCreated = true;
+			rs=pstmt.getGeneratedKeys();
+			if(rs.next())
+				serviceId=rs.getInt(1);
+//			isTermCreated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -253,7 +261,7 @@ public class TermServicesDao {
 			}
 			e.printStackTrace();
 		}
-		return isTermCreated;
+		return serviceId;
 	}
 
 	public boolean isServiceExistForUpdate(String service, int id) {

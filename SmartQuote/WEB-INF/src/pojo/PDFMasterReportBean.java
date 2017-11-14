@@ -14,7 +14,7 @@ public class PDFMasterReportBean {
 	private int custId;
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
-
+	private ArrayList<OfferBean> offerList;
 	private CalculationBean objCalculationBean=new CalculationBean();
 //	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
@@ -121,6 +121,14 @@ public class PDFMasterReportBean {
 
 	public void setGstInclusive(boolean isGstInclusive) {
 		this.isGstInclusive = isGstInclusive;
+	}
+
+	public ArrayList<OfferBean> getOfferList() {
+		return offerList;
+	}
+
+	public void setOfferList(ArrayList<OfferBean> offerList) {
+		this.offerList = offerList;
 	}
 
 //	public ArrayList<CalculationBean> getListCalculationBean() {

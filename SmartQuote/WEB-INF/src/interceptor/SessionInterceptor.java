@@ -43,12 +43,12 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 	@SuppressWarnings({ "unchecked", "unused" })
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		EmptyResponseBean data = new EmptyResponseBean(); 
+		EmptyResponseBean data = new EmptyResponseBean();
 		HttpServletRequest request = ServletActionContext.getRequest();
 		@SuppressWarnings("rawtypes")
 		Map session = ActionContext.getContext().getSession();
 		boolean status = isLoggedIn(request);
-		 System.out.println("Intercepter Status: "+status);
+		System.out.println("Intercepter Status: " + status);
 
 		String url = request.getServletPath();
 		String actionName[] = url.split("/");
@@ -59,12 +59,12 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 		Enumeration parameterNames = request.getParameterNames();
 		System.out.println("-------------------------\n");
 		Gson gson = new Gson();
-//		System.out.println("PAram>>"+parameterNames);
-		String paramName="";
+		// System.out.println("PAram>>"+parameterNames);
+		String paramName = "";
 		ArrayList<String> valuArrayList = null;
 		for (; parameterNames.hasMoreElements(); objMapList.put(paramName, valuArrayList)) {
 			paramName = (String) parameterNames.nextElement();
-			
+
 			valuArrayList = new ArrayList<String>();
 			String as[];
 			int j = (as = request.getParameterValues(paramName)).length;
@@ -73,24 +73,23 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 				valuArrayList.add(URLEncoder.encode(paramValue, "UTF-8"));
 			}
 		}
-		System.out.println("Param Name :"+paramName + " | valuArrayList: " + valuArrayList);
-		System.out.println((new StringBuilder("Json1 = ")).append(
-				gson.toJson(objMapList)).toString());
-		
+		System.out.println("Param Name :" + paramName + " | valuArrayList: " + valuArrayList);
+		System.out.println((new StringBuilder("Json1 = ")).append(gson.toJson(objMapList)).toString());
+
 		String result = java.net.URLDecoder.decode(String.valueOf(valuArrayList), "UTF-8");
-		result = result.substring(1, result.length()-1);
-		System.out.println("Result1: "+ result);
-		
+		result = result.substring(1, result.length() - 1);
+		System.out.println("Result1: " + result);
+
 		System.out.println("status  = " + status);
-		if(!status){
-			CommonLoadAction cLoadAction=null;
-			if(url.equals("/createQuote")){
+		if (!status) {
+			CommonLoadAction cLoadAction = null;
+			if (url.equals("/createQuote")) {
 				System.out.println("Create Quote");
-				cLoadAction=new CommonLoadAction();
-				cLoadAction.createQuote(result);				
-			}else if(url.equals("/updateQuote")){
+				cLoadAction = new CommonLoadAction();
+				cLoadAction.createQuote(result);
+			} else if (url.equals("/updateQuote")) {
 				System.out.println("Update Quote");
-				cLoadAction=new CommonLoadAction();
+				cLoadAction = new CommonLoadAction();
 				cLoadAction.updateQuote(result);
 			}
 		}
@@ -100,9 +99,7 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 			} else {
 				return "sessionTimeOut";
 			}
-		}
-		else
-		{
+		} else {
 			new AuditDumpDao().insertData(Integer.parseInt(session.get("userId").toString()), url, gson.toJson(objMapList));
 		}
 		return invocation.invoke();

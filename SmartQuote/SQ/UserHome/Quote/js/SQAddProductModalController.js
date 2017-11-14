@@ -1,5 +1,5 @@
 	angular.module('sq.SmartQuoteDesktop')
-	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQUserHomeServices,SQQuoteServices,$uibModal,$http,hotkeys){
+	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQManageMenuServices,SQQuoteServices,$uibModal,$http,hotkeys){
 	console.log('initialise SQAddProductModalController');
 	// $('#searchProduct').focus();
 
@@ -321,7 +321,7 @@
 	$scope.getProductDetails=function(productCode){
 	$rootScope.showLoadSpinner();
 	SQQuoteServices.GetProductDetailsWithAlternatives(productCode);
-	// SQUserHomeServices.GetProductDetails(productCode);
+	// SQManageMenuServices.GetProductDetails(productCode);
 	// $http({
 	// method: "POST",
 	// // url: "/smartquote/getProductDetails?productCode="+productCode,
@@ -822,15 +822,24 @@
 	$scope.addProduct.selectedAlternativeProduct=value;
 	}
 	});
-	// $scope.getAlternativeProducts($scope.addProduct.itemCode);
 	}
-
-	// SQQuoteServices
+	if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
+		$scope.select.type='search';
+	};
+	
 	}else{
 	// document.getElementById("#searchProduct").focus();
 
 	}
 	//================ADD Line Comment=====================
+	$scope.deleteLineComment=function(){
+		if ($scope.addProduct.addComment) {
+		$scope.addProduct.lineComment="";
+		$scope.addProduct.addComment= false;
+		} else{
+			
+		};
+	}
 	$scope.checkedLineComments=function(){
 	console.log("checkedLineComments")
 	if ($scope.addProduct.addComment) {
@@ -841,16 +850,19 @@
 	  showCancelButton: true,
 	  closeOnConfirm: true,
 	  animation: "slide-from-top",
-	  inputPlaceholder: "Add Line Comment"
+	  inputPlaceholder: "add line comment"
 	},
 	function(inputValue){
 	  if (inputValue === false){
 	  	console.log(" inputValue false")
 	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
-	  return false;
+	  	$scope.addProduct.lineComment="";
+	  	return false;
 	  } 
 	  if (inputValue === "") {
-	    swal.showInputError("You need to add line comment!");
+	  	$scope.addProduct.lineComment="";
+	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
+	    // swal.showInputError("You need to add line comment!");
 	    return false
 	  }
 	  $scope.addProduct.lineComment=inputValue;

@@ -11,6 +11,8 @@ public class QuoteBean {
 	private String email;
 	private String faxNo;
 	private String phone;
+
+
 	private String quoteAttn;
 	private String isNewCustomer;
 	private String monthlyAvgPurchase;
@@ -31,6 +33,7 @@ public class QuoteBean {
 	private ArrayList<CommentBean> commentList;
 	private ArrayList<KeyValuePairBean> termConditionList;
 	private ArrayList<KeyValuePairBean> serviceList;
+	private ArrayList<OfferBean> offerList;
 	private boolean saveWithAlternative;
 	private ArrayList<AlternateProductBean> alternativeArray;
 
@@ -250,4 +253,23 @@ public class QuoteBean {
 		this.modifiedDate = modifiedDate;
 	}
 
+	public ArrayList<OfferBean> getOfferList() {
+		return offerList;
+	}
+
+	public void setOfferList(ArrayList<OfferBean> offerList) {
+		this.offerList = offerList;
+	}
+	@Override
+	public String toString() {
+		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
+				+ email + ", faxNo=" + faxNo + ", phone=" + phone + ", quoteAttn=" + quoteAttn + ", isNewCustomer=" + isNewCustomer
+				+ ", monthlyAvgPurchase=" + monthlyAvgPurchase + ", notes=" + notes + ", pricesGstInclude=" + pricesGstInclude
+				+ ", productList=" + productList + ", currentSupplierName=" + currentSupplierName + ", competeQuote=" + competeQuote
+				+ ", salesPerson=" + salesPerson + ", currentSupplierId=" + currentSupplierId + ", salesPersonId=" + salesPersonId
+				+ ", userId=" + userId + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", status=" + status
+				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList
+				+ ", offerList=" + offerList + ", saveWithAlternative=" + saveWithAlternative + ", alternativeArray=" + alternativeArray
+				+ "]";
+	}
 }

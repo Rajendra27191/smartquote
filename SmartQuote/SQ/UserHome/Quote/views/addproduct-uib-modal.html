@@ -140,6 +140,7 @@
                             <div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
                             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                            {{addProduct.lineComment}}
+                           <a href="#" class="close" ng-click="deleteLineComment()">&times;</a>
                             </div>
                             </div>
                         </div>
@@ -247,6 +248,7 @@
             <div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
            {{addProduct.lineComment}}
+           <a href="#" class="close" aria-label="close" ng-click="deleteLineComment()">&times;</a>
             </div>
             </div>
         </div>
@@ -654,6 +656,7 @@
                         <span ng-show="((form.addProductIntoQuote.altProductQuotePrice.$dirty && form.addProductIntoQuote.altProductQuotePrice.$invalid) 
                         || (form.addProductIntoQuote.altProductQuotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
                         <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.required">* please enter alt price.</small>
+                         <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* please enter valid price.</small>
                     </span>
                     <span class="invalid-control">
                         <small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* alt price should be greater than or equal to alt cost.</small>
@@ -939,15 +942,15 @@
     <div class="col-md-2" style="width:18%;">
         <!-- {{addAnotherProduct}} -->
         <!-- <input type="checkbox" name="addProduct" ng-model="addMore.addAnotherProduct"> <label class="sub-label"> Add another </label> -->
-        <button ng-hide="productButtonStatus=='edit'" type="button" class="btn btn-block btn-primary" ng-click="addNextProduct()" uib-popover="Click to add next product into quote. [ctrl+shift+z]" popover-placement="top" popover-trigger="'mouseenter'">
+        <button ng-hide="productButtonStatus=='edit'" type="button" class="btn btn-block btn-primary" ng-click="addNextProduct()" tooltip-placement="top" uib-tooltip="Click to add next product into quote. [ctrl+shift+z]">
             <i class="fa fa-plus" aria-hidden="true"></i> Add Next Product <br></button>
         </div>
         <div class="col-md-2" style="width:18%;">
-            <button type="button" class="btn btn-block btn-primary" ng-click="saveAndClose()" uib-popover="Click to save & close product. [ctrl+shift+s]" popover-placement="top" popover-trigger="'mouseenter'">
+            <button type="button" class="btn btn-block btn-primary" ng-click="saveAndClose()" uib-tooltip="Click to save & close product. [ctrl+shift+s]" tooltip-placement="top">
                 <i class="fa fa-floppy-o" aria-hidden="true"></i> Save & Close <br></button>        
             </div>
             <div class="col-md-2" style="width:14%;">
-                <button type="button" class="btn btn-block btn-default " data-dismiss="modal" aria-label="Close" ng-click="closeModal()" uib-popover="Click to close. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'">Close</button>
+                <button type="button" class="btn btn-block btn-default " data-dismiss="modal" aria-label="Close" ng-click="closeModal()"  uib-tooltip="Click to close. [ctrl+shift+a]" tooltip-placement="top">Close</button>
             </div>
         </div>
     </script>

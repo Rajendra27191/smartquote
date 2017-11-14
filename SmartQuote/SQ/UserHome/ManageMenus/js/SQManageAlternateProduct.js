@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageAlternateProductController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','hotkeys','SQManageMenuServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,hotkeys,SQManageMenuServices){
+.controller('SQManageAlternateProductController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQManageMenuServices','hotkeys','SQManageMenuServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices,hotkeys,SQManageMenuServices){
 	console.log('initialise SQManageAlternateProductController controller');
 
 	$scope.addAlternateProductBtnShow=true;
@@ -51,6 +51,7 @@ $scope.initAuotoComplete=function(){
 		datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
 		queryTokenizer: Bloodhound.tokenizers.whitespace,
 		prefetch: {
+			// url: "/smartquote/products.json?query=%QUERY",
 			url: "/smartquote/products.json?query=%QUERY",
 			cache: false,
 			beforeSend: function(xhr){
@@ -153,7 +154,7 @@ $scope.pushDetailsToAlternateProductList=function(product){
 };
 $scope.getProductDetails=function(prod){
 	$rootScope.showSpinner();
-	SQUserHomeServices.GetProductDetails(prod.code)
+	SQManageMenuServices.GetProductDetails(prod.code)
 };
 $scope.handleGetProductDetailsDoneResponse=function(data){
 	$scope.productDetails={};

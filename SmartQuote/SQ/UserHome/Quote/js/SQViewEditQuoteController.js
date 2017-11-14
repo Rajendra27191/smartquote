@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQViewEditQuoteController',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQUserHomeServices,hotkeys,$http,SQQuoteServices,CalculationFactory){
+.controller('SQViewEditQuoteController',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQManageMenuServices,SQManageMenuServices,hotkeys,$http,SQQuoteServices,CalculationFactory,ArrayOperationFactory){
 console.log('initialise SQViewEditQuoteController');
 $scope.quoteListView=[];
 $scope.quoteView={};
@@ -21,16 +21,23 @@ $scope.isEditViewShow=false;
 
 $scope.competeQuote=["Yes","No"];
 $scope.currentSupplierList=[];
-$scope.salesPersonList=[];
-$scope.userList=[];
+// $scope.salesPersonList=[];
+// $scope.userList=[];
 $scope.isAlternateAdded=false;
 
-//=============== init date========================
-$scope.today = function() {
-	$scope.dt = new Date();
-	console.log($scope.dt)
-	return $scope.dt;
 
+if ($rootScope.userData) {
+  if ($rootScope.userData.userType.toLowerCase()=="admin") {
+    $scope.disableSalesPersonSelect=false;
+  }else{
+    $scope.disableSalesPersonSelect=true;
+  }
+};
+//======= Date Control >>>>>
+$scope.today = function() {
+	// console.log($scope.dt)
+	$scope.dt = new Date();
+	return $scope.dt;
 };
 $scope.open1 = function() {
 $scope.popup1.opened = true;
@@ -47,44 +54,35 @@ showWeeks: false
 };
 $scope.customerQuote.modefiedDate=$scope.today();
 };
-
-$scope.quoteDateChanged=function(quoteDate){
-// console.log("quoteDateChanged");
-// console.log(quoteDate);
-// console.log(moment(quoteDate).format());
-// console.log(moment(quoteDate).format());
-// console.log(moment(quoteDate).format('YYYY-MM-DD,h:mm:ss a'));
-};
+$scope.quoteDateChanged=function(quoteDate){};
 $scope.getFormattedDate=function(date){
 var dt = new Date(date);
-// console.log("date ::: ",dt)
-// var fDate= moment(dt).format('YYYY-MM-DD');
 var fDate= moment(dt).format("DD-MM-YYYY");
-// console.log("getFormattedDate : "+fDate);
-// console.log(moment(fDate).format('YYYY-MM-DD'))
-// return moment(fDate).format('yyyy-MM-dd');
 return fDate;
 };
 
-//initialising Search======================
+//======= Date Control <<<<<
+
+//===== Search Product Text Box >>>>>
 $scope.initAuotoComplete=function(){
-// $scope.selectedProduct=null;
+console.log("initAuotoComplete...");
+var timestamp = new Date().getTime();
 products = new Bloodhound({
 	datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
 	queryTokenizer: Bloodhound.tokenizers.whitespace,
 	prefetch: {
-		url: "/smartquote/products.json?query=%QUERY",
+		url: "/smartquote/products.json?"+timestamp,
 		cache: false,
 		beforeSend: function(xhr){
         $rootScope.showSpinner();
         },
 		filter: function (devices) {
-			$rootScope.hideSpinner();
 			return $.map(devices, function (device) {
 				return {
 					code: device.code,
 					value : device.value
 				};
+			$rootScope.hideSpinner();
 			});
 		}
 	},
@@ -97,58 +95,18 @@ $rootScope.productsDataset = {
 // async: false,
 source: products.ttAdapter(),
 };
-
 $rootScope.exampleOptions = {
 	displayKey: 'title',
 	highlight: true
 };
-// $timeout(function() {
-// 	$rootScope.hideSpinner();
-// }, 1000);
 };
-// $scope.initAuotoComplete=function(){
-// 	$scope.selectedProduct=null;
-// 	 products = new Bloodhound({
-// 	    // datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.value); },
-// 	    datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-// 	    queryTokenizer: Bloodhound.tokenizers.whitespace,
-// 	    // local: $scope.productList,
-// 	    prefetch: {
-// 		url: "smartquote/products.json?query=%QUERY",
-// 		cache: false,
-// 		filter: function (devices) {
-// 		return $.map(devices, function (device) {
-// 		return {
-// 			code: device.code,
-// 		    value : device.value
-// 		};
-// 		});
-// 		}
-// 		},
-// 	  });
-//     products.initialize();
-    
-//     $rootScope.productsDataset = {
-//       displayKey: 'value',
-//       limit: 200,
-//       source: products.ttAdapter(),
-//     };
-//     $rootScope.exampleOptions = {
-//       displayKey: 'title',
-//       highlight: true
-//     };
-//     $timeout(function() {
-//   		 $rootScope.hideSpinner();
-//   	}, 1000);
-// }
+// $scope.dataTableOpt = {
+//    //custom datatable options 
+//   // or load data through ajax call also
+//   "aLengthMenu": [[10, 50, 100,-1], [10, 50, 100,'All']],
+//   };
 
-$scope.dataTableOpt = {
-   //custom datatable options 
-  // or load data through ajax call also
-  "aLengthMenu": [[10, 50, 100,-1], [10, 50, 100,'All']],
-  };
-
-// ===============================UIB MODAL CODE=================================//
+//===== ADD PRODUCT UIB MODAL >>>>>
 $scope.animationsEnabled=true;
 $scope.openMyModal = function (product) {
 	var modalInstance1=$uibModal.open({
@@ -208,29 +166,29 @@ $scope.openMyModal = function (product) {
 	});
 
 };
+//===== ADD PRODUCT UIB MODAL <<<<<
 
-// ===============================UIB MODAL CODE=================================//
-
+//===== initViewEditQuote() >>>>>
 $scope.initViewEditQuote=function(){
+console.log("initViewEditQuote...")
 $rootScope.showSpinner();
 SQQuoteServices.GetQuoteView();
-
 };
 $scope.initViewEditQuote();
 
 $scope.handleGetQuoteViewDoneResponse=function(data){
 if(data){
-	// console.log(data)
+// console.log(data)
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
  	$scope.quoteListView=data.result;
  	// $rootScope.showSpinner();
-	SQUserHomeServices.GetServices();
+	// SQManageMenuServices.GetServices();
 }else{
   $rootScope.alertError(data.message);
 }
-$rootScope.hideSpinner();
 }
+$rootScope.hideSpinner();
 }
 };
 
@@ -243,139 +201,38 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 
-// Get Terms & Services=====================================
-$scope.handleGetServicesDoneResponse=function(data){
-// console.log(data)
-if(data){
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
-  $scope.serviceList=data.result;
-  $scope.serviceList1=data.result;
-  // $scope.serviceList1=data.result;
-  	// $rootScope.showSpinner();
-	SQUserHomeServices.GetTermsConditions();
+// ===== INIT() CreateQuote >>>>>>
+function setUserAsSalesPerson () {
+angular.forEach($rootScope.userList, function(element, key){
+if (element.key==quote.salesPersonId && element.value==quote.salesPerson) {
+console.log("equal")
+$scope.customerQuote.salesPerson=element;
 }
-// $rootScope.hideSpinner();
-}
-}
-};
-
-var cleanupEventGetServicesDone = $scope.$on("GetServicesDone", function(event, message){
-$scope.handleGetServicesDoneResponse(message);      
 });
-
-var cleanupEventGetServicesNotDone = $scope.$on("GetServicesNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-
-// -------------------------------------------------------------------
-$scope.handleGetTermsConditionsDoneResponse=function(data){
- // console.log(data)
-if(data){
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
-  $scope.termConditionList=data.result;
-  $scope.termConditionList1=data.result;
-  // $scope.termConditionList1=data.result;
-	
 }
- $rootScope.hideSpinner();
-}
-}
-};
 
-var cleanupEventGetTermsConditionsDone = $scope.$on("GetTermsConditionsDone", function(event, message){
-$scope.handleGetTermsConditionsDoneResponse(message);      
-});
-
-var cleanupEventGetTermsConditionsNotDone = $scope.$on("GetTermsConditionsNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-// ====================View Edit================
-$scope.termConditionList=[];
-$scope.servicesList=[];
-
+// ======= INIT() EDIT Quote <<<<<<
 var quote;
 $scope.initEditQuote=function(quote1){
-// console.log(quote)
-$rootScope.showSpinner();
-SQQuoteServices.GetCurrentSupplierList();
+console.log("initEditQuote")
 quote=quote1;
+$rootScope.showSpinner();
+SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
 };
-/*=============GET CURRENT SUPPLIER LIST==================*/
-$scope.handleGetCurrentSupplierListDoneResponse=function(data){
-if(data){
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
- 	$scope.currentSupplierList=data.result;
- 	// $rootScope.showSpinner();
-	// SQUserHomeServices.GetSalesPersonList();
-	SQUserHomeServices.GetUserList();
-}else{
-  $rootScope.alertError(data.message);
-}
-// $rootScope.hideSpinner();
-}
-}
-};
-
-var cleanupEventGetCurrentSupplierListDone = $scope.$on("GetCurrentSupplierListDone", function(event, message){
-$scope.handleGetCurrentSupplierListDoneResponse(message);      
-});
-
-var cleanupEventGetCurrentSupplierListNotDone = $scope.$on("GetCurrentSupplierListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-/*==========================GET USER LIST==============================*/
-$scope.handleGetUserListDoneResponse=function(data){
-if(data){
-if (data.code) {	
-  if(data.code.toUpperCase()=='SUCCESS'){   
-	console.log(data)	;
-	$scope.userList=data.result;
-	console.log($rootScope.userData);
-	$scope.customerQuote.salesPerson='';
-	angular.forEach($scope.userList, function(element, key){
-		if (element.key==quote.salesPersonId && element.value==quote.salesPerson) {
-			console.log("equal")
-			$scope.customerQuote.salesPerson=element;
-		}
-	});
-	SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
-	}
-  // $rootScope.hideSpinner();
-}
-}
-};
-
-var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
-$scope.handleGetUserListDoneResponse(message);      
-});
-
-var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
-// =========GetTermsAndServiceList
-
+// ========= GetTermsAndServiceList of selected Quote
 $scope.handleGetTermsAndServiceListDoneResponse=function(data){
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
-  	// console.log(data)
+  	console.log(data)
  	$scope.selectedTermConditionList=data.result.termConditionList;
  	$scope.selectedServiceList=data.result.serviceList;
-	$scope.getProductsList();
-	
-	
-	
+ 	$scope.selectedOfferList=data.result.offerList;
+	$scope.getProductsGroupList();
 }else{
   $rootScope.alertError(data.message);
 }
-// $rootScope.hideSpinner();
+$rootScope.hideSpinner();
 }
 }
 };
@@ -389,70 +246,116 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 // =====================getProductsList=======
-$scope.getProductsList=function(){
-	console.log("getProductsList")
-	// $scope.initAuotoComplete();
-	$scope.checkSelectedTermsAndCondition();
-	$scope.checkSelectedServices();
-	$scope.initAuotoComplete();
-	$scope.getProductGroup();
-	// $scope.initAuotoComplete();
+$scope.checkSelectedServices=function(){
+console.log("checkSelectedServices")
+if ($scope.selectedServiceList!='' && $scope.serviceArray!='') {
+console.log("1........")
+
+for (var j =0; j<$scope.selectedServiceList.length; j++) {
+var array=$scope.serviceArray;
+objIndex = array.findIndex((obj => obj.key == $scope.selectedServiceList[j].key));
+// console.log(array[objIndex])
+array[objIndex].code = true;
+}	
+// for (var i =0; i<$scope.serviceArray.length; i++) {
+// 	if ($scope.selectedServiceList.length>0) {
+// 	for (var j =0; j<$scope.selectedServiceList.length; j++) {
+// 		if ($scope.serviceArray[i].key==$scope.selectedServiceList[j].key) {
+// 			$scope.serviceArray[i].code=true;
+// 			break;
+// 		}else{
+// 			$scope.serviceArray[i].code=false;
+// 		}
+// 	}
+// }else{
+// $scope.serviceArray[i].code=false;
+// }
+// }
+}
+};
+$scope.checkSelectedTermsAndCondition=function(){
+console.log("checkSelectedTermsAndCondition")
+if ($scope.selectedTermConditionList!='' && $scope.termConditionArray!='') {
+console.log("1........")
+for (var j =0; j<$scope.selectedTermConditionList.length; j++) {
+var array=$scope.termConditionArray;
+objIndex = array.findIndex((obj => obj.key == $scope.selectedTermConditionList[j].key));
+// console.log(array[objIndex])
+array[objIndex].code = true;
 }
 
-// $scope.handleGetProductListDoneResponse=function(data){
-// if(data){
-// if (data.code){
-//   if(data.code.toUpperCase()=='SUCCESS'){
-//   		// $rootScope.hideSpinner();
-//    		$scope.productList=data.result;
-// 		$scope.priceArray=[];
-// 		// $scope.getProductGroup();
-// 		$scope.checkSelectedTermsAndCondition();
-// 		$scope.checkSelectedServices();
-// 		$scope.initAuotoComplete();
-// 		$scope.getProductGroup();
-//   }else{
-//    $rootScope.hideSpinner();
-//    $rootScope.alertError(data.message);
-//   }
-// // $rootScope.hideLoadSpinner();
+// for (var i =0; i<$scope.termConditionArray.length; i++) {
+// 	if ($scope.selectedTermConditionList.length>0) {	
+// 	for (var j =0; j<$scope.selectedTermConditionList.length; j++) {
+// 		if ($scope.termConditionArray[i].key==$scope.selectedTermConditionList[j].key) {
+// 			$scope.termConditionArray[i].code=true;
+// 			break;
+// 		}else{
+// 			$scope.termConditionArray[i].code=false;
+// 		}
+// 	}
+// 	}else{
+// 		$scope.termConditionArray[i].code=false;
+// 	}
 // }
-// }
-// };
-
-// var cleanupEventGetProductListDone = $scope.$on("GetProductListDone", function(event, message){
-// 	// console.log("GetProductListDone");
-// $scope.handleGetProductListDoneResponse(message);      
-// });
-
-// var cleanupEventGetProductListNotDone = $scope.$on("GetProductListNotDone", function(event, message){
-// $rootScope.alertServerError("Server error");
-// $rootScope.hideSpinner();
-// });
-/*=============GET PRODUCT GROUP LIST==================*/
-$scope.productGroupList=[];
-$scope.getProductGroup=function(){
-	// console.log("getProductGroup")
-	$rootScope.showSpinner();
-	SQUserHomeServices.GetProductGroupList();
-	// }
+}
 };
+$scope.checkSelectedOffers=function(){
+console.log("checkSelectedOffers")
+if ($scope.selectedOfferList!='' && $scope.offerArray!='') {
+console.log("1........")
+for (var j =0; j<$scope.selectedOfferList.length; j++) {
+var array=$scope.offerArray;
+objIndex = array.findIndex((obj => obj.id == $scope.selectedOfferList[j].id));
+array[objIndex].code = true;
+}
+}
+};
+// =====================getProductsList=======
+$scope.productGroupList=[];
+$scope.getProductsGroupList=function(){
+	console.log("getProductsGroupList");
+	$rootScope.showSpinner();
+	SQManageMenuServices.GetProductGroupList();
+}
+
+$scope.getQuoteDetails=function(){
+console.log("getQuoteDetails");
+//From local storage >>>>>
+$scope.initAuotoComplete();
+setUserAsSalesPerson();
+$scope.currentSupplierList=angular.copy($rootScope.supplierList);	
+$scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
+$scope.serviceArray=angular.copy($rootScope.serviceList);
+// $scope.serviceList1=angular.copy($rootScope.serviceList);
+$scope.offerArray=angular.copy($rootScope.offerList);
+// $scope.offerList1=angular.copy($rootScope.offerList);
+//From local storage <<<<<
+$rootScope.showSpinner();
+$scope.checkSelectedTermsAndCondition();
+$scope.checkSelectedServices();
+$scope.checkSelectedOffers();
+$timeout(function() {
+$rootScope.hideSpinner();
+}, 3000);
+
+};
+
 $scope.handleGetGetProductGroupListDoneResponse=function(data){
-	// console.log(data)
+	console.log(data)
 	if(data){
 	if (data.code) {
 	if(data.code.toUpperCase()=='SUCCESS'){
 	$scope.productGroupList=data.result;
-
-	//$scope.openMyModal(); 
+	$scope.getQuoteDetails();
 	}else{
 	$rootScope.hideSpinner();
     $rootScope.alertError(data.message);
 	}
+	}
+	}
 	$rootScope.hideSpinner();
-	// $rootScope.hideLoadSpinner();
-	}
-	}
 };
 
 var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListDone", function(event, message){
@@ -468,86 +371,45 @@ $scope.initProducts=function(){
 	$scope.getProductGroup();
 };
 //========================================================
-/*=============GET SALES PERSON LIST==================*/
-$scope.handleGetSalesPersonListDoneResponse=function(data){
-if(data){
-// console.log(data)	
-if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){
- 	$scope.salesPersonList=data.result;
- 	// $rootScope.showSpinner();
-	SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
-}else{
-  $rootScope.alertError(data.message);
-}
+// /*=============GET SALES PERSON LIST==================*/
+// $scope.handleGetSalesPersonListDoneResponse=function(data){
+// if(data){
+// // console.log(data)	
+// if (data.code) {
+//   if(data.code.toUpperCase()=='SUCCESS'){
+//  	$scope.salesPersonList=data.result;
+//  	// $rootScope.showSpinner();
+// 	SQQuoteServices.GetTermsAndServiceList(quote.quoteId);
+// }else{
+//   $rootScope.alertError(data.message);
+// }
+// // $rootScope.hideSpinner();
+// }
+// }
+// };
+
+// var cleanupEventGetSalesPersonListDone = $scope.$on("GetSalesPersonListDone", function(event, message){
+// $scope.handleGetSalesPersonListDoneResponse(message);      
+// });
+
+// var cleanupEventGetSalesPersonListNotDone = $scope.$on("GetSalesPersonListNotDone", function(event, message){
+// $rootScope.alertServerError("Server error");
 // $rootScope.hideSpinner();
-}
-}
-};
-
-var cleanupEventGetSalesPersonListDone = $scope.$on("GetSalesPersonListDone", function(event, message){
-$scope.handleGetSalesPersonListDoneResponse(message);      
-});
-
-var cleanupEventGetSalesPersonListNotDone = $scope.$on("GetSalesPersonListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
+// });
 
 
-$scope.checkSelectedServices=function(){
-if ($scope.selectedServiceList!='' && $scope.serviceList!='') {
-for (var i =0; i<$scope.serviceList.length; i++) {
-	if ($scope.selectedServiceList.length>0) {
-	for (var j =0; j<$scope.selectedServiceList.length; j++) {
-		if ($scope.serviceList[i].key==$scope.selectedServiceList[j].key) {
-			$scope.serviceList[i].code=true;
-			break;
-		}else{
-			$scope.serviceList[i].code=false;
-		}
-	}
-}else{
-$scope.serviceList[i].code=false;
-}
-}
-}
- // console.log(JSON.stringify($scope.selectedServiceList));
- // console.log(JSON.stringify($scope.serviceList));
-};
 
-$scope.checkSelectedTermsAndCondition=function(){
-if ($scope.selectedTermConditionList!='' && $scope.termConditionList!='') {
-	// console.log("checkSelectedTermsAndCondition")
-for (var i =0; i<$scope.termConditionList.length; i++) {
-	if ($scope.selectedTermConditionList.length>0) {	
-	for (var j =0; j<$scope.selectedTermConditionList.length; j++) {
-		if ($scope.termConditionList[i].key==$scope.selectedTermConditionList[j].key) {
-			$scope.termConditionList[i].code=true;
-			break;
-		}else{
-			$scope.termConditionList[i].code=false;
-		}
-	}
-	}else{
-		$scope.termConditionList[i].code=false;
-	}
-}
-}
-// console.log(JSON.stringify($scope.selectedTermConditionList));
-// console.log(JSON.stringify($scope.termConditionList));
-};
 
 $scope.closeEditProduct=function(){
 console.log("closeEditProducts");
 };
 
 $scope.viewDetailInformation=function(quote){
+	console.log("viewDetailInformation");
 	console.log(quote);
 	var currentQuote=angular.copy(quote);
 	// var dt = new Date(currentQuote.createdDate);
 	// console.log("date ::: ",dt)
-	
 	$scope.showEditQuoteView=true;
 	if (currentQuote.competeQuote.toUpperCase=='NO') {
 	$scope.isCurrentSupplierNameRequired=false;
@@ -623,7 +485,7 @@ $scope.checkIfProductExist=function(){
 // $scope.getProductDetails=function(product){
 // //console.log(product);
 // $rootScope.showSpinner();
-// SQUserHomeServices.GetProductDetails(product.code);
+// SQManageMenuServices.GetProductDetails(product.code);
 // };
 
 // $scope.handleGetProductDetailsDoneResponse=function(data){
@@ -676,12 +538,21 @@ $scope.resetUpdateQuote=function(){
 	$scope.customerQuote.competeQuote="No";
 	// $scope.serviceList=[];
 	// $scope.termConditionList=[];
+	$scope.currentSupplierList=angular.copy($rootScope.supplierList);	
+	$scope.termConditionArray=angular.copy($rootScope.termConditionList);
+	// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
+	$scope.serviceArray=angular.copy($rootScope.serviceList);
+	// $scope.serviceList1=angular.copy($rootScope.serviceList);
+	$scope.offerArray=angular.copy($rootScope.offerList);
+	// $scope.offerList1=angular.copy($rootScope.offerList);
+
 	$scope.isEditViewShow=false;
 	$scope.form.addCustomerQuote.submitted=false;
 	$scope.form.addCustomerQuote.$setPristine();
 	$scope.showEditQuoteView=false;
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
+
 	$scope.initDate();
 }
 $scope.cancelCreateQuote=function(){
@@ -799,7 +670,7 @@ $scope.priceArray=[];
 	 //    prodLike=$scope.addProduct.itemCode;
 		// $rootScope.showLoadSpinner();
 		// // $rootScope.showSpinner();
-		// SQUserHomeServices.GetProductList(prodLike);
+		// SQManageMenuServices.GetProductList(prodLike);
 		// $('#targetItemCode').blur();	
 		}
 	}
@@ -1200,19 +1071,9 @@ $scope.handleAddCommentDoneResponse=function(data){
 if(data){
 if (data.code){
   if(data.code.toUpperCase()=='SUCCESS'){
-   	// console.log(data);
- 	// var date= moment();
-	// var day=date.format('DD');
-	// var month=date.format('MMM');
-	// var year=date.format('YYYY');
-	// var time=moment().format('LT');
-	// console.log(date)
-	// console.log(day,month,year,time)
-	// console.log(moment().month(month).format('MMM'))
    var comment=data.result;
    $scope.customerQuote.commentList.push(comment);
    $scope.comment='';
-
    $scope.form.commentForm.submitted=false;
    $scope.form.commentForm.$setPristine();
   }else{
@@ -1236,17 +1097,6 @@ $rootScope.hideSpinner();
 //============================ Save As PDF =================================
 $scope.saveAsPDF=function(quote){
 console.log(quote);
-// var doc = new jsPDF({
-//   orientation: 'landscape',
-//   unit: 'in',
-//   format: [4, 2]
-// })
-// doc.addPage()
-// doc.addPage()
-// doc.text('I am on page 3', 10, 10)
-// doc.setPage(1)
-// doc.text('I am on page 1', 10, 10)
-// doc.save('two-by-four.pdf')
  var url ="/smartquote/custComparison?quoteId="+quote.quoteId;
  window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
 };
@@ -1275,116 +1125,12 @@ angular.forEach($scope.customerQuote.productList, function(value, key){
 });
 return alternativeArray;
 };
-// $scope.jsonOfProductList=function(customerQuote){
-// 	var productList=[];
-// 	var product={};
-// 	console.log("customerQuote");
-// 	console.log(customerQuote);
-// 	if (customerQuote.saveWithAlternative) {
-// 		angular.forEach(customerQuote.productList, function(value, key){
-// 			if (value.altProd) {
-// 			if (value.altProd.itemCode) {	
-// 			product={
-// 			"avgcost":value.altProd.avgcost,
-// 			"itemCode": value.altProd.itemCode,
-// 			"currentSupplierGP": value.altProd.currentSupplierGP,
-// 			"currentSupplierPrice": value.altProd.currentSupplierPrice,
-// 			"currentSupplierTotal": value.altProd.currentSupplierTotal,
-// 			"itemDescription": value.altProd.itemDescription,
-// 			"description2": value.altProd.description2,
-// 			"description3": value.altProd.description3,
-// 			"gpRequired": value.altProd.gpRequired,
-// 			"gstFlag": value.altProd.gstFlag,
-// 			"itemQty": value.altProd.itemQty,
-// 			"price0exGST": value.altProd.price0exGST,
-// 			"price1exGST": value.altProd.price1exGST,
-// 			"price2exGST": value.altProd.price2exGST,
-// 			"price3exGST": value.altProd.price3exGST,
-// 			"price4exGST": value.altProd.price4exGST,
-// 			"quotePrice": value.altProd.quotePrice,
-// 			"savings": value.altProd.savings,
-// 			"total": value.altProd.total,
-// 			"unit": value.altProd.unit,
-// 			}
-// 			productList.push(product);
-// 			}
-// 			}else{
-// 			product={
-// 			"avgcost": value.avgcost,
-// 			"itemCode": value.itemCode,
-// 			"itemDescription": value.itemDescriptione,
-// 			"description2": value.description2,
-// 			"description3": value.description3,
-// 			"currentSupplierGP": value.currentSupplierGP,
-// 			"currentSupplierPrice": value.currentSupplierPrice,
-// 			"currentSupplierTotal": value.currentSupplierTotal,
-// 			"gpRequired": value.gpRequired,
-// 			"gstFlag": value.gstFlag,
-// 			"isNewProduct": value.isNewProduct,
-// 			"itemQty": value.itemQty,
-// 			"price0exGST": value.price0exGST,
-// 			"price1exGST": value.price1exGST,
-// 			"price2exGST": value.price2exGST,
-// 			"price3exGST": value.price3exGST,
-// 			"price4exGST": value.price4exGST,
-// 			"productGroupCode": value.productGroupCode,
-// 			"productGroupName": value.productGroupName,
-// 			"qtyBreak0": value.qtyBreak0,
-// 			"qtyBreak1": value.qtyBreak1,
-// 			"qtyBreak2": value.qtyBreak2,
-// 			"qtyBreak3": value.qtyBreak3,
-// 			"qtyBreak4": value.qtyBreak4,
-// 			"quotePrice": value.quotePrice,
-// 			"savings": value.savings,
-// 			"total": value.total,
-// 			"unit": value.unit,
-// 			"isLinkedExact": value.isLinkedExact,
-// 			}
-// 			productList.push(product);	
-// 			}
-// 		});
-// 	}else{
-// 		angular.forEach(customerQuote.productList, function(value, key){
-// 			product={
-// 			"avgcost": value.avgcost,
-// 			"itemCode": value.itemCode,
-// 			"itemDescription": value.itemDescriptione,
-// 			"description2": value.description2,
-// 			"description3": value.description3,
-// 			"currentSupplierGP": value.currentSupplierGP,
-// 			"currentSupplierPrice": value.currentSupplierPrice,
-// 			"currentSupplierTotal": value.currentSupplierTotal,
-// 			"gpRequired": value.gpRequired,
-// 			"gstFlag": value.gstFlag,
-// 			"isNewProduct": value.isNewProduct,
-// 			"itemQty": value.itemQty,
-// 			"price0exGST": value.price0exGST,
-// 			"price1exGST": value.price1exGST,
-// 			"price2exGST": value.price2exGST,
-// 			"price3exGST": value.price3exGST,
-// 			"price4exGST": value.price4exGST,
-// 			"productGroupCode": value.productGroupCode,
-// 			"productGroupName": value.productGroupName,
-// 			"qtyBreak0": value.qtyBreak0,
-// 			"qtyBreak1": value.qtyBreak1,
-// 			"qtyBreak2": value.qtyBreak2,
-// 			"qtyBreak3": value.qtyBreak3,
-// 			"qtyBreak4": value.qtyBreak4,
-// 			"quotePrice": value.quotePrice,
-// 			"savings": value.savings,
-// 			"total": value.total,
-// 			"unit": value.unit,
-// 			"isLinkedExact": value.isLinkedExact,
-// 			}
-// 			productList.push(product);
-// 		});
-// 	}
-// 	return productList;
-// };
-$scope.jsonToCreateQuote=function(){
-var objQuoteBean={};
 var supplierName='';
 var supplierId=null;
+$scope.jsonToCreateQuote=function(){
+var objQuoteBean={};
+supplierName='';
+supplierId=null;
 var salesPerson='';
 var salesPersonId=null;
 if ($scope.customerQuote.currentSupplierName!=undefined) {
@@ -1439,8 +1185,9 @@ objQuoteBean={
 'notes':$scope.customerQuote.notes,
 'productList':$scope.customerQuote.productList,
 // 'productList':$scope.jsonOfProductList($scope.customerQuote),
-'serviceList':$scope.serviceList,
-'termConditionList':$scope.termConditionList,
+'serviceList':$scope.serviceArray,
+'termConditionList':$scope.termConditionArray,
+'offerList':$scope.offerArray,
 'userId':$rootScope.userData.userId,
 
 }
@@ -1459,12 +1206,10 @@ $log.debug("updateQuote call");
 // console.log();
 if ($scope.form.addCustomerQuote.$valid) {
  // $scope.jsonToCreateQuote();
- $log.debug(JSON.stringify($scope.customerQuote));
+ // $log.debug(JSON.stringify($scope.customerQuote));
 	if ($scope.customerQuote.productList.length>0) {
 		isSalesPersonExist=false;
 		isSupplierExist=false;
-		 // console.log($scope.customerQuote.currentSupplierName)
-		// console.log($scope.customerQuote.currentSupplierName!=undefined)
 		angular.forEach($scope.currentSupplierList, function(currentSupplierName, key){
 			if ($scope.customerQuote.currentSupplierName!=undefined&&$scope.customerQuote.currentSupplierName!=''&&$scope.customerQuote.currentSupplierName!=null) {	
 				// console.log(currentSupplierName)
@@ -1478,18 +1223,6 @@ if ($scope.form.addCustomerQuote.$valid) {
 			}
 			
 		});
-		// angular.forEach($scope.salesPersonList, function(salesPerson, key){
-		// 	if ($scope.customerQuote.salesPerson!=undefined) {	
-		// 	if ($scope.customerQuote.salesPerson.key) {
-		// 	}else{
-		// 	if ($scope.customerQuote.salesPerson.toUpperCase()==salesPerson.value.toUpperCase()){
-		// 		// console.log("isSalesPersonExist")
-		// 		isSalesPersonExist=true;
-		// 	}	
-		// 	}
-		// 	}
-		// });
-		// $log.debug("valid form");
 		if (isSupplierExist) {
 			if (isSupplierExist) {
 				$scope.form.addCustomerQuote.currentSupplierName.$invalid=true;
@@ -1498,13 +1231,6 @@ if ($scope.form.addCustomerQuote.$valid) {
 			}else{
 				$scope.form.addCustomerQuote.currentSupplierName.$invalid=false;
 			}
-			// if (isSalesPersonExist) {
-			// 	$('#salesPerson').focus();
-			// 	$scope.form.addCustomerQuote.salesPerson.$invalid=true;
-			// 	$scope.form.addCustomerQuote.submitted=true;
-			// }else{
-			// 	$scope.form.addCustomerQuote.salesPerson.$invalid=false;
-			// }
 		}else{
 			console.log(JSON.stringify($scope.jsonToCreateQuote()));
 			$rootScope.showSpinner();
@@ -1515,20 +1241,42 @@ if ($scope.form.addCustomerQuote.$valid) {
 		$scope.showAddProductError=true;
 		$('#addProductLink').focus();
 	}
-
-
 }else{
 	$log.debug("invalid form");
 	$rootScope.moveToTop();
 	$scope.form.addCustomerQuote.submitted=true;
 }
 };
+
+
+
+//UPDATE QUOTE RESPONSE >>>>>
+function checkQuoteResponse(quoteResponse){
+console.log("checkQuoteResponse" +quoteResponse);
+if (quoteResponse) {
+// if (quoteResponse.newCustomerCreated) {
+// // var obj={"code":$scope.customerQuote.customerCode,"key":quoteResponse.genratedCustomerId,"value":$scope.customerQuote.customerCode+" ("+$scope.customerQuote.customerName+")"};
+// // ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.customerList,obj);
+// } 
+if (quoteResponse.newSupplierCreated) {
+var obj={"code":supplierName,"key":quoteResponse.genratedSupplierId,"value":supplierName};
+ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.supplierList,obj);
+} 
+// if (quoteResponse.newProductCreated) {
+// 	$scope.initAuotoComplete();
+// };
+};
+};
+
+var updateQuoteResponse={};
 $scope.handleUpdateQuoteDoneResponse=function(data){
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// console.log(data)
   	 // $rootScope.alertSuccess("Successfully updated quote");
+  	updateQuoteResponse=data;
+	checkQuoteResponse(updateQuoteResponse)
   	 swal({
 	  title: "Success",
 	  text: "Successfully updated quote!",
@@ -1630,18 +1378,10 @@ hotkeys.bindTo($scope)
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventAddCommentDone();
 	cleanupEventAddCommentNotDone();
-	// cleanupEventGetProductDetailsDone();
-	// cleanupEventGetProductDetailsNotDone();
-	// cleanupEventGetProductListDone();
-	// cleanupEventGetProductListNotDone();
 	cleanupEventUpdateQuoteDone();
 	cleanupEventUpdateQuoteNotDone();
 	cleanupEventGetQuoteViewDone();
 	cleanupEventGetQuoteViewNotDone();
-	cleanupEventGetCurrentSupplierListDone();
-	cleanupEventGetCurrentSupplierListNotDone();
-	cleanupEventGetSalesPersonListDone();
-	cleanupEventGetSalesPersonListNotDone();
 	cleanupEventGetProductGroupListDone();
 	cleanupEventGetProductGroupListNotDone();
 	$rootScope.isQuoteActivated=false;

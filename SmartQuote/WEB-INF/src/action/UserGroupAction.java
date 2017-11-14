@@ -14,6 +14,7 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.MenuBean;
 import pojo.UserBean;
+import responseBeans.DetailResponseBean;
 import responseBeans.MenuResponse;
 import responseBeans.UserDetailResponse;
 import responseBeans.UserGroupResponse;
@@ -33,7 +34,8 @@ public class UserGroupAction extends ActionSupport implements
 	private MenuResponse menuResponse = new MenuResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private UserDetailResponse userDetailsResponse = new UserDetailResponse();
-
+	private DetailResponseBean objDetailResponseBean= new DetailResponseBean();
+	
 	public UserGroupResponse getData() {
 		return data;
 	}
@@ -223,7 +225,7 @@ public class UserGroupAction extends ActionSupport implements
 			UserBean objUserBean = new UserBean();
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			objUserBean = gson.fromJson(userDetails, UserBean.class);
-			boolean isUserCreated = false, isUserAlreadyRegistered = false;
+			boolean isUserAlreadyRegistered = false;
 
 			UserGroupDao objUserDao = new UserGroupDao();
 			isUserAlreadyRegistered = objUserDao.isRegisterdUser(objUserBean
@@ -233,19 +235,21 @@ public class UserGroupAction extends ActionSupport implements
 			System.out.println("isUserAlreadyRegistered: "+ isUserAlreadyRegistered);
 			if (!isUserAlreadyRegistered) {
 				UserGroupDao objUserGroupDao = new UserGroupDao();
-				isUserCreated = objUserGroupDao.saveUser(objUserBean);
+//				isUserCreated = objUserGroupDao.saveUser(objUserBean);
+				int userID = objUserGroupDao.saveUser(objUserBean);
 				objUserGroupDao.commit();
 				objUserGroupDao.closeAll();
-				if (isUserCreated) {
-					objEmptyResponse.setCode("success");
-					objEmptyResponse.setMessage(getText("user_created"));
+				if (userID>0) {
+					objDetailResponseBean.setCode("success");
+					objDetailResponseBean.setGenratedId(userID);
+					objDetailResponseBean.setMessage(getText("user_created"));
 				} else {
-					objEmptyResponse.setCode("error");
-					objEmptyResponse.setMessage(getText("error_user_create"));
+					objDetailResponseBean.setCode("error");
+					objDetailResponseBean.setMessage(getText("error_user_create"));
 				}
 			} else {
-				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("error_user_exist"));
+				objDetailResponseBean.setCode("error");
+				objDetailResponseBean.setMessage(getText("error_user_exist"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -315,5 +319,13 @@ public class UserGroupAction extends ActionSupport implements
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
+	}
+
+	public DetailResponseBean getObjDetailResponseBean() {
+		return objDetailResponseBean;
+	}
+
+	public void setObjDetailResponseBean(DetailResponseBean objDetailResponseBean) {
+		this.objDetailResponseBean = objDetailResponseBean;
 	}
 }

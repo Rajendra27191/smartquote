@@ -6,7 +6,8 @@
 	<constant name="struts.custom.i18n.resources" value="global" />
 	<constant name="struts.multipart.maxSize" value="524288000" />
 	<constant name="struts.multipart.saveDir" value="/tmp" />
-	<package name="default" extends="struts-default,json-default,jasperreports-default">
+	<package name="default"
+		extends="struts-default,json-default,jasperreports-default">
 
 		<interceptors>
 			<interceptor name="mylogging" class="interceptor.SessionInterceptor"></interceptor>
@@ -36,6 +37,12 @@
 		</action>
 
 		<action name="logout" class="action.LoginAction" method="logout">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="checkSessionActive" class="action.LoginAction" method="checkSessionActive">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
@@ -108,7 +115,7 @@
 		<action name="createUser" class="action.UserGroupAction"
 			method="createUser">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objDetailResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -184,7 +191,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getProductGroupListView" class="action.ProductGroupAction"
 			method="getProductGroupListView">
 			<result name="success" type="json">
@@ -248,7 +255,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getProductDetailsWithAlternatives" class="action.ProductAction"
 			method="getProductDetailsWithAlternatives">
 			<result name="success" type="json">
@@ -256,7 +263,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getProductAlternatives" class="action.ProductAction"
 			method="getProductAlternatives">
 			<result name="success" type="json">
@@ -288,7 +295,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="uploadProductPromoPriceByXlsx" class="action.ProductAction"
 			method="uploadProductPromoPriceByXlsx">
 			<result name="success" type="json">
@@ -296,7 +303,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="uploadNewProductCodeByXlsx" class="action.ProductAction"
 			method="uploadNewProductCodeByXlsx">
 			<result name="success" type="json">
@@ -331,7 +338,7 @@
 
 		<action name="createQuote" class="action.QuoteAction" method="createQuote">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objQuoteCreateResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -360,34 +367,30 @@
 			</result>
 		</action>
 
-		<action name="custComparison" class="action.CustComparisonAction" method="exportPDF">
-	      	<!-- <result name="success" type="jasper">
-		            <param name="location">/Reports/quote_report.jasper</param>
-		            <param name="dataSource">arrayPdfMasterReportBeans</param>
-		            <param name="format">PDF</param>
-		            <param name="reportParameters">exportParameters</param>
-	      	</result> -->  
-	      	 <result name="success" type="json">
+		<action name="custComparison" class="action.CustComparisonAction"
+			method="exportPDF">
+			<!-- <result name="success" type="jasper"> <param name="location">/Reports/quote_report.jasper</param> 
+				<param name="dataSource">arrayPdfMasterReportBeans</param> <param name="format">PDF</param> 
+				<param name="reportParameters">exportParameters</param> </result> -->
+			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
-			</result> 
+			</result>
 		</action>
-		<action name="exportToPronto" class="action.CustComparisonAction" method="exportToPronto">
-	      	<!-- <result name="success" type="jasper">
-		            <param name="location">/Reports/pronto_report.jasper</param>
-		            <param name="dataSource">arrayPdfMasterReportBeans</param>
-		            <param name="format">PDF</param>
-		            <param name="reportParameters">exportParameters</param>
-	      	</result> -->
-	      	<result name="success" type="jasper">
-                    <param name="contentDisposition">attachment;filename=Pronto Contract Template.xls</param>
-                    <param name="contentType">application/vnd.ms-excel</param>
-                    <param name="location">/Reports/pronto_xls_report.jasper</param>
-                    <param name="dataSource">arrayPdfMasterReportBeans</param>
-                    <param name="reportParameters">exportParameters</param>
-                    <param name="format">XLS</param>
-                    </result>   
-		</action> 
+		<action name="exportToPronto" class="action.CustComparisonAction"
+			method="exportToPronto">
+			<!-- <result name="success" type="jasper"> <param name="location">/Reports/pronto_report.jasper</param> 
+				<param name="dataSource">arrayPdfMasterReportBeans</param> <param name="format">PDF</param> 
+				<param name="reportParameters">exportParameters</param> </result> -->
+			<result name="success" type="jasper">
+				<param name="contentDisposition">attachment;filename=Pronto Contract Template.xls</param>
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="location">/Reports/pronto_xls_report.jasper</param>
+				<param name="dataSource">arrayPdfMasterReportBeans</param>
+				<param name="reportParameters">exportParameters</param>
+				<param name="format">XLS</param>
+			</result>
+		</action>
 
 
 		<action name="addComment" class="action.QuoteAction" method="addComment">
@@ -399,7 +402,7 @@
 
 		<action name="updateQuote" class="action.QuoteAction" method="updateQuote">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objQuoteCreateResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -415,7 +418,7 @@
 		<action name="createTermsConditions" class="action.TermServicesAction"
 			method="createTermsConditions">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objDetailResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -435,7 +438,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getServices" class="action.TermServicesAction"
 			method="getServices">
 			<result name="success" type="json">
@@ -443,15 +446,15 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="createService" class="action.TermServicesAction"
 			method="createService">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objDetailResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="updateService" class="action.TermServicesAction"
 			method="updateService">
 			<result name="success" type="json">
@@ -459,7 +462,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="deleteService" class="action.TermServicesAction"
 			method="deleteService">
 			<result name="success" type="json">
@@ -467,23 +470,23 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="getTermsAndServiceList" class="action.QuoteAction"
-            method="getTermsAndServiceList">
-            <result name="success" type="json">
-                <param name="root">quoteTermServiceResponseBean</param>
-                <param name="ignoreHierarchy">false</param>
-            </result>
-        </action>
-        
-        <action name="createAlternateProducts" class="action.AlternateProductAction"
+			method="getTermsAndServiceList">
+			<result name="success" type="json">
+				<param name="root">quoteTermServiceResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+
+		<action name="createAlternateProducts" class="action.AlternateProductAction"
 			method="createAlternateProducts">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		 <action name="updateAlternateProducts" class="action.AlternateProductAction"
+		<action name="updateAlternateProducts" class="action.AlternateProductAction"
 			method="updateAlternateProducts">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
@@ -497,18 +500,45 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="getAlternateProductsView" class="action.AlternateProductAction" method="getAlternateProductsView">
+		<action name="getAlternateProductsView" class="action.AlternateProductAction"
+			method="getAlternateProductsView">
 			<result name="success" type="json">
 				<param name="root">data</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
-		<action name="pdfDemo" class="action.CustComparisonAction" method="pdfDemo">
-	      	<result name="success" type="json">
-		       	<param name="root">objEmptyResponse</param>
+
+		<action name="pdfDemo" class="action.CustComparisonAction"
+			method="pdfDemo">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
-	      	</result>  
+			</result>
+		</action>
+
+		<action name="createOffer" class="action.OfferAction" method="createOffer">
+			<result name="success" type="json">
+				<param name="root">objDetailResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getOffersList" class="action.OfferAction" method="getOffersList">
+			<result name="success" type="json">
+				<param name="root">objOfferResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteOffer" class="action.OfferAction" method="deleteOffer">
+			<result name="success" type="json">
+				<param name="root">objDetailResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="updateOffer" class="action.OfferAction" method="updateOffer">
+			<result name="success" type="json">
+				<param name="root">objDetailResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
 		</action>
 
 	</package>

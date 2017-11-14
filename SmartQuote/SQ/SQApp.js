@@ -13,15 +13,41 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
       $rootScope.isUserSignIn=false;
    }
-   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
-      $rootScope.userNavMenu=[];
-   }
    if(storage.get('userData')==null || storage.get('userData')==''){
       $rootScope.userData={};
    }
+   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
+      $rootScope.userNavMenu=[];
+   }
+   
+   if(storage.get('userList')==null || storage.get('userList')==''){
+      $rootScope.userList=[];
+   } 
+   if(storage.get('customerList')==null || storage.get('customerList')==''){
+      $rootScope.customerList=[];
+   }
+   if(storage.get('supplierList')==null || storage.get('supplierList')==''){
+      $rootScope.supplierList=[];
+   }
+   if(storage.get('serviceList')==null || storage.get('serviceList')==''){
+      $rootScope.serviceList=[];
+   }
+   if(storage.get('termConditionList')==null || storage.get('termConditionList')==''){
+      $rootScope.termConditionList=[];
+   }
+   if(storage.get('offerList')==null || storage.get('offerList')==''){
+      $rootScope.offerList=[];
+   }
   storage.bind($rootScope, 'isUserSignIn',false);
-  storage.bind($rootScope, 'userNavMenu',[]);
   storage.bind($rootScope, 'userData',{});
+  storage.bind($rootScope, 'userNavMenu',[]);
+  
+  storage.bind($rootScope, 'userList',[]);
+  storage.bind($rootScope, 'customerList',[]);
+  storage.bind($rootScope, 'supplierList',[]);
+  storage.bind($rootScope, 'serviceList',[]);
+  storage.bind($rootScope, 'termConditionList',[]);
+  storage.bind($rootScope, 'offerList',[]);
 }])
 .controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices','$interval',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices,$interval){
 console.log("SmartQuoteDesktopController initialise");
@@ -33,9 +59,21 @@ $scope.errormsg='';
 $rootScope.isAdmin=false;
 $rootScope.isSessionExpired=false;
 $rootScope.isUserSignIn=false;
+// $rootScope.scrollpos=0;
 
 // $state.transitionTo('home.start');
 /*================ Check user is in sesssion========================*/
+ $scope.clearLocalStorageData=function(){
+    $rootScope.isUserSignIn=false;
+    $rootScope.userNavMenu=[];
+    $rootScope.userData={};
+    $rootScope.userList=[];
+    $rootScope.customerList=[];
+    $rootScope.supplierList=[];
+    $rootScope.serviceList=[];
+    $rootScope.termConditionList=[];
+    $rootScope.offerList=[];
+ }
 $rootScope.$on("sesssion", function(event, data){
     // console.log("sesssion")
     console.log(data)
@@ -45,7 +83,7 @@ $rootScope.$on("sesssion", function(event, data){
       $('#mySpinner').hide();
     }else{
       $state.transitionTo('home.start'); 
-      $rootScope.isUserSignIn=false;
+      $scope.clearLocalStorageData();
       $('#mySpinner').hide();
     }
     // console.log("isUserInSession ",$rootScope.isUserSignIn);
@@ -84,16 +122,24 @@ $scope.handleUserLogInDoneResponse=function(data){
      $scope.form.loginUser.submitted=false;
      $scope.form.loginUser.$setPristine();        
      }
-     $rootScope.userNavMenu=data.result;
+     $rootScope.userNavMenu=data.userMenuList;
      $rootScope.userData={
                            'userId':data.userData.userId,
                            'userGroupId':data.userData.userGroupId,
+                           'userType':data.userData.userType,
                            'emailId':data.userData.emailId,
                            'contact':data.userData.contact,
                            'userName':data.userData.userName,
                            'validFrom':data.userData.validFrom,
                            'validTo':data.userData.validTo
                          }
+    $rootScope.userList=data.userList;
+    $rootScope.customerList=data.customerList;
+    $rootScope.supplierList=data.supplierList;
+    $rootScope.serviceList=data.serviceList;
+    $rootScope.termConditionList=data.termConditionList;
+    $rootScope.offerList=data.offerList;
+                         
     }
     else if (data.code.toUpperCase()=='ERROR'){
       //$rootScope.alertError(data.message);
@@ -128,9 +174,7 @@ $rootScope.userSignout=function(){
     if(data.code){
     if(data.code.toUpperCase()=='SUCCESS'){ 
      $state.transitionTo('home.start'); 
-     $rootScope.isUserSignIn=false;
-     $rootScope.userNavMenu=[];
-     $rootScope.userData={};
+     $scope.clearLocalStorageData();
      $rootScope.SQNotify("Successfully log out",'success'); 
     }else{
     $rootScope.alertError(data.message);
@@ -226,9 +270,9 @@ $scope.redirectToLogin=function(){
 
 $scope.handleSessionTimeOutResponse=function(data){
   if(data){
-   //$rootScope.alertError("Session Time Out Please Login To Continue");
    $state.transitionTo('userhome.start');
    $rootScope.isSessionExpired=true;
+   //$rootScope.alertError("Session Time Out Please Login To Continue");
   }
 
   $rootScope.hideSpinner();
@@ -280,32 +324,6 @@ swal({
 });
 };
 
-//Auto Reload 
-// $scope.reload = function () {
-// console.log("reload executed");     
-// };
-// $scope.reload();
-// $interval($scope.reload, 5000);
-
-
-
-// $scope.onExit = function() {
-//   console.log("onExit")
-//       return ('bye bye');
-// };
-// $window.onbeforeunload =  $scope.onExit;
-
-
-
-// $scope.$on('$locationChangeStart', function( event ) {
-//     var answer = confirm("Are you sure you want to leave this page???")
-//     if (!answer) {
-//         event.preventDefault();
-//     }
-// });
-// $(window).bind("beforeunload",function(event) {
-  //     return "";
-  // });
 
 $scope.checkQuoteActivated = function () {
 // console.log("reload isQuoteActivated");  
@@ -336,6 +354,8 @@ $(window).bind("beforeunload",function(event) {
 $scope.checkQuoteActivated();
 $interval($scope.checkQuoteActivated, 1000);
 
+
+
 // $(window).scroll(function() {
 //   if ($(document).scrollTop() > 50) {
 //     $('nav').addClass('shrink');
@@ -343,6 +363,10 @@ $interval($scope.checkQuoteActivated, 1000);
 //     $('nav').removeClass('shrink');
 //   }
 // });
+  // $(window).scroll(function (event) {
+  //   var scroll = $(window).scrollTop();
+  //   $rootScope.scrollpos=scroll;
+  // });
 ///-------------------------Confirmation Window-----------------
 
 

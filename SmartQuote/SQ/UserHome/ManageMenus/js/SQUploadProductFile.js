@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,$upload){
+.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,$upload){
 console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];

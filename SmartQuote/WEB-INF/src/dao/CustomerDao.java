@@ -91,8 +91,9 @@ public class CustomerDao {
 		return isRegisterdUser;
 	}
 
+	@SuppressWarnings("static-access")
 	public int saveCustomer(CustomerBean objBean) {
-		boolean isUserCreated = false;
+//		boolean isUserCreated = false;
 		int custId=0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO customer_master (customer_code, customer_name, state, postal_code, "
@@ -118,7 +119,7 @@ public class CustomerDao {
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
 				custId = rs.getInt(1);
-			isUserCreated = true;
+//			isUserCreated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
