@@ -256,11 +256,13 @@
 
 	$scope.currentSupplierPriceChanged=function(price,cost){
 	// console.log("currentSupplierPriceChanged");
-	if ($scope.form.addProductIntoQuote.currentSupplierPrice.$valid) {
+	if ($scope.form.addProductIntoQuote.currentSupplierPrice&&$scope.form.addProductIntoQuote.avgcost) {
+	if ($scope.form.addProductIntoQuote.currentSupplierPrice.$valid&&$scope.form.addProductIntoQuote.avgcost.$valid) {
 	$scope.addProduct.currentSupplierGP=$scope.getPriceInPercentage(price,cost);
 	}else{
 	$scope.addProduct.currentSupplierGP=0;
-	}
+	}	
+	};
 
 	};
 	$scope.productSavings=function(){
@@ -614,7 +616,10 @@
 	$scope.isAltProductSelected=true;
 	$scope.search.selectedAltProduct='';
 	$rootScope.hideLoadSpinner();
-	};
+	}else{
+	
+	$rootScope.hideLoadSpinner();
+	}
 	}
 	}
 	};
@@ -785,15 +790,37 @@
 	// }
 	// };
 //==========EDIT===========================
-	var products;
-	if ($scope.productButtonStatus=='edit') {
+$scope.checkEditAlt=function(){
+console.log("checkEditAlt...")
+if ($scope.addProduct.alternativeProductList) {
+$scope.select.type='select';
+$scope.alternativeProductList=$scope.addProduct.alternativeProductList;
+};
+if ($scope.addProduct.altProd) {
+$scope.altProductInfo=$scope.addProduct.altProd;
+
+angular.forEach($scope.alternativeProductList, function(value, key){
+if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase()) {
+$scope.addProduct.selectedAlternativeProduct=value;
+}
+});
+}
+if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
+$scope.select.type='search';
+};
+
+};
+$scope.initEdit=function(){
+	console.log("initEdit...")
 	console.log("dataToModal")
 	console.log(dataToModal);
 	$scope.addProduct=dataToModal.product;
-	// $scope.addProduct.lineComment=dataToModal.product.lineComment;
-
+	if ($scope.addProduct.lineComment) {
+		$scope.addProduct.addComment=true;
+	}else{
+		$scope.addProduct.addComment=false;
+	}
 	$scope.productInfo=dataToModal.product;
-
 	$scope.createArrayOfQuantityAndPrice(dataToModal.product);
 	$scope.isNewProduct=$scope.addProduct.isNewProduct;
 	var productGroupCode=$scope.addProduct.productGroupCode;
@@ -810,26 +837,16 @@
 	}	
 	});
 	$scope.addProduct.productGroup=productGroupCode;
-	if ($scope.addProduct.altProd) {
-	console.log("Edit");
-	// $scope.addProduct.altProd=$scope.addProduct.altProd;
-	$scope.altProductInfo=$scope.addProduct.altProd;
-	$scope.alternativeProductList=$scope.addProduct.alternativeProductList;
-	$scope.select.type='select';
-	angular.forEach($scope.alternativeProductList, function(value, key){
-	if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase()) {
-	console.log("equal")
-	$scope.addProduct.selectedAlternativeProduct=value;
-	}
-	});
-	}
-	if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
-		$scope.select.type='search';
-	};
-	
+
+	$scope.checkEditAlt();
+
+};
+
+	var products;
+	if ($scope.productButtonStatus=='edit') {
+	$scope.initEdit();	
 	}else{
 	// document.getElementById("#searchProduct").focus();
-
 	}
 	//================ADD Line Comment=====================
 	$scope.deleteLineComment=function(){

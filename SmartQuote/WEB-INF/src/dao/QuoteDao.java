@@ -11,6 +11,7 @@ import pojo.KeyValuePairBean;
 import pojo.OfferBean;
 import pojo.ProductBean;
 import pojo.QuoteBean;
+import pojo.QuoteStatusBean;
 import connection.ConnectionFactory;
 
 public class QuoteDao {
@@ -329,7 +330,7 @@ public class QuoteDao {
 		return offerList;
 	}
 
-	private ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
+	public ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
 		ArrayList<KeyValuePairBean> termAndConditionList = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean pairBean = null;
 		String query = "select tcm.id,tcm.term_condition from quote_term_condition_master qt,term_condition_master tcm "
@@ -391,7 +392,7 @@ public class QuoteDao {
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for, comment"
+				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment"
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
 				+ " where quote_id= ? ;";
 		try {
@@ -430,6 +431,8 @@ public class QuoteDao {
 				objProductBean.setPrice3exGST(rs1.getDouble("price3exGST"));
 				objProductBean.setQtyBreak4(rs1.getDouble("qty_break4"));
 				objProductBean.setPrice4exGST(rs1.getDouble("price4exGST"));
+				objProductBean.setPromoPrice(rs1.getDouble("promo_price"));
+				
 				objProductBean.setTaxCode(rs1.getString("tax_code"));
 				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
 				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
@@ -709,6 +712,33 @@ public class QuoteDao {
 		}
 		return isDeleted;
 		
+	}
+	
+	public boolean changeQuoteStatus(QuoteStatusBean objQuoteStatusBean){
+		boolean isStatusChanged=false;
+		try {
+			String statusQuery = "UPDATE create_quote set  status=? where quote_id=?;";
+			PreparedStatement pstmt = conn.prepareStatement(statusQuery);
+			for (int i = 0; i < objQuoteStatusBean.getObjQuoteBeanList().size(); i++) {				
+				if(objQuoteStatusBean.getObjQuoteBeanList().get(i)!=null){
+					System.out.println("Quote Status : "+objQuoteStatusBean.getQuoteStatus());
+					pstmt.setString(1, objQuoteStatusBean.getQuoteStatus().toUpperCase());
+					System.out.println("Quote ID : "+objQuoteStatusBean.getObjQuoteBeanList().get(i).getQuoteId());
+					pstmt.setInt(2, objQuoteStatusBean.getObjQuoteBeanList().get(i).getQuoteId());
+					pstmt.addBatch();
+				}
+			}
+			pstmt.executeBatch();
+			isStatusChanged=true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isStatusChanged;
 	}
 
 }

@@ -94,7 +94,7 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 			}
 		}
 		if (!status) {
-			if (url.equals("/login") || url.equals("/logout")) {
+			if (url.equals("/login") || url.equals("/logout") || url.equals("/forgotPassword")) {
 				return invocation.invoke();
 			} else {
 				return "sessionTimeOut";

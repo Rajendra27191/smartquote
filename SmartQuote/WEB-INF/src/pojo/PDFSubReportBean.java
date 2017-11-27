@@ -14,7 +14,15 @@ private String isAlternative;
 private int quoteDetailId;
 private int altForQuoteDetailId;
 private String gstExempt;
+private String lineComment;
 
+
+public String getLineComment() {
+	return lineComment;
+}
+public void setLineComment(String lineComment) {
+	this.lineComment = lineComment;
+}
 public int getAltForQuoteDetailId() {
 	return altForQuoteDetailId;
 }

@@ -17,12 +17,16 @@ angular.module('sq.SmartQuoteDesktop')
    .state('userhome', {
       abstract: true,
       controller:'SQUserHomeController',
-      templateUrl:'SQ/UserHome/views/sq.user_home.tpl.html',
+      templateUrl:'SQ/UserHome/Dashboard/views/sq.user_home.tpl.html',
     })
    .state('userhome.start', {
       views: {
-        'userhome-view' : {
-          templateUrl: 'SQ/UserHome/views/sq.user_home.tpl.view.html',
+        'userhome-sessionexpire' : {
+          templateUrl: 'SQ/UserHome/Dashboard/views/sq.session_expire.tpl.view.html',
+        },
+        'userhome-dashboard' : {
+          templateUrl: 'SQ/UserHome/Dashboard/views/sq.dashboard.tpl.view.html',
+          controller:'SQDashBoardController',
         }
       }
     })

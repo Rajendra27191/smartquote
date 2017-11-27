@@ -1,6 +1,7 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload'])
-.config(function($logProvider){
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload','chart.js'])
+.config(function($logProvider,ChartJsProvider){
   $logProvider.debugEnabled(true);
+ // ChartJsProvider.setOptions({ colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'] });
   
 })
 .run(['$rootScope','$window','storage','SQHomeServices','$templateCache',function($rootScope,$window,storage,SQHomeServices,$templateCache){
@@ -311,10 +312,10 @@ $rootScope.alertSuccess=function(message){
 sweetAlert("Success",message, "success");
 };
 $rootScope.alertError=function(message){
-sweetAlert("Error",message, "error");
+sweetAlert("Oops!",message, "error");
 };
 $rootScope.alertServerError=function(message){
-sweetAlert("Oops...",message, "error");
+sweetAlert("Error",message, "error");
 };
 $rootScope.alertSessionTimeOutOnQuote=function(){
 swal({

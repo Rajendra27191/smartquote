@@ -222,10 +222,13 @@ $scope.handleCreateAlternativeProductDoneResponse=function(data){
 					$scope.resetAlternateProducts();
 
 				});
-				$rootScope.hideSpinner();
+			}else{
+				$rootScope.alertError(data.message);
+				// $rootScope.SQNotify(data.message); 
 			};
 		}
 	}
+	$rootScope.hideSpinner();
 };
 var cleanupEventCreateAlternativeProductDone = $scope.$on("CreateAlternativeProductDone", function(event, message){
 	$scope.handleCreateAlternativeProductDoneResponse(message);      
@@ -443,6 +446,7 @@ $scope.createEditAlternativeArray=function(product){
 $scope.editAlternateProductBtnClicked=function(index,product){
 console.log("editMainAlternateProductInList");
 // console.log(product);
+var prod=angular.copy(product);
 $scope.editAlternativeObject={};
 $scope.addAlternateProductBtnShow=false;
 $scope.isAlternateProductTableView=false;
@@ -452,8 +456,8 @@ $scope.showSpinner();
 $scope.initAuotoComplete();
 $scope.alternateProductList=[];
 // $scope.createEditAlternativeArray($scope.editAlternativeObject);
-if (product) {
-$scope.alternateProductList=$scope.createEditAlternativeArray(product);
+if (prod) {
+$scope.alternateProductList=$scope.createEditAlternativeArray(prod);
 // console.log($scope.alternateProductList)
 };
 };

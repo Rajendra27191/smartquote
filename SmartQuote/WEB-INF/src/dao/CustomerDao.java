@@ -48,13 +48,14 @@ public class CustomerDao {
 	public ArrayList<KeyValuePairBean> getCustomerList() {
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
-		String getCustomerList = "SELECT customer_name, customer_Code FROM customer_master;";
+		String getCustomerList = "SELECT cust_id, customer_name, customer_Code FROM customer_master;";
 		try {
 			pstmt = conn.prepareStatement(getCustomerList);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("customer_Code"));
+				objKeyValuePairBean.setKey(rs.getInt("cust_id"));
 				objKeyValuePairBean.setValue(rs.getString("customer_Code")
 						+ " (" + rs.getString("customer_name") + ")");
 				pairBeans.add(objKeyValuePairBean);

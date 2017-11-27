@@ -462,6 +462,7 @@ public class ProductDao {
 	};
 	
 	public boolean addCodeInProductCodeVersion(ArrayList<ProductCodeUpdateBean> productCodeList) throws Exception{
+		System.out.println("addCodeInProductCodeVersion");
 		boolean isInserted = false;
 		String insertQryOnProductCodeVersion="INSERT IGNORE INTO product_code_version (old_item_code,new_item_code)"
 				+ " VALUES(?,?);";
@@ -483,18 +484,22 @@ public class ProductDao {
 	}
 	
 	public boolean updateCodeInProductMaster() throws Exception{
+		System.out.println("updateCodeInProductMaster");
 		boolean isUpdated = false;
 		int result=0;
 		String updateProductCode="update product_master a, product_code_version b "
-				+ "set a.item_code = b.new_item_code where a.item_code = b.old_item_code";
+				+ "set a.item_code = b.new_item_code where a.item_code = b.old_item_code ";
 		pstmt = conn.prepareStatement(updateProductCode);
+//		System.out.println(pstmt.);
 		pstmt.executeUpdate();
+	
 		if (result>0) {
 			isUpdated=true;
 		}
 		return isUpdated;
 	}
 	public boolean updateCodeInCreateQuoteDetails() throws Exception{
+		System.out.println("updateCodeInCreateQuoteDetails");
 		boolean isUpdated = false;
 		int result=0;
 		String updateProductCode="update create_quote_details a, product_code_version b "
@@ -507,6 +512,7 @@ public class ProductDao {
 		return isUpdated;
 	}
 	public boolean updateMainIdInAlternativeMaster() throws Exception{
+		System.out.println("updateMainIdInAlternativeMaster");
 		boolean isUpdated = false;
 		int result=0;
 		String updateProductCode="update alternative_product_master a, product_code_version b "
@@ -519,6 +525,7 @@ public class ProductDao {
 		return isUpdated;
 	}
 	public boolean updateAltIdAlternativeMaster() throws Exception{
+		System.out.println("updateAltIdAlternativeMaster");
 		boolean isUpdated = false;
 		int result=0;
 		String updateProductCode="update alternative_product_master a, product_code_version b "

@@ -56,14 +56,15 @@ startingDay: 1,
 showWeeks: false
 };
 $scope.dateValid=true;
+// toDate.setYear($scope.today().getYear()+1);
+$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
+
+};
 
 $scope.validToDate=function(){
 var currentDate=$scope.today();
 var toDate=new Date(currentDate.getFullYear()+1,currentDate.getMonth(),currentDate.getDate());
 return toDate;
-};
-// toDate.setYear($scope.today().getYear()+1);
-$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
 };
 
 $scope.resetForm=function(){

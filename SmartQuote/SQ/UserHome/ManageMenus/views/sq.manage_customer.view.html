@@ -20,9 +20,11 @@ width: 62.666667%;
 			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addCustomerBtnClicked()" ng-disabled="addCustomerBtnDisabled" uib-popover="Click to add customer." popover-placement="top" popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Customer</button>
 		</div>
 </div>
-
+<!-- {{isCustomerTableView}}
+{{customerListView | json}} -->
+<!-- dt-column-defs="dtColumnDefs"  -->
 <div  ng-if="isCustomerTableView " style="font-size: 12px;"><!-- && customerListView.length>0 -->
-<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="table row-border hover table-responsive" id="customerDataTable">
+<table datatable="ng" dt-options="dtOptions" class="table row-border hover table-responsive" id="customerDataTable">
                 <thead class="table-header">
                     <tr>
 		                <th style="width:10%;">Cust Code</th>
@@ -207,9 +209,10 @@ width: 62.666667%;
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Monthly Avg Purchase</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
-	<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'manageCustomer.avgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'manageCustomer.avgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
 	<span ng-show="((form.manageCustomer.monthlyAvgPurchase.$dirty && form.manageCustomer.monthlyAvgPurchase.$invalid) || (form.manageCustomer.monthlyAvgPurchase.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small ng-show="form.manageCustomer.monthlyAvgPurchase.$invalid">*monthly average purchase invalid.</small>
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.pattern">*monthly average purchase invalid.</small>
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.$error.required">*Please enter monthly average purchase.</small>
 	</span>
 	</div>
 	</div>

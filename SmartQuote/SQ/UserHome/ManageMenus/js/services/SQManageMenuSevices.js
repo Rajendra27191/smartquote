@@ -749,11 +749,15 @@ sayHello: function(text){
 return "Factory says \"Hello " + text + "\"";
 },
 insertIntoArrayKeyValue: function(array,obj){
+console.log("insertIntoArrayKeyValue")	
+console.log(obj)	
 array.push(obj);
 return "success insertIntoArrayKeyValue";
 },
 deleteFromArrayKeyValue: function(array,obj1){
-var objIndex = array.findIndex((obj => obj.id == obj1.id));
+console.log("deleteFromArrayKeyValue")	
+console.log(obj1)	
+var objIndex = array.findIndex((obj => obj.key == obj1.key));
 array.splice(objIndex,1);
 // angular.forEach(array, function(element, index){
 // if(element.key==obj.key&&element.value.toUpperCase()==obj.value.toUpperCase()){
@@ -764,7 +768,9 @@ array.splice(objIndex,1);
 return "success deleteFromArrayKeyValue";
 },
 updateArrayKeyValue: function(array,obj1){
-objIndex = array.findIndex((obj => obj.id == obj1.id));
+console.log("updateArrayKeyValue")	
+console.log(obj1)	
+objIndex = array.findIndex((obj => obj.key == obj1.key));
 array[objIndex] = obj1;
 // angular.forEach(array, function(element, index){
 // if(element.key==obj.key){

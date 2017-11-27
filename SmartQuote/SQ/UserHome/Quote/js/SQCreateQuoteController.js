@@ -339,7 +339,8 @@ $rootScope.hideSpinner();
 $scope.resetCreateQuote=function(){
 $log.debug("resetCreateQuote call");
 $scope.customerQuote={};
-// $scope.customerQuote.productList=[];
+$scope.customerQuote.productList={};
+$scope.customerQuote.productList=[];
 $scope.addedProductList=[];
 $scope.isAddProductModalShow=false;
 $scope.supplierInformation={'subtotal':0,'gstTotal':0,'total':0};
@@ -354,6 +355,7 @@ $scope.isNewCustomer=false;
 $scope.customerQuote.competeQuote="No";
 $scope.isAlternateAdded=false;
 $scope.customerQuote.saveWithAlternative=false;
+$scope.showAddProductError=false;
 // $scope.serviceArray=angular.copy($scope.serviceList1);
 // $scope.termConditionArray=angular.copy($scope.termConditionList1);
 $scope.form.addCustomerQuote.submitted=false;
@@ -979,8 +981,13 @@ if($scope.customerQuote.currentSupplierName.key){
 supplierName=$scope.customerQuote.currentSupplierName.value;
 supplierId=$scope.customerQuote.currentSupplierName.key
 }else{
+if ($scope.customerQuote.currentSupplierName!="") {
 supplierName=$scope.customerQuote.currentSupplierName;
 supplierId=0;
+}else{
+supplierName=$scope.customerQuote.currentSupplierName;
+supplierId=-1;	
+};	
 }
 }else{
 console.log("$scope.customerQuote.currentSupplierName "+$scope.customerQuote.currentSupplierName);
@@ -1104,28 +1111,34 @@ createQuoteResponse={};
 if(data){
 if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
-$rootScope.alertSuccess("Successfully created quote");
+// $rootScope.alertSuccess("Successfully created quote");
 console.log("Quote Response ::")
 console.log(angular.toJson(data));
 createQuoteResponse=data;
+
 checkQuoteResponse(createQuoteResponse);
 $scope.resetCreateQuote();
+
+var previousWindowKeyDown = window.onkeydown;	
+swal({
+		title: "Success",
+		text: "Successfully created quote!",
+		type: "success",
+		timer: 2000,
+		showConfirmButton: false
+		// closeOnConfirm: true,			
+	});
 $timeout(function() {
 $scope.moveToCustomerInfo();
 }, 2000);
-// swal({
-// 		title: "Success",
-// 		text: "Successfully created quote!",
-// 		type: "success",
-// 	},function(){
-// 		console.log("ffff")
-// 		$window.scrollTo(0,0);
-// 		$("#customerCode").focus();
-// 	});
+if (!data.newProductCreated) {
+$rootScope.hideSpinner();
+};
+	
 }else{
 $rootScope.alertError(data.message);
-}
 $rootScope.hideSpinner();
+}
 }}
 };
 var cleanupEventQuoteSessionTimeOut = $scope.$on("QuoteSessionTimeOut", function(event, message){

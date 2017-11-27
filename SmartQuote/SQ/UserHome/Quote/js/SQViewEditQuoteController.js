@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQViewEditQuoteController',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQManageMenuServices,SQManageMenuServices,hotkeys,$http,SQQuoteServices,CalculationFactory,ArrayOperationFactory){
+.controller('SQViewEditQuoteController',function($uibModal,$scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQManageMenuServices,SQManageMenuServices,hotkeys,$http,SQQuoteServices,CalculationFactory,ArrayOperationFactory,DTOptionsBuilder, DTColumnDefBuilder,$filter){
 console.log('initialise SQViewEditQuoteController');
 $scope.quoteListView=[];
 $scope.quoteView={};
@@ -77,12 +77,12 @@ products = new Bloodhound({
         $rootScope.showSpinner();
         },
 		filter: function (devices) {
+			$rootScope.hideSpinner();
 			return $.map(devices, function (device) {
 				return {
 					code: device.code,
 					value : device.value
 				};
-			$rootScope.hideSpinner();
 			});
 		}
 	},
@@ -167,7 +167,22 @@ $scope.openMyModal = function (product) {
 
 };
 //===== ADD PRODUCT UIB MODAL <<<<<
-
+//===== INIT DATA TABLE >>>>>
+$scope.arrangeDataTable=function(){
+$scope.dtOptions= DTOptionsBuilder.newOptions()
+    .withOption('order', [0, 'desc']);
+    $scope.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(0),
+        DTColumnDefBuilder.newColumnDef(1),
+        DTColumnDefBuilder.newColumnDef(2),
+        DTColumnDefBuilder.newColumnDef(3),
+        DTColumnDefBuilder.newColumnDef(4),
+        DTColumnDefBuilder.newColumnDef(5),
+        DTColumnDefBuilder.newColumnDef(6),
+        DTColumnDefBuilder.newColumnDef(7),
+        DTColumnDefBuilder.newColumnDef(8),
+    ];
+};
 //===== initViewEditQuote() >>>>>
 $scope.initViewEditQuote=function(){
 console.log("initViewEditQuote...")
@@ -175,8 +190,9 @@ $rootScope.showSpinner();
 SQQuoteServices.GetQuoteView();
 };
 $scope.initViewEditQuote();
-
+$scope.arrangeDataTable();
 $scope.handleGetQuoteViewDoneResponse=function(data){
+$scope.quoteListView=[];
 if(data){
 // console.log(data)
 if (data.code) {
@@ -193,6 +209,7 @@ $rootScope.hideSpinner();
 };
 
 var cleanupEventGetQuoteViewDone = $scope.$on("GetQuoteViewDone", function(event, message){
+
 $scope.handleGetQuoteViewDoneResponse(message);      
 });
 
@@ -200,6 +217,83 @@ var cleanupEventGetQuoteViewNotDone = $scope.$on("GetQuoteViewNotDone", function
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
+
+//===== Select Rows & Changed Status >>>>>
+$scope.selectedRows = [];
+$scope.select = function(item,event) {
+// console.log(event)
+if (!$scope.disableSalesPersonSelect) {
+if (event.ctrlKey) {
+item.selected ? item.selected = false : item.selected = true;	
+} 
+};	
+}
+
+$scope.getAllSelectedRows = function() {
+$scope.selectedRows = [];	
+var selectedRows = $filter("filter")($scope.quoteListView, {
+  selected: true
+}, true);
+angular.forEach(selectedRows, function(value, key){
+	var quote={quoteId:value.quoteId};
+	$scope.selectedRows.push(quote);
+});
+console.log("$scope.selectedRows : "+$scope.selectedRows.length)
+};
+$scope.JsonToChangeStatus=function(status){
+var objQuoteBean={};
+objQuoteBean.objQuoteBeanList=$scope.selectedRows;
+objQuoteBean.quoteStatus=status;
+return angular.toJson(objQuoteBean);
+}
+
+$scope.changeQuoteStatus=function(status){
+if (status) {
+	$scope.getAllSelectedRows();
+	if ($scope.selectedRows.length>0) {
+	if (status.toLowerCase()=='won') {
+		console.log($scope.getAllSelectedRows())
+		$rootScope.showSpinner();
+		SQQuoteServices.changeQuoteStatus($scope.JsonToChangeStatus('won'));
+	};
+	if (status.toLowerCase()=='lost') {
+		$rootScope.showSpinner();
+		SQQuoteServices.changeQuoteStatus($scope.JsonToChangeStatus('lost'));	
+	};
+	if (status.toLowerCase()=='closed') {
+		$rootScope.showSpinner();
+		SQQuoteServices.changeQuoteStatus($scope.JsonToChangeStatus('closed'));	
+	};
+	} else{
+	$rootScope.alertError("Please select quote to change status");	
+	};
+};
+};
+
+$scope.handleChangeQuoteStatusDone=function(data){
+if(data){
+if (data.code) {
+  if(data.code.toUpperCase()=='SUCCESS'){
+   $scope.initViewEditQuote();
+   $rootScope.alertSuccess("Successfully changed status");
+   // $state.reload();
+}else{
+  $rootScope.alertError(data.message);
+$rootScope.hideSpinner();
+}
+}
+}
+};
+
+var cleanupEventChangeQuoteStatusDone = $scope.$on("ChangeQuoteStatusDone", function(event, message){
+$scope.handleChangeQuoteStatusDone(message);      
+});
+
+var cleanupEventChangeQuoteStatusNotDone = $scope.$on("ChangeQuoteStatusNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
 
 // ===== INIT() CreateQuote >>>>>>
 function setUserAsSalesPerson () {
@@ -230,9 +324,9 @@ if (data.code) {
  	$scope.selectedOfferList=data.result.offerList;
 	$scope.getProductsGroupList();
 }else{
+  $rootScope.hideSpinner();
   $rootScope.alertError(data.message);
 }
-$rootScope.hideSpinner();
 }
 }
 };
@@ -249,67 +343,39 @@ $rootScope.hideSpinner();
 $scope.checkSelectedServices=function(){
 console.log("checkSelectedServices")
 if ($scope.selectedServiceList!='' && $scope.serviceArray!='') {
-console.log("1........")
-
 for (var j =0; j<$scope.selectedServiceList.length; j++) {
 var array=$scope.serviceArray;
 objIndex = array.findIndex((obj => obj.key == $scope.selectedServiceList[j].key));
 // console.log(array[objIndex])
 array[objIndex].code = true;
 }	
-// for (var i =0; i<$scope.serviceArray.length; i++) {
-// 	if ($scope.selectedServiceList.length>0) {
-// 	for (var j =0; j<$scope.selectedServiceList.length; j++) {
-// 		if ($scope.serviceArray[i].key==$scope.selectedServiceList[j].key) {
-// 			$scope.serviceArray[i].code=true;
-// 			break;
-// 		}else{
-// 			$scope.serviceArray[i].code=false;
-// 		}
-// 	}
-// }else{
-// $scope.serviceArray[i].code=false;
-// }
-// }
 }
 };
 $scope.checkSelectedTermsAndCondition=function(){
 console.log("checkSelectedTermsAndCondition")
 if ($scope.selectedTermConditionList!='' && $scope.termConditionArray!='') {
-console.log("1........")
 for (var j =0; j<$scope.selectedTermConditionList.length; j++) {
 var array=$scope.termConditionArray;
 objIndex = array.findIndex((obj => obj.key == $scope.selectedTermConditionList[j].key));
 // console.log(array[objIndex])
 array[objIndex].code = true;
 }
-
-// for (var i =0; i<$scope.termConditionArray.length; i++) {
-// 	if ($scope.selectedTermConditionList.length>0) {	
-// 	for (var j =0; j<$scope.selectedTermConditionList.length; j++) {
-// 		if ($scope.termConditionArray[i].key==$scope.selectedTermConditionList[j].key) {
-// 			$scope.termConditionArray[i].code=true;
-// 			break;
-// 		}else{
-// 			$scope.termConditionArray[i].code=false;
-// 		}
-// 	}
-// 	}else{
-// 		$scope.termConditionArray[i].code=false;
-// 	}
-// }
 }
 };
 $scope.checkSelectedOffers=function(){
 console.log("checkSelectedOffers")
 if ($scope.selectedOfferList!='' && $scope.offerArray!='') {
-console.log("1........")
 for (var j =0; j<$scope.selectedOfferList.length; j++) {
+// console.log("checkSelectedOffers loop :"+j)	
 var array=$scope.offerArray;
 objIndex = array.findIndex((obj => obj.id == $scope.selectedOfferList[j].id));
 array[objIndex].code = true;
 }
+// $timeout(function() {
+// $rootScope.hideSpinner();
+// }, 1000);
 }
+
 };
 // =====================getProductsList=======
 $scope.productGroupList=[];
@@ -322,7 +388,6 @@ $scope.getProductsGroupList=function(){
 $scope.getQuoteDetails=function(){
 console.log("getQuoteDetails");
 //From local storage >>>>>
-$scope.initAuotoComplete();
 setUserAsSalesPerson();
 $scope.currentSupplierList=angular.copy($rootScope.supplierList);	
 $scope.termConditionArray=angular.copy($rootScope.termConditionList);
@@ -332,14 +397,16 @@ $scope.serviceArray=angular.copy($rootScope.serviceList);
 $scope.offerArray=angular.copy($rootScope.offerList);
 // $scope.offerList1=angular.copy($rootScope.offerList);
 //From local storage <<<<<
-$rootScope.showSpinner();
+$scope.calculateAllInformation();
+$scope.checkAlternativeAdded();
+$rootScope.isQuoteActivated=true;
+$scope.initDate();
+
+// $rootScope.showSpinner();
 $scope.checkSelectedTermsAndCondition();
 $scope.checkSelectedServices();
 $scope.checkSelectedOffers();
-$timeout(function() {
-$rootScope.hideSpinner();
-}, 3000);
-
+$scope.initAuotoComplete();
 };
 
 $scope.handleGetGetProductGroupListDoneResponse=function(data){
@@ -355,7 +422,7 @@ $scope.handleGetGetProductGroupListDoneResponse=function(data){
 	}
 	}
 	}
-	$rootScope.hideSpinner();
+	// $rootScope.hideSpinner();
 };
 
 var cleanupEventGetProductGroupListDone = $scope.$on("GetProductGroupListDone", function(event, message){
@@ -407,6 +474,7 @@ console.log("closeEditProducts");
 $scope.viewDetailInformation=function(quote){
 	console.log("viewDetailInformation");
 	console.log(quote);
+	// $rootScope.showSpinner();
 	var currentQuote=angular.copy(quote);
 	// var dt = new Date(currentQuote.createdDate);
 	// console.log("date ::: ",dt)
@@ -431,10 +499,9 @@ $scope.viewDetailInformation=function(quote){
     // $scope.customerQuote.createdDate=dt;
 
 	$scope.initEditQuote(quote);
-	$scope.calculateAllInformation();
-	$scope.checkAlternativeAdded();
-	$rootScope.isQuoteActivated=true;
-	$scope.initDate();
+
+
+	// $rootScope.hideSpinner();
 	
 
 };
@@ -1043,7 +1110,7 @@ $scope.quotePriceFocused=function(){
 // ===============****************************=================================
 $scope.showCommentModal=function(quote){
 	$('#commentModal').modal({ keyboard: false,backdrop: 'static',show: true});
-	$scope.customerQuote=quote;
+	$scope.customerQuote=angular.copy(quote);
 	$scope.comment='';
 };
 
@@ -1065,7 +1132,7 @@ $scope.closeCommentModal=function(quote){
 	$scope.form.commentForm.submitted=false;
    	$scope.form.commentForm.$setPristine();
    	// $scope.init();	
-   	$scope.initViewEditQuote();
+   	// $scope.initViewEditQuote();
 };
 $scope.handleAddCommentDoneResponse=function(data){
 if(data){
@@ -1310,6 +1377,14 @@ var cleanupEventUpdateQuoteNotDone = $scope.$on("UpdateQuoteNotDone", function(e
 $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
+
+//=================================================================================================
+$scope.dynamicPopover = {
+templateUrl: 'myPopoverTemplate.html',
+title: 'Quote Action'
+};
+
+
 
 //=================================================================================================
 

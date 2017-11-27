@@ -3,17 +3,17 @@ angular.module('sq.SmartQuoteDesktop')
 console.log('initialise SQManageTermsConditionsController');	
 $scope.form={};
 $scope.termCondition={};
-// $scope.termConditionList=[];
 $scope.editing = [];
 
 
 
-// $scope.init=function(){
+$scope.init=function(){
+$scope.termConditionArray=angular.copy($rootScope.termConditionList);
 // 	$rootScope.showSpinner();
 // 	SQManageMenuServices.GetTermsConditions();
-// };
+};
 
-// $scope.init();
+$scope.init();
 
 // ================= GetTermsConditions List ======================
 $scope.handleGetTermsConditionsDoneResponse=function(data){
@@ -63,7 +63,8 @@ if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   // $scope.termConditionList=data.result;
   var obj={"code":data.genratedId,"key":data.genratedId,"value":$scope.termCondition.term}
-  ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.termConditionList,obj)
+  ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.termConditionList,obj);
+  $scope.init();
   $rootScope.alertSuccess("Successfully saved term & condition!");
   $scope.termCondition={};
   $scope.form.manageTermCondition.submitted=false;
@@ -99,6 +100,7 @@ $scope.editTermBtnClicked=function(termConditionList,index){
 };
 $scope.stop = function(index){
   $scope.editing[index] = false;
+  $scope.init();
 };
 
 // ================= UpdateTermsConditions ======================
@@ -124,6 +126,7 @@ if (data.code) {
   // $scope.termConditionList=data.result;
   $scope.stop($scope.updatedIndex);
   ArrayOperationFactory.updateArrayKeyValue($rootScope.termConditionList,updateObj);
+  $scope.init();
   $rootScope.alertSuccess("Successfully updated term & condition!");
 }else if (data.code.toUpperCase()=='ERROR'){
    $rootScope.alertError(data.message);
@@ -175,6 +178,7 @@ if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   // $scope.termConditionList=data.result;
     ArrayOperationFactory.deleteFromArrayKeyValue($rootScope.termConditionList,deleteObj);
+    $scope.init();
     $rootScope.alertSuccess("Successfully deleted term & condition!");
   
 }else if (data.code.toUpperCase()=='ERROR'){

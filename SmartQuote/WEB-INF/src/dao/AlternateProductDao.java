@@ -41,7 +41,30 @@ public class AlternateProductDao {
 			e.printStackTrace();
 		}
 	}
-	public boolean saveAlternateProducts(String mainId, String altId) {
+	public boolean isAlternativeExist(String mainId, String altId) {
+		boolean isExist = false;
+		try {
+			String insertQuery= "SELECT main_product_id, alternative_product_id "
+					+ "FROM alternative_product_master "
+					+ "WHERE main_product_id=? AND alternative_product_id=?;";
+			pstmt = conn.prepareStatement(insertQuery);
+			pstmt.setString(1, mainId);
+			pstmt.setString(2, altId);
+			rs=pstmt.executeQuery();
+			if (rs.next()) {
+				isExist=true;
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isExist;
+	}
+		public boolean saveAlternateProducts(String mainId, String altId) {
 		boolean isProductCreated = false;
 		System.out.println("IN saveAlternateProducts");
 		System.out.println("mainID : "+mainId+" altId : "+altId);

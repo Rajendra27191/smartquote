@@ -3,16 +3,17 @@ angular.module('sq.SmartQuoteDesktop')
 console.log('initialise SQManageServicesController');	
 $scope.form={};
 $scope.manageService={};
-$scope.servicesList=[];
+
 $scope.editing = [];
 
 
-// $scope.init=function(){
+$scope.init=function(){
 // $rootScope.showSpinner();
 // SQManageMenuServices.GetServices();
-// };
+$scope.serviceArray=angular.copy($rootScope.serviceList);
+};
 
-// $scope.init();
+$scope.init();
 
 // ================= GetServices List ======================
 // $scope.handleGetServicesDoneResponse=function(data){
@@ -56,6 +57,7 @@ if(data.code.toUpperCase()=='SUCCESS'){
 // $scope.termConditionList=data.result;
 var obj={"code":data.genratedId,"key":data.genratedId,"value":$scope.manageService.service}
 ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.serviceList,obj)
+$scope.init();
 $rootScope.alertSuccess("Successfully saved service!");
 
 $scope.manageService={};
@@ -79,10 +81,10 @@ $rootScope.hideSpinner();
 });
 
 // ================================================================
-$scope.editServiceBtnClicked=function(termConditionList,index){
+$scope.editServiceBtnClicked=function(list,index){
 // console.log(termConditionList);	
 // console.log(index);	
-for(var i=0;i<termConditionList.length;i++){
+for(var i=0;i<list.length;i++){
 if(i == index){
 $scope.editing[i] = true;
 }else{
@@ -93,6 +95,7 @@ $scope.editing[i] = false;
 
 $scope.stop = function(index){
 $scope.editing[index] = false;
+$scope.init();
 };
 // ================= UpdateService ======================
 var updatedServiceObj={}
@@ -117,6 +120,7 @@ if(data.code.toUpperCase()=='SUCCESS'){
 // $scope.termConditionList=data.result;
 $scope.stop($scope.updatedIndex);
 ArrayOperationFactory.updateArrayKeyValue($rootScope.serviceList,updatedServiceObj);
+$scope.init();
 $rootScope.alertSuccess("Successfully updated service!");
 }else if (data.code.toUpperCase()=='ERROR'){
 $rootScope.alertError(data.message);
@@ -169,6 +173,7 @@ if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 // $scope.termConditionList=data.result;
 ArrayOperationFactory.deleteFromArrayKeyValue($rootScope.serviceList,deleteObj);
+$scope.init();
 $rootScope.alertSuccess("Successfully deleted service!");
 }else if (data.code.toUpperCase()=='ERROR'){
 $rootScope.alertError(data.message);

@@ -73,9 +73,27 @@ quote.CreateQuote = function (objQuoteBean){
 };
 
 // ==========================VIEW/EDIT QUOTE ================================
+quote.changeQuoteStatus = function (objQuoteBean){
+  console.log("changeQuoteStatus");
+  console.log(objQuoteBean)
+  data = $.param({objQuoteBean:objQuoteBean}); 
+  $http.post('/smartquote/changeQuoteStatus', data, config)
+  .success(function (data, status, headers, config) {
+    console.log(data);
+    if (data.code=="sessionTimeOut") {
+      $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    }else{
+      $rootScope.$broadcast('ChangeQuoteStatusDone', data); 
+    }
+  })
+  .error(function (data, status, header, config) {
+    console.log(data);
+    $rootScope.$broadcast('ChangeQuoteStatusNotDone', data);
+  });
+};
 
 quote.GetQuoteView = function (){
-console.log("GetQuoteView")
+// console.log("GetQuoteView")
 QuoteServices.getQuoteView.getQuoteViewMethod(function(success){
 console.log(success);
 if (success.code=="sessionTimeOut") {
@@ -163,6 +181,10 @@ console.log(error);
 $rootScope.$broadcast('GetAltProductDetailsNotDone', error);
 });
 };
+
+
+
+
 return quote;
 }])
 
@@ -185,11 +207,12 @@ return quote;
             if (customerQuote.productList.length>0) {
             angular.forEach(customerQuote.productList, function(value, key){
             subtotal=subtotal+parseFloat(value.currentSupplierTotal); 
-            
+            console.log(value)
+            if (value.gstFlag) {
             if (value.gstFlag.toUpperCase()=='NO') {
             gstTotal=gstTotal+((10/100)*value.currentSupplierTotal)
-            // console.log("gstTotal : "+gstTotal);
             } 
+            };
             });
 
             if (customerQuote.pricesGstInclude) {  
@@ -239,9 +262,11 @@ return quote;
             if (customerQuote.productList.length>0) {
               angular.forEach(customerQuote.productList, function(value, key){
                 subtotal=subtotal+parseFloat(value.total);
+                if (value.gstFlag) {
                 if (value.gstFlag.toUpperCase()=='NO') {
                   gstTotal=gstTotal+((10/100)*parseFloat(value.total))
                 }
+                };
               });
                 if (customerQuote.pricesGstInclude) {
                 totalInformation.subtotal=subtotal-gstTotal;
@@ -276,8 +301,10 @@ return quote;
 
           }else{
             subtotal=subtotal+parseFloat(value.currentSupplierTotal);
+            if (value.gstFlag) {
             if (value.gstFlag.toUpperCase()=='NO') {
             gstTotal=gstTotal+((10/100)*parseFloat(value.currentSupplierTotal))
+            }
             }
           }
         });
@@ -353,10 +380,11 @@ return quote;
               }else{
                 subtotal=subtotal+parseFloat(value.total);
                 //---
+                if (value.gstFlag) {
                 if (value.gstFlag.toUpperCase()=='NO') {
                     gstTotal=gstTotal+((10/100)*parseFloat(value.total))
                 }
-
+              }
               }
             });
               if (customerQuote.pricesGstInclude) {

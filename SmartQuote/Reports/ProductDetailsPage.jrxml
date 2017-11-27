@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
-	<property name="ireport.zoom" value="1.1000000000000305"/>
-	<property name="ireport.x" value="252"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
+	<property name="ireport.zoom" value="1.2100000000000377"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<style name="product_saving" mode="Opaque" forecolor="#000000" backcolor="#BCDB9B" hAlign="Center" vAlign="Middle" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
+	<style name="product_saving" mode="Opaque" forecolor="#000000" backcolor="#BCDB9B" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box>
+			<pen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#FFFFFF"/>
+		</box>
 		<conditionalStyle>
-			<conditionExpression><![CDATA[$F{productSavings}<=0]]></conditionExpression>
-			<style mode="Opaque" forecolor="#000000" backcolor="#EECBCB" hAlign="Center" vAlign="Middle" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+			<conditionExpression><![CDATA[$F{productSavings}<=0 && $F{isAlternative}.equalsIgnoreCase("no")]]></conditionExpression>
+			<style mode="Opaque" forecolor="#000000" backcolor="#EECBCB" hAlign="Center" vAlign="Middle" fontName="AvantGarde Bk BT BOOK" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 		</conditionalStyle>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></conditionExpression>
-			<style forecolor="#000000" backcolor="#AEABAB" vAlign="Middle" isItalic="true"/>
+			<style forecolor="#000000" backcolor="#AEABAB" vAlign="Middle" fontName="AvantGarde Bk BT BOOK" fontSize="8" isItalic="true">
+				<box topPadding="6" leftPadding="1" bottomPadding="0"/>
+			</style>
 		</conditionalStyle>
 	</style>
 	<style name="product_style" mode="Opaque" forecolor="#000000" backcolor="#E6E6E6" hAlign="Center" vAlign="Middle" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
-		<box leftPadding="2">
+		<box leftPadding="2" bottomPadding="4">
 			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 			<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
 			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -23,7 +32,7 @@
 		</box>
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$F{isAlternative}.equalsIgnoreCase("yes")]]></conditionExpression>
-			<style mode="Opaque" forecolor="#000000" backcolor="#AEABAB" hAlign="Center" vAlign="Middle" fontSize="9" isItalic="true">
+			<style mode="Opaque" forecolor="#000000" backcolor="#AEABAB" hAlign="Center" vAlign="Middle" fontName="AvantGarde Bk BT BOOK" fontSize="9" isItalic="true">
 				<box topPadding="6" leftPadding="1" bottomPadding="0">
 					<pen lineWidth="0.0"/>
 					<topPen lineWidth="0.0"/>
@@ -31,6 +40,15 @@
 					<bottomPen lineWidth="0.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="product_desc" style="product_style">
+		<box leftPadding="2" bottomPadding="2"/>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{lineComment}!=null]]></conditionExpression>
+			<style hAlign="Left" vAlign="Top" fontName="AvantGarde Bk BT BOOK" fontSize="9" isStrikeThrough="false">
+				<box leftPadding="2" bottomPadding="2"/>
 			</style>
 		</conditionalStyle>
 	</style>
@@ -69,6 +87,7 @@
 	</parameter>
 	<parameter name="pdfMasterBean" class="pojo.PDFMasterReportBean"/>
 	<parameter name="pageFooterText" class="java.lang.String"/>
+	<parameter name="termCondition" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -110,6 +129,9 @@
 	</field>
 	<field name="altForQuoteDetailId" class="java.lang.Integer">
 		<fieldDescription><![CDATA[altForQuoteDetailId]]></fieldDescription>
+	</field>
+	<field name="lineComment" class="java.lang.String">
+		<fieldDescription><![CDATA[lineComment]]></fieldDescription>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -335,82 +357,76 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="26" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<textField>
-				<reportElement uuid="6e0c2712-0a1c-479e-aef6-735a2a638ae3" style="product_saving" x="791" y="0" width="47" height="26"/>
-				<box leftPadding="1">
-					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
-					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
-					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
-					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
-					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
-				</box>
-				<textElement verticalAlignment="Middle">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="true"/>
+				<reportElement uuid="6e0c2712-0a1c-479e-aef6-735a2a638ae3" style="product_saving" x="791" y="0" width="47" height="32"/>
+				<box leftPadding="2" bottomPadding="1" rightPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productSavings}+" %"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="4844426c-fdfc-40bb-a8f8-8209cc2f252a" style="product_style" x="5" y="0" width="130" height="26"/>
-				<box leftPadding="2"/>
+				<reportElement uuid="4844426c-fdfc-40bb-a8f8-8209cc2f252a" style="product_style" x="5" y="0" width="130" height="32"/>
+				<box topPadding="4" leftPadding="2" bottomPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productCode}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="7cd57aae-2a64-417b-b285-b078218e8041" style="product_style" x="134" y="0" width="380" height="26"/>
-				<box leftPadding="2"/>
-				<textElement textAlignment="Left">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="false"/>
+				<reportElement uuid="7cd57aae-2a64-417b-b285-b078218e8041" style="product_style" x="134" y="0" width="380" height="32"/>
+				<box topPadding="4" leftPadding="2" bottomPadding="2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{productDescription}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productDescription}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="3e0b2b9a-720b-452a-9dc7-59eabcd1434a" style="product_style" x="514" y="0" width="40" height="26"/>
-				<box leftPadding="0"/>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="false"/>
+				<reportElement uuid="3e0b2b9a-720b-452a-9dc7-59eabcd1434a" style="product_style" x="514" y="0" width="40" height="32"/>
+				<box leftPadding="2" bottomPadding="1"/>
+				<textElement textAlignment="Center">
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productUOM}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="7af9d2b1-c5db-423b-9d7d-04767c909aae" style="product_style" x="554" y="0" width="37" height="26"/>
-				<box leftPadding="0"/>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="false"/>
+				<reportElement uuid="7af9d2b1-c5db-423b-9d7d-04767c909aae" style="product_style" x="554" y="0" width="37" height="32"/>
+				<box leftPadding="2" bottomPadding="1"/>
+				<textElement textAlignment="Center">
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productQty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="9b4b103a-131c-4c55-978d-3cd2694da78a" style="product_style" x="591" y="0" width="50" height="26"/>
-				<box leftPadding="0" rightPadding="5"/>
+				<reportElement uuid="9b4b103a-131c-4c55-978d-3cd2694da78a" style="product_style" x="591" y="0" width="50" height="32"/>
+				<box leftPadding="2" bottomPadding="1" rightPadding="2"/>
 				<textElement textAlignment="Right">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="false"/>
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="fb281228-66b1-4a40-854c-3bdb72c73699" style="product_style" x="641" y="0" width="50" height="26"/>
-				<box leftPadding="0" rightPadding="5"/>
+				<reportElement uuid="fb281228-66b1-4a40-854c-3bdb72c73699" style="product_style" x="641" y="0" width="50" height="32"/>
+				<box leftPadding="2" bottomPadding="1" rightPadding="2"/>
 				<textElement textAlignment="Right">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="false"/>
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productCurrentPriceTotalExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="889fb782-3a81-4713-bd6a-044263c0b6fb" style="product_style" x="691" y="0" width="50" height="26"/>
-				<box leftPadding="0" rightPadding="5"/>
+				<reportElement uuid="889fb782-3a81-4713-bd6a-044263c0b6fb" style="product_style" x="691" y="0" width="50" height="32"/>
+				<box leftPadding="2" bottomPadding="1" rightPadding="2"/>
 				<textElement textAlignment="Right">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="true"/>
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="85d250da-97a1-44b4-9e4e-024cbcd635f1" style="product_style" x="741" y="0" width="50" height="26"/>
-				<box leftPadding="0" rightPadding="5"/>
+				<reportElement uuid="85d250da-97a1-44b4-9e4e-024cbcd635f1" style="product_style" x="741" y="0" width="50" height="32"/>
+				<box leftPadding="2" bottomPadding="1" rightPadding="2"/>
 				<textElement textAlignment="Right">
-					<font fontName="AvantGarde Bk BT BOOK" size="8" isBold="true"/>
+					<font fontName="AvantGarde Bk BT BOOK" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$F{productJaybelPriceTotalExGST}]]></textFieldExpression>
 			</textField>
@@ -424,12 +440,35 @@
 				</textElement>
 				<text><![CDATA[ALTERNATIVE PRODUCT OFFER]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="d05525bd-b11d-4ade-9f05-b04724aadb53" x="134" y="17" width="380" height="15" forecolor="#000000">
+					<printWhenExpression><![CDATA[$F{lineComment}!=null]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="2" bottomPadding="1" rightPadding="2"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="AvantGarde Bk BT BOOK" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Note: "+$F{lineComment}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
+	<lastPageFooter>
+		<band height="22">
+			<textField>
+				<reportElement uuid="ba7907c6-d2ff-466e-8a56-57643091e7e1" mode="Opaque" x="5" y="0" width="833" height="21" forecolor="#999999">
+					<printWhenExpression><![CDATA[$P{termCondition}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="AvantGarde Bk BT BOOK" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Terms & Conditions : " +$P{termCondition}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
 	<summary>
-		<band height="228">
+		<band height="221">
 			<staticText>
-				<reportElement uuid="3747b2cf-d421-4748-a232-ae1986ed50c0" mode="Opaque" x="241" y="28" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="3747b2cf-d421-4748-a232-ae1986ed50c0" mode="Opaque" x="244" y="31" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -443,14 +482,14 @@
 				<text><![CDATA[Jaybel Total $]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="d8d4d3db-f228-4a45-bad7-7bdfc6be7e84" mode="Opaque" x="644" y="50" width="100" height="45" backcolor="#CCCCCC"/>
+				<reportElement uuid="d8d4d3db-f228-4a45-bad7-7bdfc6be7e84" mode="Opaque" x="647" y="53" width="100" height="45" backcolor="#CCCCCC"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{objCalculationBean}.getSavingInPercentage()+" %"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="ff8d69bf-b8d8-43fb-be72-30ed87d5c059" x="88" y="8" width="125" height="20"/>
+				<reportElement uuid="ff8d69bf-b8d8-43fb-be72-30ed87d5c059" x="91" y="11" width="125" height="20"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -458,13 +497,13 @@
 					<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Standard Total :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c602b0a5-2811-46b9-8855-8e82a60159f8" mode="Opaque" x="88" y="143" width="55" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="c602b0a5-2811-46b9-8855-8e82a60159f8" mode="Opaque" x="91" y="146" width="55" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -473,35 +512,35 @@
 				<text><![CDATA[ Subtotal]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="5b38873d-ce87-48db-9225-0fc13a226106" mode="Opaque" x="391" y="50" width="100" height="45" backcolor="#CCCCCC"/>
+				<reportElement uuid="5b38873d-ce87-48db-9225-0fc13a226106" mode="Opaque" x="394" y="53" width="100" height="45" backcolor="#CCCCCC"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$P{objCalculationBean}.getSaving()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d7efabc8-5dd2-4156-b9a6-428cc42dea47" mode="Opaque" x="296" y="80" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="d7efabc8-5dd2-4156-b9a6-428cc42dea47" mode="Opaque" x="299" y="83" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getJaybelTotal()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="d21cb661-735b-450c-9aec-3ee7dbc0dd97" mode="Opaque" x="517" y="50" width="100" height="45" backcolor="#CCCCCC"/>
+				<reportElement uuid="d21cb661-735b-450c-9aec-3ee7dbc0dd97" mode="Opaque" x="520" y="53" width="100" height="45" backcolor="#CCCCCC"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["$ "+$P{objCalculationBean}.getAnnualSaving()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="e518ae90-c819-4d43-85cf-651ccfd03d6c" mode="Opaque" x="296" y="50" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="e518ae90-c819-4d43-85cf-651ccfd03d6c" mode="Opaque" x="299" y="53" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getJaybelSubtotal()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c67a2fb8-2608-4dbf-8cbd-b53df3ab3db4" mode="Opaque" x="143" y="158" width="70" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="c67a2fb8-2608-4dbf-8cbd-b53df3ab3db4" mode="Opaque" x="146" y="161" width="70" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -510,7 +549,7 @@
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltCurrentSupplierGST()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9afa7881-08ed-45db-acb5-2ab06a28cc29" mode="Opaque" x="241" y="121" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000">
+				<reportElement uuid="9afa7881-08ed-45db-acb5-2ab06a28cc29" mode="Opaque" x="244" y="124" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -525,17 +564,8 @@
 				</textElement>
 				<text><![CDATA[Jaybel Total $]]></text>
 			</staticText>
-			<textField>
-				<reportElement uuid="b7a5b328-a618-42de-a32d-93bee4218510" mode="Opaque" x="143" y="173" width="70" height="15" backcolor="#CCCCCC">
-					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltCurrentSupplierTotal()]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement uuid="fc363c2c-7684-4972-b579-922753d81781" mode="Opaque" x="241" y="143" width="55" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="fc363c2c-7684-4972-b579-922753d81781" mode="Opaque" x="244" y="146" width="55" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -544,32 +574,14 @@
 				<text><![CDATA[ Subtotal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="29c5aacb-d0b8-433f-9d26-aa20560d96ae" mode="Opaque" x="88" y="173" width="55" height="15" backcolor="#CCCCCC">
-					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ Total]]></text>
-			</staticText>
-			<textField>
-				<reportElement uuid="9f12c8a4-ed18-45da-8ee8-ba5b494b6d39" mode="Opaque" x="296" y="173" width="70" height="15" backcolor="#CCCCCC">
-					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltJaybelTotal()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="78afb2e6-f6cb-494e-9b2b-0311850ac5ed" mode="Opaque" x="241" y="50" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="78afb2e6-f6cb-494e-9b2b-0311850ac5ed" mode="Opaque" x="244" y="53" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Subtotal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="783463e9-adf5-4bc6-869f-6c5b6cc74179" mode="Opaque" x="644" y="28" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="783463e9-adf5-4bc6-869f-6c5b6cc74179" mode="Opaque" x="647" y="31" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -583,7 +595,7 @@
 				<text><![CDATA[Savings %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="50d62f01-48f2-4ce5-98bd-d9725de5f7fd" mode="Opaque" x="241" y="158" width="55" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="50d62f01-48f2-4ce5-98bd-d9725de5f7fd" mode="Opaque" x="244" y="161" width="55" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -592,7 +604,7 @@
 				<text><![CDATA[ GST]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="a916f4db-24ed-4b44-8b74-e8f51ef1d526" mode="Opaque" x="296" y="158" width="70" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="a916f4db-24ed-4b44-8b74-e8f51ef1d526" mode="Opaque" x="299" y="161" width="70" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -601,28 +613,28 @@
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltJaybelGST()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="4798eb47-c9f4-431d-8b43-de640a083e2e" mode="Opaque" x="241" y="65" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="4798eb47-c9f4-431d-8b43-de640a083e2e" mode="Opaque" x="244" y="68" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ GST]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="da8d8b65-21db-43b6-88c3-c35cea2a9187" mode="Opaque" x="143" y="50" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="da8d8b65-21db-43b6-88c3-c35cea2a9187" mode="Opaque" x="146" y="53" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getCurrentSupplierSubtotal()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="b5fe1ef5-4ffd-4922-8fd7-f2f242be56e5" mode="Opaque" x="296" y="65" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="b5fe1ef5-4ffd-4922-8fd7-f2f242be56e5" mode="Opaque" x="299" y="68" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getJaybelGST()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="61ad8a5d-20f7-4af8-863f-20ec1f9c4fe8" x="88" y="101" width="125" height="20">
+				<reportElement uuid="61ad8a5d-20f7-4af8-863f-20ec1f9c4fe8" x="91" y="104" width="125" height="20">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -632,20 +644,20 @@
 					<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
 				</box>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Alternative Total :]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="6eee0a30-ff8e-4d86-bd47-7dce9606ea7d" mode="Opaque" x="143" y="80" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="6eee0a30-ff8e-4d86-bd47-7dce9606ea7d" mode="Opaque" x="146" y="83" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getCurrentSupplierTotal()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="2418a416-81da-4987-9484-00e95e581d58" mode="Opaque" x="88" y="121" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000">
+				<reportElement uuid="2418a416-81da-4987-9484-00e95e581d58" mode="Opaque" x="91" y="124" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -661,7 +673,7 @@
 				<text><![CDATA[Current Total $]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c0a45669-25b7-40b2-a6a6-8fac6bd67396" mode="Opaque" x="88" y="28" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="c0a45669-25b7-40b2-a6a6-8fac6bd67396" mode="Opaque" x="91" y="31" width="125" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -675,7 +687,7 @@
 				<text><![CDATA[Current Total $]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="9e0b0ddd-ab17-4c48-b8f0-ffef5f7e96b4" mode="Opaque" x="143" y="143" width="70" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="9e0b0ddd-ab17-4c48-b8f0-ffef5f7e96b4" mode="Opaque" x="146" y="146" width="70" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -684,14 +696,14 @@
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltCurrentSupplierSubtotal()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="caa331d5-2bd2-4f4d-a514-56562b5509d9" mode="Opaque" x="143" y="65" width="70" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="caa331d5-2bd2-4f4d-a514-56562b5509d9" mode="Opaque" x="146" y="68" width="70" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getCurrentSupplierGST()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="6a191926-e06e-4457-9efe-a005a0d48db9" mode="Opaque" x="517" y="28" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="6a191926-e06e-4457-9efe-a005a0d48db9" mode="Opaque" x="520" y="31" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -705,14 +717,14 @@
 				<text><![CDATA[Annual Savings $]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="504da309-1393-4187-b2c7-e36f5985faa6" mode="Opaque" x="241" y="80" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="504da309-1393-4187-b2c7-e36f5985faa6" mode="Opaque" x="244" y="83" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Total]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="e8927973-d5cd-4df1-a248-e814cf44abc1" mode="Opaque" x="391" y="143" width="100" height="45" backcolor="#CCCCCC">
+				<reportElement uuid="e8927973-d5cd-4df1-a248-e814cf44abc1" mode="Opaque" x="394" y="146" width="100" height="45" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -721,7 +733,7 @@
 				<textFieldExpression><![CDATA["$ "+$P{objCalculationBean}.getAltSaving()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="cbe98aa2-01a0-4ce2-acd6-dcddbd3e038b" mode="Opaque" x="88" y="158" width="55" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="cbe98aa2-01a0-4ce2-acd6-dcddbd3e038b" mode="Opaque" x="91" y="161" width="55" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -730,14 +742,14 @@
 				<text><![CDATA[ GST]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3e333b60-d793-4b24-a9e8-6610dcaf8e3a" mode="Opaque" x="88" y="65" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="3e333b60-d793-4b24-a9e8-6610dcaf8e3a" mode="Opaque" x="91" y="68" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ GST]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="20f25909-95da-457a-b714-f36df8bbafe2" mode="Opaque" x="391" y="121" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
+				<reportElement uuid="20f25909-95da-457a-b714-f36df8bbafe2" mode="Opaque" x="394" y="124" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -753,7 +765,7 @@
 				<text><![CDATA[Savings $]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="e96696a5-04f1-4b14-bc25-3a8db5a141d2" mode="Opaque" x="517" y="143" width="100" height="45" backcolor="#CCCCCC">
+				<reportElement uuid="e96696a5-04f1-4b14-bc25-3a8db5a141d2" mode="Opaque" x="520" y="146" width="100" height="45" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -762,7 +774,7 @@
 				<textFieldExpression><![CDATA["$ "+$P{objCalculationBean}.getAltAnnualSaving()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c597083d-9565-4156-adcc-e5ba3f53eee0" mode="Opaque" x="644" y="143" width="100" height="45" backcolor="#CCCCCC">
+				<reportElement uuid="c597083d-9565-4156-adcc-e5ba3f53eee0" mode="Opaque" x="647" y="146" width="100" height="45" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -771,16 +783,7 @@
 				<textFieldExpression><![CDATA[$P{objCalculationBean}.getAltSavingInPercentage()+" %"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9504a964-d650-4122-84dd-a65fa5684843" mode="Opaque" x="241" y="173" width="55" height="15" backcolor="#CCCCCC">
-					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
-				</textElement>
-				<text><![CDATA[ Total]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="72e98ff2-6b9d-4ef6-aec2-d2f7cf7ed4f3" mode="Opaque" x="644" y="121" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
+				<reportElement uuid="72e98ff2-6b9d-4ef6-aec2-d2f7cf7ed4f3" mode="Opaque" x="647" y="124" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -796,7 +799,7 @@
 				<text><![CDATA[Savings %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="03e1d52f-30e5-41f3-90af-a21e3997ba7d" mode="Opaque" x="391" y="28" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="03e1d52f-30e5-41f3-90af-a21e3997ba7d" mode="Opaque" x="394" y="31" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000"/>
 				<box leftPadding="0">
 					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
@@ -810,14 +813,14 @@
 				<text><![CDATA[Savings $]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="340bfd7b-161d-4739-aaa8-3a789e7869e5" mode="Opaque" x="88" y="50" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="340bfd7b-161d-4739-aaa8-3a789e7869e5" mode="Opaque" x="91" y="53" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Subtotal]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="66fb8729-6847-4938-9025-4108fbf17020" mode="Opaque" x="517" y="121" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
+				<reportElement uuid="66fb8729-6847-4938-9025-4108fbf17020" mode="Opaque" x="520" y="124" width="100" height="22" forecolor="#FFFFFF" backcolor="#C00000">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="0">
@@ -833,7 +836,7 @@
 				<text><![CDATA[Annual Savings $]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="ae482c65-30ca-4c54-bb59-4118bdbbc322" mode="Opaque" x="296" y="143" width="70" height="15" backcolor="#CCCCCC">
+				<reportElement uuid="ae482c65-30ca-4c54-bb59-4118bdbbc322" mode="Opaque" x="299" y="146" width="70" height="15" backcolor="#CCCCCC">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -842,24 +845,60 @@
 				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltJaybelSubtotal()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="df992926-c1e0-4f03-bbdd-f71b3a5680fa" mode="Opaque" x="88" y="80" width="55" height="15" backcolor="#CCCCCC"/>
+				<reportElement uuid="df992926-c1e0-4f03-bbdd-f71b3a5680fa" mode="Opaque" x="91" y="83" width="55" height="15" backcolor="#CCCCCC"/>
 				<textElement>
 					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
 				</textElement>
 				<text><![CDATA[ Total]]></text>
 			</staticText>
-			<image scaleImage="RetainShape">
-				<reportElement uuid="6608189d-ee31-43be-b127-6efeb1bbda68" mode="Transparent" x="706" y="79" width="81" height="52" backcolor="#FFFFFF">
+			<textField>
+				<reportElement uuid="9f12c8a4-ed18-45da-8ee8-ba5b494b6d39" mode="Opaque" x="299" y="176" width="70" height="15" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltJaybelTotal()]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="6608189d-ee31-43be-b127-6efeb1bbda68" mode="Transparent" x="709" y="74" width="52" height="50" backcolor="#FFFFFF">
 					<printWhenExpression><![CDATA[!$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA[$P{officeChoiceLogo}]]></imageExpression>
 			</image>
-			<image scaleImage="RetainShape">
-				<reportElement uuid="46e4faad-1c03-4ca0-b7c6-dda1c5cec7c2" mode="Transparent" x="706" y="169" width="81" height="52">
+			<image scaleImage="FillFrame">
+				<reportElement uuid="46e4faad-1c03-4ca0-b7c6-dda1c5cec7c2" mode="Transparent" x="709" y="169" width="52" height="50">
 					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
 				</reportElement>
 				<imageExpression><![CDATA[$P{officeChoiceLogo}]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement uuid="9504a964-d650-4122-84dd-a65fa5684843" mode="Opaque" x="244" y="176" width="55" height="15" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b7a5b328-a618-42de-a32d-93bee4218510" mode="Opaque" x="146" y="176" width="70" height="15" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": $ "+$P{objCalculationBean}.getAltCurrentSupplierTotal()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="29c5aacb-d0b8-433f-9d26-aa20560d96ae" mode="Opaque" x="91" y="176" width="55" height="15" backcolor="#CCCCCC">
+					<printWhenExpression><![CDATA[$P{alternativeAdded}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ Total]]></text>
+			</staticText>
 		</band>
 	</summary>
 </jasperReport>

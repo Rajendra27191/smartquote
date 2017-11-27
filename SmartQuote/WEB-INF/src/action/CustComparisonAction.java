@@ -22,6 +22,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import pojo.EmptyResponseBean;
+import pojo.KeyValuePairBean;
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
 import pojo.QuoteBean;
@@ -30,6 +31,7 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import dao.CustComparisonDao;
 import dao.QuoteDao;
+import dao.TermServicesDao;
 
 @SuppressWarnings("serial")
 public class CustComparisonAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
@@ -132,7 +134,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		for (int i = 0; i < obj.getArrayPdfSubReportBean().size(); i++) {
 			if (obj.getArrayPdfSubReportBean().get(i).getIsAlternative().equalsIgnoreCase("no")) {
 				currentSubTotal = currentSubTotal + obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST();
-				System.out.println("obj.getArrayPdfSubReportBean().get(i)" +obj.getArrayPdfSubReportBean().get(i).toString());
+//				System.out.println("obj.getArrayPdfSubReportBean().get(i)" +obj.getArrayPdfSubReportBean().get(i).toString());
 				if (obj.getArrayPdfSubReportBean().get(i).getGstExempt().equalsIgnoreCase("no")) {
 					currentGstTotal = currentGstTotal + getGstInPercentage(obj.getArrayPdfSubReportBean().get(i).getProductCurrentPriceTotalExGST());
 				}
@@ -276,7 +278,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			if (objPdfMasterReportBean.isAlternativeAdded()) {
 				objPdfMasterReportBean = getAlternativeCalculation(objPdfMasterReportBean);
 			}
-			System.out.println("objPdfMasterReportBean :: " + objPdfMasterReportBean);
+//			System.out.println("objPdfMasterReportBean :: " + objPdfMasterReportBean);
 			
 			exportParameters.put("alternativeAdded", objPdfMasterReportBean.isAlternativeAdded());
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
@@ -304,6 +306,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			
 			QuoteDao objQuoteDao=new QuoteDao();
 			objPdfMasterReportBean.setOfferList(objQuoteDao.getOfferList(objPdfMasterReportBean.getQuoteId(),getText("offer_template_url")));
+			objPdfMasterReportBean.setTermConditionList(objQuoteDao.getTermAndConditionList(objPdfMasterReportBean.getQuoteId()));
 			objQuoteDao.closeAll();
 //			System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList());
 			
@@ -321,6 +324,19 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			
 			exportParameters.put("objCalculationBean", arrayPdfMasterReportBeans.get(0).getObjCalculationBean());
 			exportParameters.put("pdfMasterBean", objPdfMasterReportBean);
+			
+			String termCondition="";
+			if (objPdfMasterReportBean.getTermConditionList().size()>0) {
+//				System.out.println("Term :: "+objPdfMasterReportBean.getTermConditionList());
+				for (int i = 0; i < objPdfMasterReportBean.getTermConditionList().size(); i++) {
+					if(i<objPdfMasterReportBean.getTermConditionList().size()-1){
+					termCondition=termCondition+objPdfMasterReportBean.getTermConditionList().get(i).getValue()+", ";
+					}else{
+					termCondition=termCondition+objPdfMasterReportBean.getTermConditionList().get(i).getValue()+". ";	
+					}
+				}
+				exportParameters.put("termCondition", termCondition);
+			}
 			
 			JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
 			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, exportParameters, beanColDataSource2);

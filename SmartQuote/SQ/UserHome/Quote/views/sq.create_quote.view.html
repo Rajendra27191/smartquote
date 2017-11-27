@@ -131,7 +131,7 @@ padding: 3px 12px;
 </div> -->
 
 
-<div class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
+<div id="customerInfo" class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
 <div class="panel-heading"><label class="sub-label" style="text-transform: uppercase;">Customer Information</label></div>
 <div class="panel-body">	
 <div class="row row-control">
@@ -143,13 +143,13 @@ padding: 3px 12px;
 	<input type = 'text' name="customerCode" id="customerCode" class = 'form-control' ng-model = 'customerQuote.customerCode' focus-me="true" ng-disabled="buttonstatus=='edit'" uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off" placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)" required><!-- ng-keydown="resetOnBackspace($event)" ng-change="customerCodeChanged()"-->
 	<!-- getCustomerDetails(customerQuote.customerCode); -->
 	<span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-	<small>* please enter customer code.</small>
+	<small>*Please enter customer code.</small>
 	</span>	
 	</div>
 	<div class="col-md-8" ng-if="showEditQuoteView">
 	<input type = 'text' name="customerCode" id="customerCode" class = 'form-control' ng-model = 'customerQuote.custCode' ng-disabled="buttonstatus=='edit'" uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off"  placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)" required readonly>
 	<span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-	<small>* please enter customer code.</small>
+	<small>*Please enter customer code.</small>
 	</span>	
 	</div>		
 
@@ -161,13 +161,13 @@ padding: 3px 12px;
 	<div class="col-md-8" ng-if="!showEditQuoteView">
 	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'customerQuote.customerName' ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
 	<span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-	<small>* please enter customer name.</small>
+	<small>*Please enter customer name.</small>
 	</span>
 	</div>
 	<div class="col-md-8" ng-if="showEditQuoteView">
 	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'customerQuote.custName' ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
 	<span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-	<small>* please enter customer name.</small>
+	<small>*Please enter customer name.</small>
 	</span>
 	</div>
 
@@ -182,7 +182,7 @@ padding: 3px 12px;
 	<div class="col-md-8">
 	<textarea name="address" class="form-control" style="padding: 11px 5px;" rows="2" ng-model = 'customerQuote.address' ng-disabled="!isNewCustomer"></textarea>
 	<span ng-show="((form.addCustomerQuote.address.$dirty && form.addCustomerQuote.address.$invalid) || (form.addCustomerQuote.address.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-	<small>* please enter customer address.</small>
+	<small>*Please enter customer address.</small>
 	</span>		
 	</div>
 	</div>
@@ -194,7 +194,7 @@ padding: 3px 12px;
 		<div class="col-md-8">
 		<input type = 'text' name="phoneNo" class = 'form-control' ng-model = 'customerQuote.phone'  ng-pattern="/^[0-9]{5,12}$/" ng-disabled="!isNewCustomer">
 		<span ng-show="((form.addCustomerQuote.phoneNo.$dirty && form.addCustomerQuote.phoneNo.$invalid) || (form.addCustomerQuote.phoneNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small ng-show="form.addCustomerQuote.phoneNo.$error.pattern">* please enter valid phone no.</small>
+			<small ng-show="form.addCustomerQuote.phoneNo.$error.pattern">*Please enter valid phone no.</small>
 		</span>		
 		</div>
 	</div>
@@ -206,8 +206,8 @@ padding: 3px 12px;
 		<div class="col-md-8">
 		<input type = 'text' name="email" class = 'form-control' ng-model = 'customerQuote.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
 		<span ng-show="((form.addCustomerQuote.email.$dirty && form.addCustomerQuote.email.$invalid) || (form.addCustomerQuote.email.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small ng-show="form.addCustomerQuote.email.$error.required">* please enter email id.</small>
-			<small ng-show="form.addCustomerQuote.email.$error.pattern">* please enter valid email id.</small>
+			<small ng-show="form.addCustomerQuote.email.$error.required">*Please enter email id.</small>
+			<small ng-show="form.addCustomerQuote.email.$error.pattern">*Please enter valid email id.</small>
 		</span>		
 		</div>
 	</div>
@@ -223,7 +223,7 @@ padding: 3px 12px;
 			<div class="col-md-8">
 			<input type = 'text' name="faxNo" class = 'form-control' ng-model = 'customerQuote.fax' ng-disabled="!isNewCustomer">
 			<span ng-show="((form.addCustomerQuote.faxNo.$dirty && form.addCustomerQuote.faxNo.$invalid) || (form.addCustomerQuote.faxNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small>* please enter fax no.</small>
+			<small>*Please enter fax no.</small>
 			</span>	
 			</div>
 	 	</div>
@@ -236,8 +236,8 @@ padding: 3px 12px;
 			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" ng-change="currentSupplierNameChanged()" autocomplete="off" typeahead-min-length="0">
 			<!--     -->
 			<span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">* please enter supplier name.</small>
-			<small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">* supplier already exist please select from list.</small>
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">*Please enter supplier name.</small>
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">*Supplier already exist please select from list.</small>
 			</span>		
 			</div>
 	 	</div>
@@ -251,7 +251,7 @@ padding: 3px 12px;
 			<option value="">Select Sales Person</option>
 			</select>
 			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small ng-if="form.addCustomerQuote.salesPerson.$error.required">* please select sales person.</small>
+			<small ng-if="form.addCustomerQuote.salesPerson.$error.required">*Please select sales person.</small>
 			</span>	
 			<!-- {{customerQuote.salesPerson}} -->
 			<!-- <input type = 'text' id="salesPerson" name="salesPerson" class = 'form-control' ng-model = 'customerQuote.salesPerson'  uib-typeahead = 'salesPersonList as salesPersonList.value for salesPersonList in salesPersonList | filter:$viewValue' typeahead-on-select="" autocomplete="off" > -->
@@ -282,7 +282,7 @@ padding: 3px 12px;
 			</span> -->
 			<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'customerQuote.monthlyAvgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
 			<span ng-show="((form.addCustomerQuote.monthlyAvgPurchase.$dirty && form.addCustomerQuote.monthlyAvgPurchase.$invalid) || (form.addCustomerQuote.monthlyAvgPurchase.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small ng-show="form.addCustomerQuote.monthlyAvgPurchase.$invalid">*monthly average purchase invalid.</small>
+			<small ng-show="form.addCustomerQuote.monthlyAvgPurchase.$invalid">*Monthly average purchase invalid.</small>
 			</span>		
 			</div>
  		 </div>
@@ -371,25 +371,25 @@ padding: 3px 12px;
 		<div class="col-md-12" >
 		<div class="col-md-6" style="padding: 0px;">
 		<div class="col-md-12" style="padding: 0px;">
-		<div class="col-md-2 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Code">P Code</div>
+		<div class="col-md-2 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Code">Product Code</div>
 		<div class="col-md-4 t_head" style="width:25%;" tooltip-placement="top" uib-tooltip="Product Name">Product Name</div>
 		<div class="col-md-1 t_head" style="width:10%;" >UOM</div>
 		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Cost</div>
 		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Qty</div>
-		<div class="col-md-1 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Current Price">C Price</div>
-		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Current Price Total">C Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Current Price">Current Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Current Price Total">Current Price Total</div>
 		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
 		</div>	
 		</div>	
 		<div class="col-md-6" style="padding: 0px;">
 		<div class="col-md-12" style="">
 		<!-- <div class="col-md-2 t_head">Current Price</div> -->
-		<div class="col-md-1 t_head" style="text-align: right;width:11%;" tooltip-placement="top" uib-tooltip="Supplier GP">S GP(%)</div>
-		<div class="col-md-2 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Jaybel Price">J Price</div>
-		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Jaybel Price Total">J Price Total</div>
-		<div class="col-md-1 t_head" style="text-align: right;width:11%" tooltip-placement="top" uib-tooltip="Jaybel GP">J GP(%)</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:11%;" tooltip-placement="top" uib-tooltip="Supplier GP">Supplier GP(%)</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Jaybel Price">Jaybel Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Jaybel Price Total">Jaybel Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:11%" tooltip-placement="top" uib-tooltip="Jaybel GP">Jaybel GP(%)</div>
 		<div class="col-md-2 t_head" style="width:15%;" tooltip-placement="top" uib-tooltip="Savings">Savings (%)</div>
-		<div class="col-md-1 t_head" style="width:11%;" tooltip-placement="top" uib-tooltip="GST Exempt Y/N">GST Y/N</div>
+		<div class="col-md-1 t_head" style="width:11%;" tooltip-placement="top" uib-tooltip="GST Exempt Y/N">GST Ex Y/N</div>
 		<div class="col-md-1 t_head" style="text-align:center;width:10%;">Comment</div>
 		<div class="col-md-2 t_head" style="text-align:center;width:17%;">Action</div>
 		</div>	
@@ -606,7 +606,7 @@ padding: 3px 12px;
 
 <div class="row" style="margin-top: 1%;" id="offerPanel">
 	<div class="col-md-12">
-	<div class="col-md-3" style="padding: 0px;padding-right: 5px;">
+	<!-- <div class="col-md-3" style="padding: 0px;padding-right: 5px;">
 	<div class="panel panel-default" style="border-radius:0px 0px 0px 4px;;">
 	<div class="panel-heading"><label class="sub-label">Services</label></div>
 	<div class="panel-body">
@@ -619,7 +619,7 @@ padding: 3px 12px;
 	</div>
 	</div>
 	</div>
-	</div>	
+	</div>	 -->
 	<div class="col-md-4" style="padding: 0px;padding-right: 5px;">
 	<div class="panel panel-default" style="border-radius:0px;">
 	<div class="panel-heading"><label class="sub-label">Terms & Conditions</label></div>

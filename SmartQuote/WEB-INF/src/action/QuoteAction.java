@@ -12,6 +12,7 @@ import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.QuoteBean;
+import pojo.QuoteStatusBean;
 import responseBeans.CommentResponseBean;
 import responseBeans.CurrentSupplierResponse;
 import responseBeans.QuoteCreateResponseBean;
@@ -140,8 +141,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
 			System.out.println("SaveCurrentSupplier :>>");
 			System.out.println(objQuoteBean.getCurrentSupplierId());
-			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
-			objQuoteBean.setCurrentSupplierId(supplierId);
+			System.out.println(objQuoteBean.getCurrentSupplierName().isEmpty());
+			if (!objQuoteBean.getCurrentSupplierName().isEmpty()) {
+				supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
+				objQuoteBean.setCurrentSupplierId(supplierId);	
+			}
 		}
 		// if (objQuoteBean.getSalesPersonId() == 0) {
 		// salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean
@@ -487,6 +491,30 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			}
 		}
 		return SUCCESS;
+	}
+	public String changeQuoteStatus() {
+		System.out.println("changeQuoteStatusToWon");
+		objEmptyResponse = new EmptyResponseBean();
+		httpSession = request.getSession(true);
+		String userId = String.valueOf(httpSession.getAttribute("userId"));
+		System.out.println("userId : " + userId);
+		String quoteDetails = request.getParameter("objQuoteBean");
+		System.out.println("QuoteDetails :: "+quoteDetails);
+		QuoteStatusBean objQuoteStatusBean = new QuoteStatusBean();
+		objQuoteStatusBean=(new Gson().fromJson(quoteDetails, QuoteStatusBean.class)) ;
+		boolean isStatusChanged=false;
+		QuoteDao objQuoteDao = new QuoteDao();
+		isStatusChanged=objQuoteDao.changeQuoteStatus(objQuoteStatusBean);
+		objQuoteDao.commit();
+		objQuoteDao.closeAll();
+		if (isStatusChanged) {
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("quote_status_changed"));
+		} else {
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("common_error"));
+		}
+	return SUCCESS;
 	}
 
 	public String getTermsAndServiceList() {

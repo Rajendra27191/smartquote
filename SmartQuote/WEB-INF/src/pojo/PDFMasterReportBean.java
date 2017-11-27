@@ -15,6 +15,7 @@ public class PDFMasterReportBean {
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
 	private ArrayList<OfferBean> offerList;
+	private ArrayList<KeyValuePairBean> termConditionList;
 	private CalculationBean objCalculationBean=new CalculationBean();
 //	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
@@ -129,6 +130,14 @@ public class PDFMasterReportBean {
 
 	public void setOfferList(ArrayList<OfferBean> offerList) {
 		this.offerList = offerList;
+	}
+
+	public ArrayList<KeyValuePairBean> getTermConditionList() {
+		return termConditionList;
+	}
+
+	public void setTermConditionList(ArrayList<KeyValuePairBean> termConditionList) {
+		this.termConditionList = termConditionList;
 	}
 
 //	public ArrayList<CalculationBean> getListCalculationBean() {

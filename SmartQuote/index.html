@@ -3,8 +3,7 @@
 <head>
 <title>Smart Quote</title>
 <meta charset="utf-8" />
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="description" content="" />
 <meta name="author" content="" />
 <link rel="icon" href="favicon.png" type="image/png">
@@ -65,6 +64,7 @@
 						data-toggle="dropdown" role="button" aria-haspopup="true"
 						aria-expanded="false" ng-click="menuClicked(menu.menuName)">
 						<!-- <span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a> -->
+						<i class="fa fa-user-circle" aria-hidden="true"></i>
 						<span data-ng-bind="userData.userName" style="text-transform: capitalize;"></span> <i class="caret"></i>
 					</a>
 						<ul class="dropdown-menu">
@@ -125,8 +125,8 @@
 	<script type="text/javascript" src="assets/libs/js/angular-cookies/angular-cookies.min.js"></script>
 	<script type="text/javascript" src="assets/libs/js/angular-cookies/angular-cookies.min.js"></script>
 	<!-- Chart -->
-	<!-- // <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script> -->
-	<!-- // <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.1.1/angular-chart.min.js"></script> -->
+	 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+	 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.1.1/angular-chart.min.js"></script>
 	
 	<!-- UI Bootstrap -->
 	<script type="text/javascript" src="assets/libs/js/ui-bootstrap-tpls-2.3.2.min.js"></script>
@@ -148,8 +148,9 @@
 	<!-- SmartQuoteApp Controllers & Services -->
 	<script type="text/javascript" src="SQ/Home/js/SQHomeController.js"></script>
 	<script type="text/javascript" src="SQ/Home/js/SQHomeServices.js"></script>
-	<script type="text/javascript" src="SQ/UserHome/js/SQUserHomeController.js"></script>
-	<script type="text/javascript" src="SQ/UserHome/js/SQUserHomeServices.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQUserHomeController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQDashBoardController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQUserHomeServices.js"></script>
 	<!-- SmartQuoteApp ManageMenu Controllers -->
 	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/services/SQManageMenuSevices.js"></script>
 	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageUserGroupController.js"></script>

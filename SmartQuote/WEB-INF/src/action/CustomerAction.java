@@ -16,6 +16,7 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import responseBeans.CustomerDetailResponseList;
 import responseBeans.CustomerDetailsResponseBean;
+import responseBeans.DetailResponseBean;
 import responseBeans.UserGroupResponse;
 
 import com.google.gson.Gson;
@@ -31,7 +32,16 @@ public class CustomerAction extends ActionSupport implements
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private CustomerDetailsResponseBean customerDetailsResponse = new CustomerDetailsResponseBean();
 	private CustomerDetailResponseList customerDetailResponseList = new CustomerDetailResponseList();
+	private DetailResponseBean objDetailResponseBean;
 	
+	public DetailResponseBean getObjDetailResponseBean() {
+		return objDetailResponseBean;
+	}
+
+	public void setObjDetailResponseBean(DetailResponseBean objDetailResponseBean) {
+		this.objDetailResponseBean = objDetailResponseBean;
+	}
+
 	public File logoFile;
 	
 	public UserGroupResponse getData() {
@@ -100,6 +110,7 @@ public class CustomerAction extends ActionSupport implements
 		return isLogoCreated;
 	}
 	public String createCustomer() {
+		objDetailResponseBean = new DetailResponseBean();
 		String customerDetails = request.getParameter("customerDetails");
 		System.out.println("customerDetails ::: "+customerDetails);
 		System.out.println("Logo file ::: " + logoFile);
@@ -124,15 +135,17 @@ public class CustomerAction extends ActionSupport implements
 				boolean isLogoSaved=createLogo(filename, logoFile);
 				System.out.println("LOGO saved ::: "+filename);
 			}
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("customer_created"));
+			System.out.println("custId"+custId);
+				objDetailResponseBean.setCode("success");
+				objDetailResponseBean.setGenratedId(custId);
+				objDetailResponseBean.setMessage(getText("customer_created"));
 			} else {
-				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("common_error"));
+				objDetailResponseBean.setCode("error");
+				objDetailResponseBean.setMessage(getText("common_error"));
 			}
 		} else {
-			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("error_Customer_exist"));
+			objDetailResponseBean.setCode("error");
+			objDetailResponseBean.setMessage(getText("error_Customer_exist"));
 		}
 		return SUCCESS;
 	}

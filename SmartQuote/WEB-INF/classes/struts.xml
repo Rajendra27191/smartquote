@@ -155,7 +155,7 @@
 		<action name="createCustomer" class="action.CustomerAction"
 			method="createCustomer">
 			<result name="success" type="json">
-				<param name="root">objEmptyResponse</param>
+				<param name="root">objDetailResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
@@ -478,6 +478,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="changeQuoteStatus" class="action.QuoteAction"
+			method="changeQuoteStatus">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="createAlternateProducts" class="action.AlternateProductAction"
 			method="createAlternateProducts">
@@ -537,6 +545,12 @@
 		<action name="updateOffer" class="action.OfferAction" method="updateOffer">
 			<result name="success" type="json">
 				<param name="root">objDetailResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getChartData" class="action.DashBoardAction" method="getChartData">
+			<result name="success" type="json">
+				<param name="root">objChartResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>

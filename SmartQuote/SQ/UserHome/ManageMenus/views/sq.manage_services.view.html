@@ -17,7 +17,7 @@
 	<div class="col-md-9">
 	<input type = 'text' name="service" id="service" class = 'form-control' ng-model = 'manageService.service' focus-me="true" autocomplete="off" focus-me="focus" required>
 	<span ng-show="((form.manageServices.service.$dirty && form.manageServices.service.$invalid) || (form.manageServices.service.$invalid && form.manageServices.submitted))" class="invalid-control">
-	<small>* please enter service.</small>
+	<small>* Please enter service.</small>
 	</span>	
 	</div>		
 	</div>
@@ -50,7 +50,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="service in serviceList" ng-if="serviceList.length>0">
+		<tr ng-repeat="service in serviceArray" ng-if="serviceArray.length>0">
 			<td><center>{{$index+1}}</center></td>
 			<td>
 			<div class="col-md-12" ng-hide = 'editing[$index]'>
@@ -68,13 +68,13 @@
 			</td>
 			<td>
 			<center>
-			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editServiceBtnClicked(serviceList,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
+			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editServiceBtnClicked(serviceArray,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
 			<!-- popover-placement="left" uib-popover="Click to edit term."  popover-trigger="'mouseenter'" -->
 		    <span style="cursor: pointer;margin: 0px 5px;" ng-click="deleteService(service)"  tooltip-placement="top" uib-tooltip="Click to delete term."><i class="glyphicon glyphicon-trash"></i></span>
 		    </center>
 		    </td>
 		</tr>
-		<tr  ng-if="!serviceList.length>0">
+		<tr  ng-if="!serviceArray.length>0">
 			<td></td>
 			<td>
 			<div class="col-md-12">

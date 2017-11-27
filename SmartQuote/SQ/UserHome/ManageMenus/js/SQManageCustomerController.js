@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageCustomerController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQManageMenuServices', 'DTOptionsBuilder', 'DTColumnDefBuilder','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices, DTOptionsBuilder, DTColumnDefBuilder,$upload){
+.controller('SQManageCustomerController',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices, DTOptionsBuilder, DTColumnDefBuilder,$upload,ArrayOperationFactory){
 console.log('initialise SQManageCustomerController controller');
 $scope.form={};
 $scope.filepreview="";
@@ -81,31 +81,28 @@ $scope.stop = function(index){
   $scope.editing[index] = false;
 };
 /*=============GET CUSTOMER LIST VIEW==================*/
-
 $scope.handleGetCustomerListViewDoneResponse=function(data){
-	// console.log(data)
+	console.log(data)
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
-  $scope.customerListView=data.objCustomersDetailResponseList;
+  $scope.customerListView=angular.copy(data.objCustomersDetailResponseList);
   console.log($scope.customerListView);
-  // $scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers');
-   $scope.dtOptions= DTOptionsBuilder.newOptions()
-    .withOption('order', [0, 'asc']);
-    $scope.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2),
-        DTColumnDefBuilder.newColumnDef(3),
-        DTColumnDefBuilder.newColumnDef(4),
-        DTColumnDefBuilder.newColumnDef(5),
-        DTColumnDefBuilder.newColumnDef(6),
-        DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8),
-        DTColumnDefBuilder.newColumnDef(9),
-        // DTColumnDefBuilder.newColumnDef(10),
-        // DTColumnDefBuilder.newColumnDef(11)
-    ];
+  	// $scope.dtOptions = DTOptionsBuilder.newOptions().withPaginationType('full_numbers');
+	// $scope.dtOptions= DTOptionsBuilder.newOptions().withOption('order', [0, 'asc']);
+	// $scope.dtColumnDefs = [
+	//         DTColumnDefBuilder.newColumnDef(0),
+	//         DTColumnDefBuilder.newColumnDef(1),
+	//         DTColumnDefBuilder.newColumnDef(2),
+	//         DTColumnDefBuilder.newColumnDef(3),
+	//         DTColumnDefBuilder.newColumnDef(4),
+	//         DTColumnDefBuilder.newColumnDef(5),
+	//         DTColumnDefBuilder.newColumnDef(6),
+	//         DTColumnDefBuilder.newColumnDef(7),
+	//         DTColumnDefBuilder.newColumnDef(8),
+	//         DTColumnDefBuilder.newColumnDef(9),
+	// ];
+   
 
 }
 $rootScope.hideSpinner();
@@ -128,7 +125,6 @@ $scope.isCustomerTableView=true;
 $scope.addCustomerBtnShow=true;
 $scope.isCustomerAddView=false;	
 $scope.buttonstatus='add';
-
 };
 
 $scope.initCustomer();
@@ -151,7 +147,7 @@ function getTimeStamp(){
 }
 $scope.editCustomerBtnClicked=function(customer){
 	console.log(customer)
-  	$scope.manageCustomer=customer;
+  	$scope.manageCustomer=angular.copy(customer);
   	$scope.buttonstatus='edit';
   	$scope.isCustomerTableView=false;
 	$scope.addCustomerBtnShow=false;
@@ -289,6 +285,7 @@ if($scope.form.manageCustomer.$valid){
 	}else{
 		$rootScope.showSpinner();
 		// SQManageMenuServices.CreateCustomer($scope.jsonToSaveCustomer());
+		console.log($scope.jsonToSaveCustomer());
 		$scope.createCustomer();
 	}	
 	}else if($scope.buttonstatus=='edit'){
@@ -304,11 +301,17 @@ if($scope.form.manageCustomer.$valid){
 };
 
 /*==================ADD CUSTOMER RESPONSE===================*/
+var objToPush={};
 $scope.handleCreateCustomerDoneResponse=function(data){
+console.log("handleCreateCustomerDoneResponse")	
+objToPush={};
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
+  	console.log(data)
   	// $rootScope.alertSuccess("Successfully saved customer");
+  	objToPush={"code":$scope.manageCustomer.customerCode,"key":data.genratedId,"value":$scope.manageCustomer.customerCode+" ("+$scope.manageCustomer.customerName+")"};
+  	ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.customerList,objToPush);
   	swal({
 	  title: "Success",
 	  text: "Successfully saved customer!",
@@ -324,6 +327,8 @@ if (data.code) {
 
 	}else{
 		$rootScope.alertError(data.message);
+		$scope.reset();
+		$scope.resetForm();
 	}
 $rootScope.hideSpinner();
 }
@@ -339,11 +344,16 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 /*==================UPDATE CUSTOMER RESPONSE===================*/
+var objToUpdate={};
 $scope.handleUpdateCustomerDoneResponse=function(data){
+	objToUpdate={};
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// $rootScope.alertSuccess("Successfully updated customer");
+  	objToUpdate={"code":$scope.manageCustomer.customerCode,"key":$scope.manageCustomer.custId,"value":$scope.manageCustomer.customerCode+" ("+$scope.manageCustomer.customerName+")"};
+  	ArrayOperationFactory.updateArrayKeyValue($rootScope.customerList,objToUpdate);
+
 	swal({
 	  title: "Success",
 	  text: "Successfully updated customer!",
@@ -374,9 +384,11 @@ $rootScope.hideSpinner();
 });
 /*==================DELETE CUSTOMER RESPONSE===================*/
 
+var objToDelete={};
 $scope.deleteCustomer=function(customer){
 var customerCode=customer.customerCode;
 //console.log(customerCode);
+objToDelete={}
 if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
 	var previousWindowKeyDown = window.onkeydown;
 	swal({
@@ -389,6 +401,8 @@ if (customerCode!==''&&customerCode!==undefined&&customerCode!==null) {
 	if (isConfirm) {
 	 $rootScope.showSpinner();
 	 SQManageMenuServices.DeleteCustomer(customerCode);
+	 objToDelete={"code":customer.customerCode,"key":customer.custId,"value":customer.customerCode+" ("+customer.customerName+")"};
+  	
 	} 
 	});
 }
@@ -397,6 +411,7 @@ $scope.handleDeleteCustomerDoneResponse=function(data){
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
+  	ArrayOperationFactory.deleteFromArrayKeyValue($rootScope.customerList,objToDelete);
   	var previousWindowKeyDown = window.onkeydown;
 	swal({
 	title: 'Success',
@@ -441,5 +456,5 @@ $scope.$on('$destroy', function(event, message) {
 
 });
 
-}])
+})
 
