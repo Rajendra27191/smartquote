@@ -107,7 +107,7 @@ padding: 3px 12px;
 <div class="container" style="padding-right: 25px;padding-left: 25px;">
  <!-- <shortcut></shortcut> -->
 <div class="row" ng-if="!showEditQuoteView">
-	<div class="col-md-12"><center><label class="main-label">Create Quote</label></center></div>
+	<div class="col-md-12"><center><label class="main-label">Create Proposal</label></center></div>
 </div>
 <div class="row" ng-if="showEditQuoteView">
 		<div class="col-md-12" style="margin-bottom: 5px;">
@@ -117,7 +117,7 @@ padding: 3px 12px;
 		<div class="col-md-8" style="padding:0px;"></div>
 		<div class="col-md-2" style="padding:0px;">
 		<span style="font-weight: 600;">
-		<p class="sub-label">Quote Id : {{customerQuote.quoteId}}</p>
+		<p class="sub-label">Proposal Id : {{customerQuote.quoteId}}</p>
 		<p class="sub-label">Created Date : {{getFormattedDate(customerQuote.createdDate)}}</p>
 		</span>	
 		</div>
@@ -289,7 +289,7 @@ padding: 3px 12px;
  		
  		  <div class="col-md-12 row-control" style="padding: 0px;">
 	 		<div class="col-md-4">
-			<label class="sub-label">Compete Quote</label> <span class="asteric"></span>		
+			<label class="sub-label">Compete Proposal</label> <span class="asteric"></span>		
 			</div>
 			<div class="col-md-8">
 
@@ -297,19 +297,19 @@ padding: 3px 12px;
 			<option value="">Select compete</option>
 			</select>
 			<span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small>*Please select compete quote.</small>
+			<small>*Please select compete proposal.</small>
 			</span>	
 			</div>
  		  </div>
 
  		   <div class="col-md-12 row-control" style="padding: 0px;">
 		 	<div class="col-md-4">
-			<label class="sub-label">Quote Attn</label> <span class="asteric">*</span>		
+			<label class="sub-label">Proposal Attn</label> <span class="asteric">*</span>		
 			</div>
 			<div class="col-md-8" ng-if="!showEditQuoteView">
 			<input type = 'text' id="quoteAttn" name="quoteAttn" class = 'form-control' ng-model = 'customerQuote.attn' required>
 			<span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
-			<small>*Please enter quote attn.</small>
+			<small>*Please enter proposal attn.</small>
 			</span>		
 			</div>
 			<div class="col-md-8" ng-if="showEditQuoteView">
@@ -356,7 +356,7 @@ padding: 3px 12px;
 	</div>
 	<div class="col-md-6"></div>
 	<div class="col-md-2">
-		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products into quote. [ctrl+shift+a]" > <i class="glyphicon glyphicon-plus"></i> Add Product
+		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products. [ctrl+shift+a]" > <i class="glyphicon glyphicon-plus"></i> Add Product
 		</a>
 		<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
 		<!-- <a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="openMyModal()" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product Modal
@@ -676,7 +676,7 @@ padding: 3px 12px;
 	<div class="col-md-2" style="padding: 0px;padding-left:10px;" >
 	<div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
 	<label class="sub-label">Save With Alternative</label>
-	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save Quote With Alternatives"></switch>
+	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
 	</div>
 	</div>
 	<div class="col-md-4" style="padding: 0px;">

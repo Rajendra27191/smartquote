@@ -1,16 +1,21 @@
 var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload','chart.js'])
 .config(function($logProvider,ChartJsProvider){
+  // console.log(".config")
   $logProvider.debugEnabled(true);
+     
  // ChartJsProvider.setOptions({ colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'] });
   
 })
-.run(['$rootScope','$window','storage','SQHomeServices','$templateCache',function($rootScope,$window,storage,SQHomeServices,$templateCache){
-   // $rootScope.showSpinner();
+.run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
+   // console.log(".run")
    // $rootScope.$on('$viewContentLoaded', function() {
    //    $templateCache.removeAll();
    // });
-   $('#mySpinner').show();
-   SQHomeServices.apiCallToCheckUserSession();
+
+   $rootScope.projectName="/smartprotest";
+   // $rootScope.projectName="/smartpro";
+   console.log($rootScope.projectName);
+
    if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
       $rootScope.isUserSignIn=false;
    }
@@ -63,6 +68,8 @@ $rootScope.isUserSignIn=false;
 // $rootScope.scrollpos=0;
 
 // $state.transitionTo('home.start');
+ $('#mySpinner').show();
+ SQHomeServices.apiCallToCheckUserSession();
 /*================ Check user is in sesssion========================*/
  $scope.clearLocalStorageData=function(){
     $rootScope.isUserSignIn=false;
@@ -79,9 +86,10 @@ $rootScope.$on("sesssion", function(event, data){
     // console.log("sesssion")
     console.log(data)
     if(data.code=="success"){
-      $state.transitionTo('userhome.start');
+      // $('#mySpinner').hide();
       $rootScope.isUserSignIn=true;
-      $('#mySpinner').hide();
+      // $rootScope.initAuotoComplete();
+      $state.transitionTo('userhome.start');
     }else{
       $state.transitionTo('home.start'); 
       $scope.clearLocalStorageData();
@@ -96,6 +104,44 @@ $rootScope.$on("sesssion", function(event, data){
 // $state.transitionTo('home.start');
 // }
 
+/*===================================================*/
+$rootScope.initAuotoComplete=function(){
+console.log("$rootScope.initAuotoComplete...");
+var timestamp = new Date().getTime();
+products = new Bloodhound({
+  datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: {
+    url: $rootScope.projectName+"/products.json?"+timestamp,
+    cache: false,
+    beforeSend: function(xhr){
+        $rootScope.showSpinner();
+        },
+    filter: function (devices) {
+      $rootScope.hideSpinner();
+      $('#mySpinner').hide();
+      return $.map(devices, function (device) {
+        return {
+          code: device.code,
+          value : device.value
+        };
+      });
+    }
+  },
+});
+products.clearPrefetchCache();
+products.initialize();
+$rootScope.productsDataset = {
+  displayKey: 'value',
+  limit: 200,
+// async: false,
+source: products.ttAdapter(),
+};
+$rootScope.exampleOptions = {
+  displayKey: 'title',
+  highlight: true
+};
+};
 /*===================================================*/
 $rootScope.userSignin=function(){
 if ($scope.form.loginUser.$valid){
@@ -140,14 +186,15 @@ $scope.handleUserLogInDoneResponse=function(data){
     $rootScope.serviceList=data.serviceList;
     $rootScope.termConditionList=data.termConditionList;
     $rootScope.offerList=data.offerList;
+    // $rootScope.initAuotoComplete();
                          
     }
     else if (data.code.toUpperCase()=='ERROR'){
       //$rootScope.alertError(data.message);
       $scope.invalidEmailPassword=true;
       $scope.errormsg=data.message;
+      $rootScope.hideSpinner();
     }
-    $rootScope.hideSpinner();
     
     }
 }
@@ -285,6 +332,8 @@ var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, me
 
 /*===============SESSION TIME OUT ENDS=====================*/
 $rootScope.moveToTop=function(){
+  console.log("moveToTop")
+   $window.pageYOffset;  
    $window.scrollTo(0,0);
 }
 

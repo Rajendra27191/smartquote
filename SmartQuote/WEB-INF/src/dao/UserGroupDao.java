@@ -218,7 +218,8 @@ public class UserGroupDao {
 				+ " WHERE a.menu_id = b.menu_id and user_group_id = ? group by 2";
 		String getSubMenus = "SELECT c.sub_menu_id, c.sub_menu_name "
 				+ " FROM user_group_access a, sub_menu_master c "
-				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?";
+				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?"
+				+ " order by 1";
 		try {
 			pstmt = conn.prepareStatement(getMenus);
 			pstmt.setInt(1, userGroupId);

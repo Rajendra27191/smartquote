@@ -326,8 +326,8 @@
 	// SQManageMenuServices.GetProductDetails(productCode);
 	// $http({
 	// method: "POST",
-	// // url: "/smartquote/getProductDetails?productCode="+productCode,
-	// url: "/smartquote/getProductDetailsWithAlternatives?productCode="+productCode,
+	// // url: "/getProductDetails?productCode="+productCode,
+	// url: "/getProductDetailsWithAlternatives?productCode="+productCode,
 	// }).success(function(data, status, header, config){
 	// console.log(data)
 	// if (data.code=="sessionTimeOut") {
@@ -578,7 +578,7 @@
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	$scope.addProduct.altProd.quotePrice='';
-	$scope.addProduct.altProd.itemQty=1;
+	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
 	if (product.promoPrice) {
 	$scope.addProduct.altProd.quotePrice=product.promoPrice;
 	$scope.altSellingPriceChanged($scope.addProduct.altProd.quotePrice,$scope.addProduct.altProd.avgcost);
@@ -851,7 +851,7 @@ $scope.initEdit=function(){
 	//================ADD Line Comment=====================
 	$scope.deleteLineComment=function(){
 		if ($scope.addProduct.addComment) {
-		$scope.addProduct.lineComment="";
+		$scope.addProduct.lineComment=null;
 		$scope.addProduct.addComment= false;
 		} else{
 			
@@ -873,11 +873,11 @@ $scope.initEdit=function(){
 	  if (inputValue === false){
 	  	console.log(" inputValue false")
 	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
-	  	$scope.addProduct.lineComment="";
+	  	$scope.addProduct.lineComment=null;
 	  	return false;
 	  } 
 	  if (inputValue === "") {
-	  	$scope.addProduct.lineComment="";
+	  	$scope.addProduct.lineComment=null;
 	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
 	    // swal.showInputError("You need to add line comment!");
 	    return false
@@ -887,7 +887,7 @@ $scope.initEdit=function(){
 	  // swal("Nice!", "You wrote: " + inputValue, "success");
 	});
 	} else{
-		$scope.addProduct.lineComment="";
+		$scope.addProduct.lineComment=null;
 	};
 	
 	};

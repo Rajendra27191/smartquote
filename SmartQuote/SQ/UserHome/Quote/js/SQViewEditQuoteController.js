@@ -24,7 +24,7 @@ $scope.currentSupplierList=[];
 // $scope.salesPersonList=[];
 // $scope.userList=[];
 $scope.isAlternateAdded=false;
-
+$rootScope.addedProductCount=0;
 
 if ($rootScope.userData) {
   if ($rootScope.userData.userType.toLowerCase()=="admin") {
@@ -64,42 +64,42 @@ return fDate;
 //======= Date Control <<<<<
 
 //===== Search Product Text Box >>>>>
-$scope.initAuotoComplete=function(){
-console.log("initAuotoComplete...");
-var timestamp = new Date().getTime();
-products = new Bloodhound({
-	datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-	queryTokenizer: Bloodhound.tokenizers.whitespace,
-	prefetch: {
-		url: "/smartquote/products.json?"+timestamp,
-		cache: false,
-		beforeSend: function(xhr){
-        $rootScope.showSpinner();
-        },
-		filter: function (devices) {
-			$rootScope.hideSpinner();
-			return $.map(devices, function (device) {
-				return {
-					code: device.code,
-					value : device.value
-				};
-			});
-		}
-	},
-});
-products.clearPrefetchCache();
-products.initialize();
-$rootScope.productsDataset = {
-	displayKey: 'value',
-	limit: 200,
-// async: false,
-source: products.ttAdapter(),
-};
-$rootScope.exampleOptions = {
-	displayKey: 'title',
-	highlight: true
-};
-};
+// $scope.initAuotoComplete=function(){
+// console.log("initAuotoComplete...");
+// var timestamp = new Date().getTime();
+// products = new Bloodhound({
+// 	datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+// 	queryTokenizer: Bloodhound.tokenizers.whitespace,
+// 	prefetch: {
+// 		url: $rootScope.projectName+"/products.json?"+timestamp,
+// 		cache: false,
+// 		beforeSend: function(xhr){
+//         $rootScope.showSpinner();
+//         },
+// 		filter: function (devices) {
+// 			$rootScope.hideSpinner();
+// 			return $.map(devices, function (device) {
+// 				return {
+// 					code: device.code,
+// 					value : device.value
+// 				};
+// 			});
+// 		}
+// 	},
+// });
+// products.clearPrefetchCache();
+// products.initialize();
+// $rootScope.productsDataset = {
+// 	displayKey: 'value',
+// 	limit: 200,
+// // async: false,
+// source: products.ttAdapter(),
+// };
+// $rootScope.exampleOptions = {
+// 	displayKey: 'title',
+// 	highlight: true
+// };
+// };
 // $scope.dataTableOpt = {
 //    //custom datatable options 
 //   // or load data through ajax call also
@@ -371,10 +371,10 @@ var array=$scope.offerArray;
 objIndex = array.findIndex((obj => obj.id == $scope.selectedOfferList[j].id));
 array[objIndex].code = true;
 }
-// $timeout(function() {
-// $rootScope.hideSpinner();
-// }, 1000);
 }
+$timeout(function() {
+$rootScope.hideSpinner();
+}, 1000);
 
 };
 // =====================getProductsList=======
@@ -406,7 +406,7 @@ $scope.initDate();
 $scope.checkSelectedTermsAndCondition();
 $scope.checkSelectedServices();
 $scope.checkSelectedOffers();
-$scope.initAuotoComplete();
+// $scope.initAuotoComplete();
 };
 
 $scope.handleGetGetProductGroupListDoneResponse=function(data){
@@ -642,25 +642,30 @@ var previousWindowKeyDown = window.onkeydown;
 $scope.resetCurrentSupplier=function(){
 console.log("resetCurrentSupplier");
 console.log($scope.customerQuote.productList.length)
+$scope.customerQuote.currentSupplierName=null;
+$scope.isCurrentSupplierNameRequired=false;
 angular.forEach($scope.customerQuote.productList, function(value, key){
 			value.currentSupplierPrice=0;
 			value.currentSupplierTotal=0;
 			value.currentSupplierGP=0;
 			value.savings=0;
+			if (value.altProd) {	
 			if(value.altProd.itemCode){
 			value.altProd.currentSupplierPrice=0;
 			value.altProd.currentSupplierTotal=0;
 			value.altProd.currentSupplierGP=0;
 			value.altProd.savings=0;
 			}
+			};
 		});
+$scope.calculateAllInformation();
 }
 
 $scope.showConfirmationWindow=function(){
 var previousWindowKeyDown = window.onkeydown;
   swal({
   title: 'Are you sure?',
-  text: "Changing compete quote to 'no' can reset current customer price data to 0 .",
+  text: "Changing compete proposal to 'No' can reset current customer price data to 0 .",
   showCancelButton: true,
   closeOnConfirm: true,
   cancelButtonText:"Cancel",
@@ -684,11 +689,7 @@ $scope.currentSupplierNameChanged=function(){
 $scope.competeQuoteChanged=function(){
 console.log($scope.customerQuote.competeQuote)
 if ($scope.customerQuote.competeQuote=='No'){
-	// if ($scope.customerQuote.productList.length>0) {
-	// $scope.showConfirmationWindow();	
-	// };	
-	$scope.customerQuote.currentSupplierName=null;
-	$scope.isCurrentSupplierNameRequired=false;
+
 	if ($scope.customerQuote.productList) {
 	if($scope.customerQuote.productList.length>0){
 		$scope.showConfirmationWindow();
@@ -700,7 +701,7 @@ if ($scope.customerQuote.competeQuote=='No'){
 	$scope.isCurrentSupplierNameRequired=false;
 	$scope.customerQuote.currentSupplierName="";
 	}
-	$scope.calculateAllInformation();
+	// $scope.calculateAllInformation();
 }
 if ($scope.customerQuote.competeQuote=='Yes'){
 	$scope.isCurrentSupplierNameRequired=true;
@@ -794,8 +795,8 @@ $scope.getEditProductAlternatives=function(productCode){
 // $rootScope.showLoadSpinner();
 $http({
 method: "POST",
-// url: "/smartquote/getProductDetails?productCode="+productCode,
-url: "/smartquote/getProductDetailsWithAlternatives?productCode="+productCode,
+// url: "/getProductDetails?productCode="+productCode,
+url: $rootScope.projectName+"/getProductDetailsWithAlternatives?productCode="+productCode,
 }).success(function(data, status, header, config){
 console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -1164,12 +1165,12 @@ $rootScope.hideSpinner();
 //============================ Save As PDF =================================
 $scope.saveAsPDF=function(quote){
 console.log(quote);
- var url ="/smartquote/custComparison?quoteId="+quote.quoteId;
+ var url =$rootScope.projectName+"/custComparison?quoteId="+quote.quoteId;
  window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
 };
 $scope.exportToPronto=function(quote){
 	console.log(quote);
-	 var url ="/smartquote/exportToPronto?quoteId="+quote.quoteId;
+	 var url =$rootScope.projectName+"/exportToPronto?quoteId="+quote.quoteId;
 	 window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
 	};
 
@@ -1329,9 +1330,9 @@ if (quoteResponse.newSupplierCreated) {
 var obj={"code":supplierName,"key":quoteResponse.genratedSupplierId,"value":supplierName};
 ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.supplierList,obj);
 } 
-// if (quoteResponse.newProductCreated) {
-// 	$scope.initAuotoComplete();
-// };
+if (quoteResponse.newProductCreated) {
+	$rootScope.initAuotoComplete();
+};
 };
 };
 
@@ -1346,7 +1347,7 @@ if (data.code) {
 	checkQuoteResponse(updateQuoteResponse)
   	 swal({
 	  title: "Success",
-	  text: "Successfully updated quote!",
+	  text: "Successfully updated proposal...!",
 	  type: "success",
 	  // animation: "slide-from-top",
 	},

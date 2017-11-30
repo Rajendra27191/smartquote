@@ -23,6 +23,7 @@ $scope.customerQuote.competeQuote="No";
 $scope.currentSupplierList=[];
 // $scope.salesPersonList=[];
 // $scope.userLists=[];
+$rootScope.addedProductCount=0;
 
 
 $scope.productList=[];
@@ -81,50 +82,50 @@ $scope.quoteDateChanged=function(quoteDate){
 };
 //======= Date Control <<<<<
 //===== Search Product Text Box >>>>>
-$scope.initAuotoComplete=function(){
-console.log("initAuotoComplete...");
-// $scope.selectedProduct=null;
-console.log("1...");
-var timestamp = new Date().getTime();
-products = new Bloodhound({
-datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-queryTokenizer: Bloodhound.tokenizers.whitespace,
-prefetch: {
-url: "/smartquote/products.json?query=%QUERY",//+timestamp,
-cache: false,
-beforeSend: function(xhr){
-$rootScope.showSpinner();
-console.log("2...");
-},
-filter: function (parsedResponse) {//(devices)
-console.log("3...");
-$rootScope.hideSpinner();
-return parsedResponse;
-// return $.map(devices, function (device) {
-// return {
-// code: device.code,
-// value : device.value
-// };
-// });
-}
+// $scope.initAuotoComplete=function(){
+// console.log("initAuotoComplete...");
+// // $scope.selectedProduct=null;
+// console.log("1...");
+// var timestamp = new Date().getTime();
+// products = new Bloodhound({
+// datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+// queryTokenizer: Bloodhound.tokenizers.whitespace,
+// prefetch: {
+// url: $rootScope.projectName+"/products.json?query=%QUERY",//+timestamp,
+// cache: false,
+// beforeSend: function(xhr){
+// $rootScope.showSpinner();
+// console.log("2...");
+// },
+// filter: function (parsedResponse) {//(devices)
+// console.log("3...");
+// $rootScope.hideSpinner();
+// return parsedResponse;
+// // return $.map(devices, function (device) {
+// // return {
+// // code: device.code,
+// // value : device.value
+// // };
+// // });
+// }
 
-},
-});
-console.log("4...");
-products.clearPrefetchCache();
-products.initialize();
-console.log("5...");
-$rootScope.productsDataset = {
-displayKey: 'value',
-limit: 200,
-source: products.ttAdapter(),
-};
-$rootScope.exampleOptions = {
-displayKey: 'title',
-highlight: true
-};
-console.log("6...");
-};
+// },
+// });
+// console.log("4...");
+// products.clearPrefetchCache();
+// products.initialize();
+// console.log("5...");
+// $rootScope.productsDataset = {
+// displayKey: 'value',
+// limit: 200,
+// source: products.ttAdapter(),
+// };
+// $rootScope.exampleOptions = {
+// displayKey: 'title',
+// highlight: true
+// };
+// console.log("6...");
+// };
 //===== Search Product Text Box <<<<<
 
 //===== ADD PRODUCT UIB MODAL >>>>>
@@ -201,7 +202,7 @@ if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 $scope.productGroupList=data.result;
 $rootScope.isQuoteActivated=true;
-$scope.initAuotoComplete();
+// $scope.initAuotoComplete();
 // $rootScope.globalProductGroupList=data.result;
 // SQManageMenuServices.GetUserList();
 }else{
@@ -209,7 +210,7 @@ $rootScope.hideSpinner();
 $rootScope.alertError(data.message);
 }
 }
-// $rootScope.hideSpinner();
+$rootScope.hideSpinner();
 }
 };
 
@@ -287,6 +288,7 @@ $scope.customerQuote.address='';
 $scope.customerQuote.phone='';
 $scope.customerQuote.email='';
 $scope.customerQuote.fax='';
+$scope.customerQuote.attn='';
 $scope.customerQuote.customerCode=code;
 }else{
 $scope.getCustomerDetails(customerCode);
@@ -300,6 +302,7 @@ address=data.address1;
 console.log("asssigning data to customer")
 $scope.customerQuote.customerCode=data.customerCode;
 $scope.customerQuote.customerName=data.customerName;
+$scope.customerQuote.attn=data.contactPerson;
 $scope.customerQuote.address=data.address;
 $scope.customerQuote.phone=data.phone;
 $scope.customerQuote.email=data.email;
@@ -492,6 +495,7 @@ value.altProd.currentSupplierGP=0;
 value.altProd.savings=0;
 };
 });
+$scope.addedProductList=angular.copy($scope.customerQuote.productList);
 }
 $scope.calculateAllInformation();
 };
@@ -500,7 +504,7 @@ $scope.showConfirmationWindow=function(){
 var previousWindowKeyDown = window.onkeydown;
 swal({
 title: 'Are you sure?',
-text: "Changing compete quote to 'no' can reset current customer price data to 0 .",
+text: "Changing compete proposal to 'No' can reset current customer price data to 0 .",
 showCancelButton: true,
 closeOnConfirm: true,
 cancelButtonText:"Cancel",
@@ -528,7 +532,6 @@ $scope.competeQuoteChanged=function(){
 console.log("$scope.customerQuote.competeQuote")
 console.log($scope.customerQuote.competeQuote)
 if ($scope.customerQuote.competeQuote=='No'){
-
 if ($scope.customerQuote.productList) {
 if ($scope.customerQuote.productList.length>0) {
 $scope.showConfirmationWindow();	
@@ -1100,7 +1103,10 @@ var obj={"code":supplierName,"key":quoteResponse.genratedSupplierId,"value":supp
 ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.supplierList,obj);
 } 
 if (quoteResponse.newProductCreated) {
-	$scope.initAuotoComplete();
+	$rootScope.initAuotoComplete();
+	$timeout(function() {
+	$scope.moveToCustomerInfo();
+	}, 2000);
 };
 };
 };
@@ -1122,17 +1128,18 @@ $scope.resetCreateQuote();
 var previousWindowKeyDown = window.onkeydown;	
 swal({
 		title: "Success",
-		text: "Successfully created quote!",
+		text: "Successfully created proposal...!",
 		type: "success",
 		timer: 2000,
 		showConfirmButton: false
 		// closeOnConfirm: true,			
 	});
+
+if (!data.newProductCreated) {
+$rootScope.hideSpinner();
 $timeout(function() {
 $scope.moveToCustomerInfo();
 }, 2000);
-if (!data.newProductCreated) {
-$rootScope.hideSpinner();
 };
 	
 }else{

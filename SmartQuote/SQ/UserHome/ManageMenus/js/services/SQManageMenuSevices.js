@@ -6,24 +6,28 @@ angular.module('sq.SmartQuoteDesktop')
 '$state',
 '$log',
 function ($rootScope, $resource, $http, $state, $log) {
+// console.log($rootScope.projectName)
 var ManageServices = {
+	
+//UserGroup API	
+setUserGroupAPI:$resource($rootScope.projectName+'/getAssignedAccess?userGroupId=:userGroupId', {}, {setUserGroupMethod :{method: 'GET'},params:{userGroupId:'@userGroupId'}}),
 //Services API	
-getServicesAPI:$resource('/smartquote/getServices', {}, {getServicesMethod :{method: 'POST'}}),
-createServiceAPI:$resource('/smartquote/createService?service=:service', {}, {createServiceMethod :{method: 'GET'},params:{service:'@service'}}),
-updateServiceAPI:$resource('/smartquote/updateService?service=:service&id=:id', {}, {updateServiceMethod :{method: 'GET'},params:{service:'@service',id:'@id'}}),
-deleteServiceAPI:$resource('/smartquote/deleteService?id=:id', {}, {deleteServiceMethod :{method: 'GET'},params:{id:'@id'}}),
+getServicesAPI:$resource($rootScope.projectName+'/getServices', {}, {getServicesMethod :{method: 'POST'}}),
+createServiceAPI:$resource($rootScope.projectName+'/createService?service=:service', {}, {createServiceMethod :{method: 'GET'},params:{service:'@service'}}),
+updateServiceAPI:$resource($rootScope.projectName+'/updateService?service=:service&id=:id', {}, {updateServiceMethod :{method: 'GET'},params:{service:'@service',id:'@id'}}),
+deleteServiceAPI:$resource($rootScope.projectName+'/deleteService?id=:id', {}, {deleteServiceMethod :{method: 'GET'},params:{id:'@id'}}),
 
 //Term Condition API	
-getTermsListAPI:$resource('/smartquote/getTermsConditions', {}, {getTermsListMethod :{method: 'POST'}}),
-createTermsConditionsAPI:$resource('/smartquote/createTermsConditions?termCondition=:termCondition', {}, {createTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition'}}),
-updateTermsConditionsAPI:$resource('/smartquote/updateTermsConditions?termCondition=:termCondition&id=:id', {}, {updateTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition',id:'@id'}}),
-deleteTermConditionAPI:$resource('/smartquote/deleteTermCondition?id=:id', {}, {deleteTermConditionMethod :{method: 'GET'},params:{id:'@id'}}),
+getTermsListAPI:$resource($rootScope.projectName+'/getTermsConditions', {}, {getTermsListMethod :{method: 'POST'}}),
+createTermsConditionsAPI:$resource($rootScope.projectName+'/createTermsConditions?termCondition=:termCondition', {}, {createTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition'}}),
+updateTermsConditionsAPI:$resource($rootScope.projectName+'/updateTermsConditions?termCondition=:termCondition&id=:id', {}, {updateTermsConditionsMethod :{method: 'GET'},params:{termCondition:'@termCondition',id:'@id'}}),
+deleteTermConditionAPI:$resource($rootScope.projectName+'/deleteTermCondition?id=:id', {}, {deleteTermConditionMethod :{method: 'GET'},params:{id:'@id'}}),
 
 //Alternative API	
-getAlternateProductsView:$resource('/smartquote/getAlternateProductsView', {}, {getAlternateProductsViewMethod :{method: 'POST'}}),
-deleteAlternateProduct:$resource('/smartquote/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
-getOffersList:$resource('/smartquote/getOffersList', {}, {getOffersListMethod :{method: 'POST'}}),
-deleteOffer:$resource('/smartquote/deleteOffer?id=:id', {}, {deleteOfferMethod :{method: 'GET'},params:{id:'@id'}}),
+getAlternateProductsView:$resource($rootScope.projectName+'/getAlternateProductsView', {}, {getAlternateProductsViewMethod :{method: 'POST'}}),
+deleteAlternateProduct:$resource($rootScope.projectName+'/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
+getOffersList:$resource($rootScope.projectName+'/getOffersList', {}, {getOffersListMethod :{method: 'POST'}}),
+deleteOffer:$resource($rootScope.projectName+'/deleteOffer?id=:id', {}, {deleteOfferMethod :{method: 'GET'},params:{id:'@id'}}),
 };
 var manageMenu = {};
 var data;
@@ -33,28 +37,23 @@ headers : {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'}
 
 /*===============Manage User Group====================*/
 manageMenu.setUserGroup = function (userGroupId){
-$http({
-method: "GET",
-url: "/smartquote/getAssignedAccess?userGroupId="+userGroupId,
-//data: $scope.additionalCategory.addCatName
-}).success(function(data, status, header, config){
-//console.log(data);
-if (data.code=="sessionTimeOut") {
-$rootScope.$broadcast('SessionTimeOut', data);   
+ManageServices.setUserGroupAPI.setUserGroupMethod({userGroupId:userGroupId},function (success) {
+console.log(success)
+if (success.code=="sessionTimeOut") {
+$rootScope.$broadcast('SessionTimeOut', success);   
 }else{          
-$rootScope.$broadcast('SetUserGroupDone', data);    
+$rootScope.$broadcast('SetUserGroupDone', success);    
 }     
-}).error(function(data, status, header, config){
-//console.log(data);
-$rootScope.$broadcast('SetUserGroupNotDone', data);
-//error
+}, function (error) {
+console.log(error);
+$rootScope.$broadcast('SetUserGroupNotDone', error);  
 });
 };
 
 manageMenu.saveUserGroup = function (userGroupName,checkedMenuList){
 $http({
 method: "POST",
-url: "/smartquote/createUserGroup?userGroupName="+userGroupName+"&checkedMenuList="+checkedMenuList,
+url: $rootScope.projectName+"/createUserGroup?userGroupName="+userGroupName+"&checkedMenuList="+checkedMenuList,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -71,7 +70,7 @@ $rootScope.$broadcast('AddUserGroupNotDone', data);
 manageMenu.editUserGroup = function (userGroupId,checkedMenuList){
 $http({
 method: "POST",
-url: "/smartquote/updateUserGroup?userGroupId="+userGroupId+"&checkedMenuList="+checkedMenuList,
+url: $rootScope.projectName+"/updateUserGroup?userGroupId="+userGroupId+"&checkedMenuList="+checkedMenuList,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -87,7 +86,7 @@ $rootScope.$broadcast('EditUserGroupNotDone', data);
 manageMenu.deleteUserGroup = function (userGroupId){
 $http({
 method: "POST",
-url: "/smartquote/deleteUserGroup?userGroupId="+userGroupId,
+url: $rootScope.projectName+"/deleteUserGroup?userGroupId="+userGroupId,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -104,7 +103,7 @@ manageMenu.SaveUser = function (userDetails){
 console.log(userDetails)
 $http({
 method: "POST",
-url: "/smartquote/createUser?userDetails="+userDetails,
+url: $rootScope.projectName+"/createUser?userDetails="+userDetails,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -120,7 +119,7 @@ $rootScope.$broadcast('SaveUserNotDone', data);
 manageMenu.GetUserList = function (){
 $http({
 method: "POST",
-url: "/smartquote/getUserList",
+url: $rootScope.projectName+"/getUserList",
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -137,7 +136,7 @@ manageMenu.GetUserDetails = function (userId){
 console.log(userId)
 $http({
 method: "POST",
-url: "/smartquote/getUserDetails?userId="+userId,
+url: $rootScope.projectName+"/getUserDetails?userId="+userId,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -153,7 +152,7 @@ $rootScope.$broadcast('GetUserDetailsNotDone', data);
 manageMenu.UpdateUserDetails = function (userDetails){
 $http({
 method: "POST",
-url: "/smartquote/updateUserDetails?userDetails="+userDetails,
+url: $rootScope.projectName+"/updateUserDetails?userDetails="+userDetails,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -169,7 +168,7 @@ $rootScope.$broadcast('UpdateUserDetailsNotDone', data);
 manageMenu.DeleteUser = function (userId){
 $http({
 method: "POST",
-url: "/smartquote/deleteUser?userId="+userId,
+url: $rootScope.projectName+"/deleteUser?userId="+userId,
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -185,7 +184,7 @@ $rootScope.$broadcast('DeleteUserNotDone', data);
 manageMenu.GetCustomerListView = function (userId){
 $http({
 method: "POST",
-url: "/smartquote/getCustomerListView",
+url: $rootScope.projectName+"/getCustomerListView",
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -201,7 +200,7 @@ $rootScope.$broadcast('GetCustomerListViewNotDone', data);
 manageMenu.GetCustomerList = function (userId){
 $http({
 method: "POST",
-url: "/smartquote/getCustomerList",
+url: $rootScope.projectName+"/getCustomerList",
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -219,7 +218,7 @@ $log.debug("GetCustomerDetails");
 $log.debug(customerCode);
 $http({
 method: "POST",
-url: "/smartquote/getCustomerDetails?customerCode="+customerCode,
+url: $rootScope.projectName+"/getCustomerDetails?customerCode="+customerCode,
 }).success(function(data, status, header, config){
 $log.debug(data);
 if (data.code=="sessionTimeOut") {
@@ -236,7 +235,7 @@ $rootScope.$broadcast('GetCustomerDetailsNotDone', data);
 manageMenu.CreateCustomer = function (customerDetails){
 $http({
 method: "POST",
-url: "/smartquote/createCustomer?customerDetails="+customerDetails,
+url: $rootScope.projectName+"/createCustomer?customerDetails="+customerDetails,
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -253,7 +252,7 @@ $rootScope.$broadcast('CreateCustomerNotDone', data);
 manageMenu.UpdateCustomer = function (customerDetails){
 $http({
 method: "POST",
-url: "/smartquote/updateCustomerDetails?customerDetails="+customerDetails,
+url: $rootScope.projectName+"/updateCustomerDetails?customerDetails="+customerDetails,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -269,7 +268,7 @@ $rootScope.$broadcast('UpdateCustomerNotDone', data);
 manageMenu.DeleteCustomer = function (customerCode){
 $http({
 method: "POST",
-url: "/smartquote/deleteCustomer?customerCode="+customerCode,
+url: $rootScope.projectName+"/deleteCustomer?customerCode="+customerCode,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -286,7 +285,7 @@ $rootScope.$broadcast('DeleteCustomerNotDone', data);
 manageMenu.GetProductGroupList = function (){
 $http({
 method: "POST",
-url: "/smartquote/getProductGroupList",
+url: $rootScope.projectName+"/getProductGroupList",
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -302,7 +301,7 @@ $rootScope.$broadcast('GetProductGroupListNotDone', data);
 manageMenu.GetProductGroupListView = function (){
 $http({
 method: "POST",
-url: "/smartquote/getProductGroupListView",
+url: $rootScope.projectName+"/getProductGroupListView",
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -318,7 +317,7 @@ $rootScope.$broadcast('GetProductGroupListViewNotDone', data);
 manageMenu.GetProductGroupDetails = function (productGroupCode){
 $http({
 method: "POST",
-url: "/smartquote/getProductGroupDetails?productGroupCode="+productGroupCode,
+url: $rootScope.projectName+"/getProductGroupDetails?productGroupCode="+productGroupCode,
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -335,7 +334,7 @@ $rootScope.$broadcast('GetProductGroupDetailsNotDone', data);
 manageMenu.CreateProductGroup = function (productDetails){
 $http({
 method: "POST",
-url: "/smartquote/createProductGroup?productDetails="+productDetails,
+url: $rootScope.projectName+"/createProductGroup?productDetails="+productDetails,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -352,7 +351,7 @@ $rootScope.$broadcast('CreateProductGroupNotDone', data);
 manageMenu.UpdateProductGroupDetails = function (productDetails){
 $http({
 method: "POST",
-url: "/smartquote/updateProductGroupDetails?productDetails="+productDetails,
+url: $rootScope.projectName+"/updateProductGroupDetails?productDetails="+productDetails,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -369,7 +368,7 @@ $rootScope.$broadcast('UpdateProductGroupDetailsNotDone', data);
 manageMenu.DeleteProductGroup = function (productGroupCode){
 $http({
 method: "POST",
-url: "/smartquote/deleteProductGroup?productGroupCode="+productGroupCode,
+url: $rootScope.projectName+"/deleteProductGroup?productGroupCode="+productGroupCode,
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -387,7 +386,7 @@ manageMenu.GetProductListView = function (fromLimit,toLimit){
 console.log(fromLimit,toLimit)
 $http({
 method: "POST",
-url: "/smartquote/getProductListView?fromLimit="+fromLimit+"&toLimit="+toLimit,
+url: $rootScope.projectName+"/getProductListView?fromLimit="+fromLimit+"&toLimit="+toLimit,
 // data:{fromLimit:fromLimit,toLimit:toLimit}
 }).success(function(data, status, header, config){
 //console.log(data)
@@ -405,7 +404,7 @@ $rootScope.$broadcast('GetProductListViewNotDone', data);
 manageMenu.GetProductList = function (prodLike){
 $http({
 method: "POST",
-url: "/smartquote/getProductList?prodLike="+prodLike,
+url: $rootScope.projectName+"/getProductList?prodLike="+prodLike,
 }).success(function(data, status, header, config){
 // console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -422,7 +421,7 @@ $rootScope.$broadcast('GetProductListNotDone', data);
 manageMenu.GetSearchedProductListView = function (prodLike){
 $http({
 method: "POST",
-url: "/smartquote/getSearchedProductListView?prodLike="+prodLike,
+url: $rootScope.projectName+"/getSearchedProductListView?prodLike="+prodLike,
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -438,7 +437,7 @@ $rootScope.$broadcast('GetSearchedProductListViewNotDone', data);
 manageMenu.GetProductDetails = function (productCode){
 $http({
 method: "POST",
-url: "/smartquote/getProductDetails?productCode="+productCode,
+url: $rootScope.projectName+"/getProductDetails?productCode="+productCode,
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -455,7 +454,7 @@ $rootScope.$broadcast('GetProductDetailsNotDone', data);
 manageMenu.CreateProduct = function (productDetails){
 $http({
 method: "POST",
-url: "/smartquote/createProduct?productDetails="+encodeURIComponent(productDetails),
+url: $rootScope.projectName+"/createProduct?productDetails="+encodeURIComponent(productDetails),
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -472,7 +471,7 @@ $rootScope.$broadcast('CreateProductNotDone', data);
 manageMenu.UpdateProductDetails = function (productDetails){
 $http({
 method: "POST",
-url: "/smartquote/updateProductDetails?productDetails="+encodeURIComponent(productDetails),
+url: $rootScope.projectName+"/updateProductDetails?productDetails="+encodeURIComponent(productDetails),
 }).success(function(data, status, header, config){
 //console.log(data)
 if (data.code=="sessionTimeOut") {
@@ -489,7 +488,7 @@ $rootScope.$broadcast('UpdateProductDetailsNotDone', data);
 manageMenu.DeleteProduct = function (productCode){
 $http({
 method: "POST",
-url: "/smartquote/deleteProduct?productCode="+productCode,
+url: $rootScope.projectName+"/deleteProduct?productCode="+productCode,
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -623,7 +622,7 @@ manageMenu.CreateAlternateProducts = function (alternateProductDetails){
 console.log("CreateAlternateProducts")
 console.log(alternateProductDetails)
 data = $.param({alternateProductDetails:alternateProductDetails}); 
-$http.post('/smartquote/createAlternateProducts', data, config)
+$http.post($rootScope.projectName+'/createAlternateProducts', data, config)
 .success(function (data, status, headers, config) {
 console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -642,7 +641,7 @@ manageMenu.UpdateAlternateProducts = function (alternateProductDetails){
 console.log("CreateAlternateProducts")
 console.log(alternateProductDetails)
 data = $.param({alternateProductDetails:alternateProductDetails}); 
-$http.post('/smartquote/updateAlternateProducts', data, config)
+$http.post($rootScope.projectName+'/updateAlternateProducts', data, config)
 .success(function (data, status, headers, config) {
 console.log(data);
 if (data.code=="sessionTimeOut") {

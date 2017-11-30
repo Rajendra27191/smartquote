@@ -3,6 +3,7 @@ angular.module('sq.SmartQuoteDesktop')
    // console.log("initialise OZAppRoute");
    $stateProvider
    .state('home', {
+      // url:'/smartquote',
       abstract: true,
       controller:'SQHomeController',
       templateUrl:'SQ/Home/views/sq.home.view.html',

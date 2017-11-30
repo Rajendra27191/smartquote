@@ -6,15 +6,16 @@ angular.module('sq.SmartQuoteDesktop')
   '$state',
   '$log',
   function ($rootScope, $resource, $http, $state, $log) {
+       // console.log($rootScope.projectName);
     var QuoteServices = {
-      getCurrentSupplierList:$resource('/smartquote/getCurrentSupplierList', {}, {getCurrentSupplierListMethod :{method: 'POST'}}),
-      getSalesPersonList:$resource('/smartquote/getSalesPersonList', {}, {getSalesPersonListMethod :{method: 'POST'}}),
-      getQuoteView:$resource('/smartquote/getQuoteView', {}, {getQuoteViewMethod :{method: 'POST'}}),
-      getTermsAndServiceList:$resource('/smartquote/getTermsAndServiceList?quoteId=:quoteId', {}, {getTermsAndServiceListMethod :{method: 'GET'},params:{quoteId:'@quoteId'}}),
-      getProductDetailsWithAlternativesAPI:$resource('/smartquote/getProductDetailsWithAlternatives?productCode=:productCode', {}, {getProductDetailsWithAlternativesMethod :{method: 'GET'},params:{productCode:'@productCode'}}),
-      getProductDetailsAPI:$resource('/smartquote/getProductDetails?productCode=:productCode', {}, {getProductDetailsMethod :{method: 'GET'},params:{productCode:'@productCode'}}),
+      getCurrentSupplierList:$resource($rootScope.projectName+'/getCurrentSupplierList', {}, {getCurrentSupplierListMethod :{method: 'POST'}}),
+      getSalesPersonList:$resource($rootScope.projectName+'/getSalesPersonList', {}, {getSalesPersonListMethod :{method: 'POST'}}),
+      getQuoteView:$resource($rootScope.projectName+'/getQuoteView', {}, {getQuoteViewMethod :{method: 'POST'}}),
+      getTermsAndServiceList:$resource($rootScope.projectName+'/getTermsAndServiceList?quoteId=:quoteId', {}, {getTermsAndServiceListMethod :{method: 'GET'},params:{quoteId:'@quoteId'}}),
+      getProductDetailsWithAlternativesAPI:$resource($rootScope.projectName+'/getProductDetailsWithAlternatives?productCode=:productCode', {}, {getProductDetailsWithAlternativesMethod :{method: 'GET'},params:{productCode:'@productCode'}}),
+      getProductDetailsAPI:$resource($rootScope.projectName+'/getProductDetails?productCode=:productCode', {}, {getProductDetailsMethod :{method: 'GET'},params:{productCode:'@productCode'}}),
      
-      // getSalesPersonList:$resource('/smartquote/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
+      // getSalesPersonList:$resource('/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
 
     };
     var quote = {};
@@ -57,7 +58,7 @@ $rootScope.$broadcast('GetSalesPersonListNotDone', error);
 quote.CreateQuote = function (objQuoteBean){
   console.log("CreateQuote1")
   data = $.param({objQuoteBean:objQuoteBean}); 
-  $http.post('/smartquote/createQuote', data, config)
+  $http.post($rootScope.projectName+'/createQuote', data, config)
   .success(function (data, status, headers, config) {
     console.log(data);
     if (data.code=="sessionTimeOut") {
@@ -77,7 +78,7 @@ quote.changeQuoteStatus = function (objQuoteBean){
   console.log("changeQuoteStatus");
   console.log(objQuoteBean)
   data = $.param({objQuoteBean:objQuoteBean}); 
-  $http.post('/smartquote/changeQuoteStatus', data, config)
+  $http.post($rootScope.projectName+'/changeQuoteStatus', data, config)
   .success(function (data, status, headers, config) {
     console.log(data);
     if (data.code=="sessionTimeOut") {
@@ -125,7 +126,7 @@ $rootScope.$broadcast('GetTermsAndServiceListNotDone', error);
 quote.UpdateQuote = function (objQuoteBean){
   console.log("UpdateQuote1")
   data = $.param({objQuoteBean:objQuoteBean}); 
-  $http.post('/smartquote/updateQuote', data, config)
+  $http.post($rootScope.projectName+'/updateQuote', data, config)
   .success(function (data, status, headers, config) {
     console.log(data);
     if (data.code=="sessionTimeOut") {
@@ -145,7 +146,7 @@ quote.AddComment = function (quoteId,comment){
 // console.log(objQuoteBean)
 $http({
   method: "POST",
-  url: "/smartquote/addComment?quoteId="+quoteId+"&comment="+comment,
+  url: $rootScope.projectName+"/addComment?quoteId="+quoteId+"&comment="+comment,
 }).success(function(data, status, header, config){
 // console.log(data);
 if (data.code=="sessionTimeOut") {

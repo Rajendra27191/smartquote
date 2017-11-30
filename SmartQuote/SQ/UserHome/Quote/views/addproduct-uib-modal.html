@@ -1,540 +1,540 @@
-    <style type="text/css" media="screen">
-    .modal-lg{
-        width: 90%;
-    }
-    .para{
-        margin: 0px;
-        font-size: small;
-        /* color:rgba(119, 117, 117, 0.8); */
-    }
-    .btn-primary:focus {
-        border: 2px solid floralwhite; 
-    }
-    .btn-default:focus {
-        border: 2px solid floralwhite; 
-    }
+<style type="text/css" media="screen">
+.modal-lg{
+width: 90%;
+}
+.para{
+margin: 0px;
+font-size: small;
+/* color:rgba(119, 117, 117, 0.8); */
+}
+.btn-primary:focus {
+border: 2px solid floralwhite; 
+}
+.btn-default:focus {
+border: 2px solid floralwhite; 
+}
 
-    #bigCircle{
-        position: relative;
-        width: 140px;
-        margin:  0 auto;
+#bigCircle{
+position: relative;
+width: 140px;
+margin:  0 auto;
 
-    }
+}
 
-    .progress-wrapper{
-        /* width: 80%;     */
-        position: relative;
-        margin: auto;
-        font-size: 20px;
-    }
-    .progress1{
-        position: absolute;
-        color: #337ab7;
-        font-weight: 100;
-        line-height: 1;
-        /* margin: 40% 35%; */
-    }
-    .progress{
-        height: 20px;
-        margin-bottom: 0px;
-    }
-    .progress-bar{
-        padding: 0px;
-    }
-    /* .round-progress-wrapper{
-    -webkit-logical-width: 80%;
-    } */
-    #productDesc .col-md-4{
-        text-align: right;
-    }
+.progress-wrapper{
+/* width: 80%;     */
+position: relative;
+margin: auto;
+font-size: 20px;
+}
+.progress1{
+position: absolute;
+color: #337ab7;
+font-weight: 100;
+line-height: 1;
+/* margin: 40% 35%; */
+}
+.progress{
+height: 20px;
+margin-bottom: 0px;
+}
+.progress-bar{
+padding: 0px;
+}
+/* .round-progress-wrapper{
+-webkit-logical-width: 80%;
+} */
+#productDesc .col-md-4{
+text-align: right;
+}
 
-    #SearchTable {
-        border-collapse: separate;
-        border-spacing: 5px 10px; 
-    }
-    #SearchTable th {
-        text-align: right;
-        /* border:1px solid #000; */
-    }
-    #SearchTable td {
-        /* border:1px solid #000; */
-    }
+#SearchTable {
+border-collapse: separate;
+border-spacing: 5px 10px; 
+}
+#SearchTable th {
+text-align: right;
+/* border:1px solid #000; */
+}
+#SearchTable td {
+/* border:1px solid #000; */
+}
 
-    #productInfo fieldset{
-        height: 180px;
-        padding: 5px;
-    }
-    div p{
-        margin: 0 0 5px;
-    }
+#productInfo fieldset{
+height: 180px;
+padding: 5px;
+}
+div p{
+margin: 0 0 5px;
+}
 
-    .col-md-8 .dropdown-menu {
-        max-height: 250px;
-        /* max-width: 500px; */
-        overflow-y: auto;
-        /* overflow-x: auto; */
-    }
-    .twitter-typeahead{
-        width: 100%;
-    }
-    /* Flash class and keyframe animation */
-    .flashit{
-        color:#b8860b;
-        -webkit-animation: flash linear 2s infinite;
-        animation: flash linear 2s infinite;
-    }
-    @-webkit-keyframes flash {
-        0% { opacity: 1; } 
-        50% { opacity: .1; } 
-        100% { opacity: 1; }
-    }
-    @keyframes flash {
-        0% { opacity: 1; } 
-        50% { opacity: .1; } 
-        100% { opacity: 1; }
-    }
+.col-md-8 .dropdown-menu {
+max-height: 250px;
+/* max-width: 500px; */
+overflow-y: auto;
+/* overflow-x: auto; */
+}
+.twitter-typeahead{
+width: 100%;
+}
+/* Flash class and keyframe animation */
+.flashit{
+color:#b8860b;
+-webkit-animation: flash linear 2s infinite;
+animation: flash linear 2s infinite;
+}
+@-webkit-keyframes flash {
+0% { opacity: 1; } 
+50% { opacity: .1; } 
+100% { opacity: 1; }
+}
+@keyframes flash {
+0% { opacity: 1; } 
+50% { opacity: .1; } 
+100% { opacity: 1; }
+}
 
-    </style>
-    <script type="text/ng-template" id="addProductModal.html">
-        <div class="modal-header">
-            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="closeAddProductModal()"><span aria-hidden="true">&times;</span></button> -->
-            <h4 class="modal-title" id="myModalLabel" >
-                <center>
-                    <span ng-if="productButtonStatus=='add'">Add Product</span>
-                    <span ng-if="productButtonStatus=='edit'">Edit Product</span>
-                </center>
-            </h4>
-            <h5 class="modal-title" id="myModalLabel" ng-if="addProduct.isAlternate">
-                <center><span style="color:#113654;">Alternative Product for : {{addProduct.alternateTo.itemCode}}</span></center>
-            </h5>
-            <div class="row">
-                <div class="col-md-4">
-                    <span ng-show="isProductExist" style="color:red;">* Product already added in quote.</span>  
-                </div>
-                <div class="col-md-4"></div>
-                <div class="col-md-4"></div>
-            </div>
-        </div>
-        <div class="modal-body" id=""><!-- modal-body open -->
-            <div load-spinner-load></div>
-            <!-- {{isNewProduct}} -->
-            <form name="form.addProductIntoQuote" novalidate>
-                <div class="row" style="" >
-                    <div class="col-md-6">
-                        <div class="row row-control" ng-if="productButtonStatus=='add'">
-                            <div class="col-md-4">
-                                <label class="sub-label">Search Product </label>     
-                            </div>
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
-                                    <input ng-disabled="productButtonStatus=='edit'" id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(search.selectedProduct)" style="padding: 6px 6px;" autofocus >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="col-md-6" ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null"> 
-                        <div class="row row-control">
-                            <div class="col-md-4"><label class="sub-label">Line Comment</label></div>
-                            <div class="col-md-8">
-                            <div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                           {{addProduct.lineComment}}
-                           <a href="#" class="close" ng-click="deleteLineComment()">&times;</a>
-                            </div>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
-                <div class="row" ng-if="!isNewProduct">
-                    <div class="col-md-6">
-                        <div class="row row-control">
-                            <div class="col-md-4">
-                                <label class="sub-label">Product Code</label>  <span class="asteric">*</span>   
-                            </div>
-                            <div class="col-md-8">
-                                <div class="inner-addon  right-addon">
-                                    <input type = 'text' name="itemCode" class = 'form-control' ng-model = 'addProduct.itemCode' required ng-disabled="true">
-                                    <span ng-show="((form.addProductIntoQuote.itemCode.$dirty && form.addProductIntoQuote.itemCode.$invalid) 
-                                    || (form.addProductIntoQuote.itemCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                                    <small>*Please select product code.</small>
-                                </span> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">UOM</label>  <span class="asteric">*</span>    
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class = 'form-control' name="unit" ng-model="addProduct.unit" ng-disabled="true" ng-required="isNewProduct">
-                            <span ng-show="((form.addProductIntoQuote.unit.$dirty && form.addProductIntoQuote.unit.$invalid) 
-                            || (form.addProductIntoQuote.unit.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                            <small ng-if="form.addProductIntoQuote.unit.$error.required">* please enter uom.</small>
-                        </span>
-                    </div>
-                </div>
-                <div class="row row-control">
-                    <div class="col-md-4">
-                        <label class="sub-label">Cost</label>  <span class="asteric">*</span>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" class = 'form-control' name="avgcost" ng-model="addProduct.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="!isNewProduct" required>
-                        <span ng-show="((form.addProductIntoQuote.avgcost.$dirty && form.addProductIntoQuote.avgcost.$invalid) 
-                        || (form.addProductIntoQuote.avgcost.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                        <small ng-if="form.addProductIntoQuote.avgcost.$error.required">* please enter cost.</small>
-                        <small ng-if="form.addProductIntoQuote.avgcost.$error.pattern">* please enter valid cost.</small>
-                    </span>             
-                </div>
-            </div>
-            <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
-                <div class="col-md-4">
-                    <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
-                </div>
-                <div class="col-md-8">
-                    <!-- {{customerQuote.competeQuote!='yes'}} -->
-                    <input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
-                    <!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
-                    <span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
-                    || (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                    <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
-                    <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
-                    <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
-                </span>
-            </div>
-        </div>
-        <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
-            <div class="col-md-4">
-                <label class="sub-label">Supplier Gp %</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
-            </div>
-        </div>
-        <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
-            <div class="col-md-4">
-                <label class="sub-label">Gp Required %</label>
-            </div>
-            <div class="col-md-8">
-                <input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
-                <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
-                || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                <small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
-            </span>
-        </div>
-    </div>
-    <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
-        <!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
-        <div class="col-md-4">
-            <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
-        </div>
-        <div class="col-md-8">
-            <input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" autocomplete="off" required>    
-            <span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
-            || (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
-        </span>
-        <span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
-    </div>
+</style>
+<script type="text/ng-template" id="addProductModal.html">
+<div class="modal-header">
+<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="closeAddProductModal()"><span aria-hidden="true">&times;</span></button> -->
+<h4 class="modal-title" id="myModalLabel" >
+<center>
+<span ng-if="productButtonStatus=='add'">Add Product</span>
+<span ng-if="productButtonStatus=='edit'">Edit Product</span>
+</center>
+</h4>
+<h5 class="modal-title" id="myModalLabel" ng-if="addProduct.isAlternate">
+<center><span style="color:#113654;">Alternative Product for : {{addProduct.alternateTo.itemCode}}</span></center>
+</h5>
+<div class="row">
+<div class="col-md-4">
+<span ng-show="isProductExist" style="color:red;">* Product already added in quote.</span>  
+</div>
+<div class="col-md-4"></div>
+<div class="col-md-4"></div>
+</div>
+</div>
+<div class="modal-body" id=""><!-- modal-body open -->
+<div load-spinner-load></div>
+<!-- {{isNewProduct}} -->
+<form name="form.addProductIntoQuote" novalidate>
+<div class="row" style="" >
+<div class="col-md-6">
+<div class="row row-control" ng-if="productButtonStatus=='add'">
+<div class="col-md-4">
+<label class="sub-label">Search Product </label>     
+</div>
+<div class="col-md-8">
+<div class="input-group">
+<span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
+<input ng-disabled="productButtonStatus=='edit'" id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(search.selectedProduct)" style="padding: 6px 6px;" autofocus >
+</div>
+</div>
+</div>
+</div>
+<!-- <div class="col-md-6" ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null"> 
+<div class="row row-control">
+<div class="col-md-4"><label class="sub-label">Line Comment</label></div>
+<div class="col-md-8">
+<div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
+<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+{{addProduct.lineComment}}
+<a href="#" class="close" ng-click="deleteLineComment()">&times;</a>
+</div>
+</div>
+</div>
+</div> -->
+</div>
+<div class="row" ng-if="!isNewProduct">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Product Code</label>  <span class="asteric">*</span>   
+</div>
+<div class="col-md-8">
+<div class="inner-addon  right-addon">
+<input type = 'text' name="itemCode" class = 'form-control' ng-model = 'addProduct.itemCode' required ng-disabled="true">
+<span ng-show="((form.addProductIntoQuote.itemCode.$dirty && form.addProductIntoQuote.itemCode.$invalid) 
+|| (form.addProductIntoQuote.itemCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small>*Please select product code.</small>
+</span> 
+</div>
+</div>
+</div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">UOM</label>  <span class="asteric">*</span>    
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="unit" ng-model="addProduct.unit" ng-disabled="true" ng-required="isNewProduct">
+<span ng-show="((form.addProductIntoQuote.unit.$dirty && form.addProductIntoQuote.unit.$invalid) 
+|| (form.addProductIntoQuote.unit.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.unit.$error.required">* please enter uom.</small>
+</span>
+</div>
+</div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Cost</label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="avgcost" ng-model="addProduct.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="!isNewProduct" required>
+<span ng-show="((form.addProductIntoQuote.avgcost.$dirty && form.addProductIntoQuote.avgcost.$invalid) 
+|| (form.addProductIntoQuote.avgcost.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.avgcost.$error.required">* please enter cost.</small>
+<small ng-if="form.addProductIntoQuote.avgcost.$error.pattern">* please enter valid cost.</small>
+</span>             
+</div>
+</div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
+<div class="col-md-4">
+<label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
+</div>
+<div class="col-md-8">
+<!-- {{customerQuote.competeQuote!='yes'}} -->
+<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
+<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
+<span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
+|| (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
+</span>
+</div>
+</div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
+<div class="col-md-4">
+<label class="sub-label">Supplier Gp %</label>
+</div>
+<div class="col-md-8">
+<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
+</div>
+</div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Gp Required %</label>
+</div>
+<div class="col-md-8">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
+|| (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+</span>
+</div>
+</div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
+<!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
+<div class="col-md-4">
+<label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" autocomplete="off" required>    
+<span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
+|| (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
+</span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+</div>
 </div>
 
 
 </div>
 <div class="col-md-6">
-    <!-- &&productButtonStatus=='edit' -->
-        <div class="row row-control" ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null">
-            <div class="col-md-4"><label class="sub-label">Line Comment</label></div>
-            <div class="col-md-8">
-            <div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-           {{addProduct.lineComment}}
-           <a href="#" class="close" aria-label="close" ng-click="deleteLineComment()">&times;</a>
-            </div>
-            </div>
-        </div>
-    <div class="row row-control">
-        <div class="col-md-4">
-            <label class="sub-label"><span>Product Name</span></label>  <span class="asteric">*</span>
-        </div>
-        <div class="col-md-8">
-            <input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'addProduct.itemDescription' ng-disabled="!isNewProduct" required>
-            <span ng-show="((form.addProductIntoQuote.itemDescription.$dirty && form.addProductIntoQuote.itemDescription.$invalid) 
-            || (form.addProductIntoQuote.itemDescription.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-show="form.addProductIntoQuote.itemDescription.$invalid">*please enter description.</small>
-        </span>
-    </div>
+<!-- &&productButtonStatus=='edit' -->
+<div class="row row-control" ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null">
+<div class="col-md-4"><label class="sub-label">Line Comment</label></div>
+<div class="col-md-8">
+<div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
+<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+{{addProduct.lineComment}}
+<a href="#" class="close" aria-label="close" ng-click="deleteLineComment()">&times;</a>
 </div>
-
-<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
-    <div class="col-md-4">
-        <label class="sub-label">Gp Required %</label>
-    </div>
-    <div class="col-md-8">
-        <input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled=" !addProduct.quotePrice>0 && !addProduct.avgcost>0">
-        <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
-        || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-        <small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
-    </span>
-</div>
-</div>
-<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
-    <div class="col-md-4">
-        <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
-    </div>
-    <div class="col-md-8">
-        <input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required>
-        <span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
-        || (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-        <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
-        <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
-    </span>
-    <span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 <div class="row row-control">
-    <div class="col-md-4">
-        <label class="sub-label">Quantity</label>  <span class="asteric">*</span>
-    </div>
-    <div class="col-md-8">
-        <input type="number" class = 'form-control' id="itemQty" name="itemQty" ng-model="addProduct.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required min="1" ng-change="standardProductQuantityChanged(addProduct.itemQty)">
-        <span ng-show="((form.addProductIntoQuote.itemQty.$dirty && form.addProductIntoQuote.itemQty.$invalid) 
-        || (form.addProductIntoQuote.itemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-        <small ng-show="form.addProductIntoQuote.itemQty.$invalid">*please enter quantity.</small>
-    </span>                 
+<div class="col-md-4">
+<label class="sub-label"><span>Product Name</span></label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'addProduct.itemDescription' ng-disabled="!isNewProduct" required>
+<span ng-show="((form.addProductIntoQuote.itemDescription.$dirty && form.addProductIntoQuote.itemDescription.$invalid) 
+|| (form.addProductIntoQuote.itemDescription.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.itemDescription.$invalid">*please enter description.</small>
+</span>
+</div>
+</div>
+
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Gp Required %</label>
+</div>
+<div class="col-md-8">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled=" !addProduct.quotePrice>0 && !addProduct.avgcost>0">
+<span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
+|| (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+</span>
+</div>
+</div>
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required>
+<span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
+|| (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
+</span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+</div>
+</div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Quantity</label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="number" class = 'form-control' id="itemQty" name="itemQty" ng-model="addProduct.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required min="1" ng-change="standardProductQuantityChanged(addProduct.itemQty)">
+<span ng-show="((form.addProductIntoQuote.itemQty.$dirty && form.addProductIntoQuote.itemQty.$invalid) 
+|| (form.addProductIntoQuote.itemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.itemQty.$invalid">*please enter quantity.</small>
+</span>                 
 </div>
 </div>  
 
 <div class="row row-control">
-    <div class="col-md-4" >
-    </div>
-    <div class="col-md-1" style="padding:0px;width: 5%;">
-        <input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()">
-    </div>
-    <div class="col-md-2" style="padding:0px;">
-        <label class="sub-label">Alternative</label>     
-    </div>
-    <div class="col-md-1" style="padding:0px;width: 3%;">
-        <input type="checkbox" class="form-control" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
-    </div>
-    <div class="col-md-2" style="padding:0px;">
-        <label class="sub-label">Comment</label>     
-    </div>
+<div class="col-md-4" >
+</div>
+<div class="col-md-1" style="padding:0px;width: 5%;">
+<input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()">
+</div>
+<div class="col-md-2" style="padding:0px;">
+<label class="sub-label">Alternative</label>     
+</div>
+<div class="col-md-1" style="padding:0px;width: 3%;">
+<input type="checkbox" class="form-control" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
+</div>
+<div class="col-md-2" style="padding:0px;">
+<label class="sub-label">Comment</label>     
+</div>
 </div>
 </div>
 </div> 
 <!-- If Product is New Starts-->
 <div class="row" ng-if="isNewProduct">
-    <div class="col-md-12" style="padding:0px;">
-         <div class="col-md-6">
-            <div class="row row-control">
-            <div class="col-md-4">
-            <label class="sub-label">Product Code</label>  <span class="asteric">*</span>   
-            </div>
-            <div class="col-md-8">
-            <input type = 'text' name="itemCode" class = 'form-control' ng-model = 'addProduct.itemCode' required ng-disabled="productButtonStatus=='edit' || isNewProduct">
-            <span ng-show="((form.addProductIntoQuote.itemCode.$dirty && form.addProductIntoQuote.itemCode.$invalid) 
-            || (form.addProductIntoQuote.itemCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small>*Please select product code.</small>
-            </span> 
-            </div>
-            </div>
+<div class="col-md-12" style="padding:0px;">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Product Code</label>  <span class="asteric">*</span>   
+</div>
+<div class="col-md-8">
+<input type = 'text' name="itemCode" class = 'form-control' ng-model = 'addProduct.itemCode' required ng-disabled="productButtonStatus=='edit' || isNewProduct">
+<span ng-show="((form.addProductIntoQuote.itemCode.$dirty && form.addProductIntoQuote.itemCode.$invalid) 
+|| (form.addProductIntoQuote.itemCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small>*Please select product code.</small>
+</span> 
+</div>
+</div>
 
-            <div class="row row-control">
-            <div class="col-md-4">
-                <label class="sub-label">UOM</label>  <span class="asteric">*</span>    
-            </div>
-            <div class="col-md-8">
-                <input type="text" class = 'form-control' name="unit" ng-model="addProduct.unit" ng-required="isNewProduct">
-                <span ng-show="((form.addProductIntoQuote.unit.$dirty && form.addProductIntoQuote.unit.$invalid) 
-                || (form.addProductIntoQuote.unit.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                <small ng-if="form.addProductIntoQuote.unit.$error.required">* please enter uom.</small>
-            </span>
-            </div>
-            </div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">UOM</label>  <span class="asteric">*</span>    
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="unit" ng-model="addProduct.unit" ng-required="isNewProduct">
+<span ng-show="((form.addProductIntoQuote.unit.$dirty && form.addProductIntoQuote.unit.$invalid) 
+|| (form.addProductIntoQuote.unit.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.unit.$error.required">* please enter uom.</small>
+</span>
+</div>
+</div>
 
-            <div class="row row-control">
-            <div class="col-md-4">
-            <label class="sub-label">Cost</label>  <span class="asteric">*</span>
-            </div>
-            <div class="col-md-8">
-            <input type="text" class = 'form-control' name="avgcost" ng-model="addProduct.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="!isNewProduct" required ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);">
-            <span ng-show="((form.addProductIntoQuote.avgcost.$dirty && form.addProductIntoQuote.avgcost.$invalid) 
-            || (form.addProductIntoQuote.avgcost.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.avgcost.$error.required">* please enter cost.</small>
-            <small ng-if="form.addProductIntoQuote.avgcost.$error.pattern">* please enter valid cost.</small>
-            </span>             
-            </div>
-            </div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Cost</label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="avgcost" ng-model="addProduct.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="!isNewProduct" required ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);">
+<span ng-show="((form.addProductIntoQuote.avgcost.$dirty && form.addProductIntoQuote.avgcost.$invalid) 
+|| (form.addProductIntoQuote.avgcost.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.avgcost.$error.required">* please enter cost.</small>
+<small ng-if="form.addProductIntoQuote.avgcost.$error.pattern">* please enter valid cost.</small>
+</span>             
+</div>
+</div>
 
-            <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
-            <div class="col-md-4">
-            <label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
-            </div>
-            <div class="col-md-8">
-            <!-- {{customerQuote.competeQuote!='yes'}} -->
-            <input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
-            <!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
-            <span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
-            || (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
-            <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
-            <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
-            </span>
-            </div>
-            </div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
+<div class="col-md-4">
+<label class="sub-label">Cur Customer Price</label> <span class="asteric" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">*</span>
+</div>
+<div class="col-md-8">
+<!-- {{customerQuote.competeQuote!='yes'}} -->
+<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
+<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
+<span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
+|| (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
+<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
+</span>
+</div>
+</div>
 
-            <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
-            <div class="col-md-4">
-            <label class="sub-label">Supplier Gp %</label>
-            </div>
-            <div class="col-md-8">
-            <input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
-            </div>
-            </div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
+<div class="col-md-4">
+<label class="sub-label">Supplier Gp %</label>
+</div>
+<div class="col-md-8">
+<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
+</div>
+</div>
 
-            <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
-            <div class="col-md-4">
-            <label class="sub-label">Gp Required %</label>
-            </div>
-            <div class="col-md-8">
-            <input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
-            <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
-            || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
-            </span>
-            </div>
-            </div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Gp Required %</label>
+</div>
+<div class="col-md-8">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
+|| (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+</span>
+</div>
+</div>
 
-            <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
-            <!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
-            <div class="col-md-4">
-            <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
-            </div>
-            <div class="col-md-8">
-            <input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required>    
-            <span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
-            || (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
-            </span>
-            <span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
-            </div>
-            </div>
-
-
-
-         </div>
-         <div class="col-md-6">
-            <div class="row row-control"ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null">
-                <div class="col-md-4"><label class="sub-label">Line Comment</label></div>
-                <div class="col-md-8">
-                <div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-               {{addProduct.lineComment}}
-               <a href="#" class="close" ng-click="deleteLineComment()">&times;</a>
-                </div>
-                </div>
-            </div>
-            <div class="row row-control">
-            <div class="col-md-4">
-                <label class="sub-label"><span>Product Name</span></label>  <span class="asteric">*</span>
-            </div>
-            <div class="col-md-8">
-                <input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'addProduct.itemDescription' ng-disabled="!isNewProduct" required>
-                <span ng-show="((form.addProductIntoQuote.itemDescription.$dirty && form.addProductIntoQuote.itemDescription.$invalid) 
-                || (form.addProductIntoQuote.itemDescription.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                <small ng-show="form.addProductIntoQuote.itemDescription.$invalid">*please enter description.</small>
-            </span>
-            </div>
-            </div>
-
-            <div class="row row-control">
-            <div class="col-md-4">
-            <label class="sub-label">Product Group</label>  <span class="asteric">*</span>
-            <!-- {{addProduct.productGroup}} -->
-            </div>
-            <div class="col-md-8">
-            <select type = 'text' name="productGroup"  class = 'form-control' ng-model = 'addProduct.productGroup' ng-options="productGroup as productGroup.code+'  ['+productGroup.value+']' for productGroup in productGroupList" required>
-                <option value="">Select Product Group</option>
-            </select>
-            <span ng-show="((form.addProductIntoQuote.productGroup.$dirty && form.addProductIntoQuote.productGroup.$invalid) 
-            || (form.addProductIntoQuote.productGroup.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-show="form.addProductIntoQuote.productGroup.$invalid">*please select product group.</small>
-            </span>
-            </div>
-            </div>
-
-            <div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
-            <div class="col-md-4">
-            <label class="sub-label">Gp Required %</label>
-            </div>
-            <div class="col-md-8">
-            <input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)">
-            <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
-            || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
-            </span>
-            </div>
-            </div>
-
-            <div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
-            <div class="col-md-4">
-            <label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
-            </div>
-            <div class="col-md-8">
-            <input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required> 
-            <span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
-            || (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
-            <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
-            </span>
-            <span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
-            </div>
-            </div>
-
-            <div class="row row-control">
-            <div class="col-md-4">
-            <label class="sub-label">Quantity</label>  <span class="asteric">*</span>
-            </div>
-            <div class="col-md-8">
-            <input type="number" class = 'form-control' name="itemQty" ng-model="addProduct.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required min="1" ng-change="standardProductQuantityChanged(addProduct.itemQty)">
-            <span ng-show="((form.addProductIntoQuote.itemQty.$dirty && form.addProductIntoQuote.itemQty.$invalid) 
-            || (form.addProductIntoQuote.itemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-            <small ng-show="form.addProductIntoQuote.itemQty.$invalid">*please enter quantity.</small>
-            </span>                 
-            </div>
-            </div>
-
-            <div class="row row-control">
-            <div class="col-md-3" style="width: 31%;">
-            </div>
-            <div class="col-md-1" style="width: 3%;">
-            <input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;" ng-init="addProduct.gstFlag=='NO'">
-            </div>
-            <div class="col-md-2" style="padding:0px;">
-            <label class="sub-label">GST Ex.</label>
-            <!-- GST Exempt -->
-            </div>
-            <div class="col-md-1" style="padding:0px;width: 3%;">
-            <input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()" >
-            </div>
-            <div class="col-md-2" style="padding:0px;">
-            <label class="sub-label">Alternative</label>     
-            </div>
-            <div class="col-md-1" style="padding:0px;width: 3%;">
-            <input type="checkbox" class="form-control" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
-            </div>
-            <div class="col-md-2" style="padding:0px;">
-            <label class="sub-label">Comment</label>     
-            </div>
-            <!-- <div class="col-md-2"></div> -->
-            </div>
+<div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
+<!-- customerQuote.competeQuote=='no' || addProduct.gstFlag=='No' -->
+<div class="col-md-4">
+<label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required>    
+<span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
+|| (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
+</span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+</div>
+</div>
 
 
 
-         </div>
-    </div>
+</div>
+<div class="col-md-6">
+<div class="row row-control"ng-if="addProduct.lineComment!=''&&addProduct.lineComment!=null">
+<div class="col-md-4"><label class="sub-label">Line Comment</label></div>
+<div class="col-md-8">
+<div class="alert alert-info" role="alert" style="padding: 5px; margin-bottom: 0px;">
+<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+{{addProduct.lineComment}}
+<a href="#" class="close" ng-click="deleteLineComment()">&times;</a>
+</div>
+</div>
+</div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label"><span>Product Name</span></label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type = 'text' name="itemDescription" class = 'form-control' ng-model = 'addProduct.itemDescription' ng-disabled="!isNewProduct" required>
+<span ng-show="((form.addProductIntoQuote.itemDescription.$dirty && form.addProductIntoQuote.itemDescription.$invalid) 
+|| (form.addProductIntoQuote.itemDescription.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.itemDescription.$invalid">*please enter description.</small>
+</span>
+</div>
+</div>
+
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Product Group</label>  <span class="asteric">*</span>
+<!-- {{addProduct.productGroup}} -->
+</div>
+<div class="col-md-8">
+<select type = 'text' name="productGroup"  class = 'form-control' ng-model = 'addProduct.productGroup' ng-options="productGroup as productGroup.code+'  ['+productGroup.value+']' for productGroup in productGroupList" required>
+<option value="">Select Product Group</option>
+</select>
+<span ng-show="((form.addProductIntoQuote.productGroup.$dirty && form.addProductIntoQuote.productGroup.$invalid) 
+|| (form.addProductIntoQuote.productGroup.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.productGroup.$invalid">*please select product group.</small>
+</span>
+</div>
+</div>
+
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Gp Required %</label>
+</div>
+<div class="col-md-8">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)">
+<span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
+|| (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+</span>
+</div>
+</div>
+
+<div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
+<div class="col-md-4">
+<label class="sub-label">Jaybel Price</label> <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" id="quotePrice"  class='form-control' name="quotePrice" ng-model="addProduct.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in priceArray | filter:$viewValue' typeahead-on-select="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" typeahead-min-length="0" ng-focus="quotePriceFocused()"  ng-change="validateSellingPrice();sellingPriceChanged(addProduct.quotePrice,addProduct.avgcost);" required> 
+<span ng-show="((form.addProductIntoQuote.quotePrice.$dirty && form.addProductIntoQuote.quotePrice.$invalid) 
+|| (form.addProductIntoQuote.quotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
+<small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
+</span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+</div>
+</div>
+
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Quantity</label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="number" class = 'form-control' name="itemQty" ng-model="addProduct.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required min="1" ng-change="standardProductQuantityChanged(addProduct.itemQty)">
+<span ng-show="((form.addProductIntoQuote.itemQty.$dirty && form.addProductIntoQuote.itemQty.$invalid) 
+|| (form.addProductIntoQuote.itemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.itemQty.$invalid">*please enter quantity.</small>
+</span>                 
+</div>
+</div>
+
+<div class="row row-control">
+<div class="col-md-3" style="width: 31%;">
+</div>
+<div class="col-md-1" style="width: 3%;">
+<input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;" ng-init="addProduct.gstFlag=='NO'">
+</div>
+<div class="col-md-2" style="padding:0px;">
+<label class="sub-label">GST Ex.</label>
+<!-- GST Exempt -->
+</div>
+<div class="col-md-1" style="padding:0px;width: 3%;">
+<input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()" >
+</div>
+<div class="col-md-2" style="padding:0px;">
+<label class="sub-label">Alternative</label>     
+</div>
+<div class="col-md-1" style="padding:0px;width: 3%;">
+<input type="checkbox" class="form-control" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
+</div>
+<div class="col-md-2" style="padding:0px;">
+<label class="sub-label">Comment</label>     
+</div>
+<!-- <div class="col-md-2"></div> -->
+</div>
+
+
+
+</div>
+</div>
 
 
 </div> 
@@ -544,166 +544,166 @@
 
 <!-- Alternative Product Info view starts> -->
 <div ng-if="addProduct.isLinkedExact">
-    <fieldset>
-        <legend><label class="label label-default sub-label" style="color:#fff;">Alternative Product Info</label></legend>
-        <div class="row" style="margin-bottom: 1%;">
-            <div class="col-md-6">
-                <div class="row row-control">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-8">
-                        <div class="col-md-4" style="padding: 0px;">
-                            <input type="radio" ng-model="select.type" value="search" ng-click="changeSelectType(select.type)"> Search      
-                        </div>
-                        <div class="col-md-6" style="padding: 0px;">
-                            <input type="radio" ng-model="select.type" value="select" ng-click="changeSelectType(select.type)"> Select from dropdown
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>    
-        <form name="form.addProductIntoQuote.alternativeProductForm" novalidate>    
-            <div ng-hide="addProduct.alternativeProductList==null && select.type=='select'">
-                <div class="row" >
-                    <div class="col-md-6" ng-if="select.type=='search'">
-                        <div class="row row-control">
-                            <div class="col-md-4">
-                                <label class="sub-label">Search Alt Product</label>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
-                                    <input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedAltProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="altProductCodeChanged(search.selectedAltProduct)" style="height: 30px;padding: 6px 6px;" autofocus>
-                                </div>
-                                <span ng-if="!isAltValid" class="invalid-control">
-                                    <small>*alternative can not be same as standard</small>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6" ng-if="addProduct.alternativeProductList.length>0 && select.type=='select'" >
-                        <div class="row row-control">
-                            <div class="col-md-4">
-                                <label class="sub-label">Select Alt Product</label>
-                            </div>
-                            <div class="col-md-8">
-                                <select type = 'text' name="alternateProduct"  class = 'form-control' ng-model = 'addProduct.selectedAlternativeProduct' ng-options="altProduct as altProduct.itemCode+'  ['+altProduct.itemDescription+']' for altProduct in alternativeProductList"  ng-change="alternativeProductSelected(addProduct.selectedAlternativeProduct)" >
-                                    <!-- ng-required="addProduct.isLinkedExact" -->
-                                    <option value="">Select Alternative Product</option>
-                                </select> 
-                                <span ng-show="((form.addProductIntoQuote.altProductCode.$dirty && form.addProductIntoQuote.altProductCode.$invalid) 
-                                || (form.addProductIntoQuote.altProductCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                                <small ng-show="form.addProductIntoQuote.altProductCode.$invalid">*please select alternative product.</small>
-                            </span>  
-                        </div>
-                    </div>
-                </div>
+<fieldset>
+<legend><label class="label label-default sub-label" style="color:#fff;">Alternative Product Info</label></legend>
+<div class="row" style="margin-bottom: 1%;">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4"></div>
+<div class="col-md-8">
+<div class="col-md-4" style="padding: 0px;">
+<input type="radio" ng-model="select.type" value="search" ng-click="changeSelectType(select.type)"> Search      
+</div>
+<div class="col-md-6" style="padding: 0px;">
+<input type="radio" ng-model="select.type" value="select" ng-click="changeSelectType(select.type)"> Select from dropdown
+</div>
+</div>
+</div>
+</div>
+</div>    
+<form name="form.addProductIntoQuote.alternativeProductForm" novalidate>    
+<div ng-hide="addProduct.alternativeProductList==null && select.type=='select'">
+<div class="row" >
+<div class="col-md-6" ng-if="select.type=='search'">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Search Alt Product</label>
+</div>
+<div class="col-md-8">
+<div class="input-group">
+<span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
+<input id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedAltProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="altProductCodeChanged(search.selectedAltProduct)" style="height: 30px;padding: 6px 6px;" autofocus>
+</div>
+<span ng-if="!isAltValid" class="invalid-control">
+<small>*alternative can not be same as standard</small>
+</span>
+</div>
+</div>
+</div>
+<div class="col-md-6" ng-if="addProduct.alternativeProductList.length>0 && select.type=='select'" >
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Select Alt Product</label>
+</div>
+<div class="col-md-8">
+<select type = 'text' name="alternateProduct"  class = 'form-control' ng-model = 'addProduct.selectedAlternativeProduct' ng-options="altProduct as altProduct.itemCode+'  ['+altProduct.itemDescription+']' for altProduct in alternativeProductList"  ng-change="alternativeProductSelected(addProduct.selectedAlternativeProduct)" >
+<!-- ng-required="addProduct.isLinkedExact" -->
+<option value="">Select Alternative Product</option>
+</select> 
+<span ng-show="((form.addProductIntoQuote.altProductCode.$dirty && form.addProductIntoQuote.altProductCode.$invalid) 
+|| (form.addProductIntoQuote.altProductCode.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.altProductCode.$invalid">*please select alternative product.</small>
+</span>  
+</div>
+</div>
+</div>
 
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">Alt Product Code</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class = 'form-control' name="altProductCode" ng-model="addProduct.altProd.itemCode" ng-disabled="true" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">Alt Product Name</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class = 'form-control' name="altProductName" ng-model="addProduct.altProd.itemDescription" ng-disabled="true" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">Alt UOM</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class = 'form-control' name="altProductUnit" ng-model="addProduct.altProd.unit" ng-disabled="true" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">Alt Cost</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class = 'form-control' name="altProductAvgCost" ng-model="addProduct.altProd.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="true" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="row row-control">
-                        <div class="col-md-4">
-                            <label class="sub-label">Alt Gp Required %</label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote.toLowerCase()=='no'">
-                            <span ng-show="((form.addProductIntoQuote.altGpRequired.$dirty && form.addProductIntoQuote.altGpRequired.$invalid) 
-                            || (form.addProductIntoQuote.altGpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                            <small ng-if="form.addProductIntoQuote.altGpRequired.$error.min || form.addProductIntoQuote.altGpRequired.$error.max">*gpRequired should be in range 0-100.</small>
-                        </span>
-                    </div>
-                </div>
-                <div class="row row-control">
-                    <div class="col-md-4">
-                        <label class="sub-label">Alt Jaybel Price</label> <span class="asteric">*</span>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact">   
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Product Code</label>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="altProductCode" ng-model="addProduct.altProd.itemCode" ng-disabled="true" required>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Product Name</label>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="altProductName" ng-model="addProduct.altProd.itemDescription" ng-disabled="true" required>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt UOM</label>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="altProductUnit" ng-model="addProduct.altProd.unit" ng-disabled="true" required>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Cost</label>
+</div>
+<div class="col-md-8">
+<input type="text" class = 'form-control' name="altProductAvgCost" ng-model="addProduct.altProd.avgcost" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-disabled="true" required>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Gp Required %</label>
+</div>
+<div class="col-md-8">
+<input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote.toLowerCase()=='no'">
+<span ng-show="((form.addProductIntoQuote.altGpRequired.$dirty && form.addProductIntoQuote.altGpRequired.$invalid) 
+|| (form.addProductIntoQuote.altGpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.altGpRequired.$error.min || form.addProductIntoQuote.altGpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+</span>
+</div>
+</div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Jaybel Price</label> <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact">   
 
-                        <span ng-show="((form.addProductIntoQuote.altProductQuotePrice.$dirty && form.addProductIntoQuote.altProductQuotePrice.$invalid) 
-                        || (form.addProductIntoQuote.altProductQuotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                        <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.required">* please enter alt price.</small>
-                         <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* please enter valid price.</small>
-                    </span>
-                    <span class="invalid-control">
-                        <small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* alt price should be greater than or equal to alt cost.</small>
-                    </span> 
+<span ng-show="((form.addProductIntoQuote.altProductQuotePrice.$dirty && form.addProductIntoQuote.altProductQuotePrice.$invalid) 
+|| (form.addProductIntoQuote.altProductQuotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.required">* please enter alt price.</small>
+<small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* please enter valid price.</small>
+</span>
+<span class="invalid-control">
+<small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* alt price should be greater than or equal to alt cost.</small>
+</span> 
 
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="row row-control">
-                <div class="col-md-4">
-                    <label class="sub-label">Alt Quantity</label>  <span class="asteric">*</span>
-                </div>
-                <div class="col-md-8">
-                    <input type="number" class = 'form-control' name="altProductItemQty" ng-model="addProduct.altProd.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.isLinkedExact" min="1">
-                    <span ng-show="((form.addProductIntoQuote.altProductItemQty.$dirty && form.addProductIntoQuote.altProductItemQty.$invalid) 
-                    || (form.addProductIntoQuote.altProductItemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-                    <small ng-show="form.addProductIntoQuote.altProductItemQty.$invalid">*please select alt product quantity.</small>
-                </span>  
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
+<div class="col-md-6">
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Quantity</label>  <span class="asteric">*</span>
+</div>
+<div class="col-md-8">
+<input type="number" class = 'form-control' name="altProductItemQty" ng-model="addProduct.altProd.itemQty" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.isLinkedExact" min="1">
+<span ng-show="((form.addProductIntoQuote.altProductItemQty.$dirty && form.addProductIntoQuote.altProductItemQty.$invalid) 
+|| (form.addProductIntoQuote.altProductItemQty.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
+<small ng-show="form.addProductIntoQuote.altProductItemQty.$invalid">*please select alt product quantity.</small>
+</span>  
+</div>
+</div>
+</div>
 </div>
 </div>
 <div ng-show="addProduct.alternativeProductList==null && select.type=='select'">
-    <div class="col-md-12">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-            <div class="alert-warning" role="alert" style="padding: 15px;">
-                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                <span class="sr-only">Warning:</span>
-                No alternatives added Please select "Search" radio.
-            </div>
-        </div>
-        <div class="col-md-3"></div> 
-    </div>   
+<div class="col-md-12">
+<div class="col-md-3"></div>
+<div class="col-md-6">
+<div class="alert-warning" role="alert" style="padding: 15px;">
+<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+<span class="sr-only">Warning:</span>
+No alternatives added Please select "Search" radio.
+</div>
+</div>
+<div class="col-md-3"></div> 
+</div>   
 </div>
 </form>
 </fieldset>
@@ -712,231 +712,240 @@
 </form>
 <br>
 <div id="productInfo" class="row row-control" ng-if="productInfo && !addProduct.isLinkedExact">
-    <div class="col-md-12">
-        <div class="col-md-12">
-            <div class="col-md-5" style="padding:0px;">
-                <fieldset>
-                    <legend><label class="label label-default sub-label" style="color:#fff;">Product Information</label></legend>
-                    <div class="row" id="productDesc">
-                        <!-- <div class="col-md-12"> -->
-                        <div class="col-md-4">
-                            <label>Product Code :</label><br>
-                            <label>Product Name :</label><br>
-                            <label>Description2 :</label><br>
-                            <label>Description3 :</label><br>
-                            <label>Unit : </label><br>
-                            <label>GST Y/N : </label><br>
-                        </div>
-                        <div class="col-md-8">
-                            <p ng-bind="productInfo.itemCode"></p>
-                            <p ng-bind="productInfo.itemDescription"></p>
-                            <p>
-                                <span ng-bind="productInfo.description2" ng-if="productInfo.description2!=null"></span>
-                                <span ng-if="productInfo.description2==null">-</span>
-                            </p>
-                            <p>
-                                <span ng-bind="productInfo.description3" ng-if="productInfo.description3!=null"></span>
-                                <span ng-if="productInfo.description3==null">-</span>
-                            </p>
-                            <p ng-bind="productInfo.unit"></p>
-                            <p ng-bind="productInfo.gstFlag"></p>
-                        </div>
-                        <!-- </div> -->
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-md-5" style="padding:0px;">
-                <fieldset>
-                    <legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
-                    <div class="row">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-5">
-                            <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price0exGST"></span> <br>
-                            <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price1exGST"></span> <br>
-                            <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price2exGST"></span> <br>
-                            <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price3exGST"></span> <br>
-                            <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price4exGST"></span> <br>
-                            <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
-                        </div>
-                        <div class="col-md-5">
-                            <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
-                            <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak1"></span> <br>
-                            <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak2"></span> <br>
-                            <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak3"></span> <br>
-                            <label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak4"></span> <br>
-                        </div> 
-                        <div class="col-md-1"></div>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="col-md-2" style="padding:0px;position:relative;">
-                <fieldset>
-                    <legend><label class="label label-default sub-label" style="color:#fff;">Product Savings</label></legend>
-                    <!-- <span style="font-weight: 700;font-size: 20px;position: absolute;margin: 30% 26%;color: #337ab7;text-align: center;">{{productSavings()}} %</span> -->
+<div class="col-md-12">
+<div class="col-md-12">
+<div class="col-md-5" style="padding:0px;">
+<fieldset>
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Information</label></legend>
+<div class="row" id="productDesc">
+<!-- <div class="col-md-12"> -->
+<div class="col-md-4">
+<label>Product Code :</label><br>
+<label>Product Name :</label><br>
+<label>Description2 :</label><br>
+<label>Description3 :</label><br>
+<label>Unit : </label><br>
+<label>GST Y/N : </label><br>
+</div>
+<div class="col-md-8">
+<p ng-bind="productInfo.itemCode"></p>
+<p ng-bind="productInfo.itemDescription"></p>
+<p>
+<span ng-bind="productInfo.description2" ng-if="productInfo.description2!=null"></span>
+<span ng-if="productInfo.description2==null">-</span>
+</p>
+<p>
+<span ng-bind="productInfo.description3" ng-if="productInfo.description3!=null"></span>
+<span ng-if="productInfo.description3==null">-</span>
+</p>
+<p ng-bind="productInfo.unit"></p>
+<p ng-bind="productInfo.gstFlag"></p>
+</div>
+<!-- </div> -->
+</div>
+</fieldset>
+</div>
+<div class="col-md-5" style="padding:0px;">
+<fieldset>
+<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
+<div class="row">
+<div class="col-md-1"></div>
+<div class="col-md-5">
+<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price0exGST"></span> <br>
+<label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price1exGST"></span> <br>
+<label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price2exGST"></span> <br>
+<label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price3exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price4exGST"></span> <br>
+<label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
+</div>
+<div class="col-md-5">
+<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
+<label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak1"></span> <br>
+<label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak2"></span> <br>
+<label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak3"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak4"></span> <br>
+</div> 
+<div class="col-md-1"></div>
+</div>
+</fieldset>
+</div>
+<div class="col-md-2" style="padding:0px;position:relative;">
+<fieldset>
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings 1</label></legend>
+<!-- <span style="font-weight: 700;font-size: 20px;position: absolute;margin: 30% 26%;color: #337ab7;text-align: center;">{{productSavings()}} %</span> -->
 
-                    <div id="bigCircle" ng-hide="productSavings()<=0">
-                        <div class="progress-wrapper">
-                            <div class="progress1 ng-cloak" ng-style="getStyle()" >{{productSavings()}} <span style="font-size:15px;">%</span></div>
-                            <round-progress max="100" current="productSavings()" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
-                            rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
-                            animation-delay="0">
-                        </round-progress>
-                    </div>
-                </div>
-                <div id="bigCircle" ng-if="productSavings()<=0">
-                    <div class="progress-wrapper">
-                        <div class="progress1 ng-cloak" ng-style="getStyle()"  style="color:#ed143d;">{{productSavings()}} <span style="font-size:15px;">%</span></div>
-                        <round-progress max="100" current="productSavingsNegative()" color="#ed143d" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
-                        rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
-                        animation-delay="0">
-                    </round-progress>
-                </div>
-            </div>
-        </fieldset>
-    </div>
+<div id="bigCircle" ng-hide="productSavings()<=0">
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()" >{{productSavings()}} <span style="font-size:15px;">%</span></div>
+<round-progress max="100" current="productSavings()" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div>
+<div id="bigCircle" ng-if="productSavings()<=0">
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()"  style="color:#ed143d;">{{productSavings()}} <span style="font-size:15px;">%</span></div>
+<round-progress max="100" current="productSavingsNegative()" color="#ed143d" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div>
+</fieldset>
+</div>
 </div> 
 </div>  
 </div>
 
 <div class="row row-control" id="productInfo" ng-if="!productInfo && !addProduct.isLinkedExact">
-    <div class="col-md-12">
-        <div class="col-md-5" style="padding:0px;">
-            <fieldset style="padding: 68px 15px;">
-                <legend><label class="label label-default sub-label" style="color:#fff;">Product Information</label></legend>
-                <p class="para"><center>No data available</center></p>
-            </fieldset>
-        </div>
-        <div class="col-md-5" style="padding:0px;">
-            <fieldset style="padding: 68px 15px;">
-                <legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
-                <p class="para"><center>No data available</center></p>
-            </fieldset>
-        </div>
-        <div class="col-md-2" style="padding:0px;">
-            <fieldset >
-                <legend><label class="label label-default sub-label" style="color:#fff;">Product Savings</label></legend>            
-                <!-- <p class="para"><center>No data available</center></p> -->
-                <div id="bigCircle">
-                    <div class="progress-wrapper">
-                        <div class="progress1 ng-cloak" ng-style="getStyle()">{{productSavings()}} <span style="font-size:15px;">%</span></div>
-                        <round-progress max="100" current="productSavings()" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
-                        rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
-                        animation-delay="0">
-                    </round-progress>
-                </div>
-            </div>
-        </fieldset>
-    </div>
+<div class="col-md-12">
+<div class="col-md-5" style="padding:0px;">
+<fieldset style="padding: 68px 15px;">
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Information</label></legend>
+<p class="para"><center>No data available</center></p>
+</fieldset>
+</div>
+<div class="col-md-5" style="padding:0px;">
+<fieldset style="padding: 68px 15px;">
+<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
+<p class="para"><center>No data available</center></p>
+</fieldset>
+</div>
+<div class="col-md-2" style="padding:0px;">
+<fieldset >
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings 2</label></legend>            
+<!-- <p class="para"><center>No data available</center></p> -->
+<div id="bigCircle" ng-hide="productSavings()<=0">
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()">{{productSavings()}} <span style="font-size:15px;">%</span></div>
+<round-progress max="100" current="productSavings()" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div>
+<div id="bigCircle" ng-if="productSavings()<=0">
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()"  style="color:#ed143d;">{{productSavings()}} <span style="font-size:15px;">%</span></div>
+<round-progress max="100" current="productSavingsNegative()" color="#ed143d" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div>
+</fieldset>
+</div>
 </div>   
 </div> 
 <div class="row row-control" ng-if="addProduct.isLinkedExact" >
-    <div class="col-md-6" style="padding:0px;padding-left: 15px;">
-        <fieldset style="padding: 15px 15px;" id="productInfo" ng-if="addProduct">
-            <legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Main Product Info</label></legend>
-            <div class="col-md-6" style="padding: 0px;padding-right: 5px;">
-                <div class="col-md-12" style="padding: 0px;">
-                    <label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemCode"></span><br>
-                    <label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemDescription"></span><br>
-                    <label>Desc2 :</label> 
-                    <span>
-                        <span style=" word-break: break-all;" ng-bind="addProduct.description2" ng-if="addProduct.description2!=null"></span>
-                        <span ng-if="addProduct.description2==null">-</span>
-                    </span><br>
-                    <label>Desc3 :</label>
-                    <span>
-                        <span style=" word-break: break-all;" ng-bind="addProduct.description3" ng-if="addProduct.description3!=null"></span>
-                        <span ng-if="addProduct.description3==null">-</span>
-                    </span> <br>
-                    <label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.unit"></span><br>
-                    <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.gstFlag"></span><br>
-                </div> 
-                <div class="col-md-12" style="padding: 0px;">
-                    <label style="color:#337ab7;">Product Savings</label>
-                    <uib-progressbar class="progress-striped active" value="getSavingStyle()" type="info" max="110" ng-hide="productSavings()<=0">
-                    <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
-                </uib-progressbar>
-                <uib-progressbar class="progress-striped active" value="productSavingsNegativeForProgress()" type="danger" max="110" ng-if="productSavings()<=0">
-                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
-            </uib-progressbar>
-            <!-- {{productSavingsNegativeForProgress()}} -->
-        </div>           
-    </div>
-    <div class="col-md-6" style="padding: 0px;">
-        <div class="col-md-12" style="padding: 0px;">
-            <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-                <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
-                <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price1exGST"></span> <br>
-                <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price2exGST"></span> <br>
-                <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price3exGST"></span> <br>
-                <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br>
-                <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
-            </div>
-            <div class="col-md-6" style="padding:0px;">
-                <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
-                <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak1"></span> <br>
-                <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak2"></span> <br>
-                <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak3"></span> <br>
-                <label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br>
-            </div> 
-        </div>   
+<div class="col-md-6" style="padding:0px;padding-left: 15px;">
+<fieldset style="padding: 15px 15px;" id="productInfo" ng-if="addProduct">
+<legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Main Product Info</label></legend>
+<div class="col-md-6" style="padding: 0px;padding-right: 5px;">
+<div class="col-md-12" style="padding: 0px;">
+<label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemCode"></span><br>
+<label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.itemDescription"></span><br>
+<label>Desc2 :</label> 
+<span>
+<span style=" word-break: break-all;" ng-bind="addProduct.description2" ng-if="addProduct.description2!=null"></span>
+<span ng-if="addProduct.description2==null">-</span>
+</span><br>
+<label>Desc3 :</label>
+<span>
+<span style=" word-break: break-all;" ng-bind="addProduct.description3" ng-if="addProduct.description3!=null"></span>
+<span ng-if="addProduct.description3==null">-</span>
+</span> <br>
+<label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.unit"></span><br>
+<label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.gstFlag"></span><br>
+</div> 
+<div class="col-md-12" style="padding: 0px;">
+<label style="color:#337ab7;">Product Savings</label>
+<uib-progressbar class="progress-striped active" value="getSavingStyle()" type="info" max="110" ng-hide="productSavings()<=0">
+<span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
+</uib-progressbar>
+<uib-progressbar class="progress-striped active" value="productSavingsNegativeForProgress()" type="danger" max="110" ng-if="productSavings()<=0">
+<span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{productSavings()}} %</span>
+</uib-progressbar>
+<!-- {{productSavingsNegativeForProgress()}} -->
+</div>           
+</div>
+<div class="col-md-6" style="padding: 0px;">
+<div class="col-md-12" style="padding: 0px;">
+<div class="col-md-6" style="padding:0px;padding-right: 5px; ">
+<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
+<label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price1exGST"></span> <br>
+<label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price2exGST"></span> <br>
+<label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price3exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br>
+<label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
+</div>
+<div class="col-md-6" style="padding:0px;">
+<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
+<label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak1"></span> <br>
+<label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak2"></span> <br>
+<label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak3"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br>
+</div> 
+</div>   
 
-    </div>
+</div>
 
 </fieldset>
-    <!--  <fieldset style="padding: 68px 15px;" id="productInfo" ng-if="!productInfo">
-    <legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Main Product Info</label></legend>
-    <p class="para"><center>No data available</center></p>
+<!--  <fieldset style="padding: 68px 15px;" id="productInfo" ng-if="!productInfo">
+<legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Main Product Info</label></legend>
+<p class="para"><center>No data available</center></p>
 </fieldset> -->
 </div>
 <div class="col-md-6" style="padding:0px;padding-right: 15px;">
-    <fieldset style="padding: 15px 15px;" id="altProductInfo" ng-if="addProduct.altProd">
-        <legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Alt Product Info</label></legend>
-        <div class="col-md-6" style="padding: 0px;padding-right: 5px;">
-            <div class="col-md-12" style="padding: 0px;">
-                <label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemCode"></span><br>
-                <label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemDescription"></span><br>
-                <label>Desc2 :</label> 
-                <span>
-                    <span style=" word-break: break-all;" ng-bind="addProduct.altProd.description2" ng-if="addProduct.altProd.description2!=null"></span>
-                    <span ng-if="addProduct.altProd.description2==null">-</span>
-                </span><br>
-                <label>Desc3 :</label>
-                <span>
-                    <span style=" word-break: break-all;" ng-bind="addProduct.altProd.description3" ng-if="addProduct.altProd.description3!=null"></span>
-                    <span ng-if="addProduct.altProd.description3==null">-</span>
-                </span> <br>
-                <label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.unit"></span><br>
-                <label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.gstFlag"></span><br>   
-            </div> 
-            <div class="col-md-12" style="padding: 0px;">
-                <label style="color:#337ab7;">Alt Product Savings</label>
-                <uib-progressbar class="progress-striped active" value="getAltSavingStyle()" type="info" max="110" ng-hide="altProductSavings()<=0">
-                <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
-            </uib-progressbar>
-            <uib-progressbar class="progress-striped active" value="getNegativeAltSavingStyle()" type="danger" max="110" ng-if="altProductSavings()<=0">
-            <span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
-        </uib-progressbar>
-        <!-- {{getNegativeAltSavingStyle()}} -->
-    </div>        
+<fieldset style="padding: 15px 15px;" id="altProductInfo" ng-if="addProduct.altProd">
+<legend style="margin-bottom: 0px;"><label class="label label-default sub-label" style="color:#fff;">Alt Product Info</label></legend>
+<div class="col-md-6" style="padding: 0px;padding-right: 5px;">
+<div class="col-md-12" style="padding: 0px;">
+<label>Code :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemCode"></span><br>
+<label>Name :</label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.itemDescription"></span><br>
+<label>Desc2 :</label> 
+<span>
+<span style=" word-break: break-all;" ng-bind="addProduct.altProd.description2" ng-if="addProduct.altProd.description2!=null"></span>
+<span ng-if="addProduct.altProd.description2==null">-</span>
+</span><br>
+<label>Desc3 :</label>
+<span>
+<span style=" word-break: break-all;" ng-bind="addProduct.altProd.description3" ng-if="addProduct.altProd.description3!=null"></span>
+<span ng-if="addProduct.altProd.description3==null">-</span>
+</span> <br>
+<label>Unit : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.unit"></span><br>
+<label>GST Y/N : </label> <span style=" word-break: break-all;" ng-bind="addProduct.altProd.gstFlag"></span><br>   
+</div> 
+<div class="col-md-12" style="padding: 0px;">
+<label style="color:#337ab7;">Alt Product Savings</label>
+<uib-progressbar class="progress-striped active" value="getAltSavingStyle()" type="info" max="110" ng-hide="altProductSavings()<=0">
+<span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
+</uib-progressbar>
+<uib-progressbar class="progress-striped active" value="getNegativeAltSavingStyle()" type="danger" max="110" ng-if="altProductSavings()<=0">
+<span style="font-size: 15px;font-weight: bold;margin-bottom: 0px;margin-top: 5px;">{{altProductSavings()}} %</span>
+</uib-progressbar>
+<!-- {{getNegativeAltSavingStyle()}} -->
+</div>        
 </div>
 <div class="col-md-6" style="padding: 0px;">
-    <div class="col-md-12" style="padding: 0px;">
-        <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-            <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
-            <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price1exGST"></span> <br>
-            <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price2exGST"></span> <br>
-            <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price3exGST"></span> <br>
-            <label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br>
-            <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.promoPrice"></span> <br>
-        </div>
-        <div class="col-md-6" style="padding:0px;">
-            <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
-            <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak1"></span> <br>
-            <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak2"></span> <br>
-            <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak3"></span> <br>
-            <label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br>
-        </div> 
-    </div>   
+<div class="col-md-12" style="padding: 0px;">
+<div class="col-md-6" style="padding:0px;padding-right: 5px; ">
+<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
+<label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price1exGST"></span> <br>
+<label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price2exGST"></span> <br>
+<label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price3exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br>
+<label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.promoPrice"></span> <br>
+</div>
+<div class="col-md-6" style="padding:0px;">
+<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
+<label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak1"></span> <br>
+<label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak2"></span> <br>
+<label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak3"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br>
+</div> 
+</div>   
 
 </div>
 
@@ -947,21 +956,21 @@
 </div>
 </div><!-- modal-body closed -->
 <div class="modal-footer">
-    <div class="col-md-6">
-        <span style="color: blue;float: left;" ng-if="customerQuote.productList">Total Products : {{addedProductCount}}</span>
-    </div>
-    <div class="col-md-2" style="width:18%;">
-        <!-- {{addAnotherProduct}} -->
-        <!-- <input type="checkbox" name="addProduct" ng-model="addMore.addAnotherProduct"> <label class="sub-label"> Add another </label> -->
-        <button ng-hide="productButtonStatus=='edit'" type="button" class="btn btn-block btn-primary" ng-click="addNextProduct()" tooltip-placement="top" uib-tooltip="Click to add next product into quote. [ctrl+shift+z]">
-            <i class="fa fa-plus" aria-hidden="true"></i> Add Next Product <br></button>
-        </div>
-        <div class="col-md-2" style="width:18%;">
-            <button type="button" class="btn btn-block btn-primary" ng-click="saveAndClose()" uib-tooltip="Click to save & close product. [ctrl+shift+s]" tooltip-placement="top">
-                <i class="fa fa-floppy-o" aria-hidden="true"></i> Save & Close <br></button>        
-            </div>
-            <div class="col-md-2" style="width:14%;">
-                <button type="button" class="btn btn-block btn-default " data-dismiss="modal" aria-label="Close" ng-click="closeModal()"  uib-tooltip="Click to close. [ctrl+shift+a]" tooltip-placement="top">Close</button>
-            </div>
-        </div>
-    </script>
+<div class="col-md-6">
+<span style="color: blue;float: left;" ng-if="customerQuote.productList">Total Products : {{addedProductCount}}</span>
+</div>
+<div class="col-md-2" style="width:18%;">
+<!-- {{addAnotherProduct}} -->
+<!-- <input type="checkbox" name="addProduct" ng-model="addMore.addAnotherProduct"> <label class="sub-label"> Add another </label> -->
+<button ng-hide="productButtonStatus=='edit'" type="button" class="btn btn-block btn-primary" ng-click="addNextProduct()" tooltip-placement="top" uib-tooltip="Click to add next product. [ctrl+shift+z]">
+<i class="fa fa-plus" aria-hidden="true"></i> Add Next Product <br></button>
+</div>
+<div class="col-md-2" style="width:18%;">
+<button type="button" class="btn btn-block btn-primary" ng-click="saveAndClose()" uib-tooltip="Click to save & close product. [ctrl+shift+s]" tooltip-placement="top">
+<i class="fa fa-floppy-o" aria-hidden="true"></i> Save & Close <br></button>        
+</div>
+<div class="col-md-2" style="width:14%;">
+<button type="button" class="btn btn-block btn-default " data-dismiss="modal" aria-label="Close" ng-click="closeModal()"  uib-tooltip="Click to close. [ctrl+shift+a]" tooltip-placement="top">Close</button>
+</div>
+</div>
+</script>

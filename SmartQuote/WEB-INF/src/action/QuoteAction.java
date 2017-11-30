@@ -393,8 +393,15 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		System.out.println("CurrentSupplierId"+objQuoteBean.getCurrentSupplierId());
 		if (objQuoteBean.getCurrentSupplierId() == 0) {
-			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
-			objQuoteBean.setCurrentSupplierId(supplierId);
+			System.out.println("SaveCurrentSupplier :>>");
+			System.out.println(objQuoteBean.getCurrentSupplierId());
+			System.out.println(objQuoteBean.getCurrentSupplierName().isEmpty());
+			if (!objQuoteBean.getCurrentSupplierName().isEmpty()) {
+				supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
+				objQuoteBean.setCurrentSupplierId(supplierId);	
+			}
+//			supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
+//			objQuoteBean.setCurrentSupplierId(supplierId);
 		}
 //		if (objQuoteBean.getSalesPersonId() == 0) {
 //			salesPersonId = objQuoteDao.saveSalesPerson(objQuoteBean.getSalesPerson());

@@ -139,18 +139,18 @@
 	<title>
 		<band height="60">
 			<staticText>
-				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="15" width="57" height="15"/>
+				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="15" width="66" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="30" width="57" height="15"/>
+				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="30" width="66" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Quote Attn]]></text>
+				<text><![CDATA[Proposal Attn]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="b301e16c-ba72-4547-9f44-a1c6f92e1232" x="639" y="15" width="56" height="15"/>
@@ -174,28 +174,28 @@
 				<text><![CDATA[Dedicated Account Manager ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="63" y="15" width="392" height="15"/>
+				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="72" y="15" width="392" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": "+$P{pdfMasterBean}.getProposalFor()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="45" width="57" height="15"/>
+				<reportElement uuid="3bf448c4-456d-4829-8433-3b3bccca8eb0" x="5" y="45" width="66" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Email]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="63" y="30" width="392" height="15"/>
+				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="72" y="30" width="392" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="11" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[": "+$P{pdfMasterBean}.getQuoteAttn()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="63" y="45" width="392" height="15"/>
+				<reportElement uuid="1d2257f4-5372-44df-b415-cbe39d4af6cf" x="72" y="45" width="392" height="15"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="AvantGarde Bk BT BOOK" size="11" isBold="false"/>
 				</textElement>

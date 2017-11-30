@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="sq.SmartQuoteDesktop">
 <head>
-<title>Smart Quote</title>
+<title>Smart Proposal</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <meta name="description" content="" />
@@ -29,6 +29,7 @@
 <body ng-controller="SmartQuoteDesktopController"
 	ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}">
 	<!-- ==========================Start Top Navigation======================== -->
+	<div sq-spinner info="loadingInfo"></div>
 	<nav id="top" class="navbar navbar-inverse navbar-fixed-top ng-cloak"
 		role="navigation" ng-if="isUserSignIn">
 		<div class="container-fluid">
@@ -64,7 +65,7 @@
 						data-toggle="dropdown" role="button" aria-haspopup="true"
 						aria-expanded="false" ng-click="menuClicked(menu.menuName)">
 						<!-- <span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a> -->
-						<i class="fa fa-user-circle" aria-hidden="true"></i>
+						<!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
 						<span data-ng-bind="userData.userName" style="text-transform: capitalize;"></span> <i class="caret"></i>
 					</a>
 						<ul class="dropdown-menu">
@@ -83,7 +84,7 @@
 
 	<!-- ==========================End Top Navigation======================== -->
 	<div id="mySpinner"
-		style='position: fixed; z-index: 100; left: 0; right: 0; width: 100%; height: 100%; margin: auto; background: #ffffff; opacity: .4;'>
+		style='position: fixed; z-index: 1031; left: 0; right: 0; width: 100%; height: 100%; margin: auto; rgba(255,255,255,0.2); opacity: .4;'>
 		<center>
 			<i style='margin: auto; margin-top: 250px;'
 				class='fa fa-spinner fa-pulse fa-3x fa-fw'></i>
@@ -91,10 +92,11 @@
 			<!-- <img src="assets/img/loading.gif" alt="Loading..." style="height: 75px;width: 75px;margin: 250px auto;"> -->
 		</center>
 	</div>
+
 	<!--DIV UI STARTS-->
 	<div style="margin-bottom: 5%; margin-top: 1%; height: 100%;">
 		<!-- style="margin-bottom: 5%;margin-top: 1%;height:100%;overflow: auto;" style="min-height:100%;margin-top:55px;margin-bottom: 100px;" -->
-		<div sq-spinner info="loadingInfo"></div>
+		
 		<div ui-view></div>
 	</div>
 	<!--DIV UI ENDS -->

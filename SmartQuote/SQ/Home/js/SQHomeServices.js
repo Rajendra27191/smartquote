@@ -6,15 +6,17 @@ angular.module('sq.SmartQuoteDesktop')
   '$state',
   '$log',
   function ($rootScope, $resource, $http, $state, $log) {
+   // console.log($rootScope.projectName);
     var HomeServices = {
-        getUserGroupMenuAPI:$resource('/smartquote/getMenuAndSubmenu ',{}, {getUserGroupMenuMethod :{method: 'POST'}}),
-        getUserGroupAPI:$resource('/smartquote/getUserGroups',{}, {getUserGroupInfoMethod :{method: 'POST'}}),
-        userLoginAPI:$resource('/smartquote/login?email=:email&password=:password', {}, {userLoginMethod :{method: 'GET'},params:{email:'@email',password:'@password'}}),
-        userLogoutAPI:$resource('/smartquote/logout', {}, {userLogoutMethod :{method: 'POST'}}),
-        userForgotPasswordAPI:$resource('/smartquote/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),
-        checkSessionActiveAPI:$resource('/smartquote/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}})
+        getUserGroupMenuAPI:$resource($rootScope.projectName+'/getMenuAndSubmenu ',{}, {getUserGroupMenuMethod :{method: 'POST'}}),
+        getUserGroupAPI:$resource($rootScope.projectName+'/getUserGroups',{}, {getUserGroupInfoMethod :{method: 'POST'}}),
+        userLoginAPI:$resource($rootScope.projectName+'/login?email=:email&password=:password', {}, {userLoginMethod :{method: 'GET'},params:{email:'@email',password:'@password'}}),
+        userLogoutAPI:$resource($rootScope.projectName+'/logout', {}, {userLogoutMethod :{method: 'POST'}}),
+        userForgotPasswordAPI:$resource($rootScope.projectName+'/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),
+        checkSessionActiveAPI:$resource($rootScope.projectName+'/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}})
       };
     var home = {};
+    // console.log($rootScope.projectName)
     home.GetUserGroupMenu = function () {
        HomeServices.getUserGroupMenuAPI.getUserGroupMenuMethod(function (success) {
         // console.log(success);
@@ -69,7 +71,7 @@ angular.module('sq.SmartQuoteDesktop')
       console.log(email)
       // $http({
       // method: "POST",
-      // url: "/smartquote/forgotPassword?email="+email,
+      // url: "/forgotPassword?email="+email,
       // }).success(function(data, status, header, config){
       //   //console.log("userForgotPassword Success");
       //   // console.log(data);

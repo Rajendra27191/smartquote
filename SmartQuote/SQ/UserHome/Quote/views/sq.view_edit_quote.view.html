@@ -129,7 +129,7 @@ border: 1px solid #d9534f;
 	<div class="row">
 		<div class="col-md-12">
 			<center>
-				<label class="main-label">View / Edit Quote</label>
+				<label class="main-label">View / Edit Proposal</label>
 			</center>
 		</div>
 	</div>
@@ -140,7 +140,7 @@ border: 1px solid #d9534f;
 			<thead class="table-header">
 				<tr>
 					<th style="width: 5%;text-align:center;" ng-if="!disableSalesPersonSelect"></th>
-					<th style="width: 7%;text-align:center;">Quote Id&nbsp;</th>
+					<th style="width: 7%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
 					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
 					<th style="width: 10%;">Cust Name &nbsp;</th>
 					<!-- <th style="width: 10%;">Phone &nbsp;</th> -->
@@ -217,10 +217,10 @@ border: 1px solid #d9534f;
 						</script>	
 						 <button uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'focus'" type="button" class="btn btn-outline-primary" style="padding:0px 5px;">Action</button> -->
 
-						<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit quote" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+						<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
 						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 						</button>
-						<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment on quote" style="padding:0px 5px;">
+						<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment" style="padding:0px 5px;">
 						<i class="fa fa-commenting-o" aria-hidden="true"></i>
 						</button>
 						<button  class="btn btn-default" ng-click="saveAsPDF(quote)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
@@ -271,7 +271,7 @@ border: 1px solid #d9534f;
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						<center>Quote Info</center>
+						<center>Proposal Info</center>
 					</h4>
 				</div>
 				<div class="modal-body" style="padding: 25px 15px;">
@@ -281,7 +281,7 @@ border: 1px solid #d9534f;
 						<div class="panel-body" style="padding: 10px 0px;">
 							<div class="col-md-12">
 								<div class="col-md-2">
-									<label>Quote No</label>: <span
+									<label>Proposal No</label>: <span
 										data-ng-bind="customerQuote.quoteId"></span>
 								</div>
 								<div class="col-md-3">
@@ -293,7 +293,7 @@ border: 1px solid #d9534f;
 										data-ng-bind="customerQuote.custName"></span>
 								</div>
 								<div class="col-md-3">
-									<label>Quote Attention</label>: <span
+									<label>Proposal Attention</label>: <span
 										data-ng-bind="customerQuote.quoteAttn"></span>
 								</div>
 							</div>

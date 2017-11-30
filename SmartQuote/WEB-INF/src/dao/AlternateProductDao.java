@@ -116,6 +116,7 @@ public class AlternateProductDao {
 		String query="SELECT "
 		+ "b.item_code 'main_product_id', b.item_description 'main_item_desc', "
 		+ "b.avg_cost 'main_avg_cost', b.unit 'main_unit',b.price0exGST 'main_product_price', "
+		+ "b.promo_price 'main_promo_price', "
 		+ "c.item_code 'alt_product_id', c.item_description 'alt_item_desc', "
 		+ "c.avg_cost 'alt_avg_cost', c.unit 'alt_unit',c.price0exGST 'alt_product_price',"
 		+ "c.promo_price 'alt_promo_price' "
@@ -133,6 +134,7 @@ public class AlternateProductDao {
 				objBean.setMainProductAvgCost(rs.getDouble("main_avg_cost"));
 				objBean.setMainProductUnit(rs.getString("main_unit"));
 				objBean.setMainProductPrice(rs.getDouble("main_product_price"));
+				objBean.setMainPromoPrice(rs.getDouble("main_promo_price"));
 				//---------------------
 				objBean.getAltProductObj().setAltProductCode(rs.getString("alt_product_id"));
 				objBean.getAltProductObj().setAltProductDesc(rs.getString("alt_item_desc"));

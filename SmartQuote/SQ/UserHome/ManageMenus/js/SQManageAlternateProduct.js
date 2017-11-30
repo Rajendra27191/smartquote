@@ -45,47 +45,47 @@ $scope.setMainProduct= function(product) {
   });
   // console.log($scope.alternateProductList)
 };
-$scope.initAuotoComplete=function(){
-	// $scope.selectedProduct=null;
-	products = new Bloodhound({
-		datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: {
-			// url: "/smartquote/products.json?query=%QUERY",
-			url: "/smartquote/products.json?query=%QUERY",
-			cache: false,
-			beforeSend: function(xhr){
-          	$rootScope.showSpinner()
-        	},
-			filter: function (devices) {
-				$rootScope.hideSpinner();
-				return $.map(devices, function (device) {
-					return {
-						code: device.code,
-						value : device.value
-					};
-				});
-			}
-		},
-	});
-	// products.clearRemoteCache();
-	products.clearPrefetchCache();
-	products.initialize();
-	$rootScope.productsDataset = {
-		displayKey: 'value',
-		limit: 200,
-		source: products.ttAdapter(),
-	};
+// $scope.initAuotoComplete=function(){
+// 	// $scope.selectedProduct=null;
+// 	products = new Bloodhound({
+// 		datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+// 		queryTokenizer: Bloodhound.tokenizers.whitespace,
+// 		prefetch: {
+// 			// url: "/products.json?query=%QUERY",
+// 			url: $rootScope.projectName+"/products.json?query=%QUERY",
+// 			cache: false,
+// 			beforeSend: function(xhr){
+//           	$rootScope.showSpinner()
+//         	},
+// 			filter: function (devices) {
+// 				$rootScope.hideSpinner();
+// 				return $.map(devices, function (device) {
+// 					return {
+// 						code: device.code,
+// 						value : device.value
+// 					};
+// 				});
+// 			}
+// 		},
+// 	});
+// 	// products.clearRemoteCache();
+// 	products.clearPrefetchCache();
+// 	products.initialize();
+// 	$rootScope.productsDataset = {
+// 		displayKey: 'value',
+// 		limit: 200,
+// 		source: products.ttAdapter(),
+// 	};
 
-	$rootScope.exampleOptions = {
-		displayKey: 'title',
-		highlight: true
-	};
+// 	$rootScope.exampleOptions = {
+// 		displayKey: 'title',
+// 		highlight: true
+// 	};
 	
-	// $timeout(function() {
-	// 	$rootScope.hideSpinner();
-	// }, 500);
-}
+// 	// $timeout(function() {
+// 	// 	$rootScope.hideSpinner();
+// 	// }, 500);
+// }
 //================================================================================================
 $scope.resetSearch=function(){
 	$scope.search.selectedProduct="";
@@ -290,8 +290,8 @@ $scope.addAlternateProductBtnClicked=function(){
 	$scope.isAlternateProductTableView=false;
 	$scope.showAddEditView=true;
 	$scope.buttonstatus='add';
-	$scope.showSpinner();
-	$scope.initAuotoComplete();
+	// $scope.showSpinner();
+	// $scope.initAuotoComplete();
 	$scope.alternateProductList=[];
 	// $scope.addProductGroupBtnShow=false;
 };
@@ -422,7 +422,7 @@ $scope.createEditAlternativeArray=function(product){
 				'itemCode':product.mainProductCode,'itemDescription': product.mainProductDesc,
 				'unit':product.mainProductUnit,'price0exGST':product.mainProductPrice,
 				'avgcost':product.mainProductAvgCost,
-				'promoPrice':null,
+				'promoPrice':product.mainPromoPrice,
 				'isMainProduct':true};
 	array.push(mainProduct);
     angular.forEach($scope.alternateProductListView, function(listProd, key){
@@ -452,8 +452,8 @@ $scope.addAlternateProductBtnShow=false;
 $scope.isAlternateProductTableView=false;
 $scope.showAddEditView=true;
 $scope.buttonstatus='edit';
-$scope.showSpinner();
-$scope.initAuotoComplete();
+// $scope.showSpinner();
+// $scope.initAuotoComplete();
 $scope.alternateProductList=[];
 // $scope.createEditAlternativeArray($scope.editAlternativeObject);
 if (prod) {

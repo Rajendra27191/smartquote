@@ -201,7 +201,7 @@ if ($files.length>0) {
 };
  };
 $scope.createCustomer = function(){
-  var uploadUrl="/smartquote/createCustomer";
+  var uploadUrl=$rootScope.projectName+"/createCustomer";
   var fd= new FormData();
   if(logoFile){
   console.log(logoFile)
@@ -225,7 +225,7 @@ $scope.createCustomer = function(){
    });
 };
 $scope.updateCustomer = function(){
-  var uploadUrl="/smartquote/updateCustomerDetails";
+  var uploadUrl=$rootScope.projectName+"/updateCustomerDetails";
   var fd= new FormData();
   if(logoFile){
   console.log(logoFile)

@@ -437,6 +437,7 @@ if(data.code){
 	$scope.resetForm();
 	$scope.init(from,to);
 	$scope.initProduct();
+	$rootScope.initAuotoComplete();
 	});
    	//$scope.init();
 	}else{
@@ -473,6 +474,7 @@ if(data.code){
 	$scope.resetForm();
 	$scope.init(from,to);
 	$scope.initProduct();
+	$rootScope.initAuotoComplete();
 	});
 	//$scope.init();
 	}else{
@@ -547,6 +549,7 @@ if (data.code) {
 	// $scope.init();
 	$scope.initProduct();
 	$scope.deleteFromProductListView(deleteProductObj);
+	$rootScope.initAuotoComplete();
 	// $scope.deleteFromProductListView($scope.deleteProductIndex);
 	} 
 	});
