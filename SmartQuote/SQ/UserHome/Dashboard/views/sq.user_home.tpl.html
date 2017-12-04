@@ -1,0 +1,4 @@
+<div class="container">
+<div ng-if="isSessionExpired" ui-view="userhome-sessionexpire"></div>
+<div ng-if="!isSessionExpired" ui-view="userhome-dashboard"></div>
+</div>
