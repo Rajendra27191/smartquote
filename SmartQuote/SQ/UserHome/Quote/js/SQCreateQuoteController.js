@@ -364,6 +364,7 @@ $scope.showAddProductError=false;
 $scope.form.addCustomerQuote.submitted=false;
 $scope.form.addCustomerQuote.$setPristine();
 $scope.initCreateQuote('init2');
+$rootScope.addedProductCount=0;
 
 
 // $scope.initAuotoComplete();

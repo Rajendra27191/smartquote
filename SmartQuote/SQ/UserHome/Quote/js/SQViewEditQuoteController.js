@@ -1128,6 +1128,11 @@ if ($scope.form.commentForm.$valid) {
 
 /*=============GET PRODUCT GROUP LIST==================*/
 /*============= Comment On Quote==================*/
+$scope.pushComment=function(array,quote){
+// console.log(quote);
+objIndex = array.findIndex((obj => obj.quoteId == quote.quoteId));
+array[objIndex].commentList = $scope.customerQuote.commentList;
+} 
 $scope.closeCommentModal=function(quote){
 	$('#commentModal').modal('hide');
 	$scope.form.commentForm.submitted=false;
@@ -1141,6 +1146,7 @@ if (data.code){
   if(data.code.toUpperCase()=='SUCCESS'){
    var comment=data.result;
    $scope.customerQuote.commentList.push(comment);
+   $scope.pushComment($scope.quoteListView,$scope.customerQuote); 
    $scope.comment='';
    $scope.form.commentForm.submitted=false;
    $scope.form.commentForm.$setPristine();

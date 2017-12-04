@@ -4,7 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import pojo.CommentBean;
 import pojo.KeyValuePairBean;
@@ -357,9 +361,12 @@ public class QuoteDao {
 	}
 
 	public ArrayList<CommentBean> getCommentList(int quoteId) {
+		Calendar start = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
 		ArrayList<CommentBean> commentList = new ArrayList<CommentBean>();
-		CommentBean objBean = null;
-		String getData = "select a.id, a.quote_id, a.user_id, a.comment, DATE_FORMAT(a.date, '%m %b %Y %H:%i %p') as date, "
+		CommentBean objBean = null;//DATE_FORMAT(a.date, '%m %b %Y %H:%i %p')
+		String getData = "select a.id, a.quote_id, a.user_id, a.comment, "
+				+ " convert_tz(a.date, '+00:00', '"+start.getTimeZone().getID()+"') as date, "
 				+ " upper(b.user_name) user_name, b.email "
 				+ " from quote_comment_master a, user_master b  "
 				+ " where a.user_id = b.user_id and quote_id = ?";
@@ -374,7 +381,7 @@ public class QuoteDao {
 				objBean.setUserID(rs1.getInt("user_id"));
 				objBean.setUserName(rs1.getString("user_name"));
 				objBean.setComment(rs1.getString("comment"));
-				objBean.setDate(rs1.getString("date"));
+				objBean.setDate(dateFormat.format(rs1.getTimestamp("date")));
 				objBean.setEmail(rs1.getString("email"));
 				commentList.add(objBean);
 			}
@@ -493,9 +500,14 @@ public class QuoteDao {
 	}
 
 	public CommentBean getCommentDetails(int commentID) {
-		CommentBean objBean = null;
+		Calendar start = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+//		dateFormat.setTimeZone(TimeZone.getTimeZone(String.valueOf(start.getTimeZone().getID())));
+		System.out.println("Time Zone: "+ start.getTimeZone().getID());
+		CommentBean objBean = null;//DATE_FORMAT(a.date, '%d %b %Y %H:%i %p')
 		String getData = "SELECT a.id, a.quote_id, a.user_id, a.comment, "
-				+ " DATE_FORMAT(a.date, '%m %b %Y %H:%i %p') as date, upper(b.user_name) user_name, b.email "
+				+ " convert_tz(a.date, '+00:00', '"+start.getTimeZone().getID()+"') as date, "
+				+ "upper(b.user_name) user_name, b.email "
 				+ " FROM quote_comment_master a, user_master b "
 				+ " WHERE a.user_id = b.user_id and a.id = ?";
 		try {
@@ -508,7 +520,7 @@ public class QuoteDao {
 				objBean.setUserID(rs1.getInt("user_id"));
 				objBean.setUserName(rs1.getString("user_name"));
 				objBean.setComment(rs1.getString("comment"));
-				objBean.setDate(rs1.getString("date"));
+				objBean.setDate(dateFormat.format(rs1.getTimestamp("date")));
 				objBean.setEmail(rs1.getString("email"));
 			}
 		} catch (Exception e) {
