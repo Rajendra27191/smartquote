@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MainFooterPage" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5b112444-68d2-40a8-9471-fa6cdb01e8bc">
+	<property name="ireport.zoom" value="0.6997610703146006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="138"/>
+	<parameter name="footerImg1Path" class="java.lang.String"/>
+	<parameter name="footerImg2Path" class="java.lang.String"/>
+	<parameter name="pageFooterText" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="quoteAttn" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteAttn]]></fieldDescription>
+	</field>
+	<field name="proposalFor" class="java.lang.String">
+		<fieldDescription><![CDATA[proposalFor]]></fieldDescription>
+	</field>
+	<field name="quoteDate" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteDate]]></fieldDescription>
+	</field>
+	<field name="arrayPdfSubReportBean" class="java.util.ArrayList">
+		<fieldDescription><![CDATA[arrayPdfSubReportBean]]></fieldDescription>
+	</field>
+	<field name="alternativeAdded" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[alternativeAdded]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManager" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManager]]></fieldDescription>
+	</field>
+	<field name="gstInclusive" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[gstInclusive]]></fieldDescription>
+	</field>
+	<field name="custId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[custId]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="contact" class="java.lang.String">
+		<fieldDescription><![CDATA[contact]]></fieldDescription>
+	</field>
+	<field name="quoteId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[quoteId]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[email]]></fieldDescription>
+	</field>
+	<field name="submittedBy" class="java.lang.String">
+		<fieldDescription><![CDATA[submittedBy]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="722" splitType="Stretch">
+			<image scaleImage="RetainShape">
+				<reportElement uuid="41c429ed-e671-4c16-824d-94ab0b71a98b" x="133" y="19" width="300" height="200"/>
+				<imageExpression><![CDATA[$P{footerImg1Path}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="979273c4-42af-4584-95d9-ba96bfec7626" x="70" y="262" width="420" height="350"/>
+				<imageExpression><![CDATA[$P{footerImg2Path}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>
