@@ -9,7 +9,7 @@ function ($timeout) {
     scope:{
         info : "=info"
     },
-    template: "<div style='position:fixed;z-index:100;left:0;right:0;width:100%;height:100%;margin:auto;background:#ffffff;opacity:.4;' ng-show='spinner.isShown'><center><i style='margin: auto;margin-top:250px;' class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><p ng-bind='info.text'></p></center></div>",
+    template: "<div style='position:fixed;z-index:1051;left:0;right:0;width:100%;height:100%;margin:auto;rgba(255,255,255,0.2);opacity:.4;' ng-show='spinner.isShown'><center><i style='margin: auto;margin-top:250px;' class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><p ng-bind='info.text'></p></center></div>",
     controller: [
       '$scope',
       '$rootScope',
@@ -163,4 +163,42 @@ function ($timeout) {
             });
         };
 })
-
+.directive('altSrc', function() {
+  return {
+    link: function(scope, element, attrs) {
+      var defaultSrc = attrs.src;
+      element.bind('error', function() {
+        if(attrs.errSrc) {
+            element.attr('src', attrs.errSrc);
+        }
+        else if(attrs.src) {
+            element.attr('src', defaultSrc);
+        }
+      });
+    }
+  }
+})
+.directive("fileinput", [function() {
+    return {
+      scope: {
+        fileinput: "=",
+        filepreview: "="
+      },
+      link: function(scope, element, attributes) {
+        element.bind("change", function(changeEvent) {
+          scope.fileinput = changeEvent.target.files[0];
+          var reader = new FileReader();
+          reader.onload = function(loadEvent) {
+            scope.$apply(function() {
+              scope.filepreview = loadEvent.target.result;
+            });
+          }
+          // console.log(scope.fileinput)
+          if (scope.fileinput) {
+          reader.readAsDataURL(scope.fileinput);
+          }
+            
+        });
+      }
+    }
+  }]);

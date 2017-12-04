@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.EmptyResponseBean;
+import responseBeans.DetailResponseBean;
 import responseBeans.KeyValuePairResponseBean;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -13,19 +14,26 @@ import com.opensymphony.xwork2.ActionSupport;
 import dao.TermServicesDao;
 
 @SuppressWarnings("serial")
-public class TermServicesAction extends ActionSupport implements
-		ServletRequestAware {
+public class TermServicesAction extends ActionSupport implements ServletRequestAware {
 	HttpServletRequest request;
 	HttpSession httpSession;
 	private KeyValuePairResponseBean objPairResponseBean;
 	private EmptyResponseBean objEmptyResponse;
+	private DetailResponseBean objDetailResponseBean;
+
+	public DetailResponseBean getObjDetailResponseBean() {
+		return objDetailResponseBean;
+	}
+
+	public void setObjDetailResponseBean(DetailResponseBean objDetailResponseBean) {
+		this.objDetailResponseBean = objDetailResponseBean;
+	}
 
 	public KeyValuePairResponseBean getObjPairResponseBean() {
 		return objPairResponseBean;
 	}
 
-	public void setObjPairResponseBean(
-			KeyValuePairResponseBean objPairResponseBean) {
+	public void setObjPairResponseBean(KeyValuePairResponseBean objPairResponseBean) {
 		this.objPairResponseBean = objPairResponseBean;
 	}
 
@@ -72,10 +80,10 @@ public class TermServicesAction extends ActionSupport implements
 	}
 
 	public String createTermsConditions() {
-		objEmptyResponse = new EmptyResponseBean();
+		objDetailResponseBean = new DetailResponseBean();
 		String termCondition = request.getParameter("termCondition");
 		// termCondition = "Terms Offering 5";
-		boolean isTermCreated = false, isTermConditionExist = false;
+		boolean isTermConditionExist = false;
 
 		TermServicesDao objDao = new TermServicesDao();
 		isTermConditionExist = objDao.isTermConditionExist(termCondition);
@@ -83,28 +91,29 @@ public class TermServicesAction extends ActionSupport implements
 		objDao.closeAll();
 		if (!isTermConditionExist) {
 			TermServicesDao objDao1 = new TermServicesDao();
-			isTermCreated = objDao1.saveTermCondition(termCondition);
+			int termId = objDao1.saveTermCondition(termCondition);
 			objDao1.commit();
 			objDao1.closeAll();
-			if (isTermCreated) {
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("term_created"));
+			if (termId > 0) {
+				objDetailResponseBean.setCode("success");
+				objDetailResponseBean.setGenratedId(termId);
+				objDetailResponseBean.setMessage(getText("term_created"));
 			} else {
-				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("common_error"));
+				objDetailResponseBean.setCode("error");
+				objDetailResponseBean.setMessage(getText("common_error"));
 			}
 		} else {
-			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("term_exist"));
+			objDetailResponseBean.setCode("error");
+			objDetailResponseBean.setMessage(getText("term_exist"));
 		}
 		return SUCCESS;
 	}
 
 	public String createService() {
-		objEmptyResponse = new EmptyResponseBean();
+		objDetailResponseBean = new DetailResponseBean();
 		String service = request.getParameter("service");
 		// service = "Service 2";
-		boolean isServiceCreated = false, isServiceExist = false;
+		boolean isServiceExist = false;
 
 		TermServicesDao objDao = new TermServicesDao();
 		isServiceExist = objDao.isServiceExist(service);
@@ -112,19 +121,20 @@ public class TermServicesAction extends ActionSupport implements
 		objDao.closeAll();
 		if (!isServiceExist) {
 			TermServicesDao objDao1 = new TermServicesDao();
-			isServiceCreated = objDao1.saveService(service);
+			int serviceId = objDao1.saveService(service);
 			objDao1.commit();
 			objDao1.closeAll();
-			if (isServiceCreated) {
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("service_created"));
+			if (serviceId > 0) {
+				objDetailResponseBean.setCode("success");
+				objDetailResponseBean.setGenratedId(serviceId);
+				objDetailResponseBean.setMessage(getText("service_created"));
 			} else {
-				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("common_error"));
+				objDetailResponseBean.setCode("error");
+				objDetailResponseBean.setMessage(getText("common_error"));
 			}
 		} else {
-			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("service_exist"));
+			objDetailResponseBean.setCode("error");
+			objDetailResponseBean.setMessage(getText("service_exist"));
 		}
 		return SUCCESS;
 	}
@@ -139,8 +149,7 @@ public class TermServicesAction extends ActionSupport implements
 		boolean isTermUpdated = false, isTermConditionExist = false;
 
 		TermServicesDao objDao = new TermServicesDao();
-		isTermConditionExist = objDao.isTermConditionExistForUpdate(
-				termCondition, id);
+		isTermConditionExist = objDao.isTermConditionExistForUpdate(termCondition, id);
 		objDao.commit();
 		objDao.closeAll();
 		if (!isTermConditionExist) {

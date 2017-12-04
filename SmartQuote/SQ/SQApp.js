@@ -1,27 +1,59 @@
-var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload'])
-.config(function($logProvider){
+var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSanitize','ngResource','ngAnimate','angularLocalStorage','uiSwitch','datatables','cfp.hotkeys','angular-svg-round-progressbar','angularUtils.directives.dirPagination','siyfion.sfTypeahead','angucomplete-alt','angularFileUpload','chart.js'])
+.config(function($logProvider,ChartJsProvider){
+  // console.log(".config")
   $logProvider.debugEnabled(true);
+     
+ // ChartJsProvider.setOptions({ colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'] });
   
 })
-.run(['$rootScope','$window','storage','SQHomeServices','$templateCache',function($rootScope,$window,storage,SQHomeServices,$templateCache){
-   // $rootScope.showSpinner();
+.run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
+   // console.log(".run")
    // $rootScope.$on('$viewContentLoaded', function() {
    //    $templateCache.removeAll();
    // });
-   $('#mySpinner').show();
-   SQHomeServices.apiCallToCheckUserSession();
+
+   $rootScope.projectName="/smartprotest";
+   // $rootScope.projectName="/smartpro";
+   console.log($rootScope.projectName);
+
    if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
       $rootScope.isUserSignIn=false;
-   }
-   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
-      $rootScope.userNavMenu=[];
    }
    if(storage.get('userData')==null || storage.get('userData')==''){
       $rootScope.userData={};
    }
+   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
+      $rootScope.userNavMenu=[];
+   }
+   
+   if(storage.get('userList')==null || storage.get('userList')==''){
+      $rootScope.userList=[];
+   } 
+   if(storage.get('customerList')==null || storage.get('customerList')==''){
+      $rootScope.customerList=[];
+   }
+   if(storage.get('supplierList')==null || storage.get('supplierList')==''){
+      $rootScope.supplierList=[];
+   }
+   if(storage.get('serviceList')==null || storage.get('serviceList')==''){
+      $rootScope.serviceList=[];
+   }
+   if(storage.get('termConditionList')==null || storage.get('termConditionList')==''){
+      $rootScope.termConditionList=[];
+   }
+   if(storage.get('offerList')==null || storage.get('offerList')==''){
+      $rootScope.offerList=[];
+   }
   storage.bind($rootScope, 'isUserSignIn',false);
-  storage.bind($rootScope, 'userNavMenu',[]);
   storage.bind($rootScope, 'userData',{});
+  storage.bind($rootScope, 'userNavMenu',[]);
+  
+  storage.bind($rootScope, 'userList',[]);
+  storage.bind($rootScope, 'customerList',[]);
+  storage.bind($rootScope, 'supplierList',[]);
+  storage.bind($rootScope, 'serviceList',[]);
+  storage.bind($rootScope, 'termConditionList',[]);
+  storage.bind($rootScope, 'offerList',[]);
 }])
 .controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices','$interval',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices,$interval){
 console.log("SmartQuoteDesktopController initialise");
@@ -33,22 +65,37 @@ $scope.errormsg='';
 $rootScope.isAdmin=false;
 $rootScope.isSessionExpired=false;
 $rootScope.isUserSignIn=false;
+// $rootScope.scrollpos=0;
 
 // $state.transitionTo('home.start');
+ $('#mySpinner').show();
+ SQHomeServices.apiCallToCheckUserSession();
 /*================ Check user is in sesssion========================*/
+ $scope.clearLocalStorageData=function(){
+    $rootScope.isUserSignIn=false;
+    $rootScope.userNavMenu=[];
+    $rootScope.userData={};
+    $rootScope.userList=[];
+    $rootScope.customerList=[];
+    $rootScope.supplierList=[];
+    $rootScope.serviceList=[];
+    $rootScope.termConditionList=[];
+    $rootScope.offerList=[];
+ }
 $rootScope.$on("sesssion", function(event, data){
-    console.log("sesssion")
+    // console.log("sesssion")
     console.log(data)
     if(data.code=="success"){
-      $state.transitionTo('userhome.start');
+      // $('#mySpinner').hide();
       $rootScope.isUserSignIn=true;
-      $('#mySpinner').hide();
+      // $rootScope.initAuotoComplete();
+      $state.transitionTo('userhome.start');
     }else{
       $state.transitionTo('home.start'); 
-      $rootScope.isUserSignIn=false;
+      $scope.clearLocalStorageData();
       $('#mySpinner').hide();
     }
-    console.log("isUserInSession ",$rootScope.isUserSignIn);
+    // console.log("isUserInSession ",$rootScope.isUserSignIn);
 });
 
 // if ($rootScope.isUserSignIn) {
@@ -57,6 +104,44 @@ $rootScope.$on("sesssion", function(event, data){
 // $state.transitionTo('home.start');
 // }
 
+/*===================================================*/
+$rootScope.initAuotoComplete=function(){
+console.log("$rootScope.initAuotoComplete...");
+var timestamp = new Date().getTime();
+products = new Bloodhound({
+  datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: {
+    url: $rootScope.projectName+"/products.json?"+timestamp,
+    cache: false,
+    beforeSend: function(xhr){
+        $rootScope.showSpinner();
+        },
+    filter: function (devices) {
+      $rootScope.hideSpinner();
+      $('#mySpinner').hide();
+      return $.map(devices, function (device) {
+        return {
+          code: device.code,
+          value : device.value
+        };
+      });
+    }
+  },
+});
+products.clearPrefetchCache();
+products.initialize();
+$rootScope.productsDataset = {
+  displayKey: 'value',
+  limit: 200,
+// async: false,
+source: products.ttAdapter(),
+};
+$rootScope.exampleOptions = {
+  displayKey: 'title',
+  highlight: true
+};
+};
 /*===================================================*/
 $rootScope.userSignin=function(){
 if ($scope.form.loginUser.$valid){
@@ -84,23 +169,32 @@ $scope.handleUserLogInDoneResponse=function(data){
      $scope.form.loginUser.submitted=false;
      $scope.form.loginUser.$setPristine();        
      }
-     $rootScope.userNavMenu=data.result;
+     $rootScope.userNavMenu=data.userMenuList;
      $rootScope.userData={
                            'userId':data.userData.userId,
                            'userGroupId':data.userData.userGroupId,
+                           'userType':data.userData.userType,
                            'emailId':data.userData.emailId,
                            'contact':data.userData.contact,
                            'userName':data.userData.userName,
                            'validFrom':data.userData.validFrom,
                            'validTo':data.userData.validTo
                          }
+    $rootScope.userList=data.userList;
+    $rootScope.customerList=data.customerList;
+    $rootScope.supplierList=data.supplierList;
+    $rootScope.serviceList=data.serviceList;
+    $rootScope.termConditionList=data.termConditionList;
+    $rootScope.offerList=data.offerList;
+    // $rootScope.initAuotoComplete();
+                         
     }
     else if (data.code.toUpperCase()=='ERROR'){
       //$rootScope.alertError(data.message);
       $scope.invalidEmailPassword=true;
       $scope.errormsg=data.message;
+      $rootScope.hideSpinner();
     }
-    $rootScope.hideSpinner();
     
     }
 }
@@ -128,9 +222,7 @@ $rootScope.userSignout=function(){
     if(data.code){
     if(data.code.toUpperCase()=='SUCCESS'){ 
      $state.transitionTo('home.start'); 
-     $rootScope.isUserSignIn=false;
-     $rootScope.userNavMenu=[];
-     $rootScope.userData={};
+     $scope.clearLocalStorageData();
      $rootScope.SQNotify("Successfully log out",'success'); 
     }else{
     $rootScope.alertError(data.message);
@@ -226,9 +318,9 @@ $scope.redirectToLogin=function(){
 
 $scope.handleSessionTimeOutResponse=function(data){
   if(data){
-   //$rootScope.alertError("Session Time Out Please Login To Continue");
    $state.transitionTo('userhome.start');
    $rootScope.isSessionExpired=true;
+   //$rootScope.alertError("Session Time Out Please Login To Continue");
   }
 
   $rootScope.hideSpinner();
@@ -240,6 +332,8 @@ var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, me
 
 /*===============SESSION TIME OUT ENDS=====================*/
 $rootScope.moveToTop=function(){
+  console.log("moveToTop")
+   $window.pageYOffset;  
    $window.scrollTo(0,0);
 }
 
@@ -267,10 +361,10 @@ $rootScope.alertSuccess=function(message){
 sweetAlert("Success",message, "success");
 };
 $rootScope.alertError=function(message){
-sweetAlert("Error",message, "error");
+sweetAlert("Oops!",message, "error");
 };
 $rootScope.alertServerError=function(message){
-sweetAlert("Oops...",message, "error");
+sweetAlert("Error",message, "error");
 };
 $rootScope.alertSessionTimeOutOnQuote=function(){
 swal({
@@ -280,32 +374,6 @@ swal({
 });
 };
 
-//Auto Reload 
-// $scope.reload = function () {
-// console.log("reload executed");     
-// };
-// $scope.reload();
-// $interval($scope.reload, 5000);
-
-
-
-// $scope.onExit = function() {
-//   console.log("onExit")
-//       return ('bye bye');
-// };
-// $window.onbeforeunload =  $scope.onExit;
-
-
-
-// $scope.$on('$locationChangeStart', function( event ) {
-//     var answer = confirm("Are you sure you want to leave this page???")
-//     if (!answer) {
-//         event.preventDefault();
-//     }
-// });
-// $(window).bind("beforeunload",function(event) {
-  //     return "";
-  // });
 
 $scope.checkQuoteActivated = function () {
 // console.log("reload isQuoteActivated");  
@@ -336,6 +404,8 @@ $(window).bind("beforeunload",function(event) {
 $scope.checkQuoteActivated();
 $interval($scope.checkQuoteActivated, 1000);
 
+
+
 // $(window).scroll(function() {
 //   if ($(document).scrollTop() > 50) {
 //     $('nav').addClass('shrink');
@@ -343,6 +413,10 @@ $interval($scope.checkQuoteActivated, 1000);
 //     $('nav').removeClass('shrink');
 //   }
 // });
+  // $(window).scroll(function (event) {
+  //   var scroll = $(window).scrollTop();
+  //   $rootScope.scrollpos=scroll;
+  // });
 ///-------------------------Confirmation Window-----------------
 
 

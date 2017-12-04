@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageUserGroupController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices){
+.controller('SQManageUserGroupController',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices){
 console.log('initialise SQManageUserGroupController controller');
 $scope.user={};
 $scope.form={};
@@ -170,7 +170,7 @@ $scope.setUserGroup=function(userGroup){
 var userGroupId=$scope.getUserGroupId(userGroup);
 //console.log(userGroupId);
 $rootScope.showSpinner();
-SQUserHomeServices.setUserGroup(userGroupId);
+SQManageMenuServices.setUserGroup(userGroupId);
 
 };
 
@@ -258,7 +258,7 @@ if($scope.menuselected>0&&userGroupName!==''&&userGroupName!==undefined){
 	 	$rootScope.alertError("User Group already exist");
 	}else{
 		$rootScope.showSpinner();
-		SQUserHomeServices.saveUserGroup(userGroupName,checkedMenuList);
+		SQManageMenuServices.saveUserGroup(userGroupName,checkedMenuList);
 	}
 		
 	}else if($scope.buttonstatus=='edit'){
@@ -266,7 +266,7 @@ if($scope.menuselected>0&&userGroupName!==''&&userGroupName!==undefined){
 	$rootScope.showSpinner();
 	var userGroup={'userGroup':userGroupName};
 	var userGroupId=$scope.getUserGroupId(userGroup);
-	SQUserHomeServices.editUserGroup(userGroupId,checkedMenuList);
+	SQManageMenuServices.editUserGroup(userGroupId,checkedMenuList);
 	}
 	}else{
 		$rootScope.alertError("Please select atleast one menu");
@@ -344,7 +344,7 @@ $scope.deleteUserGroupMenu=function(){
 	window.onkeydown = previousWindowKeyDown;
 	if (isConfirm) {
 	 $rootScope.showSpinner();
-	 SQUserHomeServices.deleteUserGroup(userGroupId);
+	 SQManageMenuServices.deleteUserGroup(userGroupId);
 	} 
 	});
 
@@ -390,4 +390,4 @@ $scope.$on('$destroy', function(event, message) {
 
 });
 
-}]);
+});

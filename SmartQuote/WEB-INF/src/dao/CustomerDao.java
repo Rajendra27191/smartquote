@@ -48,13 +48,14 @@ public class CustomerDao {
 	public ArrayList<KeyValuePairBean> getCustomerList() {
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
-		String getCustomerList = "SELECT customer_name, customer_Code FROM customer_master;";
+		String getCustomerList = "SELECT cust_id, customer_name, customer_Code FROM customer_master;";
 		try {
 			pstmt = conn.prepareStatement(getCustomerList);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("customer_Code"));
+				objKeyValuePairBean.setKey(rs.getInt("cust_id"));
 				objKeyValuePairBean.setValue(rs.getString("customer_Code")
 						+ " (" + rs.getString("customer_name") + ")");
 				pairBeans.add(objKeyValuePairBean);
@@ -91,8 +92,9 @@ public class CustomerDao {
 		return isRegisterdUser;
 	}
 
+	@SuppressWarnings("static-access")
 	public int saveCustomer(CustomerBean objBean) {
-		boolean isUserCreated = false;
+//		boolean isUserCreated = false;
 		int custId=0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO customer_master (customer_code, customer_name, state, postal_code, "
@@ -118,7 +120,7 @@ public class CustomerDao {
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
 				custId = rs.getInt(1);
-			isUserCreated = true;
+//			isUserCreated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -224,7 +226,7 @@ public class CustomerDao {
 		return isDeleted;
 	}
 
-	public ArrayList<CustomerBean> getAllCustomerDetails() {
+	public ArrayList<CustomerBean> getAllCustomerDetails(String customerLogoSrc) {
 		ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
 		CustomerBean objBean = null;
 		String getUserGroups = "SELECT cust_id, customer_code, ifnull(customer_name, '') customer_name, ifnull(state, '') state, "
@@ -253,6 +255,8 @@ public class CustomerDao {
 				objBean.setAvgPurchase(rs.getString("avg_purchase"));
 				objBean.setIndustryType(rs.getString("industry_type"));
 				objBean.setSuburb(rs.getString("suburb"));
+				String src=customerLogoSrc+"CustId_"+rs.getInt("cust_id")+".png";
+				objBean.setCustomerLogoSrc(src);
 				objCustomerBeans.add(objBean);
 			}
 		} catch (Exception e) {

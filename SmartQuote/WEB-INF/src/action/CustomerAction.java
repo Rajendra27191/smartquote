@@ -2,6 +2,8 @@ package action;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,7 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import responseBeans.CustomerDetailResponseList;
 import responseBeans.CustomerDetailsResponseBean;
+import responseBeans.DetailResponseBean;
 import responseBeans.UserGroupResponse;
 
 import com.google.gson.Gson;
@@ -29,7 +32,16 @@ public class CustomerAction extends ActionSupport implements
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private CustomerDetailsResponseBean customerDetailsResponse = new CustomerDetailsResponseBean();
 	private CustomerDetailResponseList customerDetailResponseList = new CustomerDetailResponseList();
+	private DetailResponseBean objDetailResponseBean;
 	
+	public DetailResponseBean getObjDetailResponseBean() {
+		return objDetailResponseBean;
+	}
+
+	public void setObjDetailResponseBean(DetailResponseBean objDetailResponseBean) {
+		this.objDetailResponseBean = objDetailResponseBean;
+	}
+
 	public File logoFile;
 	
 	public UserGroupResponse getData() {
@@ -83,19 +95,22 @@ public class CustomerAction extends ActionSupport implements
 		}
 		return SUCCESS;
 	}
-	public boolean createLogo(String imageName,File logoImage){
-		File fileToCreate = new File(getText("customer_logo_folder_path")+imageName);
-//		File file = new File(getText("customer_logo_folder_path"));
+	public boolean createLogo(String filename,File logoImage){
+		boolean isLogoCreated=false;
+		String projectLogoPath=System.getProperty("user.dir")+getText("customer_logo_folder_path");
+		System.out.println("projectLogoPath "+projectLogoPath);
+		File fileToCreate = new File(projectLogoPath+filename);
 		try {
+			System.out.println("fileToCreate :: "+fileToCreate);
 			FileUtils.copyFile(logoImage, fileToCreate);
+			isLogoCreated=true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return false;
+		return isLogoCreated;
 	}
 	public String createCustomer() {
+		objDetailResponseBean = new DetailResponseBean();
 		String customerDetails = request.getParameter("customerDetails");
 		System.out.println("customerDetails ::: "+customerDetails);
 		System.out.println("Logo file ::: " + logoFile);
@@ -120,15 +135,17 @@ public class CustomerAction extends ActionSupport implements
 				boolean isLogoSaved=createLogo(filename, logoFile);
 				System.out.println("LOGO saved ::: "+filename);
 			}
-				objEmptyResponse.setCode("success");
-				objEmptyResponse.setMessage(getText("customer_created"));
+			System.out.println("custId"+custId);
+				objDetailResponseBean.setCode("success");
+				objDetailResponseBean.setGenratedId(custId);
+				objDetailResponseBean.setMessage(getText("customer_created"));
 			} else {
-				objEmptyResponse.setCode("error");
-				objEmptyResponse.setMessage(getText("common_error"));
+				objDetailResponseBean.setCode("error");
+				objDetailResponseBean.setMessage(getText("common_error"));
 			}
 		} else {
-			objEmptyResponse.setCode("error");
-			objEmptyResponse.setMessage(getText("error_Customer_exist"));
+			objDetailResponseBean.setCode("error");
+			objDetailResponseBean.setMessage(getText("error_Customer_exist"));
 		}
 		return SUCCESS;
 	}
@@ -172,7 +189,7 @@ public class CustomerAction extends ActionSupport implements
 		objDao1.closeAll();
 		if (isCustomerUpdated) {
 			if (logoFile!=null) {
-				String filename = "CustId_" + objBean.getCustId() + ".png";
+				String filename ="CustId_" + objBean.getCustId() + ".png";
 				File file = new File(filename);
 				boolean isLogoSaved=false;
 				if (!file.exists()) {
@@ -183,6 +200,7 @@ public class CustomerAction extends ActionSupport implements
 					isLogoSaved=createLogo(filename, logoFile);
 					System.out.println("2.LOGO saved ::: "+filename);
 				}
+				
 			}
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("customer_updated"));
@@ -214,13 +232,14 @@ public class CustomerAction extends ActionSupport implements
 		try {
 			CustomerDao objDao = new CustomerDao();
 			ArrayList<CustomerBean> objCustomerBeans = new ArrayList<CustomerBean>();
-			objCustomerBeans = objDao.getAllCustomerDetails();
+//			objCustomerBeans = objDao.getAllCustomerDetails(getText("customer_logo_folder_path"));
+//			String customerLogoSrc=request.getSession().getServletContext().getRealPath("/")+"CustomerLogo";
+			objCustomerBeans = objDao.getAllCustomerDetails(getText("customer_logo_url"));
 			objDao.commit();
 			objDao.closeAll();
 			customerDetailResponseList.setCode("success");
 			customerDetailResponseList.setMessage(getText("details_loaded"));
-			customerDetailResponseList
-					.setObjCustomersDetailResponseList(objCustomerBeans);
+			customerDetailResponseList.setObjCustomersDetailResponseList(objCustomerBeans);
 		} catch (Exception e) {
 			customerDetailResponseList.setCode("error");
 			customerDetailResponseList.setMessage(getText("common_error"));

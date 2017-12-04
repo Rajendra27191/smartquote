@@ -218,7 +218,8 @@ public class UserGroupDao {
 				+ " WHERE a.menu_id = b.menu_id and user_group_id = ? group by 2";
 		String getSubMenus = "SELECT c.sub_menu_id, c.sub_menu_name "
 				+ " FROM user_group_access a, sub_menu_master c "
-				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?";
+				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?"
+				+ " order by 1";
 		try {
 			pstmt = conn.prepareStatement(getMenus);
 			pstmt.setInt(1, userGroupId);
@@ -323,6 +324,7 @@ public class UserGroupDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
+				objKeyValuePairBean.setCode(rs.getString("user_id"));
 				objKeyValuePairBean.setKey(rs.getInt("user_id"));
 				objKeyValuePairBean.setValue(rs.getString("user_name"));
 				pairBeans.add(objKeyValuePairBean);
@@ -339,12 +341,15 @@ public class UserGroupDao {
 		return pairBeans;
 	}
 
-	public boolean saveUser(UserBean objUserBean) {
-		boolean isUserCreated = false;
+	@SuppressWarnings("static-access")
+	public int saveUser(UserBean objUserBean) {
+//		boolean isUserCreated = false;
+		int userID=0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO user_master (user_group_id, user_name, email, password, contact, valid_from, valid_to) "
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement pstmt = conn.prepareStatement(createUserQuery);
+			PreparedStatement pstmt = null;
+			pstmt=conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, objUserBean.getUserGroupId());
 			pstmt.setString(2, objUserBean.getUserName());
 			pstmt.setString(3, objUserBean.getEmailId());
@@ -354,7 +359,10 @@ public class UserGroupDao {
 			pstmt.setDate(7, objUserBean.getValidTo());
 			System.out.println("Create User Query: " + pstmt.toString());
 			pstmt.executeUpdate();
-			isUserCreated = true;
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next())
+			userID = rs.getInt(1);
+//			isUserCreated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -363,7 +371,8 @@ public class UserGroupDao {
 			}
 			e.printStackTrace();
 		}
-		return isUserCreated;
+//		return isUserCreated;
+		return userID;
 	}
 
 	public UserBean getUserDetails(int userId) {

@@ -8,7 +8,7 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.AlternateProductBean;
 import pojo.EmptyResponseBean;
-import pojo.ProductBean;
+
 import responseBeans.AlternativeProductResponseBean;
 
 import com.google.gson.Gson;
@@ -39,6 +39,8 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 	}
 
 	public String createAlternateProducts(){
+	objEmptyResponse.setCode("error");
+	objEmptyResponse.setMessage(getText("common_error"));
 	String alternateProductDetails=request.getParameter("alternateProductDetails");
 	System.out.println("alternateProductDetails : "+alternateProductDetails);
 	AlternateProductBean objBean = new AlternateProductBean();
@@ -46,17 +48,28 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 	boolean isDataSaved=false;
 	AlternateProductDao objDao=new AlternateProductDao();
 	String mainId,altId;
-	double altDefaultPrice;
-//	System.out.println("ObjBean : "+ objBean.getMainProductCode());
-//	System.out.println("ObjBean : "+ objBean.getAlternativeProductList().size());
+	boolean isExist=false;
+
 	if (objBean.getAlternativeProductList().size()>0) {
 		System.out.println("Inside IF");
+		int countExist=0;
 		for (int i = 0; i < objBean.getAlternativeProductList().size(); i++) {
 			mainId=objBean.getMainProductCode();
 			altId=objBean.getAlternativeProductList().get(i).getAltProductCode();
-//			altDefaultPrice=objBean.getAlternativeProductList().get(i).getAltProductDefaultPrice();
-//			isDataSaved=objDao.saveAlternateProducts(mainId,altId,altDefaultPrice);
-			isDataSaved=objDao.saveAlternateProducts(mainId,altId);
+			isExist=objDao.isAlternativeExist(mainId,altId);
+			String idString="";
+			if(isExist){
+				countExist++;
+				idString=idString+" "+altId;
+			}
+			if(countExist>0){
+				System.out.println("isAlternativeExist  : "+isExist);
+				objEmptyResponse.setCode("error");
+				objEmptyResponse.setMessage(getText("alternate_product_exist") +"\n Item Code : "+ idString);
+			}else{
+				isDataSaved=objDao.saveAlternateProducts(mainId,altId);	
+			}
+			
 		}
 	}
 	objDao.commit();
@@ -64,11 +77,7 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 	if (isDataSaved) {
 		objEmptyResponse.setCode("success");
 		objEmptyResponse.setMessage(getText("alternate_product_created"));
-	} else {
-		objEmptyResponse.setCode("error");
-		objEmptyResponse.setMessage(getText("common_error"));
 	}
-	
 	return SUCCESS;	
 	};
 	
@@ -80,7 +89,7 @@ public class AlternateProductAction extends ActionSupport implements ServletRequ
 		boolean isDataSaved=false;
 		AlternateProductDao objDao=new AlternateProductDao();
 		String mainId,altId;
-		double altDefaultPrice;
+//		double altDefaultPrice;
 //		System.out.println("ObjBean : "+ objBean.getMainProductCode());
 //		System.out.println("ObjBean : "+ objBean.getAlternativeProductList().size());
 		if (objBean.getAlternativeProductList().size()>0) {

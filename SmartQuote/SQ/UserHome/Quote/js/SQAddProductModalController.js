@@ -1,5 +1,5 @@
 	angular.module('sq.SmartQuoteDesktop')
-	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQUserHomeServices,SQQuoteServices,$uibModal,$http,hotkeys){
+	.controller('SQAddProductModalController',function($uibModalInstance,dataToModal,$scope,$rootScope,hotkeys,SQManageMenuServices,SQQuoteServices,$uibModal,$http,hotkeys){
 	console.log('initialise SQAddProductModalController');
 	// $('#searchProduct').focus();
 
@@ -18,7 +18,7 @@
 	// $scope.productList=$rootScope.globalProductList;
 	// $scope.productGroupList=$rootScope.globalProductGroupList;
 	$scope.isAddProductModalShow=dataToModal.isAddProductModalShow;
-	$scope.addedProductCount=dataToModal.addedProductCount;
+	// $scope.addedProductCount=dataToModal.addedProductCount;
 	// $('#searchProduct').focus();	  
 
 	var quoteStatus=dataToModal.quoteStatus;
@@ -256,11 +256,13 @@
 
 	$scope.currentSupplierPriceChanged=function(price,cost){
 	// console.log("currentSupplierPriceChanged");
-	if ($scope.form.addProductIntoQuote.currentSupplierPrice.$valid) {
+	if ($scope.form.addProductIntoQuote.currentSupplierPrice&&$scope.form.addProductIntoQuote.avgcost) {
+	if ($scope.form.addProductIntoQuote.currentSupplierPrice.$valid&&$scope.form.addProductIntoQuote.avgcost.$valid) {
 	$scope.addProduct.currentSupplierGP=$scope.getPriceInPercentage(price,cost);
 	}else{
 	$scope.addProduct.currentSupplierGP=0;
-	}
+	}	
+	};
 
 	};
 	$scope.productSavings=function(){
@@ -321,11 +323,11 @@
 	$scope.getProductDetails=function(productCode){
 	$rootScope.showLoadSpinner();
 	SQQuoteServices.GetProductDetailsWithAlternatives(productCode);
-	// SQUserHomeServices.GetProductDetails(productCode);
+	// SQManageMenuServices.GetProductDetails(productCode);
 	// $http({
 	// method: "POST",
-	// // url: "/smartquote/getProductDetails?productCode="+productCode,
-	// url: "/smartquote/getProductDetailsWithAlternatives?productCode="+productCode,
+	// // url: "/getProductDetails?productCode="+productCode,
+	// url: "/getProductDetailsWithAlternatives?productCode="+productCode,
 	// }).success(function(data, status, header, config){
 	// console.log(data)
 	// if (data.code=="sessionTimeOut") {
@@ -576,7 +578,7 @@
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	$scope.addProduct.altProd.quotePrice='';
-	$scope.addProduct.altProd.itemQty=1;
+	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
 	if (product.promoPrice) {
 	$scope.addProduct.altProd.quotePrice=product.promoPrice;
 	$scope.altSellingPriceChanged($scope.addProduct.altProd.quotePrice,$scope.addProduct.altProd.avgcost);
@@ -614,7 +616,10 @@
 	$scope.isAltProductSelected=true;
 	$scope.search.selectedAltProduct='';
 	$rootScope.hideLoadSpinner();
-	};
+	}else{
+	
+	$rootScope.hideLoadSpinner();
+	}
 	}
 	}
 	};
@@ -785,13 +790,37 @@
 	// }
 	// };
 //==========EDIT===========================
-	var products;
-	if ($scope.productButtonStatus=='edit') {
-	console.log("dataToModal")
-	console.log(dataToModal)
-	$scope.addProduct=dataToModal.product;
-	$scope.productInfo=dataToModal.product;
+$scope.checkEditAlt=function(){
+console.log("checkEditAlt...")
+if ($scope.addProduct.alternativeProductList) {
+$scope.select.type='select';
+$scope.alternativeProductList=$scope.addProduct.alternativeProductList;
+};
+if ($scope.addProduct.altProd) {
+$scope.altProductInfo=$scope.addProduct.altProd;
 
+angular.forEach($scope.alternativeProductList, function(value, key){
+if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase()) {
+$scope.addProduct.selectedAlternativeProduct=value;
+}
+});
+}
+if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
+$scope.select.type='search';
+};
+
+};
+$scope.initEdit=function(){
+	console.log("initEdit...")
+	console.log("dataToModal")
+	console.log(dataToModal);
+	$scope.addProduct=dataToModal.product;
+	if ($scope.addProduct.lineComment) {
+		$scope.addProduct.addComment=true;
+	}else{
+		$scope.addProduct.addComment=false;
+	}
+	$scope.productInfo=dataToModal.product;
 	$scope.createArrayOfQuantityAndPrice(dataToModal.product);
 	$scope.isNewProduct=$scope.addProduct.isNewProduct;
 	var productGroupCode=$scope.addProduct.productGroupCode;
@@ -808,27 +837,61 @@
 	}	
 	});
 	$scope.addProduct.productGroup=productGroupCode;
-	if ($scope.addProduct.altProd) {
-	console.log("Edit");
-	// $scope.addProduct.altProd=$scope.addProduct.altProd;
-	$scope.altProductInfo=$scope.addProduct.altProd;
-	$scope.alternativeProductList=$scope.addProduct.alternativeProductList;
-	$scope.select.type='select';
-	angular.forEach($scope.alternativeProductList, function(value, key){
-	if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase()) {
-	console.log("equal")
-	$scope.addProduct.selectedAlternativeProduct=value;
-	}
-	});
-	// $scope.getAlternativeProducts($scope.addProduct.itemCode);
-	}
 
-	// SQQuoteServices
+	$scope.checkEditAlt();
+
+};
+
+	var products;
+	if ($scope.productButtonStatus=='edit') {
+	$scope.initEdit();	
 	}else{
 	// document.getElementById("#searchProduct").focus();
-
 	}
-
+	//================ADD Line Comment=====================
+	$scope.deleteLineComment=function(){
+		if ($scope.addProduct.addComment) {
+		$scope.addProduct.lineComment=null;
+		$scope.addProduct.addComment= false;
+		} else{
+			
+		};
+	}
+	$scope.checkedLineComments=function(){
+	console.log("checkedLineComments")
+	if ($scope.addProduct.addComment) {
+	swal({
+	  title: "",
+	  text: "",
+	  type: "input",
+	  showCancelButton: true,
+	  closeOnConfirm: true,
+	  animation: "slide-from-top",
+	  inputPlaceholder: "add line comment"
+	},
+	function(inputValue){
+	  if (inputValue === false){
+	  	console.log(" inputValue false")
+	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
+	  	$scope.addProduct.lineComment=null;
+	  	return false;
+	  } 
+	  if (inputValue === "") {
+	  	$scope.addProduct.lineComment=null;
+	  	$scope.addProduct.addComment= !$scope.addProduct.addComment
+	    // swal.showInputError("You need to add line comment!");
+	    return false
+	  }
+	  $scope.addProduct.lineComment=inputValue;
+	  
+	  // swal("Nice!", "You wrote: " + inputValue, "success");
+	});
+	} else{
+		$scope.addProduct.lineComment=null;
+	};
+	
+	};
+	
 	//================HOTKEYS=====================
 	hotkeys.bindTo($scope)
 	.add({

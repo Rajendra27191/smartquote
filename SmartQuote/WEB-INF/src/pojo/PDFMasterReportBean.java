@@ -14,7 +14,10 @@ public class PDFMasterReportBean {
 	private int custId;
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
-	private CalculationBean objCalculationBean = new CalculationBean();
+	private ArrayList<OfferBean> offerList;
+	private ArrayList<KeyValuePairBean> termConditionList;
+	private CalculationBean objCalculationBean=new CalculationBean();
+//	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
 
 	public int getQuoteId() {
@@ -120,5 +123,30 @@ public class PDFMasterReportBean {
 	public void setGstInclusive(boolean isGstInclusive) {
 		this.isGstInclusive = isGstInclusive;
 	}
+
+	public ArrayList<OfferBean> getOfferList() {
+		return offerList;
+	}
+
+	public void setOfferList(ArrayList<OfferBean> offerList) {
+		this.offerList = offerList;
+	}
+
+	public ArrayList<KeyValuePairBean> getTermConditionList() {
+		return termConditionList;
+	}
+
+	public void setTermConditionList(ArrayList<KeyValuePairBean> termConditionList) {
+		this.termConditionList = termConditionList;
+	}
+
+//	public ArrayList<CalculationBean> getListCalculationBean() {
+//		return listCalculationBean;
+//	}
+//
+//	public void setListCalculationBean(ArrayList<CalculationBean> listCalculationBean) {
+//		this.listCalculationBean = listCalculationBean;
+//	}
+
 
 }

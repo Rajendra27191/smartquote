@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageProductGroupController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','SQUserHomeServices',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,SQUserHomeServices){
+.controller('SQManageProductGroupController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','SQManageMenuServices',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,SQManageMenuServices){
 console.log('initialise SQManageProductGroupController controller');
 $window.pageYOffset;
 $scope.form={};
@@ -19,8 +19,8 @@ $scope.showAddEditView=false;
 $scope.resetManageProductView();
 $scope.init=function(){
 $rootScope.showSpinner();
- // SQUserHomeServices.GetProductGroupList();
- SQUserHomeServices.GetProductGroupListView();
+ // SQManageMenuServices.GetProductGroupList();
+ SQManageMenuServices.GetProductGroupListView();
 };
 
 $scope.init();
@@ -101,7 +101,7 @@ $rootScope.hideSpinner();
 $scope.getProductGroupDetails=function(productgroup){
 console.log(productgroup);
 $rootScope.showSpinner();
-SQUserHomeServices.GetProductGroupDetails(productgroup.code);
+SQManageMenuServices.GetProductGroupDetails(productgroup.code);
 };
 
 $scope.handleGetProductGroupDetailsDoneResponse=function(data){
@@ -150,12 +150,12 @@ $scope.saveProductGroupDetails=function(){
 	 	$rootScope.alertError("Group code already exist");
 	}else{
 		$rootScope.showSpinner();
-		SQUserHomeServices.CreateProductGroup($scope.jsonToSaveProductGroup());
+		SQManageMenuServices.CreateProductGroup($scope.jsonToSaveProductGroup());
 	}	
 	}else if($scope.buttonstatus=='edit'){
 		$rootScope.showSpinner();
 		console.log($scope.jsonToSaveProductGroup())
-		SQUserHomeServices.UpdateProductGroupDetails($scope.jsonToSaveProductGroup());
+		SQManageMenuServices.UpdateProductGroupDetails($scope.jsonToSaveProductGroup());
 	}
 	//console.log($scope.jsonToSaveCustomer());	
 }else{
@@ -256,7 +256,7 @@ if (productGroupCode!==''&&productGroupCode!==undefined&&productGroupCode!==null
 	window.onkeydown = previousWindowKeyDown;
 	if (isConfirm) {
 	 $rootScope.showSpinner();
-	 SQUserHomeServices.DeleteProductGroup(productGroupCode);
+	 SQManageMenuServices.DeleteProductGroup(productGroupCode);
 	} 
 	});
 }

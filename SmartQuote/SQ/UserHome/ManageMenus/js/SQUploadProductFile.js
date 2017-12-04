@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,$upload){
+.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,$upload){
 console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];
@@ -28,7 +28,7 @@ console.log("onExcelSelect");
 
 $scope.uploadProductsFile = function(){
   var productFile=latestExcelFile;
-  var uploadUrl="/smartquote/uploadProductByXlsx";
+  var uploadUrl=$rootScope.projectName+"/uploadProductByXlsx";
   var fd= new FormData();
   fd.append('productFile',productFile);
   $rootScope.showSpinner();
@@ -61,7 +61,7 @@ $scope.uploadProductsFile = function(){
 };
 $scope.uploadProductsWithPromoPrice = function(){
   var productFile=latestExcelFile;
-  var uploadUrl="/smartquote/uploadProductPromoPriceByXlsx";
+  var uploadUrl=$rootScope.projectName+"/uploadProductPromoPriceByXlsx";
   var fd= new FormData();
   fd.append('productFile',productFile);
   $rootScope.showSpinner();
@@ -94,7 +94,7 @@ $scope.uploadProductsWithPromoPrice = function(){
 };
 $scope.uploadNewProductCode = function(){
 var productFile=latestExcelFile;
-  var uploadUrl="/smartquote/uploadNewProductCodeByXlsx";
+  var uploadUrl=$rootScope.projectName+"/uploadNewProductCodeByXlsx";
   var fd= new FormData();
   fd.append('productFile',productFile);
   $rootScope.showSpinner();

@@ -1,6 +1,6 @@
 angular.module('sq.SmartQuoteDesktop')
 
-.controller('SQManageUserController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices){
+.controller('SQManageUserController',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices,ArrayOperationFactory){
 console.log('initialise SQManageUserController controller');
 $scope.form={};
 $scope.manageUser={};
@@ -10,11 +10,13 @@ $scope.today = function() {
     $scope.dt = new Date();
     return $scope.dt;
 };
+// ------------Get userList from local storage-------------
 
 $scope.init=function(){
 $rootScope.showSpinner();
-SQUserHomeServices.GetUserList();
 SQHomeServices.GetUserGroupInfo();
+// SQManageMenuServices.GetUserList();
+// $scope.getUserListFromLocalStorage();
 };
 
 /*Get User Group starts*/
@@ -46,21 +48,23 @@ $scope.popup1={};
 $scope.popup2={};
 $scope.buttonstatus='add';
 $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
-$scope.format = $scope.formats[1];
+// $scope.format = $scope.formats[1];
+$scope.format = "dd-MM-yyyy";
 $scope.dateOptions = {
 formatYear: 'yy',
 startingDay: 1,
 showWeeks: false
 };
 $scope.dateValid=true;
+// toDate.setYear($scope.today().getYear()+1);
+$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
+
+};
 
 $scope.validToDate=function(){
 var currentDate=$scope.today();
 var toDate=new Date(currentDate.getFullYear()+1,currentDate.getMonth(),currentDate.getDate());
 return toDate;
-};
-// toDate.setYear($scope.today().getYear()+1);
-$scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
 };
 
 $scope.resetForm=function(){
@@ -164,12 +168,12 @@ $scope.saveUser=function(userType){
 				console.log("ADD")
 				var	userDetails=$scope.jsonToCreateUser();
 				$rootScope.showSpinner();
-				SQUserHomeServices.SaveUser(userDetails);
+				SQManageMenuServices.SaveUser(userDetails);
 			}else if ($scope.buttonstatus=='edit'){
 				console.log("UPDATE")
 				var	userDetails=$scope.jsonToCreateUser();
 				$rootScope.showSpinner();
-				SQUserHomeServices.UpdateUserDetails(userDetails);
+				SQManageMenuServices.UpdateUserDetails(userDetails);
 			}	
 			}else{
 				$scope.dateValid=false;
@@ -183,21 +187,22 @@ $scope.saveUser=function(userType){
 		console.log("Form invalid");
 		console.log($scope.manageUser);
 		$scope.form.userManageUser.submitted=true;
-
-
 	}
 	
 };
 
 $scope.handleSaveUserDoneResponse=function(data){
-//console.log(data)	;
+console.log(data)	;
 if(data){
 if (data.code) {	
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$scope.isUserNameSelected=false;
+	var obj={"code":null,"key":data.genratedId,"value":$scope.manageUser.userName};
+	ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.userList,obj)
+	// console.log()
 	$scope.reset();
 	$scope.resetForm();
-	$scope.init();
+	// $scope.init();
 	//console.log($scope.form.userManageUser);
 	$rootScope.alertSuccess("Successfully saved user");
 }else{
@@ -244,33 +249,33 @@ $rootScope.hideSpinner();
 });
 
 /*==========================GET USER LIST==============================*/
-$scope.handleGetUserListDoneResponse=function(data){
-if(data){
-if (data.code) {	
-  if(data.code.toUpperCase()=='SUCCESS'){   
-	console.log(data)	;
-	$scope.userList=data.result;
-	}
-  $rootScope.hideSpinner();
-}
-}
-};
+// $scope.handleGetUserListDoneResponse=function(data){
+// if(data){
+// if (data.code) {	
+//   if(data.code.toUpperCase()=='SUCCESS'){   
+// 	console.log(data)	;
+// 	// $scope.userList=data.result;
+// 	}
+//   $rootScope.hideSpinner();
+// }
+// }
+// };
+// var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
+// 	console.log("GetUserListDone")
+// $scope.handleGetUserListDoneResponse(message);      
+// });
 
-var cleanupEventGetUserListDone = $scope.$on("GetUserListDone", function(event, message){
-$scope.handleGetUserListDoneResponse(message);      
-});
-
-var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
-$rootScope.alertServerError("Server error");
-$rootScope.hideSpinner();
-});
+// var cleanupEventGetUserListNotDone = $scope.$on("GetUserListNotDone", function(event, message){
+// $rootScope.alertServerError("Server error");
+// $rootScope.hideSpinner();
+// });
 /*==========================================================================*/
 /*========================GET USER DETAILS================================*/
 $scope.userNameChanged=function(user){
 console.log("userNameChanged====")
 console.log(user);
 $rootScope.showSpinner();
-SQUserHomeServices.GetUserDetails(user.key);
+SQManageMenuServices.GetUserDetails(user.key);
 };
 
 $scope.setDate = function(year, month, day) {
@@ -344,7 +349,8 @@ $rootScope.hideSpinner();
 /*===========================DELETE USER=============================*/
 $scope.deleteUser=function(){
 if($scope.manageUser.userId){
-	if($scope.manageUser.userName==="admin"&&$scope.manageUser.userId===29){
+	console.log($scope.manageUser)
+	if($scope.manageUser.userName.toLowerCase()==="admin"&&$scope.manageUser.userType.value.toLowerCase()==="admin"){//$scope.manageUser.userId===29
 		swal({
 		  title: "Sorry",
 		  text: "Admin can't be delete.!",
@@ -364,7 +370,7 @@ if($scope.manageUser.userId){
 		window.onkeydown = previousWindowKeyDown;
 		if (isConfirm) {
 		 $rootScope.showSpinner();
-		 SQUserHomeServices.DeleteUser($scope.manageUser.userId);	
+		 SQManageMenuServices.DeleteUser($scope.manageUser.userId);	
 		} 
 		});
 	}
@@ -375,7 +381,10 @@ if($scope.manageUser.userId){
 $scope.handleDeleteUserDoneResponse=function(data){
 if(data){
 if (data.code) {
-  if(data.code.toUpperCase()=='SUCCESS'){   
+  if(data.code.toUpperCase()=='SUCCESS'){  
+  	var obj={"code":null,"key":$scope.manageUser.userId,"value":$scope.manageUser.userName};
+  	ArrayOperationFactory.deleteFromArrayKeyValue($rootScope.userList,obj)
+  	// console.log() 
 	$scope.reset();
 	$scope.resetForm();
 	$scope.init();
@@ -409,9 +418,9 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventDeleteUserNotDone();
 	cleanupEventGetUserDetailsDone();
 	cleanupEventGetUserDetailsNotDone();
-	cleanupEventGetUserListDone();
-	cleanupEventGetUserListNotDone();
+	// cleanupEventGetUserListDone();
+	// cleanupEventGetUserListNotDone();
 
 });
 
-}]);
+});

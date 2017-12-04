@@ -17,7 +17,7 @@
 	<div class="col-md-9">
 	<input type = 'text' name="term" id="term" class = 'form-control' ng-model = 'termCondition.term' focus-me="true" autocomplete="off" focus-me="focus" required>
 	<span ng-show="((form.manageTermCondition.term.$dirty && form.manageTermCondition.term.$invalid) || (form.manageTermCondition.term.$invalid && form.manageTermCondition.submitted))" class="invalid-control">
-	<small>* please enter term.</small>
+	<small>* Please enter term.</small>
 	</span>	
 	</div>		
 	</div>
@@ -50,7 +50,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="term in termConditionList" ng-if="termConditionList.length>0">
+		<tr ng-repeat="term in termConditionArray" ng-if="termConditionArray.length>0">
 			<td><center>{{$index+1}}</center></td>
 			<td>
 			<div class="col-md-12" ng-hide = 'editing[$index]'>
@@ -68,13 +68,13 @@
 			</td>
 			<td>
 			<center>
-			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editTermBtnClicked(termConditionList,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
+			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editTermBtnClicked(termConditionArray,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
 			<!-- popover-placement="left" uib-popover="Click to edit term."  popover-trigger="'mouseenter'" -->
 		    <span style="cursor: pointer;margin: 0px 5px;" ng-click="deleteTermAndCondition(term)"  tooltip-placement="top" uib-tooltip="Click to delete term."><i class="glyphicon glyphicon-trash"></i></span>
 		    </center>
 		    </td>
 		</tr>
-		<tr  ng-if="!termConditionList.length>0">
+		<tr  ng-if="!termConditionArray.length>0">
 			<td></td>
 			<td>
 			<div class="col-md-12">

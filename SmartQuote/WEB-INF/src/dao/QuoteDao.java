@@ -4,12 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import pojo.CommentBean;
 import pojo.KeyValuePairBean;
+import pojo.OfferBean;
 import pojo.ProductBean;
 import pojo.QuoteBean;
+import pojo.QuoteStatusBean;
 import connection.ConnectionFactory;
 
 public class QuoteDao {
@@ -183,8 +189,8 @@ public class QuoteDao {
 		System.out.println(objProductBean);
 		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for) "
-				+ " values(?,?,?,?,?,?,?,?,?,?,?,?);";
+				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment) "
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt = conn
 					.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
@@ -200,6 +206,7 @@ public class QuoteDao {
 				pstmt.setDouble(10, objProductBean.getSavings());
 				pstmt.setString(11, objProductBean.getIsAlternative());
 				pstmt.setInt(12, objProductBean.getQuoteDetailId());
+				pstmt.setString(13, objProductBean.getLineComment());
 				pstmt.executeUpdate();
 				rs = pstmt.getGeneratedKeys();
 				if (rs.next())
@@ -216,28 +223,23 @@ public class QuoteDao {
 		return quoteDetailId;
 	}
 
-	public ArrayList<QuoteBean> getQuoteList() {
+	public ArrayList<QuoteBean> getQuoteList(String queryGetData) {
 		ArrayList<QuoteBean> quoteList = new ArrayList<QuoteBean>();
 		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 		QuoteBean objQuoteBean;
-//		String getData = "select quote_id,custcode,customer_name,add1,phone,email,fax_no,quote_attn,prices_gst_include,notes, "
-//				+ " user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,compete_quote, "
-//				+ " cq.sales_person_id,sales_person_name,status "
-//				+ " from create_quote cq left outer join customer_master cm on cq.custcode=cm.customer_code "
-//				+ " left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
-//				+ " left outer join sales_person sp on cq.sales_person_id = sp.sales_person_id order by created_date desc;";
-		String getData="select quote_id,custcode,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
-				+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
-				+ "from create_quote cq "
-				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
-				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
-				+ "left outer join user_master um on cq.sales_person_id = um.user_id "
-				+ "order by quote_id desc;";
+//		String getData="select quote_id,custcode,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
+//				+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
+//				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
+//				+ "from create_quote cq "
+//				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
+//				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
+//				+ "left outer join user_master um on cq.sales_person_id = um.user_id "
+//				+ "order by quote_id desc;";
+		String getData=queryGetData;
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();
-//			 System.out.println("Quote : "+pstmt);
+			 System.out.println("Quote : "+pstmt);
 			while (rs.next()) {
 				objQuoteBean = new QuoteBean();
 				objQuoteBean.setQuoteId(rs.getInt("quote_id"));
@@ -303,8 +305,36 @@ public class QuoteDao {
 		}
 		return serviceList;
 	}
+	
+	public ArrayList<OfferBean> getOfferList(int quote_id,String path) {
+//		System.out.println("PAth :: "+path);
+		ArrayList<OfferBean> offerList = new ArrayList<OfferBean>();
+//		KeyValuePairBean pairBean = null;
+		OfferBean objOfferBean=null;
+		String query = "select om.id,om.offer_name from quote_offer_master qo,offer_master om "
+				+ "where qo.offer_id = om.id  and qo.quote_id= ?;";
+		
+		try {
+			pstmt= conn.prepareStatement(query);
+			pstmt.setInt(1, quote_id);
+			rsService = pstmt.executeQuery();
+			while(rsService.next()){
+				objOfferBean = new OfferBean();
+				objOfferBean.setCode(rsService.getString("id"));
+				objOfferBean.setId(Integer.parseInt(rsService.getString("id")));
+				objOfferBean.setOfferName(rsService.getString("offer_name"));
+				String offerTemplate = path + "offer_template_" + rsService.getInt("id") + ".png";
+				objOfferBean.setOfferTemplate(offerTemplate);
+				offerList.add(objOfferBean);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return offerList;
+	}
 
-	private ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
+	public ArrayList<KeyValuePairBean> getTermAndConditionList(int quote_id) {
 		ArrayList<KeyValuePairBean> termAndConditionList = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean pairBean = null;
 		String query = "select tcm.id,tcm.term_condition from quote_term_condition_master qt,term_condition_master tcm "
@@ -331,9 +361,12 @@ public class QuoteDao {
 	}
 
 	public ArrayList<CommentBean> getCommentList(int quoteId) {
+		Calendar start = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
 		ArrayList<CommentBean> commentList = new ArrayList<CommentBean>();
-		CommentBean objBean = null;
-		String getData = "select a.id, a.quote_id, a.user_id, a.comment, DATE_FORMAT(a.date, '%m %b %Y %H:%i %p') as date, "
+		CommentBean objBean = null;//DATE_FORMAT(a.date, '%m %b %Y %H:%i %p')
+		String getData = "select a.id, a.quote_id, a.user_id, a.comment, "
+				+ " convert_tz(a.date, '+00:00', '"+start.getTimeZone().getID()+"') as date, "
 				+ " upper(b.user_name) user_name, b.email "
 				+ " from quote_comment_master a, user_master b  "
 				+ " where a.user_id = b.user_id and quote_id = ?";
@@ -348,7 +381,7 @@ public class QuoteDao {
 				objBean.setUserID(rs1.getInt("user_id"));
 				objBean.setUserName(rs1.getString("user_name"));
 				objBean.setComment(rs1.getString("comment"));
-				objBean.setDate(rs1.getString("date"));
+				objBean.setDate(dateFormat.format(rs1.getTimestamp("date")));
 				objBean.setEmail(rs1.getString("email"));
 				commentList.add(objBean);
 			}
@@ -366,7 +399,7 @@ public class QuoteDao {
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST, tax_code,is_alternate,alternate_for "
+				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment"
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
 				+ " where quote_id= ? ;";
 		try {
@@ -405,9 +438,12 @@ public class QuoteDao {
 				objProductBean.setPrice3exGST(rs1.getDouble("price3exGST"));
 				objProductBean.setQtyBreak4(rs1.getDouble("qty_break4"));
 				objProductBean.setPrice4exGST(rs1.getDouble("price4exGST"));
+				objProductBean.setPromoPrice(rs1.getDouble("promo_price"));
+				
 				objProductBean.setTaxCode(rs1.getString("tax_code"));
 				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
 				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
+				objProductBean.setLineComment(rs1.getString("comment"));
 				productList.add(objProductBean);
 			}
 		} catch (Exception e) {
@@ -464,9 +500,14 @@ public class QuoteDao {
 	}
 
 	public CommentBean getCommentDetails(int commentID) {
-		CommentBean objBean = null;
+		Calendar start = Calendar.getInstance();
+		DateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss");
+//		dateFormat.setTimeZone(TimeZone.getTimeZone(String.valueOf(start.getTimeZone().getID())));
+		System.out.println("Time Zone: "+ start.getTimeZone().getID());
+		CommentBean objBean = null;//DATE_FORMAT(a.date, '%d %b %Y %H:%i %p')
 		String getData = "SELECT a.id, a.quote_id, a.user_id, a.comment, "
-				+ " DATE_FORMAT(a.date, '%m %b %Y %H:%i %p') as date, upper(b.user_name) user_name, b.email "
+				+ " convert_tz(a.date, '+00:00', '"+start.getTimeZone().getID()+"') as date, "
+				+ "upper(b.user_name) user_name, b.email "
 				+ " FROM quote_comment_master a, user_master b "
 				+ " WHERE a.user_id = b.user_id and a.id = ?";
 		try {
@@ -479,7 +520,7 @@ public class QuoteDao {
 				objBean.setUserID(rs1.getInt("user_id"));
 				objBean.setUserName(rs1.getString("user_name"));
 				objBean.setComment(rs1.getString("comment"));
-				objBean.setDate(rs1.getString("date"));
+				objBean.setDate(dateFormat.format(rs1.getTimestamp("date")));
 				objBean.setEmail(rs1.getString("email"));
 			}
 		} catch (Exception e) {
@@ -532,24 +573,20 @@ public class QuoteDao {
 		boolean termsAndConditionSaved= false;
 		String saveData = " insert IGNORE into quote_term_condition_master (quote_id ,term_id) "
 				+ " values(?,?);";
-		System.out.println("quote id:::::"+quoteId);
+		System.out.println("saveTermsAndConditionDetails : quote id:::::"+quoteId);
 		try {
 			pstmt = conn.prepareStatement(saveData);
 			for (int i = 0; i < termConditionList.size(); i++) {
-				
 				System.out.println("codeeeee::::::::"+termConditionList.get(i).getCode());
 				if(termConditionList.get(i).getCode().equalsIgnoreCase("true")){
-					
+					termsAndConditionSaved = true;
 					pstmt.setInt(1, quoteId);
 					System.out.println("value::"+termConditionList.get(i).getKey()+"quoteId::::"+quoteId);
 					pstmt.setInt(2, termConditionList.get(i).getKey());
 					pstmt.addBatch();
 				}
-				
 			}
 			pstmt.executeBatch();
-			termsAndConditionSaved = true;
-			
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -566,11 +603,10 @@ public class QuoteDao {
 		boolean serviceDetailsSaved= false;
 		String saveData = " insert IGNORE into quote_service_master (quote_id ,service_id) "
 				+ " values(?,?);";
-		System.out.println("quote id:::::"+quoteId);
+		System.out.println("saveServiceDetails : quote id:::::"+quoteId);
 		try {
 			pstmt = conn.prepareStatement(saveData);
-			for (int i = 0; i < serviceList.size(); i++) {
-				
+			for (int i = 0; i < serviceList.size(); i++) {				
 				System.out.println("codeeeee::::::::"+serviceList.get(i).getCode());
 				if(serviceList.get(i).getCode().equalsIgnoreCase("true")){
 					serviceDetailsSaved = true;
@@ -580,9 +616,7 @@ public class QuoteDao {
 					pstmt.addBatch();
 				}
 			}
-			
 			pstmt.executeBatch();
-
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -593,12 +627,43 @@ public class QuoteDao {
 		}
 		return serviceDetailsSaved;
 	}
+	
+	public boolean saveOfferDetails(ArrayList<OfferBean> offerList,
+			int quoteId) {
+		boolean offerDetailsSaved= false;
+		String saveData = " insert IGNORE into quote_offer_master (quote_id ,offer_id) "
+				+ " values(?,?);";
+		System.out.println("saveOfferDetails : quote id:::::"+quoteId);
+		try {
+			pstmt = conn.prepareStatement(saveData);
+			for (int i = 0; i < offerList.size(); i++) {				
+				System.out.println("codeeeee::::::::"+offerList.get(i).getCode());
+				if(offerList.get(i).getCode().equalsIgnoreCase("true")){
+					offerDetailsSaved = true;
+					pstmt.setInt(1, quoteId);
+					System.out.println("value::"+offerList.get(i).getId()+"quoteId::::"+quoteId);
+					pstmt.setInt(2, offerList.get(i).getId());
+					pstmt.addBatch();
+				}
+			}
+			pstmt.executeBatch();
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return offerDetailsSaved;
+	}
 
-	public QuoteBean getTermsServiceList(int quoteId) {
+	public QuoteBean getTermsServiceList(int quoteId,String path) {
 		QuoteBean objQuoteBean = new QuoteBean();
 		objQuoteBean.setQuoteId(quoteId);
 		objQuoteBean.setTermConditionList(getTermAndConditionList(quoteId));
 		objQuoteBean.setServiceList(getServiceList(quoteId));
+		objQuoteBean.setOfferList(getOfferList(quoteId,path));
 		return objQuoteBean;
 	}
 
@@ -640,6 +705,52 @@ public class QuoteDao {
 		}
 		return isDeleted;
 		
+	}
+	public boolean deleteOfferDetails(int quoteId) {
+		boolean isDeleted = false;
+		try {
+			String deleteGroupQuery = "DELETE FROM quote_offer_master WHERE quote_id = ?";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.setInt(1, quoteId);
+			pstmt.executeUpdate();
+			isDeleted = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDeleted;
+		
+	}
+	
+	public boolean changeQuoteStatus(QuoteStatusBean objQuoteStatusBean){
+		boolean isStatusChanged=false;
+		try {
+			String statusQuery = "UPDATE create_quote set  status=? where quote_id=?;";
+			PreparedStatement pstmt = conn.prepareStatement(statusQuery);
+			for (int i = 0; i < objQuoteStatusBean.getObjQuoteBeanList().size(); i++) {				
+				if(objQuoteStatusBean.getObjQuoteBeanList().get(i)!=null){
+					System.out.println("Quote Status : "+objQuoteStatusBean.getQuoteStatus());
+					pstmt.setString(1, objQuoteStatusBean.getQuoteStatus().toUpperCase());
+					System.out.println("Quote ID : "+objQuoteStatusBean.getObjQuoteBeanList().get(i).getQuoteId());
+					pstmt.setInt(2, objQuoteStatusBean.getObjQuoteBeanList().get(i).getQuoteId());
+					pstmt.addBatch();
+				}
+			}
+			pstmt.executeBatch();
+			isStatusChanged=true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isStatusChanged;
 	}
 
 }

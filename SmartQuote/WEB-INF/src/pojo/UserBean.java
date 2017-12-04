@@ -94,4 +94,11 @@ public class UserBean {
 		this.language = language;
 	}
 
+	@Override
+	public String toString() {
+		return "UserBean [userId=" + userId + ", userGroupId=" + userGroupId + ", userName=" + userName + ", emailId=" + emailId
+				+ ", password=" + password + ", userType=" + userType + ", contact=" + contact + ", validFrom=" + validFrom + ", validTo="
+				+ validTo + ", language=" + language + "]";
+	}
+
 }

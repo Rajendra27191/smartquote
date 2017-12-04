@@ -8,6 +8,7 @@ private String mainProductDesc;//--
 private String mainProductUnit;//--
 private double mainProductPrice;//--
 private double mainProductAvgCost;//--
+private double mainPromoPrice;//--
 //private ArrayList<String> alternativeProductCodeList=new ArrayList<String>();//--
 private ArrayList<AlternateProductDetailBean> alternativeProductList=new ArrayList<AlternateProductDetailBean>();
 private AlternateProductDetailBean altProductObj=new AlternateProductDetailBean();
@@ -233,6 +234,14 @@ public AlternateProductDetailBean getAltProductObj() {
 
 public void setAltProductObj(AlternateProductDetailBean altProductObj) {
 	this.altProductObj = altProductObj;
+}
+
+public double getMainPromoPrice() {
+	return mainPromoPrice;
+}
+
+public void setMainPromoPrice(double mainPromoPrice) {
+	this.mainPromoPrice = mainPromoPrice;
 }
 
 

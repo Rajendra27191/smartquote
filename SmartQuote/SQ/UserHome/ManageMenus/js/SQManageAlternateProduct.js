@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageAlternateProductController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQUserHomeServices','hotkeys','SQManageMenuServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQUserHomeServices,hotkeys,SQManageMenuServices){
+.controller('SQManageAlternateProductController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','SQManageMenuServices','hotkeys','SQManageMenuServices',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,SQManageMenuServices,hotkeys,SQManageMenuServices){
 	console.log('initialise SQManageAlternateProductController controller');
 
 	$scope.addAlternateProductBtnShow=true;
@@ -45,46 +45,47 @@ $scope.setMainProduct= function(product) {
   });
   // console.log($scope.alternateProductList)
 };
-$scope.initAuotoComplete=function(){
-	// $scope.selectedProduct=null;
-	products = new Bloodhound({
-		datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-		queryTokenizer: Bloodhound.tokenizers.whitespace,
-		prefetch: {
-			url: "/smartquote/products.json?query=%QUERY",
-			cache: false,
-			beforeSend: function(xhr){
-          	$rootScope.showSpinner()
-        	},
-			filter: function (devices) {
-				$rootScope.hideSpinner();
-				return $.map(devices, function (device) {
-					return {
-						code: device.code,
-						value : device.value
-					};
-				});
-			}
-		},
-	});
-	// products.clearRemoteCache();
-	products.clearPrefetchCache();
-	products.initialize();
-	$rootScope.productsDataset = {
-		displayKey: 'value',
-		limit: 200,
-		source: products.ttAdapter(),
-	};
+// $scope.initAuotoComplete=function(){
+// 	// $scope.selectedProduct=null;
+// 	products = new Bloodhound({
+// 		datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+// 		queryTokenizer: Bloodhound.tokenizers.whitespace,
+// 		prefetch: {
+// 			// url: "/products.json?query=%QUERY",
+// 			url: $rootScope.projectName+"/products.json?query=%QUERY",
+// 			cache: false,
+// 			beforeSend: function(xhr){
+//           	$rootScope.showSpinner()
+//         	},
+// 			filter: function (devices) {
+// 				$rootScope.hideSpinner();
+// 				return $.map(devices, function (device) {
+// 					return {
+// 						code: device.code,
+// 						value : device.value
+// 					};
+// 				});
+// 			}
+// 		},
+// 	});
+// 	// products.clearRemoteCache();
+// 	products.clearPrefetchCache();
+// 	products.initialize();
+// 	$rootScope.productsDataset = {
+// 		displayKey: 'value',
+// 		limit: 200,
+// 		source: products.ttAdapter(),
+// 	};
 
-	$rootScope.exampleOptions = {
-		displayKey: 'title',
-		highlight: true
-	};
+// 	$rootScope.exampleOptions = {
+// 		displayKey: 'title',
+// 		highlight: true
+// 	};
 	
-	// $timeout(function() {
-	// 	$rootScope.hideSpinner();
-	// }, 500);
-}
+// 	// $timeout(function() {
+// 	// 	$rootScope.hideSpinner();
+// 	// }, 500);
+// }
 //================================================================================================
 $scope.resetSearch=function(){
 	$scope.search.selectedProduct="";
@@ -153,7 +154,7 @@ $scope.pushDetailsToAlternateProductList=function(product){
 };
 $scope.getProductDetails=function(prod){
 	$rootScope.showSpinner();
-	SQUserHomeServices.GetProductDetails(prod.code)
+	SQManageMenuServices.GetProductDetails(prod.code)
 };
 $scope.handleGetProductDetailsDoneResponse=function(data){
 	$scope.productDetails={};
@@ -221,10 +222,13 @@ $scope.handleCreateAlternativeProductDoneResponse=function(data){
 					$scope.resetAlternateProducts();
 
 				});
-				$rootScope.hideSpinner();
+			}else{
+				$rootScope.alertError(data.message);
+				// $rootScope.SQNotify(data.message); 
 			};
 		}
 	}
+	$rootScope.hideSpinner();
 };
 var cleanupEventCreateAlternativeProductDone = $scope.$on("CreateAlternativeProductDone", function(event, message){
 	$scope.handleCreateAlternativeProductDoneResponse(message);      
@@ -286,8 +290,8 @@ $scope.addAlternateProductBtnClicked=function(){
 	$scope.isAlternateProductTableView=false;
 	$scope.showAddEditView=true;
 	$scope.buttonstatus='add';
-	$scope.showSpinner();
-	$scope.initAuotoComplete();
+	// $scope.showSpinner();
+	// $scope.initAuotoComplete();
 	$scope.alternateProductList=[];
 	// $scope.addProductGroupBtnShow=false;
 };
@@ -418,7 +422,7 @@ $scope.createEditAlternativeArray=function(product){
 				'itemCode':product.mainProductCode,'itemDescription': product.mainProductDesc,
 				'unit':product.mainProductUnit,'price0exGST':product.mainProductPrice,
 				'avgcost':product.mainProductAvgCost,
-				'promoPrice':null,
+				'promoPrice':product.mainPromoPrice,
 				'isMainProduct':true};
 	array.push(mainProduct);
     angular.forEach($scope.alternateProductListView, function(listProd, key){
@@ -442,17 +446,18 @@ $scope.createEditAlternativeArray=function(product){
 $scope.editAlternateProductBtnClicked=function(index,product){
 console.log("editMainAlternateProductInList");
 // console.log(product);
+var prod=angular.copy(product);
 $scope.editAlternativeObject={};
 $scope.addAlternateProductBtnShow=false;
 $scope.isAlternateProductTableView=false;
 $scope.showAddEditView=true;
 $scope.buttonstatus='edit';
-$scope.showSpinner();
-$scope.initAuotoComplete();
+// $scope.showSpinner();
+// $scope.initAuotoComplete();
 $scope.alternateProductList=[];
 // $scope.createEditAlternativeArray($scope.editAlternativeObject);
-if (product) {
-$scope.alternateProductList=$scope.createEditAlternativeArray(product);
+if (prod) {
+$scope.alternateProductList=$scope.createEditAlternativeArray(prod);
 // console.log($scope.alternateProductList)
 };
 };

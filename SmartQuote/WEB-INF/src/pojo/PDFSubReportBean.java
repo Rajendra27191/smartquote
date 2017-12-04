@@ -14,7 +14,15 @@ private String isAlternative;
 private int quoteDetailId;
 private int altForQuoteDetailId;
 private String gstExempt;
+private String lineComment;
 
+
+public String getLineComment() {
+	return lineComment;
+}
+public void setLineComment(String lineComment) {
+	this.lineComment = lineComment;
+}
 public int getAltForQuoteDetailId() {
 	return altForQuoteDetailId;
 }
@@ -87,18 +95,20 @@ public String getIsAlternative() {
 public void setIsAlternative(String isAlternative) {
 	this.isAlternative = isAlternative;
 }
-@Override
-public String toString() {
-	return "PDFSubReportBean [productCode=" + productCode + ", productDescription=" + productDescription + ", productUOM=" + productUOM
-			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
-			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
-			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + "]";
-}
+
 public String getGstExempt() {
 	return gstExempt;
 }
 public void setGstExempt(String gstExempt) {
 	this.gstExempt = gstExempt;
+}
+@Override
+public String toString() {
+	return "PDFSubReportBean [productCode=" + productCode + ", productDescription=" + productDescription + ", productUOM=" + productUOM
+			+ ", productQty=" + productQty + ", productCurrentPriceExGST=" + productCurrentPriceExGST + ", productCurrentPriceTotalExGST="
+			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
+			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + ", quoteDetailId="
+			+ quoteDetailId + ", altForQuoteDetailId=" + altForQuoteDetailId + ", gstExempt=" + gstExempt + "]";
 }
 
 

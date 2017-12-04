@@ -90,99 +90,171 @@ table.dataTable tbody th,table.dataTable tbody td {
 	margin-right: 5%;
 	margin-left: 5%;
 }
+tr td {
+  cursor: pointer
+}
+
+tr.selected td {
+border-top: 1px solid #ddd;
+background: #ececec!important;
+}
+.won{
+color: #5cb85c;
+border: 2px solid #5cb85c;
+}
+.lost{
+color: #d9534f;
+border: 2px solid #d9534f;
+}
+.saved{
+color: #0275d8;
+border: 2px solid #0275d8;
+}
+.updated{
+color: #f0ad4e;
+border: 2px solid #f0ad4e;
+}
+.closed{
+color: #777;
+border: 2px solid #777;
+}
+.ini{
+color: #d9534f;
+border: 1px solid #d9534f;
+}
+
 /* .fa-lg{ font-size: 1.4em;color: rgba(15, 70, 116, 0.84);} */
 </style>
 <div class="viewQuote">
 	<div class="row">
 		<div class="col-md-12">
 			<center>
-				<label class="main-label">View / Edit Quote</label>
+				<label class="main-label">View / Edit Proposal</label>
 			</center>
 		</div>
 	</div>
-
-	<div id="quoteTable" style="font-size: 12px;"
-		ng-if="!showEditQuoteView">
+<!-- {{showEditQuoteView}} -->
+	<div id="quoteTable" style="font-size: 12px;" ng-if="!showEditQuoteView">
 		<!-- && customerListView.length>0 -->
-		<table datatable="ng" class="table row-border hover table-responsive">
+		<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table row-border hover table-responsive">
 			<thead class="table-header">
 				<tr>
-					<th style="width: 5%;text-align:center;">Sr No &nbsp;</th>
-					<th style="width: 7%;text-align:center;">Quote Id&nbsp;</th>
+					<th style="width: 5%;text-align:center;" ng-if="!disableSalesPersonSelect"></th>
+					<th style="width: 7%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
 					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
-					<th style="width: 17%;">Cust Name &nbsp;</th>
+					<th style="width: 10%;">Cust Name &nbsp;</th>
 					<!-- <th style="width: 10%;">Phone &nbsp;</th> -->
 					<th style="width: 13%;">Email &nbsp;</th>
 					<th style="width: 10%;">Sales Person &nbsp;</th>
 					<th style="width: 10%;">Supplier &nbsp;</th>
 					<!-- <th style="width: 5%;">Atten &nbsp;</th> -->
 					<th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
-					<th style="width: 8%;">Status &nbsp;</th>
-					<th style="width: 10%;text-align:center;">Action &nbsp;</th>
+					<th style="width: 10%;text-align:center;">Status &nbsp;</th>
+					<th style="width: 11%;text-align:center;">Action &nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
-
-				<tr ng-repeat="quote in quoteListView" ng-click="testingClick(name)">
-					<td style="text-align:center;">{{$index+1}}</td>
-					<td style="text-align:center;">
-						<!-- <span data-ng-bind="quote.quoteId"></span> -->
-						{{::quote.quoteId}}
+<!-- ng-click="select(quote,$event)" -->
+				<tr ng-repeat="quote in quoteListView" ng-class="{'selected': quote.selected}">
+					<td style="text-align:center;" ng-if="!disableSalesPersonSelect">
+						<!-- {{$index+1}} -->
+						<input type="checkbox" name="quote" ng-model="quoteListView[$index].selected" ng-init="quoteListView[$index].selected=false;"  style="height: 15px; width: 15px;cursor:pointer;" >
 					</td>
 					<td style="text-align:center;">
-						<!-- <span data-ng-bind="quote.createdDate"></span> -->
+						{{::quote.quoteId}}
+					</td>				
+					<td style="text-align:center;">
 						{{:: getFormattedDate(quote.createdDate)}}
 					</td>
+					
 					<td >
-						<!-- <span data-ng-bind="quote.custName"></span> -->
 						{{::quote.custName}}
 					</td>
-					<!-- <td><span data-ng-bind="quote.phone"></span></td> -->
 					<td>
-						<!-- <span data-ng-bind="quote.email"></span> -->
 						{{::quote.email}}
 					</td>
 					<td>
-						<!-- <span data-ng-bind="quote.salesPerson" ng-if="quote.salesPerson!=''"></span>  -->
 						{{::quote.salesPerson}}
 						<span ng-if="quote.salesPerson==''"> --- </span>
 					</td>
 					<td>
-						<!-- <span data-ng-bind="quote.currentSupplierName"ng-if="quote.currentSupplierName!=''"></span>  -->
 						{{::quote.currentSupplierName}}
 						<span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null">--- </span>
 					</td>
-					<!-- <td><span data-ng-bind="quote.quoteAttn"></span></td> -->
 					<td style="text-align:center;">
 						<span ng-if="quote.modifiedDate!=null" > 
 						{{::getFormattedDate(quote.modifiedDate)}}
 						</span>
 					</td>
 					<td>
-						<!-- <span data-ng-bind="quote.status"></span> -->
+						<div class="col-md-11 col-md-offset-1">
+						<span ng-class="{'won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
 						{{::quote.status}}
+						</span>
+						</div>
 					</td>
-					<td style="text-align:center;"><span style="cursor: pointer; margin: 0px 0px;"
-						ng-click="viewDetailInformation(quote)" popover-placement="left"
-						uib-popover="Click to view/edit quote."
-						popover-trigger="'mouseenter'"><i
-							class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
-						<span style="cursor: pointer; margin: 0px 0px;"
-						ng-click="showCommentModal(quote)" popover-placement="left"
-						uib-popover="Click to add comment on quote."
-						popover-trigger="'mouseenter'"><i
-							class="fa fa-commenting-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
-						<!-- <a target="_blank" href="/smartquote/custComparison?quoteId={{quote.quoteId}}">email me</a> -->
-						<span style="cursor: pointer;margin: 0px 0px;" ng-click="saveAsPDF(quote)" popover-placement="left" uib-popover="Click to create pdf."  popover-trigger="'mouseenter'"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></span>&nbsp;&nbsp;
-						<span style="cursor: pointer; margin: 0px 0px;"
-						ng-click="exportToPronto(quote)" popover-placement="left"
-						uib-popover="Click to export to pronto contract.xls"
-						popover-trigger="'mouseenter'"><i class="fa fa-table fa-lg"
-							aria-hidden="true"></i></span></td>
+
+					<td style="text-align: center;">
+					<!-- 	<script type="text/ng-template" id="myPopoverTemplate.html">
+						<div class="form-group" style="width:100px;">
+						<div class="col-md-12" style="padding: 0px;margin-bottom: 5px;text-align: center;">
+						<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit quote" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</button>
+						<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment on quote" style="padding:0px 5px;">
+						<i class="fa fa-commenting-o" aria-hidden="true"></i>
+						</button>
+						<button  class="btn btn-default" ng-click="saveAsPDF(quote)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
+						<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+						</button>		
+						</div>	
+						<div class="col-md-12" style="padding: 0px;margin-bottom: 5px;text-align: center;">
+						<button  class="btn btn-default" ng-click="exportToPronto(quote)" tooltip-placement="top" uib-tooltip="click to export to pronto contract.xls" style="padding:0px 5px;">
+						<i class="fa fa-table" aria-hidden="true"></i>
+						</button>
+						</div>
+						</div>	
+						</script>	
+						 <button uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'focus'" type="button" class="btn btn-outline-primary" style="padding:0px 5px;">Action</button> -->
+
+						<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</button>
+						<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment" style="padding:0px 5px;">
+						<i class="fa fa-commenting-o" aria-hidden="true"></i>
+						</button>
+						<button  class="btn btn-default" ng-click="saveAsPDF(quote)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
+						<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+						</button>		
+						<button  class="btn btn-default" ng-click="exportToPronto(quote)" tooltip-placement="top" uib-tooltip="click to export to pronto contract.xls" style="padding:0px 5px;">
+						<i class="fa fa-table" aria-hidden="true"></i>
+						</button>
+						
+						
+					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	<!--  -->
+	<div class="row" ng-if="!showEditQuoteView && !disableSalesPersonSelect">
+	<div class="col-md-4">
+		<button type="button" ng-click="changeQuoteStatus('won')" class="btn btn-outline-success"  tooltip-placement="top" uib-tooltip="change status as 'WON'">
+		<i class="fa fa-smile-o fa-lg" aria-hidden="true"></i> Won
+		</button>
+		<button type="button" ng-click="changeQuoteStatus('lost')" class="btn btn-outline-danger" tooltip-placement="top" uib-tooltip="change status as 'LOST'">
+		<i class="fa fa-frown-o fa-lg" aria-hidden="true"></i> Lost
+		</button>
+		<!-- <button type="button" ng-click="changeQuoteStatus('closed')" class="btn btn-outline-secondary" tooltip-placement="top" uib-tooltip="change status as 'CLOSED'">
+		<i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Closed
+		</button> -->
+	</div>
+	<div class="col-md-8">
+	</div>
+
+	</div>
+	<!-- {{selectedRows | json}} -->
+	<!-- {{selectedRows.length}} -->
 
 	<!-- <div  ng-if="showEditQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.quote.view.html'"></div> -->
 	<div ng-if="showEditQuoteView"
@@ -199,7 +271,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 						<span aria-hidden="true">&times;</span>
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						<center>Quote Info</center>
+						<center>Proposal Info</center>
 					</h4>
 				</div>
 				<div class="modal-body" style="padding: 25px 15px;">
@@ -209,7 +281,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 						<div class="panel-body" style="padding: 10px 0px;">
 							<div class="col-md-12">
 								<div class="col-md-2">
-									<label>Quote No</label>: <span
+									<label>Proposal No</label>: <span
 										data-ng-bind="customerQuote.quoteId"></span>
 								</div>
 								<div class="col-md-3">
@@ -221,7 +293,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 										data-ng-bind="customerQuote.custName"></span>
 								</div>
 								<div class="col-md-3">
-									<label>Quote Attention</label>: <span
+									<label>Proposal Attention</label>: <span
 										data-ng-bind="customerQuote.quoteAttn"></span>
 								</div>
 							</div>
@@ -267,7 +339,7 @@ table.dataTable tbody th,table.dataTable tbody td {
 								<div class="col-md-2" style="padding-right: 0px;">
 									<p style="margin: 0 0 0px; padding: 15px 0px;">
 										<span style="font-weight: bold;"
-											ng-bind="commentList.userName"></span><br> <span
+											ng-bind="commentList.userName"></span><br> <span style="word-break: break-word;"
 											ng-bind="commentList.email"></span>
 									</p>
 								</div>
@@ -337,3 +409,4 @@ table.dataTable tbody th,table.dataTable tbody td {
 			</div>
 		</div>
 	</div>
+

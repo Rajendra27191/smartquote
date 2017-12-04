@@ -20,9 +20,11 @@ width: 62.666667%;
 			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addCustomerBtnClicked()" ng-disabled="addCustomerBtnDisabled" uib-popover="Click to add customer." popover-placement="top" popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Customer</button>
 		</div>
 </div>
-
+<!-- {{isCustomerTableView}}
+{{customerListView | json}} -->
+<!-- dt-column-defs="dtColumnDefs"  -->
 <div  ng-if="isCustomerTableView " style="font-size: 12px;"><!-- && customerListView.length>0 -->
-<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs"  class="table row-border hover table-responsive" id="customerDataTable">
+<table datatable="ng" dt-options="dtOptions" class="table row-border hover table-responsive" id="customerDataTable">
                 <thead class="table-header">
                     <tr>
 		                <th style="width:10%;">Cust Code</th>
@@ -33,7 +35,7 @@ width: 62.666667%;
 		                <th style="width:10%;">Fax</th>
 		                <th style="width:10%;">Email</th>
 		                <th style="width:10%;">Total Staff</th>
-		                <th style="width:10%;">Monthly Avg Purchs</th>
+		                <th style="width:15%;">Monthly Avg Purchs</th>
 		                <th style="width:10%;">Industry Type</th>
 		                <th style="width:5%;">Action</th>
                     </tr>
@@ -207,9 +209,10 @@ width: 62.666667%;
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Monthly Avg Purchase</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
-	<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'manageCustomer.avgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0">
+	<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'manageCustomer.avgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
 	<span ng-show="((form.manageCustomer.monthlyAvgPurchase.$dirty && form.manageCustomer.monthlyAvgPurchase.$invalid) || (form.manageCustomer.monthlyAvgPurchase.$invalid && form.manageCustomer.submitted))" class="invalid-control">
-	<small ng-show="form.manageCustomer.monthlyAvgPurchase.$invalid">*monthly average purchase invalid.</small>
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.pattern">*monthly average purchase invalid.</small>
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.$error.required">*Please enter monthly average purchase.</small>
 	</span>
 	</div>
 	</div>
@@ -226,19 +229,34 @@ width: 62.666667%;
 
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Customer Logo</label> </div>
-	<div class="col-md-8">
-	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview">
+	<div class="col-md-8" >
+	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview" style="margin-bottom: 2%;">
 	<span class="invalid-control">
-	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 15KB.</small>
-	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.gif).</small>
+	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 50KB.</small>
+	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
 	</span>
-	<!-- <div ng-hide="invalidFileSize || isInvalid">
- 	<img ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview" style="height: 50px;width:50px;"/>	
+	<!-- <i class="fa fa-eye" aria-hidden="true" uib-popover="Click to view added logo." popover-placement="top" popover-trigger="'mouseenter'"></i> -->
+	
+	</div>
+	<!-- <div class="col-md-1" style="padding:0px;" ng-if="!isInvalid&&!invalidFileSize">
+
+		<button type="button" class="" ng-click="isImageCollapsed = !isImageCollapsed" style="float: right;"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+	</div>-->
+	</div> 
+
+	<div class="row row-control" >
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="!invalidFileSize && !isInvalid && !isFileNull">	
+ 	<img class="img-thumbnail"  ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview"  style="height: 100px;width:100px;" alt-SRC src="Images/no-image.png" />	
+	</div>
+	</div>
+	<!-- <img class="img-thumbnail" ng-src="" class="img-responsive"  style="height: 100px;width:100px;"/>	 -->
+	<!-- <div class="row row-control">
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="manageCustomer.customerLogoSrc">
+ 	<img class="img-thumbnail" ng-src="{{manageCustomer.customerLogoSrc}}" class="img-responsive"  style="height: 100px;width:100px;"/>			
+	</div>	
 	</div> -->
-	</div>
-	</div>
-
-
 
 
 	<div class="row">

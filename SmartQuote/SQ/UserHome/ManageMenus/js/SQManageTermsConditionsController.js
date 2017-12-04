@@ -1,16 +1,16 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQManageTermsConditionsController',['$scope','$rootScope','$window','$anchorScroll','$log','$state','$timeout','SQUserHomeServices',function($scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQUserHomeServices){
+.controller('SQManageTermsConditionsController',function($scope,$rootScope,$window,$anchorScroll,$log,$state,$timeout,SQManageMenuServices,ArrayOperationFactory){
 console.log('initialise SQManageTermsConditionsController');	
 $scope.form={};
 $scope.termCondition={};
-$scope.termConditionList=[];
 $scope.editing = [];
 
 
 
 $scope.init=function(){
-	$rootScope.showSpinner();
-	SQUserHomeServices.GetTermsConditions();
+$scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// 	$rootScope.showSpinner();
+// 	SQManageMenuServices.GetTermsConditions();
 };
 
 $scope.init();
@@ -21,7 +21,7 @@ $scope.handleGetTermsConditionsDoneResponse=function(data){
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
-  $scope.termConditionList=data.result;
+  // $scope.termConditionList=data.result;
 }
 $rootScope.hideSpinner();
 }
@@ -47,7 +47,7 @@ $scope.saveTermAndCondition=function(){
 		// var term ={"termName":$scope.termCondition.term}
 		// $scope.termConditionList.push(term);
 		$rootScope.showSpinner();
-		SQUserHomeServices.CreateTermsConditions($scope.termCondition.term);
+		SQManageMenuServices.CreateTermsConditions($scope.termCondition.term);
 
 
 	}else{
@@ -57,20 +57,15 @@ $scope.saveTermAndCondition=function(){
 }
 
 $scope.handleCreateTermsConditionsDoneResponse=function(data){
-// console.log(data)
+console.log(data)
 if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   // $scope.termConditionList=data.result;
-   	swal({
-	  title: "Success",
-	  text: "Successfully saved term & condition!",
-	  type: "success",
-	  // animation: "slide-from-top",
-	},
-	function(){
-	$scope.init();
-	});
+  var obj={"code":data.genratedId,"key":data.genratedId,"value":$scope.termCondition.term}
+  ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.termConditionList,obj);
+  $scope.init();
+  $rootScope.alertSuccess("Successfully saved term & condition!");
   $scope.termCondition={};
   $scope.form.manageTermCondition.submitted=false;
   $scope.form.manageTermCondition.$setPristine();
@@ -105,17 +100,19 @@ $scope.editTermBtnClicked=function(termConditionList,index){
 };
 $scope.stop = function(index){
   $scope.editing[index] = false;
+  $scope.init();
 };
 
 // ================= UpdateTermsConditions ======================
-
+var updateObj={};
 $scope.updateTermAndCondition=function(term,index){
 	// console.log(term)
+	updateObj={};
 	if (term.value && term.key) {
 		$scope.updatedIndex=index;
 	 	$rootScope.showSpinner();
-		SQUserHomeServices.UpdateTermsConditions(term.value,term.key);
-
+		SQManageMenuServices.UpdateTermsConditions(term.value,term.key);
+		updateObj={"code":term.key,"key":term.key,"value":term.value}
 	}else{
 
 	}
@@ -127,20 +124,13 @@ if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   // $scope.termConditionList=data.result;
-   	swal({
-	  title: "Success",
-	  text: "Successfully updated term & condition!",
-	  type: "success",
-	  // animation: "slide-from-top",
-	},
-	function(){
-	$scope.init();
-	$scope.stop($scope.updatedIndex);
-	});
-  
+  $scope.stop($scope.updatedIndex);
+  ArrayOperationFactory.updateArrayKeyValue($rootScope.termConditionList,updateObj);
+  $scope.init();
+  $rootScope.alertSuccess("Successfully updated term & condition!");
 }else if (data.code.toUpperCase()=='ERROR'){
    $rootScope.alertError(data.message);
-   $scope.init();
+   // $scope.init();
 }
 $rootScope.hideSpinner();
 }
@@ -159,26 +149,25 @@ $rootScope.hideSpinner();
 // ================================================================
 
 // ================= DeleteTermsConditions ======================
-
+var deleteObj={};
 $scope.deleteTermAndCondition=function(term){
 	// console.log(term)
+	deleteObj={};
 	if (term.value && term.key) {
 	var previousWindowKeyDown = window.onkeydown;
 	swal({
 	title: 'Are you sure?',
-	text: "You will not be able to recover this customer!",
+	text: "You will not be able to recover this term & condition!",
 	showCancelButton: true,
 	closeOnConfirm: false,
 	}, function (isConfirm) {
 	window.onkeydown = previousWindowKeyDown;
 	if (isConfirm) {
 		$rootScope.showSpinner();
-		SQUserHomeServices.DeleteTermCondition(term.key);
+		SQManageMenuServices.DeleteTermCondition(term.key);
+		deleteObj={"code":term.key,"key":term.key,"value":term.value}
 	} 
 	});
-
-	}else{
-
 	}
 }
 
@@ -188,16 +177,9 @@ if(data){
 if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   // $scope.termConditionList=data.result;
-   	swal({
-	  title: "Success",
-	  text: "Successfully deleted term & condition!",
-	  type: "success",
-	  // animation: "slide-from-top",
-	},
-	function(){
-	$scope.init();
-	// $scope.stop($scope.updatedIndex);
-	});
+    ArrayOperationFactory.deleteFromArrayKeyValue($rootScope.termConditionList,deleteObj);
+    $scope.init();
+    $rootScope.alertSuccess("Successfully deleted term & condition!");
   
 }else if (data.code.toUpperCase()=='ERROR'){
    $rootScope.alertError(data.message);
@@ -216,5 +198,13 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 
-	
-}]);
+$scope.$on('$destroy', function(event, message) {
+cleanupEventCreateTermsConditionsDone();
+cleanupEventCreateTermsConditionsNotDone();
+cleanupEventUpdateTermsConditionsDone();
+cleanupEventUpdateTermsConditionsNotDone();
+cleanupEventDeleteTermConditionDone();
+cleanupEventDeleteTermConditionNotDone();
+});
+
+});

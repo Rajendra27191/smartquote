@@ -3,6 +3,7 @@ angular.module('sq.SmartQuoteDesktop')
    // console.log("initialise OZAppRoute");
    $stateProvider
    .state('home', {
+      // url:'/smartquote',
       abstract: true,
       controller:'SQHomeController',
       templateUrl:'SQ/Home/views/sq.home.view.html',
@@ -17,12 +18,16 @@ angular.module('sq.SmartQuoteDesktop')
    .state('userhome', {
       abstract: true,
       controller:'SQUserHomeController',
-      templateUrl:'SQ/UserHome/views/sq.user_home.tpl.html',
+      templateUrl:'SQ/UserHome/Dashboard/views/sq.user_home.tpl.html',
     })
    .state('userhome.start', {
       views: {
-        'userhome-view' : {
-          templateUrl: 'SQ/UserHome/views/sq.user_home.tpl.view.html',
+        'userhome-sessionexpire' : {
+          templateUrl: 'SQ/UserHome/Dashboard/views/sq.session_expire.tpl.view.html',
+        },
+        'userhome-dashboard' : {
+          templateUrl: 'SQ/UserHome/Dashboard/views/sq.dashboard.tpl.view.html',
+          controller:'SQDashBoardController',
         }
       }
     })
@@ -61,6 +66,10 @@ angular.module('sq.SmartQuoteDesktop')
    .state('managealternateproduct', {
       controller:'SQManageAlternateProductController',
       templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_alternate_product.view.html',
+    })
+    .state('manageoffers', {
+     	controller:'SQManageOffersController',
+    	templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_offers.view.html',
     })
    .state('createquote', {
       controller:'SQCreateQuoteController',
