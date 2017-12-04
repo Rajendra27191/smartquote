@@ -1,0 +1,712 @@
+<style type="text/css" media="screen">
+.borderBox{
+border: 1px solid #EEE8E8; padding : 0px ;border-radius: 6px;
+}
+.borderTable{
+border: 1px solid #EEE8E8;;border-radius: 0px;
+}
+.main-label{
+margin: 3% 0% 1% 0%;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+/* background-color: #f3f3f3; */
+/* opacity: 1; */
+background: rgba(243, 243, 243, 0.5);
+}
+textarea {
+resize: none;
+}
+[class|=col-md-4]{
+padding-right: 0px;
+}
+
+.col-panel{
+padding: 0px;
+}
+fieldset {
+border: 1px solid gray;
+border-radius: 0px; 
+/*border-radius: 5px; */
+padding: 15px;
+}
+legend {
+display: block;
+width: auto;
+border-bottom: none;
+margin-bottom: 0px;
+font-size: 15px;
+}
+.table>thead>tr>th {
+padding: 5px;
+}
+
+.para{
+margin: 0px;
+}
+
+.label-default{
+font-size: 14px;
+
+}
+.alt-product{
+background: rgba(245, 9, 4, 0.03);
+}
+.price{
+text-align: right;
+}
+.t_head{
+text-align: left;
+font-size: 12px;
+color: #333;
+font-weight: bold;
+padding: 5px;
+cursor: pointer;;
+}
+.t_data{
+text-align: left;
+font-size: 12px;
+color: #333;
+padding: 5px;
+}
+#productTable .col-md-12{
+padding: 0px;
+}
+.panel-heading {
+padding: 5px 10px;
+}
+
+.col-md-8 {
+padding-left:0px; 
+}
+.input-group-btn .btn {
+padding: 3px 12px;
+}
+.panel-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 15px;
+    color: #6f6767;
+}
+#offerPanel .panel-body {
+    padding: 10px;
+    min-height: 110px;
+    max-height: 110px;
+    overflow-y: scroll
+
+}
+.checkbox, .radio {
+    margin-top: 0px; 
+}
+.switch {
+	top:0px;
+}
+.panel {
+     margin-bottom: 1%; 
+}
+</style>
+<div class="container" style="padding-right: 25px;padding-left: 25px;">
+ <!-- <shortcut></shortcut> -->
+<div class="row" ng-if="!showEditQuoteView">
+	<div class="col-md-12"><center><label class="main-label">Create Proposal</label></center></div>
+</div>
+<div class="row" ng-if="showEditQuoteView">
+		<div class="col-md-12" style="margin-bottom: 5px;">
+		<div class="col-md-2" style="padding:0px;">
+		<button ng-click="cancelCreateQuote()" class="btn btn-default" style="border-radius: 0px;"><i class="fa fa-chevron-left" aria-hidden="true"></i> Back</button>
+		</div>
+		<div class="col-md-8" style="padding:0px;"></div>
+		<div class="col-md-2" style="padding:0px;">
+		<span style="font-weight: 600;">
+		<p class="sub-label">Proposal Id : {{customerQuote.quoteId}}</p>
+		<p class="sub-label">Created Date : {{getFormattedDate(customerQuote.createdDate)}}</p>
+		</span>	
+		</div>
+		</div>
+</div>
+<div class="row">
+<div class="col-md-12">
+<form name="form.addCustomerQuote" novalidate>
+<!-- <div class="row">
+	<div class="col-md-12"><label class="sub-label">Customer Information</label></div>
+</div> -->
+
+
+<div id="customerInfo" class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
+<div class="panel-heading"><label class="sub-label" style="text-transform: uppercase;">Customer Information</label></div>
+<div class="panel-body">	
+<div class="row row-control">
+	<div class="col-md-6" style="padding:0px;">
+	<div class="col-md-4">
+	<label class="sub-label">Customer Code</label> <span class="asteric">*</span>
+	</div>
+	<div class="col-md-8" ng-if="!showEditQuoteView">
+	<input type = 'text' name="customerCode" id="customerCode" class = 'form-control' ng-model = 'customerQuote.customerCode' focus-me="true" ng-disabled="buttonstatus=='edit'" uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off" placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)" required><!-- ng-keydown="resetOnBackspace($event)" ng-change="customerCodeChanged()"-->
+	<!-- getCustomerDetails(customerQuote.customerCode); -->
+	<span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>*Please enter customer code.</small>
+	</span>	
+	</div>
+	<div class="col-md-8" ng-if="showEditQuoteView">
+	<input type = 'text' name="customerCode" id="customerCode" class = 'form-control' ng-model = 'customerQuote.custCode' ng-disabled="buttonstatus=='edit'" uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off"  placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)" required readonly>
+	<span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>*Please enter customer code.</small>
+	</span>	
+	</div>		
+
+	</div>
+	<div class="col-md-6" style="padding:0px;">
+	<div class="col-md-4">
+	<label class="sub-label">Customer Name</label> <span class="asteric">*</span>		
+	</div>
+	<div class="col-md-8" ng-if="!showEditQuoteView">
+	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'customerQuote.customerName' ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+	<span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>*Please enter customer name.</small>
+	</span>
+	</div>
+	<div class="col-md-8" ng-if="showEditQuoteView">
+	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'customerQuote.custName' ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+	<span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>*Please enter customer name.</small>
+	</span>
+	</div>
+
+	</div>
+</div>
+
+<div class="row row-control">
+	<div class="col-md-6" style="padding:0px;">
+	<div class="col-md-4">
+	<label class="sub-label">Address</label>
+	</div>
+	<div class="col-md-8">
+	<textarea name="address" class="form-control" style="padding: 11px 5px;" rows="2" ng-model = 'customerQuote.address' ng-disabled="!isNewCustomer"></textarea>
+	<span ng-show="((form.addCustomerQuote.address.$dirty && form.addCustomerQuote.address.$invalid) || (form.addCustomerQuote.address.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+	<small>*Please enter customer address.</small>
+	</span>		
+	</div>
+	</div>
+	<div class="col-md-6" style="padding:0px;">
+	<div class="col-md-12 row-control" style="padding:0px;">
+		<div class="col-md-4">
+		<label class="sub-label">Phone No</label>		
+		</div>
+		<div class="col-md-8">
+		<input type = 'text' name="phoneNo" class = 'form-control' ng-model = 'customerQuote.phone'  ng-pattern="/^[0-9]{5,12}$/" ng-disabled="!isNewCustomer">
+		<span ng-show="((form.addCustomerQuote.phoneNo.$dirty && form.addCustomerQuote.phoneNo.$invalid) || (form.addCustomerQuote.phoneNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-show="form.addCustomerQuote.phoneNo.$error.pattern">*Please enter valid phone no.</small>
+		</span>		
+		</div>
+	</div>
+	<div class="col-md-12" style="padding:0px;">
+		<div class="col-md-4">
+		<label class="sub-label">Email</label> <span class="asteric">*</span>
+			
+		</div>
+		<div class="col-md-8">
+		<input type = 'text' name="email" class = 'form-control' ng-model = 'customerQuote.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+		<span ng-show="((form.addCustomerQuote.email.$dirty && form.addCustomerQuote.email.$invalid) || (form.addCustomerQuote.email.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-show="form.addCustomerQuote.email.$error.required">*Please enter email id.</small>
+			<small ng-show="form.addCustomerQuote.email.$error.pattern">*Please enter valid email id.</small>
+		</span>		
+		</div>
+	</div>
+
+	</div>
+</div>
+ <div class="row row-control">
+ 	<div class="col-md-6" style="padding:0px;">
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Fax</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+			<input type = 'text' name="faxNo" class = 'form-control' ng-model = 'customerQuote.fax' ng-disabled="!isNewCustomer">
+			<span ng-show="((form.addCustomerQuote.faxNo.$dirty && form.addCustomerQuote.faxNo.$invalid) || (form.addCustomerQuote.faxNo.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please enter fax no.</small>
+			</span>	
+			</div>
+	 	</div>
+
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Current Supplier Name</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+			<input type = 'text' id="currentSupplierName" name="currentSupplierName" class = 'form-control' ng-model = 'customerQuote.currentSupplierName' uib-typeahead = 'currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue' typeahead-on-select="currentSupplierNameChanged()" ng-required="isCurrentSupplierNameRequired" ng-change="currentSupplierNameChanged()" autocomplete="off" typeahead-min-length="0">
+			<!--     -->
+			<span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">*Please enter supplier name.</small>
+			<small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">*Supplier already exist please select from list.</small>
+			</span>		
+			</div>
+	 	</div>
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+			<div class="col-md-4">
+			<label class="sub-label">Sales Person</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+		
+			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList" required ng-disabled="disableSalesPersonSelect">
+			<option value="">Select Sales Person</option>
+			</select>
+			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.salesPerson.$error.required">*Please select sales person.</small>
+			</span>	
+			<!-- {{customerQuote.salesPerson}} -->
+			<!-- <input type = 'text' id="salesPerson" name="salesPerson" class = 'form-control' ng-model = 'customerQuote.salesPerson'  uib-typeahead = 'salesPersonList as salesPersonList.value for salesPersonList in salesPersonList | filter:$viewValue' typeahead-on-select="" autocomplete="off" > -->
+			<!-- <span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-if="form.addCustomerQuote.salesPerson.$error.required && !form.addCustomerQuote.salesPerson.$invalid">* please enter supplier name.</small>
+			<small ng-if="form.addCustomerQuote.salesPerson.$invalid">* sales person already exist please select from list.</small>
+			</span>	 -->
+			</div>
+		</div>
+	 	<div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Prices GST Incl</label> 
+			</div>
+			<div class="col-md-8" >	
+			<input type="checkbox" name="priceGstInclude" ng-model="customerQuote.pricesGstInclude" ng-change="calculateAllInformation();" style="height: 15px; width: 15px;">&nbsp;&nbsp;&nbsp;		
+			</div>
+	 	</div>
+ 	</div>
+ 	<div class="col-md-6" style="padding:0px;">
+ 		 <div class="col-md-12 row-control" style="padding: 0px;" ng-if="isNewCustomer">
+		 	<div class="col-md-4">
+			<label class="sub-label">Monthly Avg Pur </label> <span class="asteric">*</span>		
+			</div>
+			<div class="col-md-8">
+			<!-- <input type = 'text' id="quoteAttn" name="quoteAttn" class = 'form-control' ng-model = 'customerQuote.attn' required>
+			<span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>* please enter monthly avg purchase.</small>
+			</span> -->
+			<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'customerQuote.monthlyAvgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
+			<span ng-show="((form.addCustomerQuote.monthlyAvgPurchase.$dirty && form.addCustomerQuote.monthlyAvgPurchase.$invalid) || (form.addCustomerQuote.monthlyAvgPurchase.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small ng-show="form.addCustomerQuote.monthlyAvgPurchase.$invalid">*Monthly average purchase invalid.</small>
+			</span>		
+			</div>
+ 		 </div>
+ 		
+ 		  <div class="col-md-12 row-control" style="padding: 0px;">
+	 		<div class="col-md-4">
+			<label class="sub-label">Compete Proposal</label> <span class="asteric"></span>		
+			</div>
+			<div class="col-md-8">
+
+			<select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required>
+			<option value="">Select compete</option>
+			</select>
+			<span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please select compete proposal.</small>
+			</span>	
+			</div>
+ 		  </div>
+
+ 		   <div class="col-md-12 row-control" style="padding: 0px;">
+		 	<div class="col-md-4">
+			<label class="sub-label">Proposal Attn</label> <span class="asteric">*</span>		
+			</div>
+			<div class="col-md-8" ng-if="!showEditQuoteView">
+			<input type = 'text' id="quoteAttn" name="quoteAttn" class = 'form-control' ng-model = 'customerQuote.attn' required>
+			<span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please enter proposal attn.</small>
+			</span>		
+			</div>
+			<div class="col-md-8" ng-if="showEditQuoteView">
+			<input type = 'text' id="quoteAttn" name="quoteAttn" class = 'form-control' ng-model = 'customerQuote.quoteAttn' required>
+			<span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
+			<small>*Please enter quote attn.</small>
+			</span>		
+			</div>
+ 		 	</div>
+
+ 		 	<div class="col-md-12 row-control" style="padding: 0px;">
+			<div class="col-md-4"><label class="sub-label">Date</label></div>
+			<div class="col-md-8">
+			<p class="input-group" id="createdDate" ng-if="!showEditQuoteView">
+	          <input type="text" name="createdDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.createdDate" ng-change="quoteDateChanged(customerQuote.createdDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <span class="input-group-btn">
+	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          </span>
+		    </p>
+		    <p class="input-group" id="modefiedDate" ng-if="showEditQuoteView">
+	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="quoteDateChanged(customerQuote.modefiedDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <span class="input-group-btn">
+	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+	          </span>
+		    </p>
+			</div>
+ 			</div>
+ 	</div>
+ </div>
+
+</div>
+</div>
+<div class="row" ng-if="showAddProductError">
+<div class="col-md-6"></div>
+<div class="col-md-6">
+<span ng-show="showAddProductError" class="invalid-control" style="float: right;"><small>*Please add products before save.</small></span>	
+</div>	
+</div>
+<div class="panel panel-default" style="border-radius:0px;">
+	<div class="panel-heading">
+	<div class="row">
+	<div class="col-md-4">
+		<label class="sub-label" style="text-transform: uppercase;">Added Products : <span ng-if="customerQuote.productList">{{addedProductCount}}</span></label>
+	</div>
+	<div class="col-md-6"></div>
+	<div class="col-md-2">
+		<a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products. [ctrl+shift+a]" > <i class="glyphicon glyphicon-plus"></i> Add Product
+		</a>
+		<!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button> -->
+		<!-- <a id="addProductLink" href="#" class="" style="text-decoration: none;float: right;color:#113654;font-weight: bold;cursor: pointer;" ng-click="openMyModal()" uib-popover="Click to add products into quote. [ctrl+shift+a]" popover-placement="top" popover-trigger="'mouseenter'"> <i class="glyphicon glyphicon-plus"></i> Add Product Modal
+		</a> -->
+		<!-- <span style="color: gray;float: right;">[ctrl+shift+a]</span> -->
+	</div>
+	</div>
+	</div>
+	<div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
+<!-- {{customerQuote.productList}} -->
+	<div class="col-md-12">
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="padding: 0px;">
+		<div class="col-md-2 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Code">Product Code</div>
+		<div class="col-md-4 t_head" style="width:25%;" tooltip-placement="top" uib-tooltip="Product Name">Product Name</div>
+		<div class="col-md-1 t_head" style="width:10%;" >UOM</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Cost</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Qty</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Current Price">Current Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Current Price Total">Current Price Total</div>
+		<!-- <div class="col-md-1 t_head">Current Price Total</div> -->
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12" style="">
+		<!-- <div class="col-md-2 t_head">Current Price</div> -->
+		<div class="col-md-1 t_head" style="text-align: right;width:11%;" tooltip-placement="top" uib-tooltip="Supplier GP">Supplier GP(%)</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Jaybel Price">Jaybel Price</div>
+		<div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Jaybel Price Total">Jaybel Price Total</div>
+		<div class="col-md-1 t_head" style="text-align: right;width:11%" tooltip-placement="top" uib-tooltip="Jaybel GP">Jaybel GP(%)</div>
+		<div class="col-md-2 t_head" style="width:15%;" tooltip-placement="top" uib-tooltip="Savings">Savings (%)</div>
+		<div class="col-md-1 t_head" style="width:11%;" tooltip-placement="top" uib-tooltip="GST Exempt Y/N">GST Ex Y/N</div>
+		<div class="col-md-1 t_head" style="text-align:center;width:10%;">Comment</div>
+		<div class="col-md-2 t_head" style="text-align:center;width:17%;">Action</div>
+		</div>	
+		</div>	
+		</div>
+	</div>
+	<div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList" ng-class="{'alt-product':product.isAlternate}">
+		<div class="col-md-12" style="padding: 0px;">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" >
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.itemCode"></span></div>
+		<div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.itemDescription"></div>
+		<div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.unit"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.avgcost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.itemQty"></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.quotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="product.total.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.gpRequired)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.savings)"></span></div>
+		<div class="col-md-1 t_data" style="text-align:center;width:11%;"><span data-ng-bind="product.gstFlag"></span></div>
+		<div class="col-md-1 t_data" style="text-align:center;width:10%;">
+		<span ng-if="product.lineComment!=null&&product.lineComment!=''" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:#31708f;"></i> </span>	
+		</div>
+		<div class="col-md-2 t_data" style="text-align:center;width:17%;">
+		<span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" tooltip-placement="top" uib-tooltip="Click To Edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
+        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" tooltip-placement="top" uib-tooltip="Click To Delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
+        </div>
+		</div>	
+		</div>	
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.itemCode">
+			<hr style="margin: 0px;">
+		</div>
+		<div class="col-md-12" ng-if="product.altProd.itemCode" style="background: rgba(245, 9, 4, 0.03);padding: 0px;">
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.altProd.itemCode"></span></div>
+		<div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.altProd.itemDescription"></div>
+		<div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.altProd.unit"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.avgcost"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.itemQty"></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierPrice)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:10%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}}</span></div>
+
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierTotal)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}} </span></div>
+		</div>	
+		</div>	
+		<div class="col-md-6" style="padding: 0px;">
+		<div class="col-md-12">
+		<div class="col-md-1 t_data" style="text-align: right;width:11%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierGP)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:11%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}}</span></div>
+
+		<div class="col-md-2 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.altProd.quotePrice)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="product.altProd.total.toFixed(2)"></span></div>
+		<div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.altProd.gpRequired)"></span></div>
+		<div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.altProd.savings)"></span></div>
+		<div class="col-md-1 t_data" style="text-align:center;width:11%;"><span data-ng-bind="product.altProd.gstFlag"></span></div>
+		<div class="col-md-1 t_data" style="width:10%;"></div>
+		<div class="col-md-2 t_data" style="width:17%;">
+        </div>
+		</div>	
+		</div>	
+		</div>
+
+	</div>
+	</div>
+</div>
+<div class="row row-control">
+	<div class="col-md-1">
+	<label class="sub-label">Notes</label>
+	</div>
+	<div class="col-md-11">
+	<textarea name="notes" rows="1" class="form-control" ng-model="customerQuote.notes"></textarea>
+	</div>
+
+</div>
+
+<div class="row" style="margin-bottom: 1%;margin-top: 2%;">
+	<div class="col-md-12" style="margin-bottom: 1%;">
+	<label class="sub-label">STANDARD TOTAL :</label>
+	</div>
+	<div class="col-md-12" style="padding-right: 0px;">
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Current Supplier Information</label></legend>
+			<!-- <span data-ng-bind="supplierInformation"></span> -->
+			<p class="para"><label>Subtotal </label>: {{getPrice(supplierInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: {{getPrice(supplierInformation.gstTotal)}}</p>
+			<p class="para"><label>Total </label>: {{getPrice(supplierInformation.total)}} </p>
+			
+		</fieldset>
+	</div>	
+	<div class="col-md-3">
+		<fieldset style="border: 1px solid #cccccc;padding: 17px 15px;">
+			<legend><label class="label label-default" style="color: #fff;">GP Information</label></legend>
+			<p class="para"><label>Avg of GP Required </label>: {{getPrice(gpInformation.avgGpRequired)}}</p>
+			<p class="para"><label>Avg of Cur Supplier GP </label>: {{getPrice(gpInformation.avgCurrentSupplierGp)}}</p>		
+			<br>	
+		</fieldset>
+	</div>
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Total Information</label></legend>
+			<p class="para"><label>Subtotal  </label>: {{getPrice(totalInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: {{getPrice(totalInformation.gstTotal)}}</p>		
+			<p class="para"><label>Total </label>: {{getPrice(totalInformation.total)}}</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="totalInformation.total<=supplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			 {{(getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)}}</span>
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span ng-if="!((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{(((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)}}</span> 
+			<span ng-if="((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			{{((getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)*12).toFixed(2)}}
+			</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="totalInformation.total>supplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			<span> {{getPrice(0)}}</span>  
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span> {{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			<span>{{getPrice(0)}}</span>
+			</p>		
+		</fieldset>
+	</div> 
+	</div>	
+</div>
+<div class="row row-control" style="margin-bottom: 3%;" ng-if="isAlternateAdded">
+	<div class="col-md-12" style="margin-bottom: 1%;">
+		<label class="sub-label">ALTERNATIVE PRODUCTS TOTAL :</label>
+	</div>
+	<div class="col-md-12" style="padding-right: 0px;">
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Current Supplier Information</label></legend>
+			<p class="para"><label>Subtotal </label>: {{getPrice(altSupplierInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: {{getPrice(altSupplierInformation.gstTotal)}}</p>
+			<p class="para"><label>Total </label>: {{getPrice(altSupplierInformation.total)}} </p>
+			
+		</fieldset>
+	</div>	
+	<div class="col-md-3">
+		<fieldset style="border: 1px solid #cccccc;padding: 17px 15px;">
+			<legend><label class="label label-default" style="color: #fff;">GP Information</label></legend>
+			<p class="para"><label>Avg of GP Required </label>: {{getPrice(altGpInformation.avgGpRequired)}}</p>
+			<p class="para" ng-hide="getPrice(altGpInformation.avgCurrentSupplierGp)=='NaN'"><label>Avg of Cur Supplier GP </label>: {{getPrice(altGpInformation.avgCurrentSupplierGp)}}</p>		
+			<p class="para" ng-if="getPrice(altGpInformation.avgCurrentSupplierGp)=='NaN'"><label>Avg of Cur Supplier GP </label>:{{getPrice(0)}}</p>		
+			<br>	
+		</fieldset>
+	</div>
+	<div class="col-md-3" style="padding:0px;">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Total Information</label></legend>
+			<!-- {{altTotalInformation}} -->
+			<p class="para"><label>Subtotal  </label>: {{getPrice(altTotalInformation.subtotal)}}</p>
+			<p class="para"><label>GST Total </label>: {{getPrice(altTotalInformation.gstTotal)}}</p>		
+			<p class="para"><label>Total </label>: {{getPrice(altTotalInformation.total)}}</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="altTotalInformation.total<=altSupplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			 {{(getPrice(altSupplierInformation.total)-getPrice(altTotalInformation.total)).toFixed(2)}}</span>
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span ng-if="!((((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{(((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)}}</span> 
+			<span ng-if="((((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			{{((getPrice(altSupplierInformation.total)-getPrice(altTotalInformation.total)).toFixed(2)*12).toFixed(2)}}
+			</p>		
+		</fieldset>
+	</div>
+	<div class="col-md-3" ng-show="altTotalInformation.total>altSupplierInformation.total">
+		<fieldset style="border: 1px solid #cccccc;">
+			<legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+			<p class="para"><label>Overall Saving ($) </label>: 
+			<span> {{getPrice(0)}}</span>  
+			</p>		
+			<p class="para"><label>Overall Saving (%)  </label>: 
+			<span> {{getPrice(0)}}</span>
+			</p>
+			<p class="para"><label>Total Annual Saving ($) </label>: 
+			<span>{{getPrice(0)}}</span>
+			</p>		
+		</fieldset>
+	</div> 
+	</div>	
+</div>
+
+<div class="row" style="margin-top: 1%;" id="offerPanel">
+	<div class="col-md-12">
+	<!-- <div class="col-md-3" style="padding: 0px;padding-right: 5px;">
+	<div class="panel panel-default" style="border-radius:0px 0px 0px 4px;;">
+	<div class="panel-heading"><label class="sub-label">Services</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="service in serviceArray">
+	<label>
+	<input type="checkbox" name="service" ng-model="serviceArray[$index].code" ng-init="serviceArray[$index].code=false;" style="height: 15px; width: 15px;" ng-if="!showEditQuoteView">		
+	<input type="checkbox" name="service" ng-model="serviceArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+	{{service.value}}
+	</label>
+	</div>
+	</div>
+	</div>
+	</div>	 -->
+	<div class="col-md-4" style="padding: 0px;padding-right: 5px;">
+	<div class="panel panel-default" style="border-radius:0px;">
+	<div class="panel-heading"><label class="sub-label">Terms & Conditions</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="term in termConditionArray">
+		<label >
+		<input type="checkbox" name="term" ng-model="termConditionArray[$index].code" ng-init="termConditionArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView">
+		<input type="checkbox" name="term" ng-model="termConditionArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+		{{term.value}}
+		</label>
+		</div>
+	</div>
+	</div>
+	</div>
+	<div class="col-md-5" style="padding: 0px;">
+	<div class="panel panel-default" style="border-radius:0px 0px 4px 0px;">
+	<div class="panel-heading"><label class="sub-label">Offers</label></div>
+	<div class="panel-body">
+	<div class="checkbox" ng-repeat="offer in offerArray">
+	<label>	
+	<input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
+	<input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+	{{offer.offerName}}
+	</label>
+	</div>	
+	</div>
+	</div>
+	<!-- 	<uib-accordion>
+		<div uib-accordion-group class=" panel panel-default" ng-init="isOpen=true;"  is-open="isOpen">
+		<uib-accordion-heading>
+		<label >Offers</label>
+		<i class="pull-right glyphicon glyphicon-chevron-right" ng-show="!isOpen"></i>
+		<i class="pull-right glyphicon glyphicon-chevron-down" ng-show="isOpen"></i>
+		</uib-accordion-heading>
+		<div class="checkbox" ng-repeat="offer in offerArray">
+		<label>	
+		<input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
+		<input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+		{{offer.offerName}}</label>
+		</div>
+		</div>
+		</uib-accordion> -->
+	</div>
+	<!--  -->
+
+	</div>
+
+</div>
+<div class="row" style="margin-top: 1%;">
+	<div class="col-md-12" style="padding: 0px;">
+	
+	<div class="col-md-6"></div>
+	<!--  -->
+	<div class="col-md-2" style="padding: 0px;padding-left:10px;" >
+	<div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
+	<label class="sub-label">Save With Alternative</label>
+	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
+	</div>
+	</div>
+	<div class="col-md-4" style="padding: 0px;">
+	<div class="col-md-6">
+	<button id="create" ng-click="createQuote()" class="btn btn-block button-ok" style="" ng-if="!showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
+	<button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>
+	</div>	
+	<div class="col-md-6">
+	<button id='cancel' ng-click="cancelCreateQuote()" class="btn btn-block button-delete" style=""><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
+	</div>		
+	</div>
+
+	</div> 
+
+</div>
+
+
+</form>
+</div>
+<!-- <div class="col-md-1"></div> -->
+</div>
+</div>
+
+
+<!-- <div class="row" ng-if="!showEditQuoteView">
+  <div class="moveTop" ng-click="moveToCustomerInfo();" uib-tooltip="Move To Top" tooltip-placement="top">
+   <i class="glyphicon glyphicon-chevron-up"></i>
+  </div>
+</div> -->
+<!-- <div ng-include="'SQ/UserHome/Quote/views/add_product_modal.html'" ng-if="productList.length>0"></div> -->
+<!-- <div ng-include="'SQ/UserHome/Quote/views/sq.add_product_into_quote_modal.html'"></div> -->
+<div ng-include="'SQ/UserHome/Quote/views/addproduct-uib-modal.html'"></div>
+

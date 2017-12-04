@@ -1,0 +1,92 @@
+<style type="text/css" media="screen">
+.main-label{
+	margin: 3% 0% 3% 0%;
+}	
+</style>
+<div class="container">
+<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Create/Edit Terms And Conditions</label></center></div>
+</div>
+<form name="form.manageTermCondition" novalidate>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<div class="row row-control">
+	<div class="col-md-3">
+	<label class="sub-label">Term</label> <span class="asteric">*</span>
+	</div>
+	<div class="col-md-9">
+	<input type = 'text' name="term" id="term" class = 'form-control' ng-model = 'termCondition.term' focus-me="true" autocomplete="off" focus-me="focus" required>
+	<span ng-show="((form.manageTermCondition.term.$dirty && form.manageTermCondition.term.$invalid) || (form.manageTermCondition.term.$invalid && form.manageTermCondition.submitted))" class="invalid-control">
+	<small>* Please enter term.</small>
+	</span>	
+	</div>		
+	</div>
+	<div class="row row-control">
+		<div class="col-md-5"></div>
+		<div class="col-md-4">
+    	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteUserGroupMenu()" class="btn btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+    	</div>
+		<div class="col-md-3">
+		<button id="create" ng-click="saveTermAndCondition()" class="btn btn-block button-ok" style="margin-top: 10%;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>	
+		</div>
+	</div>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+</form>
+<br>
+<!-- <div class="row">
+	<div class="col-md-12"><center><label>- : Existings Terms & Conditions : -</label></center></div>
+</div> -->
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<table  class="table table-bordered hover table-responsive">
+	<caption>- : Existing Terms & Conditions : -</caption>
+	<thead>
+		<tr>
+			<th><center>Sr No</center></th>
+			<th><center>Terms And Conditions</center></th>
+			<th><center>Action</center></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="term in termConditionArray" ng-if="termConditionArray.length>0">
+			<td><center>{{$index+1}}</center></td>
+			<td>
+			<div class="col-md-12" ng-hide = 'editing[$index]'>
+			<span>{{term.value}}</span>					
+			</div>
+			<div class="col-md-12" ng-show="editing[$index]">
+			<div class="col-md-10" style="padding: 0px;">
+			<input type="text" class="form-control" focus-me="true" name="" value="" placeholder="please add term & condition" ng-model="term.value" style="border-radius: 0px;">
+			</div>
+			<div class="col-md-2" style="padding: 0px;">
+			<span style="cursor: pointer;margin: 0px 5px;color:green;" ng-click="updateTermAndCondition(term,$index)"><i class="fa fa-check-circle-o fa-lg" aria-hidden="true"></i></span>
+		    <span style="cursor: pointer;margin: 0px 5px;color:red;" ng-click="stop($index)"><i class="fa fa-times-circle-o fa-lg" aria-hidden="true"></i></span>
+			</div>
+			</div>
+			</td>
+			<td>
+			<center>
+			<span style="cursor: pointer;margin: 0px 5px;" ng-click="editTermBtnClicked(termConditionArray,$index)" tooltip-placement="top" uib-tooltip="Click to edit term."><i class="glyphicon glyphicon-pencil"></i></span>
+			<!-- popover-placement="left" uib-popover="Click to edit term."  popover-trigger="'mouseenter'" -->
+		    <span style="cursor: pointer;margin: 0px 5px;" ng-click="deleteTermAndCondition(term)"  tooltip-placement="top" uib-tooltip="Click to delete term."><i class="glyphicon glyphicon-trash"></i></span>
+		    </center>
+		    </td>
+		</tr>
+		<tr  ng-if="!termConditionArray.length>0">
+			<td></td>
+			<td>
+			<div class="col-md-12">
+			<center>Terms & Conditions not added.</center>					
+			</div>
+			</td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+
+</div>

@@ -1,0 +1,282 @@
+<style type="text/css">
+.col-md-4 {
+    width: 37.333333%;
+}
+.col-md-8 {
+width: 62.666667%;
+}
+.main-label {   
+    margin: 3% 0% 0% 0%;
+}
+
+</style>
+<div class="container">
+<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage Customer</label></center></div>
+</div>
+<div  style="padding-bottom: 40px;" class="row" ng-if="addCustomerBtnShow">
+		<div class="col-md-11" style="width: 84%;"></div>
+		<div class="col-md-1" style="width: 16%;">
+			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addCustomerBtnClicked()" ng-disabled="addCustomerBtnDisabled" uib-popover="Click to add customer." popover-placement="top" popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Customer</button>
+		</div>
+</div>
+<!-- {{isCustomerTableView}}
+{{customerListView | json}} -->
+<!-- dt-column-defs="dtColumnDefs"  -->
+<div  ng-if="isCustomerTableView " style="font-size: 12px;"><!-- && customerListView.length>0 -->
+<table datatable="ng" dt-options="dtOptions" class="table row-border hover table-responsive" id="customerDataTable">
+                <thead class="table-header">
+                    <tr>
+		                <th style="width:10%;">Cust Code</th>
+		                <th style="width:10%;">Cust Name</th>
+		                <th style="width:10%;">Phone No</th>
+		                <th style="width:10%;">Contact Person</th>
+		                <!-- <th>Address</th> -->
+		                <th style="width:10%;">Fax</th>
+		                <th style="width:10%;">Email</th>
+		                <th style="width:10%;">Total Staff</th>
+		                <th style="width:15%;">Monthly Avg Purchs</th>
+		                <th style="width:10%;">Industry Type</th>
+		                <th style="width:5%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<!-- ng-click="showDetails(customerListView,$index)" -->
+                    <tr ng-repeat="customer in customerListView"  > 
+		                <td><span data-ng-bind="customer.customerCode"></span></td>
+		                <td><span data-ng-bind="customer.customerName"></span></td>
+		                <td><span data-ng-bind="customer.phone"></span></td>
+		                <td><span data-ng-bind="customer.contactPerson"></span></td>
+		                <!-- <td>
+		                	<span data-ng-bind="customer.address1"></span>
+						<div class="col-md-12" ng-show="editing[$index]">hiii</div>	
+		                </td> -->
+		                <td><span data-ng-bind="customer.fax"></span></td>
+		                <td><span data-ng-bind="customer.email"></span></td>
+		                <td><span data-ng-bind="customer.totalStaff"></span></td>
+		                <td><span data-ng-bind="getPrice(customer.avgPurchase)"></span></td> 
+		                <td><span data-ng-bind="customer.industryType"></span></td> 
+		                <td>
+		                <span style="cursor: pointer;margin: 0px 0px;" ng-click="editCustomerBtnClicked(customer)" popover-placement="left" uib-popover="Click to edit customer."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-pencil"></i></span>&nbsp;&nbsp;
+		                <span style="cursor: pointer;margin: 0px 0px;" ng-click="deleteCustomer(customer)" popover-placement="left" uib-popover="Click to delete customer."  popover-trigger="'mouseenter'"><i class="glyphicon glyphicon-trash"></i></span>
+		                </td>
+                	</tr>
+                </tbody>
+</table>	
+</div>
+
+<!-- <div ng-hide="customerListView.length>0" style="font-size: 12px;margin-top:5%;">
+ 	<div style="padding:40px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);background-color:#F1F1F1; letter-spacing: 1px; margin:10px;" class="row">
+        <div class="col-md-12">
+          <div class="no-message">
+          	<center><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></center>
+            <center>
+              <p style="font-size: 14px; font-weight:bold;">As of now there are no customer available.</p>   
+              <p style="font-size: 12px;">You can add, delete customer and other customer related details will be shown here.</p>
+            </center>
+          </div>
+        </div>
+  </div>
+</div> -->
+
+<div id="customerForm" ng-if="isCustomerAddView" style="margin-top: 3%;">
+<form name="form.manageCustomer" novalidate>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Customer Code</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'text' name="customerCode" class = 'form-control' ng-model = 'manageCustomer.customerCode' focus-me="true" ng-disabled="buttonstatus=='edit'" required><!-- uib-typeahead = 'customerList as customerList.value for customerList in customerList | filter:$viewValue' typeahead-on-select="getCustomerDetails(manageCustomer.customerCode)" ng-keydown="resetOnBackspace($event)"  ng-change="customerCodeChanged()" -->
+	<span ng-show="((form.manageCustomer.customerCode.$dirty && form.manageCustomer.customerCode.$invalid) || (form.manageCustomer.customerCode.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small>*Please enter customer code.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Customer Name</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'text' name="customerName" class = 'form-control' ng-model = 'manageCustomer.customerName' required>
+	<span ng-show="((form.manageCustomer.customerName.$dirty && form.manageCustomer.customerName.$invalid) || (form.manageCustomer.customerName.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small>*Please enter customer name.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Phone No</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="phoneNo" class = 'form-control' ng-model = 'manageCustomer.phone'  ng-pattern="/^[0-9]{5,12}$/">
+	<span ng-show="((form.manageCustomer.phoneNo.$dirty && form.manageCustomer.phoneNo.$invalid) || (form.manageCustomer.phoneNo.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+		<small ng-show="form.manageCustomer.phoneNo.$error.pattern">*Please enter valid phone no.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Contact Person</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="contactPerson" class = 'form-control' ng-model = 'manageCustomer.contactPerson'>
+	<span ng-show="((form.manageCustomer.contactPerson.$dirty && form.manageCustomer.contactPerson.$invalid) || (form.manageCustomer.contactPerson.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small>*Please enter contact person.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Address 1</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="address1" class = 'form-control' ng-model = 'manageCustomer.address1' ng-click="collapseDiv()" ng-focus="collapseDiv()">
+	</div>
+	</div>
+		
+	<div uib-collapse="isCollapsed">
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Address 2</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="address2" class = 'form-control' ng-model = 'manageCustomer.address2'>
+	</div>
+	</div>
+
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Suburb </label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="suburb" class = 'form-control' ng-model = 'manageCustomer.suburb'>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">State</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="state" class = 'form-control' ng-model = 'manageCustomer.state'>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4">
+	<label class="sub-label">Postal Code</label>
+	</div>
+	<div class="col-md-8">
+	<input type = 'text' name="postcode" class = 'form-control' ng-model = 'manageCustomer.postalCode' ng-pattern="/^(0|[1-9][0-9]*)$/" ng-maxlength="6">
+	<span ng-show="((form.manageCustomer.postcode.$dirty && form.manageCustomer.postcode.$invalid) || (form.manageCustomer.postcode.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small ng-show="form.manageCustomer.postcode.$error.required">*Please enter postal code.</small>
+	<small ng-show="form.manageCustomer.postcode.$error.pattern || form.manageCustomer.postcode.$error.maxlength">*Please valid postal code.</small></span>
+	</div>
+	</div>
+
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Fax No</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="faxNo" class = 'form-control' ng-model = 'manageCustomer.fax'>
+	<span ng-show="((form.manageCustomer.faxNo.$dirty && form.manageCustomer.faxNo.$invalid) || (form.manageCustomer.faxNo.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small>*Please enter fax no.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Email</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'text' name="email" class = 'form-control' ng-model = 'manageCustomer.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
+	<span ng-show="((form.manageCustomer.email.$dirty && form.manageCustomer.email.$invalid) || (form.manageCustomer.email.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+		<small ng-show="form.manageCustomer.email.$error.required">*Please enter email id.</small>
+		<small ng-show="form.manageCustomer.email.$error.pattern">*Please enter valid email id.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Total Staff</label></div>
+	<div class="col-md-8">
+	<input type = 'number' string-to-number name="totalStaff" class = 'form-control' ng-model = 'manageCustomer.totalStaff' ng-pattern="/^(0|[1-9][0-9]*)$/" step="0">
+	<span ng-show="((form.manageCustomer.totalStaff.$dirty && form.manageCustomer.totalStaff.$invalid) || (form.manageCustomer.totalStaff.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small ng-show="form.manageCustomer.totalStaff.$invalid">*total staff invalid.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Monthly Avg Purchase</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type = 'number' string-to-number name="monthlyAvgPurchase" class = 'form-control' ng-model = 'manageCustomer.avgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" required>
+	<span ng-show="((form.manageCustomer.monthlyAvgPurchase.$dirty && form.manageCustomer.monthlyAvgPurchase.$invalid) || (form.manageCustomer.monthlyAvgPurchase.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.pattern">*monthly average purchase invalid.</small>
+	<small ng-show="form.manageCustomer.monthlyAvgPurchase.$error.required">*Please enter monthly average purchase.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Industry Type</label></div>
+	<div class="col-md-8">
+	<input type = 'text' name="industryType" class = 'form-control' ng-model = 'manageCustomer.industryType'>
+	<span ng-show="((form.manageCustomer.industryType.$dirty && form.manageCustomer.industryType.$invalid) || (form.manageCustomer.industryType.$invalid && form.manageCustomer.submitted))" class="invalid-control">
+	<small>*Please enter monthly industry type.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Customer Logo</label> </div>
+	<div class="col-md-8" >
+	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="customerLogo"  filepreview="filepreview" style="margin-bottom: 2%;">
+	<span class="invalid-control">
+	<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 50KB.</small>
+	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
+	</span>
+	<!-- <i class="fa fa-eye" aria-hidden="true" uib-popover="Click to view added logo." popover-placement="top" popover-trigger="'mouseenter'"></i> -->
+	
+	</div>
+	<!-- <div class="col-md-1" style="padding:0px;" ng-if="!isInvalid&&!invalidFileSize">
+
+		<button type="button" class="" ng-click="isImageCollapsed = !isImageCollapsed" style="float: right;"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
+	</div>-->
+	</div> 
+
+	<div class="row row-control" >
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="!invalidFileSize && !isInvalid && !isFileNull">	
+ 	<img class="img-thumbnail"  ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview"  style="height: 100px;width:100px;" alt-SRC src="Images/no-image.png" />	
+	</div>
+	</div>
+	<!-- <img class="img-thumbnail" ng-src="" class="img-responsive"  style="height: 100px;width:100px;"/>	 -->
+	<!-- <div class="row row-control">
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="manageCustomer.customerLogoSrc">
+ 	<img class="img-thumbnail" ng-src="{{manageCustomer.customerLogoSrc}}" class="img-responsive"  style="height: 100px;width:100px;"/>			
+	</div>	
+	</div> -->
+
+
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4" style="width: 31.333333%;">
+    	<!-- <button ng-if="buttonstatus=='edit'" ng-click="deleteCustomer()" class="btn btn-default btn-block button-delete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button> -->
+    	<button ng-click="cancelAddCustomer()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
+    	</div>
+		<div class="col-md-4" style="width: 31.333333%;">
+		<button id="create" ng-click="saveCustomer()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+
+</div>
+
+
+<!--  /^[0-9]+(\.[0-9]{1,10})?$/  reg-ex-input reg-ex="^[0-9.]$"--><!-- ng-keyup="FilterInput($event,manageCustomer.avgPurchase)" -->

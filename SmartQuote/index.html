@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="sq.SmartQuoteDesktop">
+<head>
+<title>Smart Proposal</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<link rel="icon" href="favicon.png" type="image/png">
+
+<link rel="stylesheet" type="text/css" href="assets/libs/bootstrap/dist/css/bootstrap.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="assets/libs/js/angular-ui-switch/angular-ui-switch.css">
+<link rel="stylesheet" type="text/css" href="assets/libs/angucomplete-alt/angucomplete-alt.css">
+
+<!-- Sweet Alert -->
+<script src="assets/libs/sweet-alert/sweetalert-dev.js"></script>
+<link rel="stylesheet" href="assets/libs/sweet-alert/sweetalert.css">
+<!-- Datatable-->
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.0/css/responsive.dataTables.min.css">
+<!-- Hotkeys -->
+<link rel="stylesheet" href="assets/libs/js/angular/angular-csp.css">
+<link rel="stylesheet" href="assets/libs/hot-keys/hotkeys.min.css">
+<link rel="stylesheet" href="assets/libs/typeahead/angular-typeahead.css">
+<!-- SQ CSS-->
+<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+</head>
+<body ng-controller="SmartQuoteDesktopController"
+	ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}">
+	<!-- ==========================Start Top Navigation======================== -->
+	<div sq-spinner info="loadingInfo"></div>
+	<nav id="top" class="navbar navbar-inverse navbar-fixed-top ng-cloak"
+		role="navigation" ng-if="isUserSignIn">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav" ng-repeat="menu in userNavMenu">
+					<li ng-if="!(menu.subMenuBeans.length>0)"><a href="#"><span
+							data-ng-bind="menu.menuName"
+							ng-click="menuClicked(menu.menuName)"></span></a></li>
+					<li ng-if="menu.subMenuBeans.length>0 && menu.menuName!=='Profile'"
+						class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false" ng-click="menuClicked(menu.menuName)"><span
+							data-ng-bind="menu.menuName"></span> <i class="caret"></i></a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="submenu in menu.subMenuBeans"><a href="#"
+								ng-click="subMenuClicked(submenu.subMenuName)"><span
+									data-ng-bind="submenu.subMenuName"></span></a></li>
+						</ul></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right"
+					ng-repeat="menu in userNavMenu">
+					<li ng-if="menu.subMenuBeans.length>0 && menu.menuName=='Profile'"
+						class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false" ng-click="menuClicked(menu.menuName)">
+						<!-- <span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a> -->
+						<!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
+						<span data-ng-bind="userData.userName" style="text-transform: capitalize;"></span> <i class="caret"></i>
+					</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="submenu in menu.subMenuBeans"><a href="#"
+								ng-click="subMenuClicked(submenu.subMenuName)"> <i
+									class="fa fa-sign-out" aria-hidden="true"
+									ng-if="submenu.subMenuName=='Logout'"></i> <span
+									data-ng-bind="submenu.subMenuName"></span></a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+		<!--/.container-fluid -->
+	</nav>
+
+	<!-- ==========================End Top Navigation======================== -->
+	<div id="mySpinner"
+		style='position: fixed; z-index: 1031; left: 0; right: 0; width: 100%; height: 100%; margin: auto; rgba(255,255,255,0.2); opacity: .4;'>
+		<center>
+			<i style='margin: auto; margin-top: 250px;'
+				class='fa fa-spinner fa-pulse fa-3x fa-fw'></i>
+			<p>Loading</p>
+			<!-- <img src="assets/img/loading.gif" alt="Loading..." style="height: 75px;width: 75px;margin: 250px auto;"> -->
+		</center>
+	</div>
+
+	<!--DIV UI STARTS-->
+	<div style="margin-bottom: 5%; margin-top: 1%; height: 100%;">
+		<!-- style="margin-bottom: 5%;margin-top: 1%;height:100%;overflow: auto;" style="min-height:100%;margin-top:55px;margin-bottom: 100px;" -->
+		
+		<div ui-view></div>
+	</div>
+	<!--DIV UI ENDS -->
+
+	
+	<!-- Javascript files -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular/angular.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.5.6/angular-datatables.min.js"></script>
+	<script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+	<!-- Typeahead -->
+	<script data-require="typeahead.js@*" data-semver="0.10.0" src="assets/libs/typeahead/typeahead.bundle.js"></script>
+	<script data-require="bloodhound.js@*" data-semver="0.10.0" src="assets/libs/typeahead/bloodhound.js"></script>
+	<script src="assets/libs/typeahead/angular-typeahead.js"></script>
+	<!-- Angular -->
+	<script type="text/javascript" src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular/angular-animate.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular-resource/angular-resource.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular-ui-router.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular-ui-switch/angular-ui-switch.js"></script>
+	<script type="text/javascript" src="assets/libs/uploader/angular-file-upload-shim.min.js"></script>
+	<script type="text/javascript" src="assets/libs/uploader/angular-file-upload.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/moment.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angularLocalStorage/src/angularLocalStorage.js"></script>
+	<script type="text/javascript" src="assets/libs/js/ng-infinite-scroll.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular-cookies/angular-cookies.min.js"></script>
+	<script type="text/javascript" src="assets/libs/js/angular-cookies/angular-cookies.min.js"></script>
+	<!-- Chart -->
+	 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+	 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-chart.js/1.1.1/angular-chart.min.js"></script>
+	
+	<!-- UI Bootstrap -->
+	<script type="text/javascript" src="assets/libs/js/ui-bootstrap-tpls-2.3.2.min.js"></script>
+	<!-- Pagination -->
+	<script type="text/javascript" src="assets/libs/pagination/dirPagination.js"></script>
+	<!-- Angucomplete-alt -->
+	<script src="assets/libs/angucomplete-alt/angucomplete-alt.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-touch.min.js"></script>
+	<!-- Shortcut keys (Hot keys)-->
+	<script src="assets/libs/hot-keys/hotkeys.min.js"></script>
+	<script src="assets/libs/round-progressbar/roundProgress.min.js"></script>
+	<!-- // <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script> -->
+
+	<!-- SmartQuoteApp Default Controller,Route,Directives  -->
+	<script type="text/javascript" src="SQ/SQApp.js"></script>
+	<script type="text/javascript" src="SQ/SQAppRoute.js"></script>
+	<script type="text/javascript" src="common/SQDirectives.js"></script>
+	<script type="text/javascript" src="assets/notification/js/angular_notify.js"></script>
+	<!-- SmartQuoteApp Controllers & Services -->
+	<script type="text/javascript" src="SQ/Home/js/SQHomeController.js"></script>
+	<script type="text/javascript" src="SQ/Home/js/SQHomeServices.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQUserHomeController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQDashBoardController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Dashboard/js/SQUserHomeServices.js"></script>
+	<!-- SmartQuoteApp ManageMenu Controllers -->
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/services/SQManageMenuSevices.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageUserGroupController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageUserController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageCustomerController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageProductGroupController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageProductController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQUploadProductFile.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageTermsConditionsController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageServicesController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageAlternateProduct.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/ManageMenus/js/SQManageOffersController.js"></script>
+	<!-- SmartQuoteApp Quote Controllers -->
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQCreateQuoteController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQViewEditQuoteController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQAddProductModalController.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/services/SQQuoteServices.js"></script>
+
+
+
+
+	
+	
+
+
+
+</body>
+</html>

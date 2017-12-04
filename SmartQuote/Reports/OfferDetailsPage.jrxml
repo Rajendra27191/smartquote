@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OfferDetailsPage" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="491d8dfb-41bd-4118-aab3-ead90ac9ee38">
+	<property name="ireport.zoom" value="0.3855432894295319"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="code" class="java.lang.String">
+		<fieldDescription><![CDATA[code]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="offerName" class="java.lang.String">
+		<fieldDescription><![CDATA[offerName]]></fieldDescription>
+	</field>
+	<field name="offerTemplate" class="java.lang.String">
+		<fieldDescription><![CDATA[offerTemplate]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="842" splitType="Stretch">
+			<image onErrorType="Blank">
+				<reportElement uuid="efd4ba49-fc3e-498f-832b-0e2ab603461e" x="0" y="0" width="595" height="842"/>
+				<imageExpression><![CDATA[$F{offerTemplate}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

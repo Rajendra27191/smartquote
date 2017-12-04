@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quote_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8db8e68c-96db-4599-b0f5-5c8299cef66a">
+	<property name="ireport.zoom" value="1.100000000000031"/>
+	<property name="ireport.x" value="9"/>
+	<property name="ireport.y" value="335"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/radhika/git/smartquote/SmartQuote/Reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subreportPath" class="java.lang.String"/>
+	<parameter name="headerImg1Path" class="java.lang.String"/>
+	<parameter name="headerImg2Path" class="java.lang.String"/>
+	<parameter name="headerImg3Path" class="java.lang.String"/>
+	<parameter name="footerImg1Path" class="java.lang.String"/>
+	<parameter name="footerImg2Path" class="java.lang.String"/>
+	<parameter name="customerLogoPath" class="java.lang.String"/>
+	<parameter name="customer" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$F{proposalFor}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="quote_attn" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$F{quoteAttn}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="email" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$F{email}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="officeChoiceLogo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="submittedBy" class="java.lang.String">
+		<fieldDescription><![CDATA[submittedBy]]></fieldDescription>
+	</field>
+	<field name="quoteDate" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteDate]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManager" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManager]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[email]]></fieldDescription>
+	</field>
+	<field name="custId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[custId]]></fieldDescription>
+	</field>
+	<field name="quoteAttn" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteAttn]]></fieldDescription>
+	</field>
+	<field name="proposalFor" class="java.lang.String">
+		<fieldDescription><![CDATA[proposalFor]]></fieldDescription>
+	</field>
+	<field name="contact" class="java.lang.String">
+		<fieldDescription><![CDATA[contact]]></fieldDescription>
+	</field>
+	<field name="gstInclusive" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[gstInclusive]]></fieldDescription>
+	</field>
+	<field name="objCalculationBean" class="pojo.CalculationBean">
+		<fieldDescription><![CDATA[objCalculationBean]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="755" splitType="Stretch">
+			<image scaleImage="RetainShape">
+				<reportElement uuid="2b98c993-52a3-4c4e-9a8d-ccd7b8925a61" x="155" y="13" width="252" height="200"/>
+				<imageExpression><![CDATA[$P{headerImg1Path}]]></imageExpression>
+			</image>
+			<image scaleImage="FillFrame">
+				<reportElement uuid="13b91d63-03d2-42ad-b99e-6cbc21400731" x="155" y="238" width="252" height="223"/>
+				<imageExpression><![CDATA[$P{headerImg2Path}]]></imageExpression>
+			</image>
+			<rectangle radius="10">
+				<reportElement uuid="5614d581-5c4e-45bd-bdff-82de9617fe24" x="107" y="492" width="350" height="150"/>
+				<graphicElement>
+					<pen lineWidth="3.0" lineColor="#D92D21"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="bfbde55c-ba98-45f0-83c1-ba8feeba52dd" x="111" y="502" width="340" height="15" backcolor="#FF3366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Business Proposal For]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="a8c31ee8-9d28-4241-98de-b9e19cd1e9be" x="2" y="702" width="553" height="1"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineColor="#C00000"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="1" y="681" width="164" height="20" forecolor="#C00000"/>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[jaybel office choice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="1" y="702" width="164" height="15" forecolor="#C00000"/>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[unit 11, 1472 boundary road]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="1" y="716" width="164" height="15" forecolor="#C00000"/>
+				<textElement>
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[wacol QLD 4076]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="391" y="685" width="164" height="15" forecolor="#C00000"/>
+				<textElement textAlignment="Right">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[www.jaybel.com.au]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="391" y="702" width="164" height="15" forecolor="#C00000"/>
+				<textElement textAlignment="Right">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[tel: (07) 3423 5888]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="391" y="717" width="164" height="15" forecolor="#C00000"/>
+				<textElement textAlignment="Right">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[fax: (07) 3423 5899]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3b3fab8a-1550-4be6-a218-698feae67c4d" x="391" y="732" width="164" height="15" forecolor="#C00000"/>
+				<textElement textAlignment="Right">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[sales@jaybel.com.au]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bfbde55c-ba98-45f0-83c1-ba8feeba52dd" x="111" y="602" width="340" height="15" backcolor="#FF3366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Submitted By]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="efa7f7e4-f6d4-486a-8095-7f61bec82bb6" x="111" y="557" width="340" height="15" forecolor="#D92D21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{proposalFor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a4d25024-312b-4a8c-a00f-9fc98e5436f5" x="111" y="617" width="340" height="15" forecolor="#D92D21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{submittedBy}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame" onErrorType="Icon">
+				<reportElement uuid="d5fb89ec-f073-4027-b5e4-9b64c4a83325" mode="Transparent" x="255" y="517" width="50" height="40"/>
+				<graphicElement>
+					<pen lineWidth="0.0" lineColor="#CCCCCC"/>
+				</graphicElement>
+				<imageExpression><![CDATA[$P{customerLogoPath}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement uuid="efa7f7e4-f6d4-486a-8095-7f61bec82bb6" x="111" y="587" width="340" height="15" forecolor="#D92D21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quoteAttn}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="bfbde55c-ba98-45f0-83c1-ba8feeba52dd" x="111" y="572" width="340" height="15" backcolor="#FF3366"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Proposal Attn]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

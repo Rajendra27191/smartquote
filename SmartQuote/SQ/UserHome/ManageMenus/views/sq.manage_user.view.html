@@ -1,0 +1,129 @@
+<style type="text/css">
+	.input-group-btn .btn {
+    padding: 3px 12px;
+  }
+</style>
+<div class="container">
+<form name="form.userManageUser" novalidate>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Manage User</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">User Name</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<!-- <input type="text" class = 'form-control' name="userName" ng-model="manageUser.userName" required> -->
+	<input type = 'text' name="userName" class = 'form-control' ng-model = 'manageUser.userName' uib-typeahead = 'userList as userList.value for userList in userList | filter:$viewValue' typeahead-on-select="userNameChanged(manageUser.userName)" ng-keydown="resetOnBackspace($event)"  ng-change="userNameSelected()" autocomplete="off" focus-me="true" required>
+
+	<span ng-show="((form.userManageUser.userName.$dirty && form.userManageUser.userName.$invalid) || (form.userManageUser.userName.$invalid && form.userManageUser.submitted))" class="invalid-control">
+	<small>*Please enter user name.</small>
+	</span>
+	</div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">User Type</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<select type="text" name="userGroupName" class="form-control" ng-options="usergroup as usergroup.value for usergroup in userGroups" ng-model="manageUser.userType" ng-change="userTypeChanged(manageUser.userType)" required>
+	<option value="">Select User Type</option>
+	<!-- <option selected ng-if="buttonstatus=='edit">{{manageUser.userType}}</option> -->
+	</select>
+	<!-- <input type = 'text' name="userGroupName" class = 'form-control' ng-model = 'manageUser.userType' uib-typeahead = 'usergroup as usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="userTypeChanged(manageUser.userType)"  autocomplete="off" required> -->
+	<span ng-show="((form.userManageUser.userGroupName.$dirty && form.userManageUser.userGroupName.$invalid) || (form.userManageUser.userGroupName.$invalid && form.userManageUser.submitted))" class="invalid-control">
+	<small>*Please select user type.</small>
+	</span>
+    </div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Email Id</label> <span class="asteric">*</span></div>
+	<div class="col-md-8"><input type="text" class = 'form-control' name="userEmailId" ng-model="manageUser.userEmailId" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
+	<span ng-show="((form.userManageUser.userEmailId.$dirty && form.userManageUser.userEmailId.$invalid) || (form.userManageUser.userEmailId.$invalid && form.userManageUser.submitted))" class="invalid-control">
+		<small ng-show="form.userManageUser.userEmailId.$error.required">*Please enter email id.</small>
+		<small ng-show="form.userManageUser.userEmailId.$error.pattern">*Please enter valid email id.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Password</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type="password" id='pw1' class = 'form-control' name="userPassword" ng-model="manageUser.userPassword"   required>
+	<span ng-show="((form.userManageUser.userPassword.$dirty && form.userManageUser.userPassword.$invalid) || (form.userManageUser.userPassword.$invalid && form.userManageUser.submitted))" class="invalid-control">
+	<small ng-show="form.userManageUser.userPassword.$error.required">*Please enter password.</small>
+	<small ng-show="onlyspaceError&&!(form.userManageUser.userPassword.$error.required)">*Password should contain alphanumeric(a-z,A-Z,0-9) or special characters(@,#,$,&,-,_)..</small>
+	<!-- <small ng-show="form.userManageUser.userPassword.$error.pattern">*Password should contain alphanumeric(a-z,A-Z,0-9) or special characters(@,#,$,&,-,_).</small> ng-pattern="/^[a-zA-Z0-9&*@#$]*$/"-->
+	</span>
+
+	</div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Confirm Password</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type="password" id='pw2' class = 'form-control' name="userConfirmPassword" ng-model="manageUser.userConfirmPassword" pw-check='pw1' required>
+	<span ng-show="((form.userManageUser.userConfirmPassword.$dirty && form.userManageUser.userConfirmPassword.$invalid) || (form.userManageUser.userConfirmPassword.$invalid && form.userManageUser.submitted))" class="invalid-control">
+		<small ng-show="form.userManageUser.userConfirmPassword.$error.required && !(form.userManageUser.userConfirmPassword.$error.pwmatch)">*Please enter confirm password.</small>
+		<small ng-show="form.userManageUser.userConfirmPassword.$error.pwmatch">*password doesnt match.</small>
+	</span>
+	</div>
+	</div>
+
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Contact No</label> <span class="asteric">*</span></div>
+	<div class="col-md-8">
+	<input type="" class = 'form-control' name="userContactNo" ng-model="manageUser.userContactNo" ng-pattern="/^[0-9]{5,12}$/" required>
+	<span ng-show="((form.userManageUser.userContactNo.$dirty && form.userManageUser.userContactNo.$invalid) || (form.userManageUser.userContactNo.$invalid && form.userManageUser.submitted))" class="invalid-control">
+		<small ng-show="form.userManageUser.userContactNo.$error.required">*Please enter contact no.</small>
+		<small ng-show="form.userManageUser.userContactNo.$error.pattern">*Please enter valid contact no.</small>
+	</span>
+	</div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Valid From</label></div>
+	<div class="col-md-8">
+	 <p class="input-group">
+          <input type="text" name="userValidFrom" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="manageUser.userValidFrom" ng-change="userValidFromDateChanged(manageUser.userValidFrom)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+        </p>
+    </div>
+	</div>
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Valid To</label></div>
+	<div class="col-md-8">
+	 <p class="input-group">
+          <input type="text" name="userValidTo" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="manageUser.userValidTo" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" ng-change="validateDate(manageUser.userValidFrom,manageUser.userValidTo)"/>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-default" ng-click="open2()"><i class="glyphicon glyphicon-calendar"></i></button>
+          </span>
+     </p>
+     <span ng-show="!dateValid" class="invalid-control">
+		<small>*valid to date should be greater than valid from.</small>
+ 	</span>
+    </div>
+	</div>
+
+
+
+
+
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+    	<button ng-if="buttonstatus=='edit'" ng-click="deleteUser()" class="btn btn-block button-delete" ng-disabled="disabledDelete"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</button>
+    	</div>
+		<div class="col-md-4">
+		<button id="create" ng-click="saveUser()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		</div>
+	</div>
+
+
+</div>
+<div class="col-md-3"></div>
+</div>
+</form>
+</div>
+
+

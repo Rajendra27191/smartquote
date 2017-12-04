@@ -1,0 +1,164 @@
+<style type="text/css" media="screen">
+.main-label{
+	margin: 3% 0% 3% 0%;
+}	
+.row-control {
+    margin-bottom: 10px;
+}
+.form-control {
+    height: 30px;
+    padding: 5px 8px;
+    font-size: 13px;
+}
+</style>
+<div class="container">
+<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Create/Edit Offers</label></center></div>
+</div>
+
+<div  style="padding-bottom: 40px;" class="row" ng-if="addOfferButtonShow">
+		<div class="col-md-8" ></div>
+		<div class="col-md-2" >
+			<button id="" class="btn btn-sm btn-block btn-primary button-add" ng-click="addOfferButtonClicked()" uib-popover="Click to add offers." popover-placement="top" popover-trigger="'mouseenter'"><i class="fa fa-plus"></i>&nbsp;&nbsp;Add Offer</button>
+		</div>
+		<div class="col-md-2"></div>
+</div>
+
+<div class="row">
+<div class="col-md-8 col-md-offset-2" style="padding:0px;">
+<div class="col-md-12 bs-callout bs-callout-primary" ng-if="!offerList.length>0"> 
+		<div class="col-md-4"></div>
+		<div class="col-md-6">
+	  	<h4>No Offer added</h4>	
+		</div>
+</div>
+<div class="col-md-12" ng-if="offerList.length>0">
+<div id="offerList">
+<div class="col-md-12" style="margin-bottom: 10px;">
+<div class="col-md-6" style="padding:0px;">
+	<div class="input-group">
+	<span class="input-group-addon" id="sizing-addon2"><i class="fa fa-search fa-lg" aria-hidden="true"></i></span>
+	<input type="text" class="form-control" ng-model="search.offerName" placeholder="Search existing offer">
+	</div>
+</div>
+</div>
+<!-- <script type="text/ng-template" id="myPopoverTemplate.html">
+<img class="img-thumbnail" ng-src="{{imgSrc}}" style="height: 50px;width:50px;">
+</script> -->
+<div class="col-md-12" ng-repeat="offer in offerList | filter:search ">			
+	<div class="col-md-12 bs-callout bs-callout-primary">
+	<div class="col-md-3">
+		<!-- popover-animation="true" popover-trigger="'mouseenter'" uib-popover-template="dynamicPopover.templateUrl" ng-mouseenter="imageHover(offer.offerTemplate)" -->
+		<a target="blank" ng-href="{{offer.offerTemplate}}" tooltip-placement="top" uib-tooltip="click to open">
+		<img class="img-thumbnail" ng-src="{{offer.offerTemplate}}" style="height: 50px;width:50px;" alt-SRC src="Images/no-image.png" >
+		</a>
+		
+	</div>
+	<div class="col-md-7">
+		<h4>Offer :</h4>
+		{{offer.offerName}}
+	</div>
+	<div class="col-md-1">
+		<button  class="btn btn-default" ng-click="editOfferButtonClicked(offer)" style="float: right;margin: 5px auto;" tooltip-placement="top" uib-tooltip="click to edit">
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		</button>	
+	</div>
+	<div class="col-md-1">
+		<button  class="btn btn-default" ng-click="deleteOffer(offer)" style="float: right;margin: 5px auto;" tooltip-placement="top" uib-tooltip="click to delete">
+		<i class="fa fa-trash-o" aria-hidden="true"></i>
+		</button>
+	</div>
+	</div>
+</div>
+
+<div class="col-md-12" ng-if="(offerList | filter:search).length == 0">
+	<div class="col-md-12 bs-callout bs-callout-primary" > 
+		<div class="col-md-1"></div>
+		<div class="col-md-11">
+	  	<h4>offer not available</h4>	
+		</div>
+	</div>
+</div>
+</div>
+</div>	
+</div>
+</div>
+
+<!-- Modal -->
+<div id="addEditViewModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">
+        <center ng-if="saveStatus=='add'">Add offer</center>	
+        <center ng-if="saveStatus=='edit'">Edit offer</center>	
+        </h4>
+      </div>
+      <div class="modal-body">
+		<form name="form.manageOffers" novalidate>
+		<div class="row">
+		<div class="col-md-10 col-md-offset-1">			
+		<div class="row row-control">
+		<div class="col-md-3">
+		<label class="sub-label">Offer</label> <span class="asteric">*</span>
+		</div>
+		<div class="col-md-9">
+		<input type = 'text' name="offer" id="offer" class = 'form-control' ng-model = 'manageOffers.offer' focus-me="true" autocomplete="off" focus-me="focus" required>
+		<span ng-show="((form.manageOffers.offer.$dirty && form.manageOffers.offer.$invalid) || (form.manageOffers.offer.$invalid && form.manageOffers.submitted))" class="invalid-control">
+		<small>* please enter offer.</small>
+		</span>	
+		</div>
+		</div>
+		<div class="row row-control">
+		<div class="col-md-3">
+		<label class="sub-label">Template</label> <span class="asteric">*</span>
+		</div>
+		<div class="col-md-9">
+			<input type = 'file' class = 'form-control' ng-file-select = "onFileSelect($files)" fileinput="file" id = 'fileOfferTemplate' name="offerTemplate" filepreview="filepreview" required>
+			<!-- <span ng-show="((form.manageOffers.offerTemplate.$dirty && form.manageOffers.offerTemplate.$invalid) || (form.manageOffers.offerTemplate.$invalid && form.manageOffers.submitted))" class="invalid-control">
+			<small>* please select offer template.</small>
+			</span>	 -->
+			<span class="invalid-control">
+			<small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 1MB.</small>
+			<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
+			<!-- <small ng-show="isFileNull" style="color: red;">*Please select offer template.</small> -->
+			</span>
+		</div>
+		</div>
+		<div class="row row-control" >
+		<div class="col-md-3"></div>
+		<!--  ng-show="filepreview"-->
+		<div class="col-md-9" ng-if="!invalidFileSize && !isInvalid && !isFileNull">	
+	 	<img class="img-thumbnail"  ng-src="{{filepreview}}" class="img-responsive"   style="height: 100px;width:100px;" alt-SRC src="Images/no-image.png" ng-if="filepreview"/>
+	 	<!-- <div class="caption">
+          <p>Uploaded image</p>
+        </div> -->	
+		</div>
+		</div>
+		</div>
+		<div class="col-md-1"></div>
+		</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+      	<div class="row row-control">
+		<div class="col-md-6"></div>
+		<div class="col-md-3">
+			<button type="button" class="btn btn-block btn-default" data-dismiss="modal">Close</button>
+		</div>
+		<div class="col-md-3">
+        <button id="create" ng-if="saveStatus=='add'" ng-click="saveOffer()" class="btn btn-block button-ok" style="margin: 0%;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save</button>	 
+        <button id="create" ng-if="saveStatus=='edit'" ng-click="saveOffer()" class="btn btn-block button-ok" style="margin: 0%;"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</button>	
+		</div>
+		</div>
+		
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</div>
