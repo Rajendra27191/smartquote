@@ -2,7 +2,6 @@ package pojo;
 
 public class AlternateProductDetailBean {
 	private String altProductCode;
-//	private double altProductDefaultPrice;
 	private String altProductDesc;//--
 	private String altProductDesc2;
 	private String altProductDesc3;
@@ -18,12 +17,6 @@ public class AlternateProductDetailBean {
 	public void setAltProductCode(String altProductCode) {
 		this.altProductCode = altProductCode;
 	}
-//	public double getAltProductDefaultPrice() {
-//		return altProductDefaultPrice;
-//	}
-//	public void setAltProductDefaultPrice(double altProductDefaultPrice) {
-//		this.altProductDefaultPrice = altProductDefaultPrice;
-//	}
 	public String getAltProductDesc() {
 		return altProductDesc;
 	}

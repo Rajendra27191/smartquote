@@ -1,19 +1,19 @@
 <!-- SQ Test -->
-<Context path="/smartprotest" reloadable="true" docBase="/home/radhika/git/smartquote/SmartQuote" 
-	workDir="/home/radhika/git/smartquote/SmartQuote/work">
- <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
-	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true"
-    removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquote_test?autoReconnect=true"/>
-</Context>  
+<!-- <Context path="/smartprotest" reloadable="true" docBase="/home/radhika/git/smartquote/SmartQuote"  -->
+<!-- 	workDir="/home/radhika/git/smartquote/SmartQuote/work"> -->
+<!--  <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource" -->
+<!-- 	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12" -->
+<!-- 	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true" -->
+<!--     removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver" -->
+<!-- 	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquote_test?autoReconnect=true"/> -->
+<!-- </Context>   -->
 
 <!--SQ Production  -->
-<!-- <Context path="/smartpro" reloadable="true" docBase="/home/radhika/git/smartquote/SmartQuote" 
-	workDir="/home/radhika/git/smartquote/SmartQuote/work">
- <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
-	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true"
-    removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/>
-</Context> -->
+<!-- <Context path="/smartpro" reloadable="true" docBase="/home/radhika/git/smartquote/SmartQuote"  -->
+<!-- 	workDir="/home/radhika/git/smartquote/SmartQuote/work"> -->
+<!--  <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource" -->
+<!-- 	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12" -->
+<!-- 	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true" -->
+<!--     removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver" -->
+<!-- 	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/> -->
+<!-- </Context>  -->

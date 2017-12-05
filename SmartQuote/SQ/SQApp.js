@@ -8,52 +8,32 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
 })
 .run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
    // console.log(".run")
-   // $rootScope.$on('$viewContentLoaded', function() {
-   //    $templateCache.removeAll();
-   // });
+   // $rootScope.projectName="/smartprotest";
+   // // $rootScope.projectName="/smartpro";
+   // console.log($rootScope.projectName);
+   $rootScope.projectName="/";
 
+   var currentURL=$window.location.href; 
+   var isSmartProTest=currentURL.includes("smartprotest");
+   if (isSmartProTest) {
    $rootScope.projectName="/smartprotest";
+   $rootScope.storageName="smartprotest";
+   if(storage.get('smartprotest')==null || storage.get('smartprotest')==''){
+      $rootScope.smartprotest={};
+   }
+   storage.bind($rootScope,'smartprotest',{});
+   }else{
    // $rootScope.projectName="/smartpro";
-   console.log($rootScope.projectName);
+   $rootScope.projectName="/smartpro";
+   $rootScope.storageName="smartpro";
+   if(storage.get('smartpro')==null || storage.get('smartpro')==''){
+      $rootScope.smartpro={};
+   }
+   storage.bind($rootScope, 'smartpro',{});
+   };
+   console.log("URL: "+currentURL);
+   console.log("Project: "+$rootScope.projectName);
 
-   if(storage.get('isUserSignIn')==null || storage.get('isUserSignIn')==''){
-      $rootScope.isUserSignIn=false;
-   }
-   if(storage.get('userData')==null || storage.get('userData')==''){
-      $rootScope.userData={};
-   }
-   if(storage.get('userNavMenu')==null || storage.get('userNavMenu')==''){
-      $rootScope.userNavMenu=[];
-   }
-   
-   if(storage.get('userList')==null || storage.get('userList')==''){
-      $rootScope.userList=[];
-   } 
-   if(storage.get('customerList')==null || storage.get('customerList')==''){
-      $rootScope.customerList=[];
-   }
-   if(storage.get('supplierList')==null || storage.get('supplierList')==''){
-      $rootScope.supplierList=[];
-   }
-   if(storage.get('serviceList')==null || storage.get('serviceList')==''){
-      $rootScope.serviceList=[];
-   }
-   if(storage.get('termConditionList')==null || storage.get('termConditionList')==''){
-      $rootScope.termConditionList=[];
-   }
-   if(storage.get('offerList')==null || storage.get('offerList')==''){
-      $rootScope.offerList=[];
-   }
-  storage.bind($rootScope, 'isUserSignIn',false);
-  storage.bind($rootScope, 'userData',{});
-  storage.bind($rootScope, 'userNavMenu',[]);
-  
-  storage.bind($rootScope, 'userList',[]);
-  storage.bind($rootScope, 'customerList',[]);
-  storage.bind($rootScope, 'supplierList',[]);
-  storage.bind($rootScope, 'serviceList',[]);
-  storage.bind($rootScope, 'termConditionList',[]);
-  storage.bind($rootScope, 'offerList',[]);
 }])
 .controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices','$interval',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices,$interval){
 console.log("SmartQuoteDesktopController initialise");
@@ -71,6 +51,37 @@ $rootScope.isUserSignIn=false;
  $('#mySpinner').show();
  SQHomeServices.apiCallToCheckUserSession();
 /*================ Check user is in sesssion========================*/
+ $scope.setLocalStorageData=function(data){
+    console.log("setLocalStorageData")
+    console.log(data)
+    if (data) {
+      if (data.userNavMenu&&data.userData&&data.userList&&data.customerList&&data.supplierList&&data.termConditionList&&data.offerList) {
+      $rootScope.isUserSignIn=true;
+      $rootScope.userNavMenu=data.userNavMenu;
+      $rootScope.userData={
+                           'userId':data.userData.userId,
+                           'userGroupId':data.userData.userGroupId,
+                           'userType':data.userData.userType,
+                           'emailId':data.userData.emailId,
+                           'contact':data.userData.contact,
+                           'userName':data.userData.userName,
+                           'validFrom':data.userData.validFrom,
+                           'validTo':data.userData.validTo
+                         }
+      $rootScope.userList=data.userList;
+      $rootScope.customerList=data.customerList;
+      $rootScope.supplierList=data.supplierList;
+      $rootScope.serviceList=data.serviceList;
+      $rootScope.termConditionList=data.termConditionList;
+      $rootScope.offerList=data.offerList;
+      }else{
+         $rootScope.isUserSignIn=false;
+      }
+    }else{
+       $rootScope.isUserSignIn=false;
+    }
+    // console.log($rootScope.userNavMenu)
+ };
  $scope.clearLocalStorageData=function(){
     $rootScope.isUserSignIn=false;
     $rootScope.userNavMenu=[];
@@ -81,15 +92,31 @@ $rootScope.isUserSignIn=false;
     $rootScope.serviceList=[];
     $rootScope.termConditionList=[];
     $rootScope.offerList=[];
+    if ($rootScope.storageName.toLowerCase()=="smartprotest") {
+       $rootScope.smartprotest={};
+    }else{
+       $rootScope.smartpro={};
+    }
  }
 $rootScope.$on("sesssion", function(event, data){
     // console.log("sesssion")
     console.log(data)
     if(data.code=="success"){
       // $('#mySpinner').hide();
-      $rootScope.isUserSignIn=true;
       // $rootScope.initAuotoComplete();
-      $state.transitionTo('userhome.start');
+          if ($rootScope.storageName.toLowerCase()=="smartprotest") {
+            $scope.setLocalStorageData($rootScope.smartprotest);
+          }else{
+            $scope.setLocalStorageData($rootScope.smartpro);
+          }
+          console.log($rootScope.isUserSignIn)
+          if ($rootScope.isUserSignIn) {
+          $state.transitionTo('userhome.start');
+          }else{
+            $state.transitionTo('home.start'); 
+            $scope.clearLocalStorageData();
+            $('#mySpinner').hide();
+          }
     }else{
       $state.transitionTo('home.start'); 
       $scope.clearLocalStorageData();
@@ -158,7 +185,6 @@ $scope.handleUserLogInDoneResponse=function(data){
     //console.log(data);  
     if(data.code){ 
     if(data.code.toUpperCase()=='SUCCESS'){ 
-     $rootScope.isUserSignIn=true;
      //console.log("lllllllllllllllll");
      $state.transitionTo('userhome.start');
      $rootScope.SQNotify("Successfully log in",'success');
@@ -169,23 +195,52 @@ $scope.handleUserLogInDoneResponse=function(data){
      $scope.form.loginUser.submitted=false;
      $scope.form.loginUser.$setPristine();        
      }
-     $rootScope.userNavMenu=data.userMenuList;
-     $rootScope.userData={
-                           'userId':data.userData.userId,
-                           'userGroupId':data.userData.userGroupId,
-                           'userType':data.userData.userType,
-                           'emailId':data.userData.emailId,
-                           'contact':data.userData.contact,
-                           'userName':data.userData.userName,
-                           'validFrom':data.userData.validFrom,
-                           'validTo':data.userData.validTo
-                         }
-    $rootScope.userList=data.userList;
-    $rootScope.customerList=data.customerList;
-    $rootScope.supplierList=data.supplierList;
-    $rootScope.serviceList=data.serviceList;
-    $rootScope.termConditionList=data.termConditionList;
-    $rootScope.offerList=data.offerList;
+
+    if ($rootScope.storageName.toLowerCase()=="smartprotest") {
+       $rootScope.smartprotest.isUserSignIn=true;
+       $rootScope.smartprotest.userNavMenu=data.userMenuList;
+       $rootScope.smartprotest.userData={
+                             'userId':data.userData.userId,
+                             'userGroupId':data.userData.userGroupId,
+                             'userType':data.userData.userType,
+                             'emailId':data.userData.emailId,
+                             'contact':data.userData.contact,
+                             'userName':data.userData.userName,
+                             'validFrom':data.userData.validFrom,
+                             'validTo':data.userData.validTo
+                           }
+      $rootScope.smartprotest.userList=data.userList;
+      $rootScope.smartprotest.customerList=data.customerList;
+      $rootScope.smartprotest.supplierList=data.supplierList;
+      $rootScope.smartprotest.serviceList=data.serviceList;
+      $rootScope.smartprotest.termConditionList=data.termConditionList;
+      $rootScope.smartprotest.offerList=data.offerList;
+
+      $scope.setLocalStorageData($rootScope.smartprotest);
+
+      }else{
+       $rootScope.smartpro.isUserSignIn=true;
+       $rootScope.smartpro.userNavMenu=data.userMenuList;
+       $rootScope.smartpro.userData={
+                             'userId':data.userData.userId,
+                             'userGroupId':data.userData.userGroupId,
+                             'userType':data.userData.userType,
+                             'emailId':data.userData.emailId,
+                             'contact':data.userData.contact,
+                             'userName':data.userData.userName,
+                             'validFrom':data.userData.validFrom,
+                             'validTo':data.userData.validTo
+                           }
+      $rootScope.smartpro.userList=data.userList;
+      $rootScope.smartpro.customerList=data.customerList;
+      $rootScope.smartpro.supplierList=data.supplierList;
+      $rootScope.smartpro.serviceList=data.serviceList;
+      $rootScope.smartpro.termConditionList=data.termConditionList;
+      $rootScope.smartpro.offerList=data.offerList;
+
+      $scope.setLocalStorageData($rootScope.smartpro);
+
+    };
     // $rootScope.initAuotoComplete();
                          
     }
