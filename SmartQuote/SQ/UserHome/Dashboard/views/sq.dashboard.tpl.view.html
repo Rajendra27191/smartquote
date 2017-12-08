@@ -10,8 +10,8 @@ input[type=date]::-webkit-outer-spin-button {
   
 </style>
 
-<div class="container" style="margin-top:15%;" id="dashboardContent">
-  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
+<div class="container" style="margin-top:5%;" id="dashboardContent">
+ <!--  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
         <div class="col-md-12">
           <div class="no-message">
           <center><i class="fa fa-laptop fa-5x" aria-hidden="true"></i></center>
@@ -21,14 +21,14 @@ input[type=date]::-webkit-outer-spin-button {
             </center>	  
           </div>
         </div>
-  </div>
+  </div> -->
 
-<!-- <div class="row">
+<div class="row">
 <div class="col-md-10 col-md-offset-1">
   <div class="col-md-12">  
   <div class="col-md-4">
-     <input type="date" class="form-control" id="exampleInput" name="input" ng-model="example.value"
-       placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required />
+    <!--  <input type="date" class="form-control" id="exampleInput" name="input" ng-model="example.value"
+       placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required /> -->
   </div>  
   <div class="col-md-8">
   <div class="col-md-1"><lable class="sub-label">From</label></div>
@@ -53,9 +53,53 @@ input[type=date]::-webkit-outer-spin-button {
   </div>
 </div>
 <div class="col-md-1"></div>
-</div> -->
 </div>
- <!-- <canvas id="bar" class="chart chart-bar"  chart-data="barData" chart-labels="barLables" chart-options="options" chart-colors="colors">
-</canvas> -->
+</div>
 
 
+<div id="dashboardChart" >
+<div class="row">
+<div class="col-md-1"></div>
+<div class="col-md-2">
+  <div class="bs-vcallout bs-vcallout-success">
+  <center><h4>Won</h4></center>
+  <center><h4>{{totalStatus.won.totalQuote}}</h4></center>
+  </div>
+</div>
+<div class="col-md-2">
+  <div class="bs-vcallout bs-vcallout-warning">
+    <center><h4>Pipeline</h4></center>
+    <center><h4>{{totalStatus.pipeline.totalQuote}}</h4></center>
+  </div>
+</div>
+<div class="col-md-2">
+  <div class="bs-vcallout bs-vcallout-default">
+    <center><h4>Expected To Close</h4></center>
+    <center><h4>{{totalStatus.pipeline.totalQuote}}</h4></center>
+  </div>
+</div>
+<div class="col-md-2">
+  <div class="bs-vcallout bs-vcallout-danger">
+    <center><h4>Lost</h4></center>
+    <center><h4>{{totalStatus.lost.totalQuote}}</h4></center>
+  </div>
+</div>
+<div class="col-md-1"></div>
+</div>
+<div class="row">
+<div class="col-md-6" style="width: 48%;padding:0px;border: 1px solid #eee;border-top-width: 10px;border-top-color: #777;margin-right: 5px;margin-left: 5px;">
+  <div class="">
+  <div google-chart chart="objBarChart" style="height:300px; width:550px;"></div>
+  <!-- <div google-chart chart="myChartObject" style="height:300px; width:550px;"></div> -->
+  </div>
+</div>
+<div class="col-md-6" style="width: 48%;padding:0px;border: 1px solid #eee;border-top-width: 10px;border-top-color: #777;margin-right: 5px;margin-left: 5px;">
+<div class="">
+  <!-- <div google-chart chart="myChartObject1" style="height:300px; width:550px;"></div> -->
+<div  google-chart chart="objPieChart" style="height:300px; width:550px;"></div>      
+</div>  
+</div>
+</div>
+</div>
+
+ 

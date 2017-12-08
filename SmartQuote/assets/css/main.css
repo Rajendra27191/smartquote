@@ -503,7 +503,7 @@
   cursor:pointer;
 }
   /*=============Callout CSS Starts=============*/
-  .bs-callout {
+.bs-callout {
     padding: 5px;
     margin: 5px 0;
     border: 1px solid #eee;
@@ -559,6 +559,64 @@
 .bs-callout-info h4 {
     color: #5bc0de;
 }
+/*=============Vertical Callout=============*/
+.bs-vcallout {
+    padding: 5px;
+    margin: 5px 0;
+    border: 1px solid #eee;
+    border-top-width: 10px;
+    border-radius: 0px;
+}
+.bs-vcallout h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+.bs-vcallout p:last-child {
+    /*margin-bottom: 0;*/
+}
+.bs-vcallout code {
+    border-radius: 0px;
+}
+.bs-vcallout+.bs-vcallout {
+    /*margin-top: -5px;*/
+}
+.bs-vcallout-default {
+    border-top-color: #777;
+}
+.bs-vcallout-default h4 {
+    color: #777;
+}
+.bs-vcallout-primary {
+    border-top-color: #428bca;
+}
+.bs-vcallout-primary h4 {
+    color: #428bca;
+}
+.bs-vcallout-success {
+    border-top-color: #5cb85c;
+}
+.bs-vcallout-success h4 {
+    color: #5cb85c;
+}
+.bs-vcallout-danger {
+    border-top-color: #d9534f;
+}
+.bs-vcallout-danger h4 {
+    color: #d9534f;
+}
+.bs-vcallout-warning {
+    border-top-color: #f0ad4e;
+}
+.bs-vcallout-warning h4 {
+    color: #f0ad4e;
+}
+.bs-vcallout-info {
+    border-top-color: #5bc0de;
+}
+.bs-vcallout-info h4 {
+    color: #5bc0de;
+}
+
 /*=============Callout CSS Ends=============*/
 /*input:-webkit-autofill,
 input:-webkit-autofill:hover, 

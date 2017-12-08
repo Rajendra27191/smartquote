@@ -8,7 +8,9 @@ angular.module('sq.SmartQuoteDesktop')
   function ($rootScope, $resource, $http, $state, $log) {
     var UserHomeServices = {
         getProductsFromJsonFile:$resource($rootScope.projectName+'/products.json', {}, {getProductsFromJsonFileMethod:{method:'GET'}}),
-        getChartDataApi:$resource($rootScope.projectName+'/getChartData', {}, {getChartDataMethod:{method:'GET'}})
+        // getChartDataApi:$resource($rootScope.projectName+'/getChartData', {}, {getChartDataMethod:{method:'GET'}}),
+        getChartDataApi:$resource($rootScope.projectName+'/getChartData',{}, {getChartDataMethod :{method: 'POST'}})
+
       };
     var userhome = {};
     var data;
@@ -30,17 +32,35 @@ angular.module('sq.SmartQuoteDesktop')
     });
     };        
 
-    userhome.GetChartData = function (){
-    UserHomeServices.getChartDataApi.getChartDataMethod(function (success) {
-    console.log(success)
-    if (success.code=="sessionTimeOut") {
-    $rootScope.$broadcast('SessionTimeOut', success);   
+    // userhome.GetChartData = function (){
+    // UserHomeServices.getChartDataApi.getChartDataMethod(function (success) {
+    // console.log(success)
+    // if (success.code=="sessionTimeOut") {
+    // $rootScope.$broadcast('SessionTimeOut', success);   
+    // }else{
+    // $rootScope.$broadcast('GetChartDataDone', success); 
+    // }
+    // }, function (error) {
+    // console.log(error);
+    // $rootScope.$broadcast('GetChartDataNotDone', error);  
+    // });
+    // };     
+
+    userhome.GetChartData = function (data){
+    console.log(data)
+    data = $.param({chartDetails:data}); 
+    $http.post($rootScope.projectName+'/getChartData', data, config)
+    .success(function (data, status, headers, config) {
+    console.log(data);
+    if (data.code=="sessionTimeOut") {
+      $rootScope.$broadcast('QuoteSessionTimeOut', data);     
     }else{
-    $rootScope.$broadcast('GetChartDataDone', success); 
+       $rootScope.$broadcast('GetChartDataDone', data); 
     }
-    }, function (error) {
-    console.log(error);
-    $rootScope.$broadcast('GetChartDataNotDone', error);  
+    })
+    .error(function (data, status, header, config) {
+    console.log(data);
+    $rootScope.$broadcast('GetChartDataNotDone', data);  
     });
     };     
 

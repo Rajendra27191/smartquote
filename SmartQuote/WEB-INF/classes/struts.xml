@@ -550,7 +550,7 @@
 		</action>
 		<action name="getChartData" class="action.DashBoardAction" method="getChartData">
 			<result name="success" type="json">
-				<param name="root">objChartResponseBean</param>
+				<param name="root">objChartResponseBeans</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>

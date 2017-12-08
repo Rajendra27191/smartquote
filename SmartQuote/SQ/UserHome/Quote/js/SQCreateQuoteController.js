@@ -1104,7 +1104,7 @@ var obj={"code":supplierName,"key":quoteResponse.genratedSupplierId,"value":supp
 ArrayOperationFactory.insertIntoArrayKeyValue($rootScope.supplierList,obj);
 } 
 if (quoteResponse.newProductCreated) {
-	$rootScope.initAuotoComplete();
+	$rootScope.initAuotoComplete(true);
 	$timeout(function() {
 	$scope.moveToCustomerInfo();
 	}, 2000);

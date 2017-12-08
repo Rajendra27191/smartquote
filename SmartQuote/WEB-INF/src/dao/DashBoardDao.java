@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import responseBeans.ChartResponseBean;
 import connection.ConnectionFactory;
 
 public class DashBoardDao {
@@ -41,13 +43,19 @@ public class DashBoardDao {
 			e.printStackTrace();
 		}
 	}
-	public int getTotalQuotes(String query) {
-		int total = 0;
+	public ArrayList<ChartResponseBean> getChartDetails(String query) {
+		ArrayList<ChartResponseBean> objList = new ArrayList<ChartResponseBean>();
+		ChartResponseBean objBean = null;
 		try {
 			pstmt = conn.prepareStatement(query);
+			System.out.println(pstmt);
 			rs = pstmt.executeQuery();
-			if(rs.next()){
-				total=rs.getInt(1);
+			while(rs.next()){
+				objBean = new ChartResponseBean();
+				objBean.setStatus(rs.getString("status"));
+				objBean.setTotalCount(rs.getInt("totalCount"));
+				objBean.setTotalAmount(rs.getDouble("totalAmount"));
+				objList.add(objBean);
 			}
 		} catch (Exception e) {
 			try {
@@ -57,102 +65,6 @@ public class DashBoardDao {
 			}
 			e.printStackTrace();
 		}
-		return total;
+		return objList;
 	}
-	
-//	public int getTotalQuote(String getTotalQuoteQuery) {
-//		int totalQuote = 0;
-//		try {
-//			pstmt = conn.prepareStatement(getTotalQuoteQuery);
-//			rs = pstmt.executeQuery();
-//			if(rs.next()){
-//				totalQuote=rs.getInt(1);
-//			}
-//		} catch (Exception e) {
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
-//		return totalQuote;
-//	}
-//
-//	public int getPipelineQuote(String query) {
-//		int pipelineQuote = 0;
-//		try {
-//			pstmt = conn.prepareStatement(query);
-//			rs = pstmt.executeQuery();
-//			if(rs.next()){
-//				pipelineQuote=rs.getInt(1);
-//			}
-//		} catch (Exception e) {
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
-//		return pipelineQuote;
-//	}
-//
-//	public int getWonQuote(String query) {
-//		int wonQuote = 0;
-//		try {
-//			pstmt = conn.prepareStatement(query);
-//			rs = pstmt.executeQuery();
-//			if(rs.next()){
-//				wonQuote=rs.getInt(1);
-//			}
-//		} catch (Exception e) {
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
-//		return wonQuote;
-//	}
-//
-//	public int getLostQuote(String query) {
-//		int lostQuote = 0;
-//		try {
-//			pstmt = conn.prepareStatement(query);
-//			rs = pstmt.executeQuery();
-//			if(rs.next()){
-//				lostQuote=rs.getInt(1);
-//			}
-//		} catch (Exception e) {
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
-//		return lostQuote;
-//	}
-//
-//	public int getClosedQuote(String query) {
-//		int closedQuote = 0;
-//		try {
-//			pstmt = conn.prepareStatement(query);
-//			rs = pstmt.executeQuery();
-//			if(rs.next()){
-//				closedQuote=rs.getInt(1);
-//			}
-//		} catch (Exception e) {
-//			try {
-//				conn.rollback();
-//			} catch (SQLException e1) {
-//				e1.printStackTrace();
-//			}
-//			e.printStackTrace();
-//		}
-//		return closedQuote;
-//	}
-
 }

@@ -93,8 +93,8 @@ $scope.resetSearch=function(){
 };
 
 $scope.addProductToAlternateProductList=function(product){
-console.log("addProductToAlternateProductList");
-console.log(product);
+// console.log("addProductToAlternateProductList");
+// console.log(product);
 if (product) {
 	if (product.code) {
 		if ($scope.alternateProductList) {
@@ -106,7 +106,7 @@ if (product) {
 					}
 				});
 				if (isProductExist) {
-					console.log("duplicate product")
+					// console.log("duplicate product")
 					$rootScope.SQNotify("Duplicate product entry",'error'); 
 					$scope.resetSearch();
 				}else{
@@ -120,7 +120,7 @@ if (product) {
 }
 };
 $scope.deleteAlternateProduct=function(index){
-console.log("deleteAlternateProduct")
+// console.log("deleteAlternateProduct")
 var product={};
 if ($scope.alternateProductList.length>0) {
 if ($scope.alternateProductList.length==1) {
@@ -150,7 +150,7 @@ $scope.alternateProductList.splice(index,1);
 //=====================================
 $scope.pushDetailsToAlternateProductList=function(product){
 	$scope.alternateProductList.push(product);	
-	console.log($scope.alternateProductList)	
+	// console.log($scope.alternateProductList)	
 };
 $scope.getProductDetails=function(prod){
 	$rootScope.showSpinner();
@@ -161,8 +161,8 @@ $scope.handleGetProductDetailsDoneResponse=function(data){
 	if(data){
 		if (data.code) {
 			if(data.code.toUpperCase()=='SUCCESS'){
-				console.log("getProductDetails");
-				console.log(data.objProductResponseBean);
+				// console.log("getProductDetails");
+				// console.log(data.objProductResponseBean);
 				$scope.productDetails=data.objProductResponseBean;
 				$scope.productDetails.isMainProduct=false;
 				//---Promo price 
@@ -203,7 +203,7 @@ $scope.jsonToSaveAlternateProducts=function(){
 	return obj;
 };
 $scope.createAlternateProducts=function(){
-	console.log("createAlternateProducts");
+	// console.log("createAlternateProducts");
 	// console.log(JSON.stringify($scope.jsonToSaveAlternateProducts()));
 	$rootScope.showSpinner();
 	SQManageMenuServices.CreateAlternateProducts(JSON.stringify($scope.jsonToSaveAlternateProducts()))
@@ -241,11 +241,11 @@ var cleanupEventCreateAlternativeProductNotDone = $scope.$on("CreateAlternativeP
 
 
 $scope.saveAlternateProducts=function(){
-	console.log("saveAlternateProducts")
-	console.log($scope.alternateProductList)
-	console.log($scope.alternateProductList.length);
+	// console.log("saveAlternateProducts")
+	// console.log($scope.alternateProductList)
+	// console.log($scope.alternateProductList.length);
 	if ($scope.form.edit.$valid) {
-	console.log("Valid");
+	// console.log("Valid");
 	// console.log($scope.form.edit);
 	if ($scope.alternateProductList.length>0) {
 	var isMainProductExist=false;
@@ -257,7 +257,7 @@ $scope.saveAlternateProducts=function(){
 	if (isMainProductExist) {
 	if ($scope.alternateProductList.length>1) {
 
-	console.log(JSON.stringify($scope.jsonToSaveAlternateProducts()));
+	// console.log(JSON.stringify($scope.jsonToSaveAlternateProducts()));
 	if ($scope.buttonstatus=='add') {
 		$scope.createAlternateProducts();
 	};
@@ -276,8 +276,8 @@ $scope.saveAlternateProducts=function(){
 	$scope.resetSearch();
 	}
 	}else{
-	console.log("inValid");
-	console.log($scope.form.edit)
+	// console.log("inValid");
+	// console.log($scope.form.edit)
 	$scope.form.edit.submitted=true;
 
 	};
@@ -383,8 +383,8 @@ $scope.createEditAlternativeArray=function(product){
 	var array=[];
 	var obj={}
 	var mainProductAdded=false;
-	console.log("ALT PRODUCT :::");
-	console.log(product);
+	// console.log("ALT PRODUCT :::");
+	// console.log(product);
 	// angular.forEach($scope.alternateProductListView, function(listProd, key){
 	// 	if (listProd.mainProductCode==product.mainProductCode) {
 	// 		console.log("1...............")
@@ -444,7 +444,7 @@ $scope.createEditAlternativeArray=function(product){
 };
 
 $scope.editAlternateProductBtnClicked=function(index,product){
-console.log("editMainAlternateProductInList");
+// console.log("editMainAlternateProductInList");
 // console.log(product);
 var prod=angular.copy(product);
 $scope.editAlternativeObject={};
@@ -462,7 +462,7 @@ $scope.alternateProductList=$scope.createEditAlternativeArray(prod);
 };
 };
 $scope.editAlternateProducts=function(){
-	console.log("editAlternateProducts")
+	// console.log("editAlternateProducts")
 	$rootScope.showSpinner();
 	SQManageMenuServices.UpdateAlternateProducts(JSON.stringify($scope.jsonToSaveAlternateProducts()))
 }
