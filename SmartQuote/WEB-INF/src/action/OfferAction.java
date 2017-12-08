@@ -40,9 +40,9 @@ public class OfferAction extends ActionSupport implements ServletRequestAware {
 	public boolean createOfferTemplate(File srcFile, String destFileName) {
 		boolean isTemplateCreated = false;
 		String projectTemplatePath = System.getProperty("user.dir") + getText("offer_template_folder_path");
-		System.out.println("projectTemplatePath ::" + projectTemplatePath);
+//		System.out.println("projectTemplatePath ::" + projectTemplatePath);
 		File fileToCreate = new File(projectTemplatePath + destFileName);
-		System.out.println("fileTocreate" + fileToCreate);
+//		System.out.println("fileTocreate" + fileToCreate);
 		try {
 			if (!fileToCreate.exists()) {
 				FileUtils.copyFile(srcFile, fileToCreate);
@@ -57,6 +57,20 @@ public class OfferAction extends ActionSupport implements ServletRequestAware {
 			e.printStackTrace();
 		}
 		return isTemplateCreated;
+	}
+	public boolean deleteOfferTemplate(String destFileName) {
+		boolean isTemplateDeleted = false;
+		String projectTemplatePath = System.getProperty("user.dir") + getText("offer_template_folder_path");
+//		System.out.println("projectTemplatePath ::" + projectTemplatePath);
+		File deleteTemplate = new File(projectTemplatePath + destFileName);
+//		System.out.println("fileTocreate" + deleteTemplate);
+		try {
+			deleteTemplate.delete();
+			isTemplateDeleted = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isTemplateDeleted;
 	}
 
 	public String createOffer() {
@@ -124,6 +138,8 @@ public class OfferAction extends ActionSupport implements ServletRequestAware {
 		int offerId = Integer.parseInt(request.getParameter("id"));
 		try {
 			boolean isDeleted = objOfferDao.deleteOffer(offerId);
+			String offerTemplate = "offer_template_" + offerId + ".png";
+			deleteOfferTemplate(offerTemplate);
 			objOfferDao.commit();
 			objOfferDao.closeAll();
 			if (isDeleted) {

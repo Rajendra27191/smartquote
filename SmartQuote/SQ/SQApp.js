@@ -14,6 +14,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    $rootScope.projectName="/";
 
    var currentURL=$window.location.href; 
+   // var currentURL="http://localhost:6003/smartprotest"; 
    var isSmartProTest=currentURL.includes("smartprotest");
    if (isSmartProTest) {
    $rootScope.projectName="/smartprotest";
@@ -132,15 +133,23 @@ $rootScope.$on("sesssion", function(event, data){
 // }
 
 /*===================================================*/
-$rootScope.initAuotoComplete=function(){
+$rootScope.initAuotoComplete=function(callWithTimeStamp){
 console.log("$rootScope.initAuotoComplete...");
 var timestamp = new Date().getTime();
+var fileURL= $rootScope.projectName+"/products.json?"
+var isCache=false;
+if (callWithTimeStamp) {
+ fileURL= $rootScope.projectName+"/products.json?"+timestamp,
+ isCache=false;
+} 
+console.log("fileURL : "+ fileURL)
 products = new Bloodhound({
   datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   prefetch: {
-    url: $rootScope.projectName+"/products.json?"+timestamp,
-    cache: false,
+    // url: $rootScope.projectName+"/products.json?"+timestamp,
+    url: fileURL,
+    cache: isCache,
     beforeSend: function(xhr){
         $rootScope.showSpinner();
         },

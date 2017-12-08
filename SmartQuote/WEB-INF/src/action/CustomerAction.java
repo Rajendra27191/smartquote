@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.interceptor.ServletRequestAware;
@@ -108,6 +109,20 @@ public class CustomerAction extends ActionSupport implements
 			e.printStackTrace();
 		}
 		return isLogoCreated;
+	}
+	public boolean deleteLogo(String filename){
+		boolean isLogoDeleted=false;
+		String projectLogoPath=System.getProperty("user.dir")+getText("customer_logo_folder_path");
+		System.out.println("projectLogoPath "+projectLogoPath);
+		File fileToDelete = new File(projectLogoPath+filename);
+		try {
+			System.out.println("fileToDelete :: "+fileToDelete);
+			fileToDelete.delete();
+			isLogoDeleted=true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isLogoDeleted;
 	}
 	public String createCustomer() {
 		objDetailResponseBean = new DetailResponseBean();
@@ -215,9 +230,14 @@ public class CustomerAction extends ActionSupport implements
 		String customerCode = request.getParameter("customerCode");
 		// customerCode = "SHR6799AUN";
 		CustomerDao objDao = new CustomerDao();
+		CustomerBean objBean = objDao.getCustomerDetails(customerCode);
+		String filename ="CustId_" + objBean.getCustId() + ".png";
+		deleteLogo(filename);
 		boolean isDeleted = objDao.deleteUser(customerCode);
 		objDao.commit();
 		objDao.closeAll();
+		
+		
 		if (isDeleted) {
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("customer_deleted"));
