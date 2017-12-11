@@ -90,6 +90,7 @@ $scope.resetOnBackspace = function (event) {
         $scope.resetView();
         $scope.resetForm();
 		$scope.buttonstatus='add';
+		$('#userGroupName').focus();
     }
 };
 $scope.userGroupChanged = function (event) {
