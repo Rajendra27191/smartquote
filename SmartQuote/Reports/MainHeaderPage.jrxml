@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quote_report" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8db8e68c-96db-4599-b0f5-5c8299cef66a">
-	<property name="ireport.zoom" value="0.7513148009016011"/>
+	<property name="ireport.zoom" value="0.8264462809917612"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="4"/>
+	<property name="ireport.y" value="62"/>
+	<style name="text_style" hAlign="Center" vAlign="Top" fontSize="16" isBold="true">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$P{customerLogoPath}!=""&&$P{customerLogoPath}!=null]]></conditionExpression>
+			<style hAlign="Left" vAlign="Top" fontSize="16" isBold="true"/>
+		</conditionalStyle>
+	</style>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["/home/radhika/git/smartquote/SmartQuote/Reports/"]]></defaultValueExpression>
 	</parameter>
@@ -61,27 +67,8 @@
 				<reportElement uuid="2738194b-eac6-4ec6-997e-9bce250a9023" mode="Opaque" x="0" y="0" width="595" height="755"/>
 				<imageExpression><![CDATA[$P{frontCoverPath}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement uuid="bfbde55c-ba98-45f0-83c1-ba8feeba52dd" x="22" y="677" width="253" height="20" backcolor="#FF3366">
-					<printWhenExpression><![CDATA[$P{customerLogoPath}==""&&$P{customerLogoPath}==null]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="AvantGarde Bk BT BOOK" size="14" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Business Proposal For ]]></text>
-			</staticText>
-			<textField>
-				<reportElement uuid="efa7f7e4-f6d4-486a-8095-7f61bec82bb6" x="22" y="698" width="253" height="51" forecolor="#D92D21">
-					<printWhenExpression><![CDATA[$P{customerLogoPath}==""&&$P{customerLogoPath}==null]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="AvantGarde Bk BT BOOK" size="14" isBold="false"/>
-					<paragraph lineSpacing="Fixed"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{proposalFor}]]></textFieldExpression>
-			</textField>
-			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle" onErrorType="Icon">
-				<reportElement uuid="d5fb89ec-f073-4027-b5e4-9b64c4a83325" mode="Transparent" x="75" y="649" width="150" height="100">
+			<image scaleImage="RetainShape" hAlign="Right" vAlign="Top" onErrorType="Icon">
+				<reportElement uuid="d5fb89ec-f073-4027-b5e4-9b64c4a83325" mode="Transparent" x="76" y="669" width="196" height="77">
 					<printWhenExpression><![CDATA[$P{customerLogoPath}!=""&&$P{customerLogoPath}!=null]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -89,21 +76,30 @@
 				</graphicElement>
 				<imageExpression><![CDATA[$P{customerLogoPath}]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement uuid="a349d358-24ca-40e5-8c67-804a7241e9d1" style="text_style" x="53" y="669" width="220" height="20">
+					<printWhenExpression><![CDATA[$P{customerLogoPath}==""||$P{customerLogoPath}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<text><![CDATA[Business Proposal For :]]></text>
+			</staticText>
 			<textField>
-				<reportElement uuid="efa7f7e4-f6d4-486a-8095-7f61bec82bb6" x="319" y="698" width="250" height="51" forecolor="#D92D21"/>
-				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="AvantGarde Bk BT BOOK" size="14" isBold="false"/>
-					<paragraph lineSpacing="Fixed"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{quoteAttn}]]></textFieldExpression>
+				<reportElement uuid="a3e04b2b-f8d1-4367-a89e-12e54f71cd76" style="text_style" x="53" y="691" width="220" height="50" forecolor="#D92D21">
+					<printWhenExpression><![CDATA[$P{customerLogoPath}==""||$P{customerLogoPath}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{proposalFor}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="bfbde55c-ba98-45f0-83c1-ba8feeba52dd" x="319" y="677" width="250" height="20" backcolor="#FF3366"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="AvantGarde Bk BT BOOK" size="14" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Proposal Attn ]]></text>
+				<reportElement uuid="800e3dbc-16c6-4260-871c-9e51bca9bb14" style="text_style" x="290" y="669" width="220" height="20"/>
+				<textElement/>
+				<text><![CDATA[Quote Attn :]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="ddd3e761-8a8c-42b8-85cc-63fcec08b5db" style="text_style" x="290" y="691" width="220" height="50" forecolor="#D92D21"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{quoteAttn}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

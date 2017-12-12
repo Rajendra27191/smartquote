@@ -37,13 +37,8 @@ var cleanupEventGetUserGroupInfoNotDone = $scope.$on("GetUserGroupInfoNotDone", 
   $rootScope.alertServerError("Server error");
   $rootScope.hideSpinner();
 });
-
-$scope.handleGetUserGroupMenuDoneResponse=function(data){
-if(data){
-  if(data.code){
-   if(data.code.toUpperCase()=='SUCCESS'){   
-    var result=data.result;
-    result.forEach(function(element,index){
+function setMenuAccess(result){
+ result.forEach(function(element,index){
       if(element.menuName=='Profile' || element.menuName=='Home'){
         element.status=true;
        // console.log(element)
@@ -52,7 +47,15 @@ if(data){
         });
       }
     });
-    $rootScope.userMenu=result;
+};
+$scope.handleGetUserGroupMenuDoneResponse=function(data){
+if(data){
+  if(data.code){
+   if(data.code.toUpperCase()=='SUCCESS'){   
+    var result=data.result;
+   	setMenuAccess(result);
+    $rootScope.userMenu=angular.copy(result);
+    $scope.userMenuList=angular.copy(data.result);
   //$rootScope.userNavMenu=$rootScope.userMenu;
   } 
   }
@@ -73,33 +76,41 @@ var cleanupEventGetUserGroupMenuNotDone = $scope.$on("GetUserGroupMenuNotDone", 
 /*=============GET USER GROUP AND MENUS STOP=====================*/
 
 $scope.resetView=function(){
-$rootScope.showSpinner();
-SQHomeServices.GetUserGroupInfo();
-SQHomeServices.GetUserGroupMenu();
+// console.log("resetView")
+var result=$scope.userMenuList;
+setMenuAccess(result);
+$rootScope.userMenu=angular.copy($scope.userMenuList);
 };
 
 $scope.resetForm=function(){
-$scope.user={};
+// console.log("resetForm")
+// $scope.user={};
 $scope.buttonstatus='add';
 $scope.form.userManageUserGroup.submitted=false;
 $scope.form.userManageUserGroup.$setPristine();
 }
 
+$scope.clearData = function () {
+	// console.log("clearData")
+	$scope.resetView();
+    $scope.resetForm();
+	$scope.buttonstatus='add';
+}
+var eventObj={}
 $scope.resetOnBackspace = function (event) {
-    if (event.keyCode === 8) {
-        $scope.resetView();
-        $scope.resetForm();
-		$scope.buttonstatus='add';
-		$('#userGroupName').focus();
-    }
+	eventObj={}
+	eventObj=event;    
 };
-$scope.userGroupChanged = function (event) {
-console.log("userGroupChanged")
+$scope.userGroupChanged = function (newValue,oldValue) {
+console.log("userGroupChanged");
 if ($scope.isUserGroupSelected) {
 $scope.buttonstatus='add';
 var tempcode=$scope.user.userGroup;
-$scope.resetForm();
 $scope.user.userGroup = tempcode;
+// $scope.resetForm();
+if (eventObj.keyCode == 8) {
+    $scope.clearData();
+}    
 }
 };
 //$scope.resetView();

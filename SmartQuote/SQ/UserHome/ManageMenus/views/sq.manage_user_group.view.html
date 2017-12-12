@@ -16,7 +16,7 @@ overflow-y: auto;
 	<div class="row">
 	<div class="col-md-4" style="padding-right: 0px;"><label class="sub-label">User Group</label> <span class="asteric">*</span></div>
 	<div class="col-md-8" style="padding-left: 0px;">
-	<input type = 'text' id="userGroupName" name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)"  ng-change="userGroupChanged()" autocomplete="off" focus-me="" typeahead-min-length="0" required>
+	<input type = 'text' id="userGroupName" name="userGroupName" class = 'form-control' style = 'width : 100%;' ng-model = 'user.userGroup' uib-typeahead = 'usergroup.value for usergroup in userGroups | filter:$viewValue' typeahead-on-select="setUserGroup(user)" ng-keydown="resetOnBackspace($event)"  ng-change="userGroupChanged(user.userGroup,'{{user.userGroup}}')" autocomplete="off" focus-me="" typeahead-min-length="0" required>
 	<span ng-show="((form.userManageUserGroup.userGroupName.$dirty && form.userManageUserGroup.userGroupName.$invalid) || (form.userManageUserGroup.userGroupName.$invalid && form.userManageUserGroup.submitted))" style="color:red;font-size:14px;word-break:break-all;">
 	<small>*Please enter user group name.</small>
 	</span>
