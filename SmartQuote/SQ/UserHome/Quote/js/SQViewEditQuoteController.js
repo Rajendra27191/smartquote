@@ -55,11 +55,11 @@ showWeeks: false
 $scope.customerQuote.modefiedDate=$scope.today();
 };
 $scope.quoteDateChanged=function(quoteDate){};
-$scope.getFormattedDate=function(date){
-var dt = new Date(date);
-var fDate= moment(dt).format("DD-MM-YYYY");
-return fDate;
-};
+// $rootScope.getFormattedDate=function(date){
+// var dt = new Date(date);
+// var fDate= moment(dt).format("DD-MM-YYYY");
+// return fDate;
+// };
 
 //======= Date Control <<<<<
 

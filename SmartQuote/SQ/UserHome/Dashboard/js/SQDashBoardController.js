@@ -1,11 +1,7 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQDashBoardController',function($scope,$rootScope,SQUserHomeServices){
+.controller('SQDashBoardController',function($scope,$rootScope,SQUserHomeServices,$window){
 console.log('initialise SQDashBoardController controller');
-$scope.userArray=$rootScope.userList;
-$scope.agent={};
-$scope.userID=$rootScope.userData.userId;
-$scope.selectedUserID=$scope.userID;
-
+$window.pageYOffset;
 
 
 //==================DATE===============
@@ -22,10 +18,18 @@ $scope.popup2={};
 $scope.buttonstatus='add';
 $scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
 $scope.format = "dd-MM-yyyy";
-$scope.dateOptions = {
+$scope.dateOptions1 = {
 formatYear: 'yy',
 startingDay: 1,
 showWeeks: false
+};
+$scope.dateOptions2 = {
+formatYear: 'yy',
+startingDay: 1,
+showWeeks: false,
+maxDate:$scope.today(),
+// minDate: new Date(),
+// startingDay: 1
 };
 $scope.dateValid=true;
 
@@ -40,10 +44,6 @@ var currentDate=$scope.today();
 var fromDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1,currentDate.getDate());
 return fromDate;
 };
-
-$scope.agent={'fromDate':$scope.validFromDate(),'toDate':$scope.today()};
-
-//$scope.today();
 $scope.open1 = function() {
 $scope.popup1.opened = true;
 };
@@ -66,6 +66,39 @@ $scope.validateDate=function(dateFrom,dateTo){
 		}
 	}
 }
+// === INIT
+$scope.userID=angular.copy($rootScope.userData.userId);
+$scope.agent={};
+$scope.agent.fromDate=$scope.validFromDate();
+$scope.agent.toDate=$scope.today();
+$scope.showDashboard=false;
+if ($rootScope.userData) {
+  if ($rootScope.userData.userType.toLowerCase()=="admin") {
+    $scope.disableSelectAgent=false;
+	$scope.agent.agentList=angular.copy($rootScope.userList);
+	var obj={"code":"0","key":0,"value":"All Agents"};
+	$scope.agent.agentList.unshift(obj);
+	$scope.agent.agentCode=$scope.agent.agentList[0]//"0";
+	$scope.selectedUserID=$scope.agent.agentCode.code;
+  }else{
+    $scope.disableSelectAgent=true;
+    $scope.agent.agentCode=$rootScope.userData.userId.toString();
+    $scope.selectedUserID=$scope.userID;
+	$scope.agent.agentList=angular.copy($rootScope.userList);
+	var obj={"code":"0","key":0,"value":"All Agents"};
+	$scope.agent.agentList.push(obj);
+  }
+};
+
+
+$scope.changeAgent=function(agent){
+console.log("changeAgent")
+console.log(agent);
+$scope.selectedUserID=agent.code;
+$scope.selectedUserID=agent.code;
+};
+
+
 
 
 $scope.dataToChart=function(){
@@ -81,6 +114,7 @@ $scope.init=function(){
 	$rootScope.showSpinner();
 	SQUserHomeServices.GetChartData($scope.dataToChart());
 };
+
 $scope.init();
 
 
@@ -89,6 +123,10 @@ function capitalize(s){
     return s.toLowerCase().replace( /\b./g, function(a){ return a.toUpperCase(); } );
 };
 
+function formatCalloutData(response){
+console.log(response);
+$scope.callOutData= angular.copy(response);
+};
 function formatBarChartData(response){
 $scope.objBarChart={};
 var data=[];
@@ -110,7 +148,7 @@ title: '',
 'colors': ["#CC0000","#FF8800","#007E33"],
 vAxis: {
 minValue: 0,
-maxValue: 10,
+// maxValue: 10,
 }
 };
 console.log(angular.toJson($scope.objBarChart))
@@ -141,6 +179,8 @@ console.log(angular.toJson($scope.objPieChart))
 function formatData(response){
 formatBarChartData(response);
 formatPieChartData(response);
+formatCalloutData(response);
+$scope.showDashboard=true;
 // $scope.totalStatus=angular.copy(response);
 };
 
@@ -163,7 +203,13 @@ var cleanupEventGetProductDetailsNotDone = $scope.$on("GetChartDataNotDone", fun
 	$rootScope.hideSpinner();
 });
 
+//================= Get Dashboard Results=============
 
+$scope.getDashboardResults=function(){
+console.log("getDashboardResults");
+console.log($scope.agent)
+$scope.init();
+};
 
 
 // $scope.myChartObject = {};
@@ -207,24 +253,24 @@ var cleanupEventGetProductDetailsNotDone = $scope.$on("GetChartDataNotDone", fun
 //     };
 
 
-var data =[
-          ['', 'Lost','Won','Pipeline'],
-          ['',  15,20,10],
-          // ['Eat',      2],
-          // ['Commute',  2],
-          // ['Watch TV', 2],
-          // ['Sleep',    7]
-        ];
+// var data =[
+//           ['', 'Lost','Won','Pipeline'],
+//           ['',  15,20,10],
+//           // ['Eat',      2],
+//           // ['Commute',  2],
+//           // ['Watch TV', 2],
+//           // ['Sleep',    7]
+//         ];
 
-        var options = {
-          title: 'My Daily Activities',
-          'colors': ["#CC0000","#007E33","#FF8800"]
-            // pieSliceText: 'label',
-        };
-  $scope.myChartObject1={};
-  $scope.myChartObject1.type="ColumnChart";
-  $scope.myChartObject1.data=data;
-  $scope.myChartObject1.options=options;
+//         var options = {
+//           title: 'My Daily Activities',
+//           'colors': ["#CC0000","#007E33","#FF8800"]
+//             // pieSliceText: 'label',
+//         };
+//   $scope.myChartObject1={};
+//   $scope.myChartObject1.type="ColumnChart";
+//   $scope.myChartObject1.data=data;
+//   $scope.myChartObject1.options=options;
   
 
 });

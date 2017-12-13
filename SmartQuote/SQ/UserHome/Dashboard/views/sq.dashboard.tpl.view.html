@@ -23,70 +23,76 @@ input[type=date]::-webkit-outer-spin-button {
         </div>
   </div> -->
 
-<div class="row">
+<div class="row" style="margin-bottom:2%;">
 <div class="col-md-10 col-md-offset-1">
   <div class="col-md-12">  
-  <div class="col-md-4">
-    <!--  <input type="date" class="form-control" id="exampleInput" name="input" ng-model="example.value"
-       placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required /> -->
+  <div class="col-md-3">
+   <select type="text" name="userGroupName" class="form-control" ng-model="agent.agentCode" ng-options="agent as agent.value for agent in agent.agentList" ng-change="changeAgent(agent.agentCode)" ng-disabled="disableSelectAgent"required>
+  </select>
   </div>  
+  <!-- {{agent}} -->
   <div class="col-md-8">
   <div class="col-md-1"><lable class="sub-label">From</label></div>
   <div class="col-md-5">
   <p class="input-group">
-      <input type="text" name="fromDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.fromDate" ng-change="fromDateChanged(agent.fromDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" on-open-focus="false"/>
+      <input type="text" name="fromDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.fromDate" ng-change="fromDateChanged(agent.fromDate)" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" on-open-focus="false" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
       <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1()" style="padding: 3px 12px;"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
   </p>
+  <span ng-show="!dateValid" class="invalid-control">
+    <small>*valid to date should be greater than valid from.</small>
+  </span>
   </div>
   <div class="col-md-1"><lable class="sub-label">To</label></div>
   <div class="col-md-5">
   <p class="input-group">
-          <input type="text" name="toDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.toDate" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
+          <input type="text" name="toDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.toDate" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" />
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open2()" style="padding: 3px 12px;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
      </p>
   </div> 
   </div>
+  <div class="col-md-1">
+    <button id="create" ng-click="getDashboardResults()" class="btn btn-default"> Go</button>
+  </div>
   </div>
 </div>
 <div class="col-md-1"></div>
 </div>
 </div>
+<div class="row" style="margin-bottom:2%;">
+<div class="col-md-3"></div>
+<div class="col-md-6">
+  <center><h5 style="font-weight: bold;text-transform: capitalize;">
+    Showing result for {{agent.agentCode.value}}  From {{getFormattedDate(agent.fromDate)}} To {{getFormattedDate(agent.toDate)}} 
+  </h5></center>
+</div>
+<div class="col-md-3"></div>
+</div>
 
-
-<div id="dashboardChart" >
-<div class="row">
-<div class="col-md-1"></div>
-<div class="col-md-2">
-  <div class="bs-vcallout bs-vcallout-success">
-  <center><h4>Won</h4></center>
-  <center><h4>{{totalStatus.won.totalQuote}}</h4></center>
+<div id="dashboardChart" ng-if="showDashboard">
+<div class="row" style="margin-bottom:2%;">
+<div class="col-md-3"></div>
+<div class="col-md-2" ng-repeat="item in callOutData">
+  <div class="bs-vcallout " ng-class="{'bs-vcallout-success':item.status=='WON','bs-vcallout-danger':item.status=='LOST','bs-vcallout-warning':item.status=='PIPELINE'}">
+  <center><h5 style="font-weight: bold;text-transform: capitalize;">{{item.status}}</h5></center>
+  <center>{{item.totalCount}}</center>
+  <center style="font-weight: bold;">$ {{item.totalAmount}}</center>
   </div>
 </div>
-<div class="col-md-2">
-  <div class="bs-vcallout bs-vcallout-warning">
-    <center><h4>Pipeline</h4></center>
-    <center><h4>{{totalStatus.pipeline.totalQuote}}</h4></center>
-  </div>
-</div>
-<div class="col-md-2">
+<!-- <div class="col-md-2">
   <div class="bs-vcallout bs-vcallout-default">
-    <center><h4>Expected To Close</h4></center>
-    <center><h4>{{totalStatus.pipeline.totalQuote}}</h4></center>
+  <center><h5 style="font-weight: bold;text-transform: capitalize;">Expected To Close</h5></center>
+  <center>123</center>
+  <center style="font-weight: bold;">$ 123</center>
   </div>
+</div> -->
+<div class="col-md-3"></div>
 </div>
-<div class="col-md-2">
-  <div class="bs-vcallout bs-vcallout-danger">
-    <center><h4>Lost</h4></center>
-    <center><h4>{{totalStatus.lost.totalQuote}}</h4></center>
-  </div>
-</div>
-<div class="col-md-1"></div>
-</div>
-<div class="row">
+
+<div class="row" >
 <div class="col-md-6" style="width: 48%;padding:0px;border: 1px solid #eee;border-top-width: 10px;border-top-color: #777;margin-right: 5px;margin-left: 5px;">
   <div class="">
   <div google-chart chart="objBarChart" style="height:300px; width:550px;"></div>

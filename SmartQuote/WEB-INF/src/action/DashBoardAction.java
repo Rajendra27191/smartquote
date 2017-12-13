@@ -20,7 +20,7 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 	private HttpServletRequest request;
 	HttpSession httpSession;
 	DashBoardDao objDashBoardDao = null;
-	
+
 	ArrayList<ChartResponseBean> objChartResponseBeans = new ArrayList<ChartResponseBean>();
 
 	public ArrayList<ChartResponseBean> getObjChartResponseBeans() {
@@ -37,7 +37,7 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 		objChartBean = new Gson().fromJson(chartDetails, ChartBean.class);
 		System.out.println("chartDetails" + chartDetails);
 		objDashBoardDao = new DashBoardDao();
-//		objChartResponseBean = new ChartResponseBean();
+		// objChartResponseBean = new ChartResponseBean();
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		String userType = String.valueOf(httpSession.getAttribute("userType"));
@@ -45,12 +45,21 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 		System.out.println("userType : " + userType);
 		String queryStr = "";
 		System.out.println("objChartBean" + objChartBean);
-		queryStr = "Select CASE when status in ('saved', 'updated') then 'PIPELINE' "
-				+ "ELSE status END  as status , count(distinct a.quote_id) totalCount, "
-				+ "round(sum(b.total), 2) totalAmount from create_quote a, create_quote_details b "
-				+ "where a.quote_id =  b.quote_id and b.alternate_for = 0 " + "and date(a.created_date) between '"
-				+ objChartBean.getFromDate() + "' " + "and '" + objChartBean.getToDate() + "' "
-				+ " and sales_person_id = "+objChartBean.getUserID()+" group by 1";
+		if (objChartBean.getUserID().equalsIgnoreCase("0")) {
+			queryStr = "Select CASE when status in ('saved', 'updated') then 'PIPELINE' "
+					+ "ELSE status END  as status , count(distinct a.quote_id) totalCount, "
+					+ "round(sum(b.total), 2) totalAmount from create_quote a, create_quote_details b "
+					+ "where a.quote_id =  b.quote_id and b.alternate_for = 0 " + "and date(a.created_date) between '"
+					+ objChartBean.getFromDate() + "' " + "and '" + objChartBean.getToDate() + "' group by 1";
+		} else {
+			queryStr = "Select CASE when status in ('saved', 'updated') then 'PIPELINE' "
+					+ "ELSE status END  as status , count(distinct a.quote_id) totalCount, "
+					+ "round(sum(b.total), 2) totalAmount from create_quote a, create_quote_details b "
+					+ "where a.quote_id =  b.quote_id and b.alternate_for = 0 " + "and date(a.created_date) between '"
+					+ objChartBean.getFromDate() + "' " + "and '" + objChartBean.getToDate() + "' " + " and sales_person_id = "
+					+ objChartBean.getUserID() + " group by 1";
+		}
+
 		try {
 			objChartResponseBeans = objDashBoardDao.getChartDetails(queryStr);
 		} catch (Exception e) {

@@ -481,7 +481,11 @@ $interval($scope.checkQuoteActivated, 1000);
   // });
 ///-------------------------Confirmation Window-----------------
 
-
+$rootScope.getFormattedDate=function(date){
+var dt = new Date(date);
+var fDate= moment(dt).format("DD-MM-YYYY");
+return fDate;
+};
 $scope.$on('$destroy', function(event, message) {
 cleanupEventUserLogInDone();
 cleanupEventUserLogInNotDone();
