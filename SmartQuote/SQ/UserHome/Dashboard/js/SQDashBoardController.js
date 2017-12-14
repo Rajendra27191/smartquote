@@ -82,11 +82,17 @@ if ($rootScope.userData) {
 	$scope.selectedUserID=$scope.agent.agentCode.code;
   }else{
     $scope.disableSelectAgent=true;
-    $scope.agent.agentCode=$rootScope.userData.userId.toString();
+    // $scope.agent.agentCode=$rootScope.userData.userId.toString();
     $scope.selectedUserID=$scope.userID;
 	$scope.agent.agentList=angular.copy($rootScope.userList);
-	var obj={"code":"0","key":0,"value":"All Agents"};
-	$scope.agent.agentList.push(obj);
+	angular.forEach($scope.agent.agentList, function(value, key){
+    	if (value.code==$rootScope.userData.userId.toString()) {
+    		$scope.agent.agentCode=value;
+    	};
+    });
+    // $scope.agent.agentCode=$scope.agent.agentList[0]
+	// var obj={"code":"0","key":0,"value":"All Agents"};
+	// $scope.agent.agentList.push(obj);
   }
 };
 
@@ -142,8 +148,9 @@ data.push(legend);
 data.push(column);
 $scope.objBarChart.type="ColumnChart"
 $scope.objBarChart.data=data;
+console.log($scope.agentData)
 $scope.objBarChart.options= {
-title: '',
+// title: "Result For "+$scope.agentData.agentCode.value+" From "+$rootScope.getFormattedDate($scope.agentData.fromDate)+" To "+$rootScope.getFormattedDate($scope.agentData.toDate),
 // 'legend': {'position': 'top','alignment': 'start' },
 'colors': ["#CC0000","#FF8800","#007E33"],
 vAxis: {
@@ -158,7 +165,7 @@ function formatPieChartData(response){
 $scope.objPieChart={};
 $scope.objPieChart.type="PieChart"
 $scope.objPieChart.options= {
-        'title': '',
+        // 'title': 'Proposal',
         // 'legend': {'position': 'none'},
         'colors': ["#FF8800","#007E33","#CC0000"]
     };
@@ -177,6 +184,7 @@ console.log(angular.toJson($scope.objPieChart))
 
 
 function formatData(response){
+$scope.agentData=angular.copy($scope.agent)
 formatBarChartData(response);
 formatPieChartData(response);
 formatCalloutData(response);
@@ -190,6 +198,12 @@ $scope.handleGetChartDataDoneResponse=function(data){
 	if(data){
 		if (data.length>0) {
 		formatData(data);
+		}else{
+			if ($scope.showDashboard) {
+			$rootScope.alertError("No Records Found For Agent"+$scope.agent.agentCode.value+" Between \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" And "+ $rootScope.getFormattedDate($scope.agent.toDate));	
+			$scope.agent=angular.copy($scope.agentData);	
+				
+			};
 		}
 	}
 	$rootScope.hideSpinner();
