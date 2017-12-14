@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+
+import org.apache.commons.lang3.text.WordUtils;
+
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
 import connection.ConnectionFactory;
@@ -129,9 +132,9 @@ public class CustComparisonDao {
 				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));
 				objPdfMasterReportBean.setGstInclusive(rs.getBoolean("prices_gst_include"));
 				objPdfMasterReportBean.setQuoteDate(sdf.format(rs.getDate("quoteDate")));
-				objPdfMasterReportBean.setProposalFor(rs.getString("proposalFor"));
+				objPdfMasterReportBean.setProposalFor(WordUtils.capitalizeFully(rs.getString("proposalFor")));
 				objPdfMasterReportBean.setSubmittedBy(rs.getString("sales_person_name"));
-				objPdfMasterReportBean.setQuoteAttn(rs.getString("quoteAttn"));
+				objPdfMasterReportBean.setQuoteAttn(WordUtils.capitalizeFully(rs.getString("quoteAttn")));
 				objPdfMasterReportBean.setCustId(rs.getInt("customerId"));
 				//====
 				productList = getProductDetails(rs.getInt("quote_id"));
