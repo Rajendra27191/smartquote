@@ -8,8 +8,8 @@ angular.module('sq.SmartQuoteDesktop')
   function ($rootScope, $resource, $http, $state, $log) {
    // console.log($rootScope.projectName);
     var HomeServices = {
-        getUserGroupMenuAPI:$resource($rootScope.projectName+'/getMenuAndSubmenu ',{}, {getUserGroupMenuMethod :{method: 'POST'}}),
-        getUserGroupAPI:$resource($rootScope.projectName+'/getUserGroups',{}, {getUserGroupInfoMethod :{method: 'POST'}}),
+        getUserGroupMenuAPI:$resource($rootScope.projectName+'/getMenuAndSubmenu ',{}, {getUserGroupMenuMethod :{method: 'GET'}}),
+        getUserGroupAPI:$resource($rootScope.projectName+'/getUserGroups',{}, {getUserGroupInfoMethod :{method: 'GET'}}),
         userLoginAPI:$resource($rootScope.projectName+'/login?email=:email&password=:password', {}, {userLoginMethod :{method: 'GET'},params:{email:'@email',password:'@password'}}),
         userLogoutAPI:$resource($rootScope.projectName+'/logout', {}, {userLogoutMethod :{method: 'POST'}}),
         userForgotPasswordAPI:$resource($rootScope.projectName+'/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),

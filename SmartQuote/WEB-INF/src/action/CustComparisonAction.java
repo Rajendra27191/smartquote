@@ -22,7 +22,6 @@ import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import pojo.EmptyResponseBean;
-import pojo.KeyValuePairBean;
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
 import pojo.QuoteBean;
@@ -31,7 +30,6 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import dao.CustComparisonDao;
 import dao.QuoteDao;
-import dao.TermServicesDao;
 
 @SuppressWarnings("serial")
 public class CustComparisonAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
@@ -284,10 +282,12 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
-			exportParameters.put("headerImg1Path", imgDirPath + "/header_img1.png");
-			exportParameters.put("headerImg2Path", imgDirPath + "/header_img2.png");
-			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
-			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
+			exportParameters.put("frontCoverPath", imgDirPath + "/front_cover.jpg");
+			exportParameters.put("backCoverPath", imgDirPath + "/back_cover.jpg");
+//			exportParameters.put("headerImg1Path", imgDirPath + "/header_img1.png");
+//			exportParameters.put("headerImg2Path", imgDirPath + "/header_img2.png");
+//			exportParameters.put("footerImg1Path", imgDirPath + "/footer_img1.png");
+//			exportParameters.put("footerImg2Path", imgDirPath + "/footer_img2.png");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
 			String pageFooterText="";
 			if(objPdfMasterReportBean.isGstInclusive()){
@@ -299,7 +299,8 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			String custLogoPath = System.getProperty("user.dir")+getText("customer_logo_folder_path");
 			File file = new File(custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			if (!file.exists()) {
-				exportParameters.put("customerLogoPath", imgDirPath + "/no-image.png");
+//				exportParameters.put("customerLogoPath", imgDirPath + "/no-image.png");
+				exportParameters.put("customerLogoPath", "");
 			} else {
 				exportParameters.put("customerLogoPath", custLogoPath + "CustId_" + objPdfMasterReportBean.getCustId() + ".png");
 			}

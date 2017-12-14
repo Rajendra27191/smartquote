@@ -97,7 +97,7 @@ public class CommonLoadAction extends ActionSupport {
 			}
 		}
 		String status = "INI";
-		boolean isQuoteSaved = false;
+//		boolean isQuoteSaved = false;
 		boolean istermSaved;
 		boolean isServiceSaved;
 		int quoteId = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
@@ -167,7 +167,7 @@ public class CommonLoadAction extends ActionSupport {
 		String status = "INI";
 		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean, status);
 		@SuppressWarnings("unused")
-		boolean isQuoteSaved = false;
+//		boolean isQuoteSaved = false;
 		boolean isTermsSaved = false;
 		boolean isServiceSaved = false;
 

@@ -3,11 +3,7 @@ package action;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -320,7 +316,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					if (isFileUploaded) {
 						objEmptyResponse.setCode("success");
 						objEmptyResponse.setMessage(getText("product_file_uploaded"));
-//						CommonLoadAction.createProductFile(projectPath);
+						CommonLoadAction.createProductFile(projectPath);
 					} else {
 						objEmptyResponse.setCode("error");
 						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
