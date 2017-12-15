@@ -52,11 +52,9 @@ $scope.open2 = function() {
 $scope.popup2.opened = true;
 };
 
-$scope.fromDateChanged=function(userValidFromDate){
-//console.log(userValidFrom)
-};
+
 $scope.validateDate=function(dateFrom,dateTo){
-	//console.log("validateDate")
+	console.log("validateDate")
 	if(dateFrom&&dateTo){
 		var date1=moment(dateFrom).format('YYYY-MM-DD');
 		var date2=moment(dateTo).format('YYYY-MM-DD');
@@ -72,7 +70,8 @@ $scope.userID=angular.copy($rootScope.userData.userId);
 $scope.agent={};
 $scope.agent.fromDate=$scope.validFromDate();
 $scope.agent.toDate=$scope.today();
-$scope.showDashboard=false;
+$scope.noDataFound=false;
+
 if ($rootScope.userData) {
   if ($rootScope.userData.userType.toLowerCase()=="admin") {
     $scope.disableSelectAgent=false;
@@ -194,7 +193,8 @@ $scope.showDashboard=true;
 };
 
 $scope.handleGetChartDataDoneResponse=function(data){
-	console.log("handleGetChartDataDoneResponse")
+	console.log("handleGetChartDataDoneResponse");
+	// $scope.showDashboard=false;
 	$scope.productDetails={};
 	if(data){
 		if (data.length>0) {
@@ -206,10 +206,12 @@ $scope.handleGetChartDataDoneResponse=function(data){
 		});	
 		if (isValidData) {
 		formatData(data);
+		$scope.noDataFound=false;
 		}else{
 			if ($scope.showDashboard) {
 			$rootScope.alertError("No Records Found For Agent "+$scope.agent.agentCode.value+" From \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" To "+ $rootScope.getFormattedDate($scope.agent.toDate));	
 			$scope.agent=angular.copy($scope.agentData);
+			$scope.noDataFound=true;
 			};
 		}
 	}else{

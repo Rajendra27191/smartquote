@@ -1,7 +1,7 @@
 angular.module('sq.SmartQuoteDesktop')
 .controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','$http',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,$http){
 console.log('initialise SQUserHomeController controller');
-// $rootScope.initAuotoComplete();
+$rootScope.initAuotoComplete();
 $window.pageYOffset;
 
 //CODE STARTS===============================================================================================================

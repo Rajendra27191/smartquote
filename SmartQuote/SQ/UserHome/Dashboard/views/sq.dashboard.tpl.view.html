@@ -8,7 +8,7 @@
   
 </style>
 
-<div class="container" id="dashboardContent" style="overflow: hidden;">
+<div class="container" id="dashboardContent" >
  <!--  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
         <div class="col-md-12">
           <div class="no-message">
@@ -41,7 +41,7 @@
   <div class="col-md-1" style="padding:0px;text-align: right;"><label>From :&nbsp;</label></div>
   <div class="col-md-5" style="padding-left:0px;">
   <p class="input-group">
-      <input type="text" name="fromDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.fromDate" ng-change="fromDateChanged(agent.fromDate)" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" on-open-focus="false" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
+      <input type="text" name="fromDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.fromDate" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" on-open-focus="false" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
       <span class="input-group-btn">
         <button type="button" class="btn btn-default" ng-click="open1()" style="padding: 3px 12px;"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
@@ -116,7 +116,7 @@
 <div class="col-md-3"></div>
 <div class="col-md-6">
   <center><h5  style="font-weight: bold;text-transform: capitalize;">
-    Showing result for <label class="sub-label">{{agentData.agentCode.value}}</label> From <label class="sub-label">{{getFormattedDate(agentData.fromDate)}}</label> To 
+    Result for <label class="sub-label">{{agentData.agentCode.value}}</label> From <label class="sub-label">{{getFormattedDate(agentData.fromDate)}}</label> To 
     <label class="sub-label">{{getFormattedDate(agentData.toDate)}}</label> 
   </h5></center>
 </div>
@@ -124,7 +124,7 @@
 </div>
 </div>
 
-<div id="dashboardChart" ng-if="!showDashboard">
+<div id="dashboardChart" ng-if="noDataFound">
 <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
         <div class="col-md-12">
           <div class="no-message">  
@@ -140,4 +140,18 @@
   </div> 
 </div>
 
- 
+<!-- <div id="dashboardChart" ng-if="!showDashboard">
+  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
+        <div class="col-md-12">
+          <div class="no-message">
+          <center><i class="fa fa-laptop fa-5x" aria-hidden="true"></i></center>
+            <center>
+              <p style="font-size: 16px; font-weight:bold;">User Dashboard.</p>   
+              <p style="font-size: 16px;">No content available to display.</p> 
+            </center>   
+          </div>
+        </div>
+  </div>
+</div> -->
+
+
