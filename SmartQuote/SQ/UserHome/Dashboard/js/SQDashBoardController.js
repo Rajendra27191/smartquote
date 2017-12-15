@@ -21,7 +21,8 @@ $scope.format = "dd-MM-yyyy";
 $scope.dateOptions1 = {
 formatYear: 'yy',
 startingDay: 1,
-showWeeks: false
+showWeeks: false,
+maxDate:$scope.today(),
 };
 $scope.dateOptions2 = {
 formatYear: 'yy',
@@ -152,7 +153,7 @@ console.log($scope.agentData)
 $scope.objBarChart.options= {
 // title: "Result For "+$scope.agentData.agentCode.value+" From "+$rootScope.getFormattedDate($scope.agentData.fromDate)+" To "+$rootScope.getFormattedDate($scope.agentData.toDate),
 // 'legend': {'position': 'top','alignment': 'start' },
-'colors': ["#CC0000","#FF8800","#007E33"],
+'colors': ["#007E33","#FF8800","#CC0000"],
 vAxis: {
 minValue: 0,
 // maxValue: 10,
@@ -167,7 +168,7 @@ $scope.objPieChart.type="PieChart"
 $scope.objPieChart.options= {
         // 'title': 'Proposal',
         // 'legend': {'position': 'none'},
-        'colors': ["#FF8800","#007E33","#CC0000"]
+        'colors': ["#007E33","#FF8800","#CC0000"]
     };
 $scope.objPieChart.data={"cols": [
         {id: "t", label: "Status", type: "string"},
@@ -197,16 +198,25 @@ $scope.handleGetChartDataDoneResponse=function(data){
 	$scope.productDetails={};
 	if(data){
 		if (data.length>0) {
+		var isValidData=false;
+		angular.forEach(data,function(value,key){
+			if (value.totalCount>0) {
+				isValidData=true;
+			};
+		});	
+		if (isValidData) {
 		formatData(data);
 		}else{
 			if ($scope.showDashboard) {
-			$rootScope.alertError("No Records Found For Agent"+$scope.agent.agentCode.value+" Between \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" And "+ $rootScope.getFormattedDate($scope.agent.toDate));	
-			$scope.agent=angular.copy($scope.agentData);	
-				
+			$rootScope.alertError("No Records Found For Agent "+$scope.agent.agentCode.value+" From \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" To "+ $rootScope.getFormattedDate($scope.agent.toDate));	
+			$scope.agent=angular.copy($scope.agentData);
 			};
 		}
-	}
+	}else{
+			
+		}
 	$rootScope.hideSpinner();
+}
 };
 var cleanupEventGetChartDataDone = $scope.$on("GetChartDataDone", function(event, message){
 	$scope.handleGetChartDataDoneResponse(message);      
@@ -222,7 +232,11 @@ var cleanupEventGetProductDetailsNotDone = $scope.$on("GetChartDataNotDone", fun
 $scope.getDashboardResults=function(){
 console.log("getDashboardResults");
 console.log($scope.agent)
-$scope.init();
+if ($scope.dateValid) {
+$scope.init();	
+}else{
+// $rootScope.SQNotify("Please Select Valid Date",'error'); 
+}
 };
 
 

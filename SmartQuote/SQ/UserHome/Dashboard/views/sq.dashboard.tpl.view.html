@@ -8,7 +8,7 @@
   
 </style>
 
-<div class="container" id="dashboardContent">
+<div class="container" id="dashboardContent" style="overflow: hidden;">
  <!--  <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
         <div class="col-md-12">
           <div class="no-message">
@@ -24,11 +24,12 @@
   <div class="col-md-12"><center><label class="main-label">Dashboard</label></center></div>
 </div>
 
-<div class="row" style="margin-bottom:2%;">
+<div style="margin-bottom:2%;">
+<div class="row">
 <div class="col-md-10 col-md-offset-1">
   <div class="col-md-12">  
   <div class="col-md-3">
-  <div class="col-md-4" style="padding:0px;text-align: right;"><lable>Agent :&nbsp;&nbsp;</label></div>
+  <div class="col-md-4" style="padding:0px;text-align: right;"><label>Agent :&nbsp;&nbsp;</label></div>
   <div class="col-md-8" style="padding:0px;">
   <select type="text" name="userGroupName" class="form-control" ng-model="agent.agentCode" ng-options="agent as agent.value for agent in agent.agentList" ng-change="changeAgent(agent.agentCode)" ng-disabled="disableSelectAgent"required>
   </div>
@@ -37,7 +38,7 @@
   </div>
   <!-- {{agent}} -->
   <div class="col-md-8">
-  <div class="col-md-1" style="padding:0px;text-align: right;"><lable>From :&nbsp;&nbsp;</label></div>
+  <div class="col-md-1" style="padding:0px;text-align: right;"><label>From :&nbsp;</label></div>
   <div class="col-md-5" style="padding-left:0px;">
   <p class="input-group">
       <input type="text" name="fromDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.fromDate" ng-change="fromDateChanged(agent.fromDate)" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true" on-open-focus="false" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
@@ -45,14 +46,12 @@
         <button type="button" class="btn btn-default" ng-click="open1()" style="padding: 3px 12px;"><i class="glyphicon glyphicon-calendar"></i></button>
       </span>
   </p>
-  <span ng-show="!dateValid" class="invalid-control">
-    <small>*From date should be smaller than To date.</small>
-  </span>
+  
   </div>
-  <div class="col-md-1" style="padding:0px;text-align: right;"><lable>To :&nbsp;&nbsp;</label></div>
+  <div class="col-md-1" style="padding:0px;text-align: right;"><label>To :&nbsp;&nbsp;</label></div>
   <div class="col-md-5" style="padding-left:0px;">
   <p class="input-group">
-          <input type="text" name="toDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.toDate" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" on-open-focus="false" readonly="true" />
+          <input type="text" name="toDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="agent.toDate" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" on-open-focus="false" readonly="true" ng-change="validateDate(agent.fromDate,agent.toDate)"/>
           <span class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="open2()" style="padding: 3px 12px;"><i class="glyphicon glyphicon-calendar"></i></button>
           </span>
@@ -60,12 +59,22 @@
   </div> 
   </div>
   <div class="col-md-1">
-    <button id="create" ng-click="getDashboardResults()" class="btn button-ok" style="padding: 3px 12px;"><i class="fa fa-eye" aria-hidden="true"></i> View</button>
+    <button id="create" ng-click="getDashboardResults()" class="btn button-ok" style="padding: 3px 12px;" ng-disabled="!dateValid"><i class="fa fa-eye" aria-hidden="true" ></i> View</button>
   </div>
   </div>
 </div>
 <div class="col-md-1"></div>
 </div>
+<div class="row">
+<div class="col-md-8 col-md-offset-4">
+  <span ng-show="!dateValid" class="invalid-control">
+    <small>* From date should be smaller than to date.</small>
+  </span>
+</div>
+<div class="col-md-offset-1"></div>
+</div>
+</div>
+
 </div>
 
 
@@ -106,23 +115,27 @@
 <div class="row" style="margin-bottom:2%;">
 <div class="col-md-3"></div>
 <div class="col-md-6">
-  <center><h5 class="sub-label" style="font-weight: bold;text-transform: capitalize;">
-    Showing result for {{agentData.agentCode.value}}  From {{getFormattedDate(agentData.fromDate)}} To {{getFormattedDate(agentData.toDate)}} 
+  <center><h5  style="font-weight: bold;text-transform: capitalize;">
+    Showing result for <label class="sub-label">{{agentData.agentCode.value}}</label> From <label class="sub-label">{{getFormattedDate(agentData.fromDate)}}</label> To 
+    <label class="sub-label">{{getFormattedDate(agentData.toDate)}}</label> 
   </h5></center>
 </div>
 <div class="col-md-3"></div>
 </div>
 </div>
+
 <div id="dashboardChart" ng-if="!showDashboard">
 <div style="padding:50px; opacity: .8;margin-top: 2px;margin-bottom: 1px; color: rgb(80, 74, 74);letter-spacing: 1px; margin:10px;" class="row">
         <div class="col-md-12">
-          <div class="no-message">
-          <center><i class="fa fa-laptop fa-5x" aria-hidden="true"></i></center>
+          <div class="no-message">  
+          <center><i class="fa fa-frown-o fa-2x" aria-hidden="true"></i></center>
             <center>
-              <p style="font-size: 16px; font-weight:bold;">User Dashboard.</p>   
-              <p style="font-size: 16px;">No content available to display.</p> 
+              <p style="font-size: 16px; font-weight:bold;">No Proposal Created</p>   
+              <p style="font-size: 16px;">By Agent  {{agent.agentCode.value}} From {{getFormattedDate(agent.fromDate)}} 
+                To {{getFormattedDate(agent.toDate)}}</p>   
+        
             </center>   
-          </div>
+          </div> 
         </div>
   </div> 
 </div>

@@ -9,8 +9,8 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
 .run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
    $rootScope.projectName="/";
 
-   // var currentURL=$window.location.href; 
-   var currentURL="http://localhost:6003/smartprotest/"; 
+    var currentURL=$window.location.href; 
+//   var currentURL="http://localhost:6003/smartprotest/"; 
 
    var isSmartProTest=currentURL.includes("smartprotest");
    if (isSmartProTest) {
