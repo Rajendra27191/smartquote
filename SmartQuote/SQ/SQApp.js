@@ -194,7 +194,7 @@ $scope.handleUserLogInDoneResponse=function(data){
     if(data.code.toUpperCase()=='SUCCESS'){ 
      //console.log("lllllllllllllllll");
      $state.transitionTo('userhome.start');
-     $rootScope.SQNotify("Successfully log in",'success');
+     // $rootScope.SQNotify("Successfully log in",'success');
      $scope.user={};
      $scope.invalidEmailPassword=false;
      $rootScope.isSessionExpired=false;
@@ -285,7 +285,7 @@ $rootScope.userSignout=function(){
     if(data.code.toUpperCase()=='SUCCESS'){ 
      $state.transitionTo('home.start'); 
      $scope.clearLocalStorageData();
-     $rootScope.SQNotify("Successfully log out",'success'); 
+     // $rootScope.SQNotify("Successfully log out",'success'); 
     }else{
     $rootScope.alertError(data.message);
     }

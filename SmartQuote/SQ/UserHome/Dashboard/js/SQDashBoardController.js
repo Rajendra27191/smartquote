@@ -202,16 +202,18 @@ $scope.handleGetChartDataDoneResponse=function(data){
 		angular.forEach(data,function(value,key){
 			if (value.totalCount>0) {
 				isValidData=true;
-			};
+			}else{
+				isValidData=false;
+			}
 		});	
 		if (isValidData) {
 		formatData(data);
 		$scope.noDataFound=false;
 		}else{
+			$scope.noDataFound=true;
 			if ($scope.showDashboard) {
 			$rootScope.alertError("No Records Found For Agent "+$scope.agent.agentCode.value+" From \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" To "+ $rootScope.getFormattedDate($scope.agent.toDate));	
 			$scope.agent=angular.copy($scope.agentData);
-			$scope.noDataFound=true;
 			};
 		}
 	}else{
