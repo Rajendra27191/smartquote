@@ -122,7 +122,7 @@ $scope.init=function(){
 };
 
 // $rootScope.initAuotoComplete();
-// $scope.init();
+$scope.init();
 
 
 //===============Format chart data======

@@ -57,13 +57,6 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 					+ "date(a.created_date) between  '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' "
 					+ " group by 1) b on a.status = b.status ";
 		} else {
-//			queryStr = "SELECT a.status, b.totalCount, b.totalAmount FROM status_master a left outer join "
-//					+ "(Select CASE when status in ('saved', 'updated') then 'PIPELINE' ELSE status END  as status , "
-//					+ "count(distinct a.quote_id) totalCount, round(sum(b.total), 2) totalAmount "
-//					+ "from create_quote a, create_quote_details b "
-//					+ "where a.quote_id =  b.quote_id and b.alternate_for = 0 and date(a.created_date) "
-//					+ "between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' and sales_person_id = "+objChartBean.getUserID()+" group by 1) b "
-//					+ "on a.status = b.status;";
 			queryStr = "SELECT a.status, b.totalCount, b.totalAmount FROM status_master a left outer join "
 					+ "(Select CASE when status in ('saved', 'updated') then 'PIPELINE' ELSE status END  as status , "
 					+ "count(distinct a.quote_id) totalCount, "
@@ -80,6 +73,8 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 			objChartResponseBeans = objDashBoardDao.getChartDetails(queryStr);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			objDashBoardDao.closeAll();
 		}
 		return SUCCESS;
 	}

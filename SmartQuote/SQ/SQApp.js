@@ -134,7 +134,7 @@ $rootScope.initAuotoComplete=function(callWithTimeStamp){
 console.log("$rootScope.initAuotoComplete...");
 var objURL="";
 var timestamp = new Date().getTime();
-var fileURL= $rootScope.projectName+"/products.json?"
+var fileURL= $rootScope.projectName+"/products.json"
 var isCache=false;
 if (callWithTimeStamp) {
  fileURL= $rootScope.projectName+"/products.json?"+timestamp,
@@ -145,8 +145,8 @@ products = new Bloodhound({
   datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   prefetch: {
-    url: $rootScope.projectName+"/products.json?"+timestamp,
-    // url: fileURL,
+    // url: $rootScope.projectName+"/products.json?"+timestamp,
+    url: fileURL,
     cache: isCache,
     beforeSend: function(xhr){
         $rootScope.showSpinner();
