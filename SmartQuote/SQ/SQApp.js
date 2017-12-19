@@ -9,8 +9,8 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
 .run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
    $rootScope.projectName="/";
 
-    var currentURL=$window.location.href; 
-//   var currentURL="http://localhost:6003/smartprotest/"; 
+//    var currentURL=$window.location.href; 
+   var currentURL="http://localhost:6003/smartprotest/"; 
 
    var isSmartProTest=currentURL.includes("smartprotest");
    if (isSmartProTest) {
@@ -145,8 +145,8 @@ products = new Bloodhound({
   datumTokenizer:function(d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
   queryTokenizer: Bloodhound.tokenizers.whitespace,
   prefetch: {
-    // url: $rootScope.projectName+"/products.json?"+timestamp,
-    url: fileURL,
+    url: $rootScope.projectName+"/products.json?"+timestamp,
+    // url: fileURL,
     cache: isCache,
     beforeSend: function(xhr){
         $rootScope.showSpinner();
