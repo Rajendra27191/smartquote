@@ -153,7 +153,7 @@ console.log($scope.agentData)
 $scope.objBarChart.options= {
 // title: "Result For "+$scope.agentData.agentCode.value+" From "+$rootScope.getFormattedDate($scope.agentData.fromDate)+" To "+$rootScope.getFormattedDate($scope.agentData.toDate),
 // 'legend': {'position': 'top','alignment': 'start' },
-'colors': ["#007E33","#FF8800","#CC0000"],
+'colors': ["#008901","#FF9600","#EC3100"],
 vAxis: {
 minValue: 0,
 // maxValue: 10,
@@ -168,7 +168,7 @@ $scope.objPieChart.type="PieChart"
 $scope.objPieChart.options= {
         // 'title': 'Proposal',
         // 'legend': {'position': 'none'},
-        'colors': ["#007E33","#FF8800","#CC0000"]
+        'colors': ["#008901","#FF9600","#EC3100"]
     };
 $scope.objPieChart.data={"cols": [
         {id: "t", label: "Status", type: "string"},

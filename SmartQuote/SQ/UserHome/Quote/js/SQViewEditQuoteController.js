@@ -621,6 +621,7 @@ $scope.resetUpdateQuote=function(){
 	$rootScope.isQuoteActivated=false;
 
 	$scope.initDate();
+		$('#currentSupplierName').focus();
 }
 $scope.cancelCreateQuote=function(){
 var previousWindowKeyDown = window.onkeydown;

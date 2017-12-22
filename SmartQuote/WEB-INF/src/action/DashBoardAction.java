@@ -46,27 +46,30 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 		String queryStr = "";
 		System.out.println("objChartBean" + objChartBean);
 		if (objChartBean.getUserID().equalsIgnoreCase("0")) {
-			queryStr = "SELECT a.status, b.totalCount, b.totalAmount FROM status_master a left outer join "
-					+ "(Select CASE when status in ('saved', 'updated') then 'PIPELINE' ELSE status END  as status , "
-					+ "count(distinct a.quote_id) totalCount, "
-					+ "CASE when a.prices_gst_include = 'No' then  "
-					+ "(CASE when c.gst_flag = 'No' then round((sum(b.total) + ((10/100) * sum(b.total))), 2)  "
-					+ "else round(sum(b.total), 2) end) else round(sum(b.total), 2) end as totalAmount "
-					+ "from create_quote a, create_quote_details b, product_master c "
-					+ "where a.quote_id =  b.quote_id and b.product_id = c.item_code  and b.alternate_for = 0 and "
-					+ "date(a.created_date) between  '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' "
-					+ " group by 1) b on a.status = b.status ";
+			queryStr = "SELECT a.status, b.totalCount, b.totalAmount"
+					+ " FROM status_master a left outer join"
+					+ " (Select CASE when status in ('saved', 'updated') then 'PIPELINE'"
+					+ " ELSE status END  as status , count(distinct a.quote_id) totalCount,"
+					+ " round(sum(CASE when a.prices_gst_include = 'No' then"
+					+ " (CASE when c.gst_flag = 'No' then round(b.total + ((10/100) * b.total), 2)"
+					+ " else round(b.total, 2) end) else round(b.total, 2) end), 2) as totalAmount"
+					+ " from create_quote a, create_quote_details b, product_master c"
+					+ " where a.quote_id =  b.quote_id and b.product_id = c.item_code and b.alternate_for = 0 and"
+					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' group by 1)"
+					+ " b on a.status = b.status;";
 		} else {
-			queryStr = "SELECT a.status, b.totalCount, b.totalAmount FROM status_master a left outer join "
-					+ "(Select CASE when status in ('saved', 'updated') then 'PIPELINE' ELSE status END  as status , "
-					+ "count(distinct a.quote_id) totalCount, "
-					+ "CASE when a.prices_gst_include = 'No' then  "
-					+ "(CASE when c.gst_flag = 'No' then round((sum(b.total) + ((10/100) * sum(b.total))), 2)  "
-					+ "else round(sum(b.total), 2) end) else round(sum(b.total), 2) end as totalAmount "
-					+ "from create_quote a, create_quote_details b, product_master c "
-					+ "where a.quote_id =  b.quote_id and b.product_id = c.item_code  and b.alternate_for = 0 and "
-					+ "date(a.created_date) between  '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' "
-					+ "and sales_person_id ="+objChartBean.getUserID()+" group by 1) b on a.status = b.status ";
+			queryStr = "SELECT a.status, b.totalCount, b.totalAmount"
+					+ " FROM status_master a left outer join"
+					+ " (Select CASE when status in ('saved', 'updated') then 'PIPELINE'"
+					+ " ELSE status END  as status , count(distinct a.quote_id) totalCount,"
+					+ " round(sum(CASE when a.prices_gst_include = 'No' then"
+					+ " (CASE when c.gst_flag = 'No' then round(b.total + ((10/100) * b.total), 2)"
+					+ " else round(b.total, 2) end) else round(b.total, 2) end), 2) as totalAmount"
+					+ " from create_quote a, create_quote_details b, product_master c"
+					+ " where a.quote_id =  b.quote_id and b.product_id = c.item_code and b.alternate_for = 0 and"
+					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"'"
+					+ " and sales_person_id ="+objChartBean.getUserID()+" group by 1)"
+					+ " b on a.status = b.status;";
 		}
 
 		try {
