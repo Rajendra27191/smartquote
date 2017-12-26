@@ -113,8 +113,9 @@ public class CustComparisonDao {
 //				+ "DATE_FORMAT(ifnull(modified_date,created_date), '%d-%m-%Y') as quoteDate,"
 				+ "DATE(ifnull(modified_date,created_date)) quoteDate,"
 				+ "cq.current_supplier_id,cs.current_supplier_name,"
-				+ "usr.user_id 'sales_person_id',usr.user_name 'sales_person_name' ,compete_quote,status,"
-				+ "cm.cust_id 'customerId' "
+				+ "usr.user_id 'sales_person_id',usr.user_name 'sales_person_name' ,"
+				+ "usr.email 'sales_person_email', usr.contact 'sales_person_contact', "
+				+ "compete_quote,status, cm.cust_id 'customerId' "
 				+ "FROM create_quote cq "
 				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
@@ -128,6 +129,9 @@ public class CustComparisonDao {
 			while (rs.next()) {
 				objPdfMasterReportBean = new PDFMasterReportBean();
 				objPdfMasterReportBean.setDedicatedAccountManager(rs.getString("sales_person_name"));
+				objPdfMasterReportBean.setDedicatedAccountManagerEmail(rs.getString("sales_person_email"));
+				objPdfMasterReportBean.setDedicatedAccountManagerContact(rs.getString("sales_person_contact"));
+				
 				objPdfMasterReportBean.setEmail(rs.getString("email"));
 				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));
 				objPdfMasterReportBean.setGstInclusive(rs.getBoolean("prices_gst_include"));
@@ -136,6 +140,8 @@ public class CustComparisonDao {
 				objPdfMasterReportBean.setSubmittedBy(rs.getString("sales_person_name"));
 				objPdfMasterReportBean.setQuoteAttn(WordUtils.capitalizeFully(rs.getString("quoteAttn")));
 				objPdfMasterReportBean.setCustId(rs.getInt("customerId"));
+				
+				
 				//====
 				productList = getProductDetails(rs.getInt("quote_id"));
      			objPdfMasterReportBean.setArrayPdfSubReportBean(productList);

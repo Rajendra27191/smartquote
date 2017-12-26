@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 public class PDFMasterReportBean {
 	private String dedicatedAccountManager;
+	private String dedicatedAccountManagerEmail;
+	private String dedicatedAccountManagerContact;
+	
 	private String Contact;
 	private String email;
 	private int quoteId;
@@ -138,6 +141,22 @@ public class PDFMasterReportBean {
 
 	public void setTermConditionList(ArrayList<KeyValuePairBean> termConditionList) {
 		this.termConditionList = termConditionList;
+	}
+
+	public String getDedicatedAccountManagerEmail() {
+		return dedicatedAccountManagerEmail;
+	}
+
+	public void setDedicatedAccountManagerEmail(String dedicatedAccountManagerEmail) {
+		this.dedicatedAccountManagerEmail = dedicatedAccountManagerEmail;
+	}
+
+	public String getDedicatedAccountManagerContact() {
+		return dedicatedAccountManagerContact;
+	}
+
+	public void setDedicatedAccountManagerContact(String dedicatedAccountManagerContact) {
+		this.dedicatedAccountManagerContact = dedicatedAccountManagerContact;
 	}
 
 //	public ArrayList<CalculationBean> getListCalculationBean() {

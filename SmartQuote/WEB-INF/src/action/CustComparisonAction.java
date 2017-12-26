@@ -311,17 +311,21 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			objQuoteDao.closeAll();
 //			System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList());
 			
-			JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
-			JRBeanCollectionDataSource beanColDataSource3 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
-			JRBeanCollectionDataSource beanColDataSource2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getArrayPdfSubReportBean());
-			String sourceFileName1 = dirPath + "/MainHeaderPage.jasper";
-			String sourceFileName2 = dirPath + "/ProductDetailsPage.jasper";
-			String sourceFileName3 = dirPath + "/MainFooterPage.jasper";
+			JRBeanCollectionDataSource beanColDataSourceHeaderPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			JRBeanCollectionDataSource beanColDataSourceProductDetailPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getArrayPdfSubReportBean());
+			JRBeanCollectionDataSource beanColDataSourceFooterPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			JRBeanCollectionDataSource beanColDataSalesRepInfoPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			
+			String mainHeaderPageSrc = dirPath + "/MainHeaderPage.jasper";
+			String productDetailsPageSrc = dirPath + "/ProductDetailsPage.jasper";
+			String mainFooterPageSrc = dirPath + "/MainFooterPage.jasper";
+			String salesRepInfoPageSrc = dirPath + "/SalesRepInfoPage.jasper";
 			
 
-			FileInputStream report1 = new FileInputStream(sourceFileName1);
-			FileInputStream report2 = new FileInputStream(sourceFileName2);
-			FileInputStream report3 = new FileInputStream(sourceFileName3);
+			FileInputStream reportHeader = new FileInputStream(mainHeaderPageSrc);
+			FileInputStream reportProDetail = new FileInputStream(productDetailsPageSrc);
+			FileInputStream reportFooter = new FileInputStream(mainFooterPageSrc);
+			FileInputStream reportSalesRep = new FileInputStream(salesRepInfoPageSrc);
 			
 			exportParameters.put("objCalculationBean", arrayPdfMasterReportBeans.get(0).getObjCalculationBean());
 			exportParameters.put("pdfMasterBean", objPdfMasterReportBean);
@@ -339,25 +343,27 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 				exportParameters.put("termCondition", termCondition);
 			}
 			
-			JasperPrint jasperPrint1 = JasperFillManager.fillReport(report1, exportParameters, beanColDataSource);
-			JasperPrint jasperPrint2 = JasperFillManager.fillReport(report2, exportParameters, beanColDataSource2);
-			JasperPrint jasperPrint3 = JasperFillManager.fillReport(report3, exportParameters, beanColDataSource3);
+			JasperPrint jasperPrintHeader = JasperFillManager.fillReport(reportHeader, exportParameters, beanColDataSourceHeaderPage);
+			JasperPrint jasperPrintProDetail = JasperFillManager.fillReport(reportProDetail, exportParameters, beanColDataSourceProductDetailPage);
+			JasperPrint jasperPrintFooter = JasperFillManager.fillReport(reportFooter, exportParameters, beanColDataSourceFooterPage);
+			JasperPrint jasperPrintSalesRep = JasperFillManager.fillReport(reportSalesRep, exportParameters, beanColDataSalesRepInfoPage);
 			
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
-			list.add(jasperPrint1);
-			list.add(jasperPrint2);
+			list.add(jasperPrintHeader);
+			list.add(jasperPrintSalesRep);
+			list.add(jasperPrintProDetail);
 	
-			JRBeanCollectionDataSource beanColDataSource4=null;String sourceFileName4="";
-			JasperPrint jasperPrint4=null;FileInputStream report4=null;
+			JRBeanCollectionDataSource beanColDataSourceForOfferDetailsPage=null;String OfferDetailsPageSrc="";
+			JasperPrint jasperPrintOfferDetail=null;FileInputStream reportOfferDetail=null;
 			if (objPdfMasterReportBean.getOfferList().size()>0) {
-				beanColDataSource4 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getOfferList());
-				sourceFileName4 = dirPath + "/OfferDetailsPage.jasper";
-				report4 = new FileInputStream(sourceFileName4);
-				jasperPrint4 = JasperFillManager.fillReport(report4, exportParameters, beanColDataSource4);
-				list.add(jasperPrint4);
+				beanColDataSourceForOfferDetailsPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getOfferList());
+				OfferDetailsPageSrc = dirPath + "/OfferDetailsPage.jasper";
+				reportOfferDetail = new FileInputStream(OfferDetailsPageSrc);
+				jasperPrintOfferDetail = JasperFillManager.fillReport(reportOfferDetail, exportParameters, beanColDataSourceForOfferDetailsPage);
+				list.add(jasperPrintOfferDetail);
 			}
-			list.add(jasperPrint3);
+			list.add(jasperPrintFooter);
 			
 			
 			

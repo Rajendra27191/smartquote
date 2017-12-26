@@ -660,6 +660,8 @@ angular.forEach($scope.customerQuote.productList, function(value, key){
 			};
 		});
 $scope.calculateAllInformation();
+$('#currentSupplierName').focus();
+$("#competeQuote").focus();
 }
 
 $scope.showConfirmationWindow=function(){

@@ -293,7 +293,7 @@ padding: 3px 12px;
 			</div>
 			<div class="col-md-8">
 
-			<select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required>
+			<select type="text" id="competeQuote" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required>
 			<option value="">Select compete</option>
 			</select>
 			<span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
