@@ -122,6 +122,7 @@ $scope.init=function(){
 };
 
 // $rootScope.initAuotoComplete();
+
 $scope.init();
 
 
@@ -199,7 +200,6 @@ $scope.handleGetChartDataDoneResponse=function(data){
 	$scope.productDetails={};
 	if(data){
 		if (data.length>0) {
-		formatCalloutData(data);
 		var isValidData=false;
 		angular.forEach(data,function(value,key){
 			if (value.totalCount>0) {
@@ -207,14 +207,16 @@ $scope.handleGetChartDataDoneResponse=function(data){
 			}
 		});	
 		if (isValidData) {
+		formatCalloutData(data);
 		formatData(data);
 		$scope.noDataFound=false;
 		}else{
 			if ($scope.showDashboard) {
-			$rootScope.alertError("No Records Found For Agent "+$scope.agent.agentCode.value+" From \n"+$rootScope.getFormattedDate($scope.agent.fromDate)+" To "+ $rootScope.getFormattedDate($scope.agent.toDate));	
+			$rootScope.alertError("No Records Found For Agent "+$scope.agent.agentCode.value+"\n From "+$rootScope.getFormattedDate($scope.agent.fromDate)+" To "+ $rootScope.getFormattedDate($scope.agent.toDate));	
 			$scope.agent=angular.copy($scope.agentData);
 			}else{
 			$scope.noDataFound=true;	
+			$scope.callOutData1= angular.copy(response);
 			};
 		}
 	}else{
@@ -222,6 +224,7 @@ $scope.handleGetChartDataDoneResponse=function(data){
 		}
 	$rootScope.hideSpinner();
 }
+	// $rootScope.initAuotoComplete();	
 };
 var cleanupEventGetChartDataDone = $scope.$on("GetChartDataDone", function(event, message){
 	$scope.handleGetChartDataDoneResponse(message);      

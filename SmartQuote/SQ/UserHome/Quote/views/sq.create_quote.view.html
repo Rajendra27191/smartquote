@@ -276,11 +276,11 @@ padding: 3px 12px;
 			</div>	
 			</script>	
 
-			<div class="input-group">	
-			<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeLogo' name="customerLogo"  filepreview="filepreview" ng-if="isNewCustomer">
-			<span class="input-group-addon btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'mouseenter'" ng-if="isNewCustomer"><i class="fa fa-eye" aria-hidden="true" ></i> </span>	 
-			<button class="btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'mouseenter'" ng-if="!isNewCustomer" style="padding: 3px 12px;">Preview Logo</button>	 
+			<div class="input-group" ng-if="isNewCustomer">	
+			<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeLogo' name="customerLogo"  filepreview="filepreview" >
+			<span class="input-group-addon btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'mouseenter'" ><i class="fa fa-eye" aria-hidden="true" ></i> </span>	 	 
 			</div>	
+			<button class="btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'mouseenter'" ng-if="!isNewCustomer" style="padding: 3px 12px;">Preview Logo</button>
 			</div>
 			<div class="col-md-12" style="padding:0px;">
 			<span class="invalid-control">

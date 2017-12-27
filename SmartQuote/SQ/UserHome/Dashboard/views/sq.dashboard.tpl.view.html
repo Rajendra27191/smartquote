@@ -127,7 +127,7 @@
 <div id="dashboardChart" ng-if="noDataFound">
 <div class="row" style="margin-bottom:2%;">
 <div class="col-md-3"></div>
-<div class="col-md-2" ng-repeat="item in callOutData">
+<div class="col-md-2" ng-repeat="item in callOutData1">
   <div class="bs-vcallout " ng-class="{'bs-vcallout-success':item.status=='WON','bs-vcallout-danger':item.status=='LOST','bs-vcallout-warning':item.status=='PIPELINE'}">
   <center><h5 style="font-weight: bold;text-transform: capitalize;">{{item.status}}</h5></center>
   <center>{{item.totalCount}}</center>
