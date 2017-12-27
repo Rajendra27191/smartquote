@@ -11,6 +11,7 @@ public class QuoteBean {
 	private String email;
 	private String faxNo;
 	private String phone;
+	private String custLogo;
 
 
 	private String quoteAttn;
@@ -271,5 +272,13 @@ public class QuoteBean {
 				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList
 				+ ", offerList=" + offerList + ", saveWithAlternative=" + saveWithAlternative + ", alternativeArray=" + alternativeArray
 				+ "]";
+	}
+
+	public String getCustLogo() {
+		return custLogo;
+	}
+
+	public void setCustLogo(String custLogo) {
+		this.custLogo = custLogo;
 	}
 }

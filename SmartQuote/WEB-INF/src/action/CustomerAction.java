@@ -34,7 +34,7 @@ public class CustomerAction extends ActionSupport implements
 	private CustomerDetailsResponseBean customerDetailsResponse = new CustomerDetailsResponseBean();
 	private CustomerDetailResponseList customerDetailResponseList = new CustomerDetailResponseList();
 	private DetailResponseBean objDetailResponseBean;
-	
+	public File logoFile;
 	public DetailResponseBean getObjDetailResponseBean() {
 		return objDetailResponseBean;
 	}
@@ -43,8 +43,6 @@ public class CustomerAction extends ActionSupport implements
 		this.objDetailResponseBean = objDetailResponseBean;
 	}
 
-	public File logoFile;
-	
 	public UserGroupResponse getData() {
 		return data;
 	}
@@ -98,6 +96,8 @@ public class CustomerAction extends ActionSupport implements
 	}
 	public boolean createLogo(String filename,File logoImage){
 		boolean isLogoCreated=false;
+		System.out.println("filename >> "+filename);
+		System.out.println("logoImage >> "+logoImage);
 		String projectLogoPath=System.getProperty("user.dir")+getText("customer_logo_folder_path");
 		System.out.println("projectLogoPath "+projectLogoPath);
 		File fileToCreate = new File(projectLogoPath+filename);
@@ -110,6 +110,7 @@ public class CustomerAction extends ActionSupport implements
 		}
 		return isLogoCreated;
 	}
+	
 	public boolean deleteLogo(String filename){
 		boolean isLogoDeleted=false;
 		String projectLogoPath=System.getProperty("user.dir")+getText("customer_logo_folder_path");
@@ -172,7 +173,7 @@ public class CustomerAction extends ActionSupport implements
 			customerDetailsResponse.setCode("error");
 			customerDetailsResponse.setMessage(getText("common_error"));
 			CustomerDao objDao = new CustomerDao();
-			CustomerBean objBean = objDao.getCustomerDetails(customerCode);
+			CustomerBean objBean = objDao.getCustomerDetails(customerCode,getText("customer_logo_url"));
 			objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
@@ -230,7 +231,7 @@ public class CustomerAction extends ActionSupport implements
 		String customerCode = request.getParameter("customerCode");
 		// customerCode = "SHR6799AUN";
 		CustomerDao objDao = new CustomerDao();
-		CustomerBean objBean = objDao.getCustomerDetails(customerCode);
+		CustomerBean objBean = objDao.getCustomerDetails(customerCode,getText("customer_logo_url"));
 		String filename ="CustId_" + objBean.getCustId() + ".png";
 		deleteLogo(filename);
 		boolean isDeleted = objDao.deleteUser(customerCode);

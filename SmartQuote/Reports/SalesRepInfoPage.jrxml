@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesRepInfoPage" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a7ad0a0f-7806-4b4b-b53f-5c5fff3b6bce">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="alternativeAdded" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[alternativeAdded]]></fieldDescription>
+	</field>
+	<field name="arrayPdfSubReportBean" class="java.util.ArrayList">
+		<fieldDescription><![CDATA[arrayPdfSubReportBean]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="contact" class="java.lang.String">
+		<fieldDescription><![CDATA[contact]]></fieldDescription>
+	</field>
+	<field name="custId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[custId]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManager" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManager]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManagerContact" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManagerContact]]></fieldDescription>
+	</field>
+	<field name="dedicatedAccountManagerEmail" class="java.lang.String">
+		<fieldDescription><![CDATA[dedicatedAccountManagerEmail]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[email]]></fieldDescription>
+	</field>
+	<field name="gstInclusive" class="java.lang.Boolean">
+		<fieldDescription><![CDATA[gstInclusive]]></fieldDescription>
+	</field>
+	<field name="objCalculationBean" class="pojo.CalculationBean">
+		<fieldDescription><![CDATA[objCalculationBean]]></fieldDescription>
+	</field>
+	<field name="offerList" class="java.util.ArrayList">
+		<fieldDescription><![CDATA[offerList]]></fieldDescription>
+	</field>
+	<field name="proposalFor" class="java.lang.String">
+		<fieldDescription><![CDATA[proposalFor]]></fieldDescription>
+	</field>
+	<field name="quoteAttn" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteAttn]]></fieldDescription>
+	</field>
+	<field name="quoteDate" class="java.lang.String">
+		<fieldDescription><![CDATA[quoteDate]]></fieldDescription>
+	</field>
+	<field name="quoteId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[quoteId]]></fieldDescription>
+	</field>
+	<field name="submittedBy" class="java.lang.String">
+		<fieldDescription><![CDATA[submittedBy]]></fieldDescription>
+	</field>
+	<field name="termConditionList" class="java.util.ArrayList">
+		<fieldDescription><![CDATA[termConditionList]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="421" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9406d720-4526-48a2-8164-39f4fd1ff29a" x="191" y="108" width="295" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " +$F{dedicatedAccountManager}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="92c0763f-c052-48c1-bbdc-1d61f83f0885" x="191" y="130" width="295" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " +$F{dedicatedAccountManagerContact}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ec032faf-c033-42ad-a585-40167f8ee541" x="191" y="153" width="295" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[": " +$F{dedicatedAccountManagerEmail}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f26a55ab-61c1-4b63-ba86-4c6c0874241a" x="15" y="108" width="161" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sales Rep Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f0417c03-bb97-4b5f-a608-78b1f1c2c7fd" x="15" y="151" width="161" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sales Rep Email ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef7213cd-9913-4a1a-950f-cca7a659bf78" x="15" y="129" width="161" height="20"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sales Rep Contact ]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

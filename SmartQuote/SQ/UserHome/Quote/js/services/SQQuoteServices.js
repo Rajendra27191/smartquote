@@ -55,10 +55,22 @@ $rootScope.$broadcast('GetSalesPersonListNotDone', error);
 });
 };
 
-quote.CreateQuote = function (objQuoteBean){
+quote.CreateQuote = function (logoFile,objQuoteBean){
   console.log("CreateQuote1")
-  data = $.param({objQuoteBean:objQuoteBean}); 
-  $http.post($rootScope.projectName+'/createQuote', data, config)
+  console.log(logoFile)
+  // console.log(objQuoteBean)
+  // data = $.param({objQuoteBean:objQuoteBean}); 
+  var fd= new FormData();
+  if(logoFile!=null){
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('objQuoteBean',objQuoteBean);
+  // // $http.post($rootScope.projectName+'/createQuote', fd, config)
+   $http.post($rootScope.projectName+'/createQuote', fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
   .success(function (data, status, headers, config) {
     console.log(data);
     if (data.code=="sessionTimeOut") {

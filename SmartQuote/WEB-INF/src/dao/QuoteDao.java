@@ -223,7 +223,7 @@ public class QuoteDao {
 		return quoteDetailId;
 	}
 
-	public ArrayList<QuoteBean> getQuoteList(String queryGetData) {
+	public ArrayList<QuoteBean> getQuoteList(String queryGetData,String customerLogoSrc) {
 		ArrayList<QuoteBean> quoteList = new ArrayList<QuoteBean>();
 		ArrayList<ProductBean> productList = new ArrayList<ProductBean>();
 		QuoteBean objQuoteBean;
@@ -244,6 +244,7 @@ public class QuoteDao {
 				objQuoteBean = new QuoteBean();
 				objQuoteBean.setQuoteId(rs.getInt("quote_id"));
 				objQuoteBean.setCustCode(rs.getString("custcode"));
+//				System.out.println("CCC "+rs.getString("cust_id"));
 				objQuoteBean.setCustName(rs.getString("customer_name"));
 				objQuoteBean.setAddress(rs.getString("add1"));
 				objQuoteBean.setPhone(rs.getString("phone"));
@@ -270,6 +271,11 @@ public class QuoteDao {
 				productList = getProductDetails(rs.getInt("quote_id"));
 				objQuoteBean.setProductList(productList);
 				objQuoteBean.setCommentList(getCommentList(rs.getInt("quote_id")));
+				if (rs.getString("cust_id")==null) {
+				} else {
+					String src=customerLogoSrc+"CustId_"+rs.getInt("cust_id")+".png";
+					objQuoteBean.setCustLogo(src);
+				}
 				//objQuoteBean.setTermConditionList(getTermAndConditionList(rs.getInt("quote_id")));
 				//objQuoteBean.setServiceList(getServiceList(rs.getInt("quote_id")));
 				quoteList.add(objQuoteBean);

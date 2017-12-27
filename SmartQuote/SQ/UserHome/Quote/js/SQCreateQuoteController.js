@@ -290,6 +290,7 @@ $scope.customerQuote.email='';
 $scope.customerQuote.fax='';
 $scope.customerQuote.attn='';
 $scope.customerQuote.customerCode=code;
+$scope.filepreview='';
 }else{
 $scope.getCustomerDetails(customerCode);
 }
@@ -307,6 +308,7 @@ $scope.customerQuote.address=data.address;
 $scope.customerQuote.phone=data.phone;
 $scope.customerQuote.email=data.email;
 $scope.customerQuote.fax=data.fax;
+$scope.filepreview=data.customerLogoSrc;
 };
 
 $scope.getCustomerDetails=function(customer){
@@ -1074,9 +1076,9 @@ $scope.form.addCustomerQuote.currentSupplierName.$invalid=false;
 }
 }else{
 if ($scope.buttonstatus=='add') {
-console.log(JSON.stringify($scope.jsonToCreateQuote()));
+// console.log(JSON.stringify($scope.jsonToCreateQuote()));
 $rootScope.showSpinner();
-SQQuoteServices.CreateQuote(JSON.stringify($scope.jsonToCreateQuote()));
+SQQuoteServices.CreateQuote(logoFile,JSON.stringify($scope.jsonToCreateQuote()));
 }
 }
 }else{
@@ -1164,8 +1166,60 @@ $rootScope.alertServerError("Server error");
 $rootScope.hideSpinner();
 });
 
-//===================HOTKEYS====================  
+//===================File Upload====================  
+$scope.dynamicPopover = {
+templateUrl: 'myPopoverTemplate.html',
+title: 'Customer Logo'
+};
 
+$scope.filepreview="";
+var latestFile=null;
+var logoFile=null;
+$scope.onFileSelect = function($files){
+console.log("onFileSelect");
+console.log($files);
+console.log($files.length);
+if ($files.length>0) {
+     for (var i = 0; i < $files.length; i++) {
+      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+       console.log("valid file");
+       latestFile = $files[i];
+       $scope.file=latestFile
+	      if ((latestFile.size / 1024) <=50) {//6144
+		  $scope.invalidFileSize=false;		      	
+	      logoFile=latestFile;
+	      $scope.isFileNull=false;
+	      }else{
+			console.log("invalid file size");
+			$scope.invalidFileSize=true;
+	      }
+      }else{
+       console.log("invalid file");
+       $scope.isInvalid=true;
+       $scope.invalidFile=true;
+       $scope.isFileNull=true;
+       latestFile = null;
+       logoFile=null;
+       document.getElementById('fileTypeExcelHost').value = '';
+       }
+   }
+}else{	
+	$scope.isFileNull=true;
+	latestFile = null;
+    logoFile=null;
+};
+};
+
+$scope.viewCustomerLogo=function(filepreview){
+console.log("viewCustomerLogo");
+ $('#custLogoModal').modal({ keyboard: false,backdrop: 'static',show: true});
+console.log("");
+$scope.custLogoSrc=filepreview;
+};
+
+
+
+//===================HOTKEYS====================  
 hotkeys.bindTo($scope)
 .add({
 combo: 'ctrl+shift+a',

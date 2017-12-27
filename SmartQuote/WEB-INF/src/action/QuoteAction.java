@@ -1,5 +1,6 @@
 package action;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,9 +41,9 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	private QuoteResponseBean quoteResponseBean;
 	private QuoteTermServiceResponseBean quoteTermServiceResponseBean;
 	private CommentResponseBean objCommentResponse;
-	
 	private QuoteCreateResponseBean objQuoteCreateResponseBean;
-	
+	public File logoFile;
+	private CustomerAction objCustomerAction = new CustomerAction();
 	public CommentResponseBean getObjCommentResponse() {
 		return objCommentResponse;
 	}
@@ -105,12 +106,14 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("userId : " + userId);
 		int supplierId = 0;//salesPersonId = 0;
 		int customerId=0;
+		
 		String quoteDetails = request.getParameter("objQuoteBean");
 		System.out.println("Quote Details: " + quoteDetails);
+//		System.out.println("Logo file ::: " + logoFile);
 		QuoteDao objQuoteDao = new QuoteDao();
 //		objEmptyResponse = new EmptyResponseBean();
 		objQuoteCreateResponseBean=new QuoteCreateResponseBean();
-		System.out.println("param : " + quoteDetails);
+//		System.out.println("param : " + quoteDetails);
 
 		QuoteBean objQuoteBean = new QuoteBean();
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -118,9 +121,9 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 //		System.out.println("Quote Date ::"+ objQuoteBean.getCreatedDate());
 //		objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
 		
-		System.out.println("objQuoteBean.toString : ");
-		System.out.println(objQuoteBean.toString());
-		System.out.println("CUST PRESENT : " + objQuoteBean.getIsNewCustomer().toLowerCase());
+//		System.out.println("objQuoteBean.toString : ");
+//		System.out.println(objQuoteBean.toString());
+		System.out.println("New Customer : " + objQuoteBean.getIsNewCustomer().toLowerCase());
 		//----------------
 		if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
 			CustomerBean objBean = new CustomerBean();
@@ -134,6 +137,14 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			CustomerDao objDao1 = new CustomerDao();
 			customerId = objDao1.saveCustomer(objBean);
 			System.out.println("isCustomerCreated : " + customerId);
+			if (customerId>0){
+				if (logoFile!=null) {
+					String filename = "CustId_" + customerId + ".png";
+					System.out.println(">>"+filename+">>"+logoFile);
+					boolean isLogoSaved=objCustomerAction.createLogo(filename, logoFile);
+					System.out.println("LOGO saved ::: "+isLogoSaved+" "+filename);
+				}
+			}
 			objDao1.commit();
 			objDao1.closeAll();
 		}
@@ -291,7 +302,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			QuoteDao objQuoteDao = new QuoteDao();
 			String query="";
 			if (userType.equalsIgnoreCase("admin")) {
-				query="select quote_id,custcode,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
+				query="select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 				+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
 				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
 				+ "from create_quote cq "
@@ -300,7 +311,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				+ "left outer join user_master um on cq.sales_person_id = um.user_id "
 				+ "order by quote_id desc;";
 			} else {
-				query="select quote_id,custcode,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
+				query="select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
 						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
 						+ "from create_quote cq "
@@ -310,7 +321,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						+ " WHERE cq.sales_person_id ="+userId
 						+ " order by quote_id desc;";
 			}
-			quoteList = objQuoteDao.getQuoteList(query);
+			quoteList = objQuoteDao.getQuoteList(query,getText("customer_logo_url"));
 			System.out.println("Quote List : " + quoteList.size());
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();

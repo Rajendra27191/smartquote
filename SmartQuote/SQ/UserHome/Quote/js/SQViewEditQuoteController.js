@@ -499,8 +499,7 @@ $scope.viewDetailInformation=function(quote){
     // $scope.customerQuote.createdDate=dt;
 
 	$scope.initEditQuote(quote);
-
-
+	$scope.filepreview=currentQuote.custLogo;
 	// $rootScope.hideSpinner();
 	
 
@@ -1391,7 +1390,7 @@ $rootScope.hideSpinner();
 //=================================================================================================
 $scope.dynamicPopover = {
 templateUrl: 'myPopoverTemplate.html',
-title: 'Quote Action'
+title: 'Customer Logo'
 };
 
 

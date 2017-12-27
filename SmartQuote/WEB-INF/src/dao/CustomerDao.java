@@ -132,7 +132,7 @@ public class CustomerDao {
 		return custId;
 	}
 
-	public CustomerBean getCustomerDetails(String customerCode) {
+	public CustomerBean getCustomerDetails(String customerCode,String customerLogoSrc) {
 		CustomerBean objBean = null;
 		String getUserGroups = "SELECT cust_id, customer_code, customer_name, state, postal_code, add1, add2, phone, contact_person, "
 				+ " fax_no, email, total_staff, avg_purchase, industry_type "
@@ -158,6 +158,8 @@ public class CustomerDao {
 				objBean.setTotalStaff(rs.getInt("total_staff"));
 				objBean.setAvgPurchase(rs.getString("avg_purchase"));
 				objBean.setIndustryType(rs.getString("industry_type"));
+				String src=customerLogoSrc+"CustId_"+rs.getInt("cust_id")+".png";
+				objBean.setCustomerLogoSrc(src);
 			}
 		} catch (Exception e) {
 			try {
