@@ -554,6 +554,26 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		<action name="loadPaymentReminderFile" class="action.PaymentReminderAction"
+			method="loadPaymentReminderFile">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="unloadPaymentReminderFile" class="action.PaymentReminderAction"
+			method="unloadPaymentReminderFile">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getLoadedFileList" class="action.PaymentReminderAction"
+			method="getLoadedFileList">
+			<result name="success" type="json">
+				<param name="root">objResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

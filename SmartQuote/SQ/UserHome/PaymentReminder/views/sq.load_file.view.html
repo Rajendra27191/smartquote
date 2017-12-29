@@ -1,0 +1,63 @@
+<style type="text/css">
+	.form-control{
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+	}
+	
+
+</style>
+
+<!-- <div class="container" onload="">  -->
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Load File</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-3"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
+	<div class="col-md-9">
+	<input type = 'file' class = 'form-control' ng-file-select = "onExcelSelect($files)"  id = 'emailTemplate' name="productFile" required>
+	<span class="invalid-control">
+	<small ng-show="isRequired" style="color: red;">*Please select file to upload.</small>
+	<small ng-show="isValid" style="color: red;">*Please select valid file (only .xlsx , .xls).</small>
+	</span>
+	<!-- ngf-pattern="'.xls,.csv,.xlsx'" accept=".xls,.csv,.xlsx" ngf-max-size="20MB" -->
+	</div>
+	</div>
+
+	<br>
+	<div class="row">
+		<div class="col-md-8"></div>
+		<div class="col-md-4">
+		<button id="create" ng-click="uploadFile()" class="btn btn-block button-ok">
+			<!-- <i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload -->
+			<i class="fa fa-upload" aria-hidden="true"></i> Upload
+		</button>	
+		</div>
+	</div>
+
+<!-- </form> -->
+</div>
+<div class="col-md-2"></div>
+</div>
+<br>
+<center><span style="color: red;">* Note: The file should be in following format.</span></center> 
+<div class="row">
+<div class="col-md-10">
+<img src="Images/format.bmp" />	
+</div>
+<div class="col-md-1"></div>
+</div>
+<!-- </div> -->
+
+<!-- Floating Social Media bar Starts -->
+<!-- <div class="float-sm">
+  <div class="fl-fl float-fb">
+    <i class="fa fa-facebook" style="font-size: 20px;color: #fff; padding: 10px 0;"></i>
+    <a href="" target="_blank"> Like us!</a>
+  </div>
+</div> -->
+
+

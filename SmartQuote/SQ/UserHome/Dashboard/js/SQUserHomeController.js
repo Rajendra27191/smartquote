@@ -80,6 +80,10 @@ $scope.confirmChangeView=function(subMenuName){
   if(subMenuName.toLowerCase()==='view/edit proposal'){
   // $state.transitionTo('vieweditquote');    
   $state.go('vieweditquote', {}, {reload: true});   
+  } 
+  if(subMenuName.toLowerCase()==='load file'){
+  // $state.transitionTo('vieweditquote');    
+  $state.go('paymentreminder.start', {}, {reload: true});   
   }
   if(subMenuName==='Logout'){
   $rootScope.userSignout(); 
@@ -88,8 +92,8 @@ $scope.confirmChangeView=function(subMenuName){
 
 
 $rootScope.subMenuClicked=function(subMenuName){
-  // console.log(subMenuName);
-  // console.log("$rootScope.isQuoteActivated >>" +$rootScope.isQuoteActivated)
+  console.log(subMenuName);
+  console.log("isQuoteActivated >>" +$rootScope.isQuoteActivated)
   if ($rootScope.isQuoteActivated) {
   $scope.showPromptWindow(subMenuName);
   }else{
