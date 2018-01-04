@@ -209,4 +209,62 @@ public class PaymentReminderDao {
 		}
 		return isUnload;
 	}
+	public ArrayList<PaymentReminderBean> getFileDetailList() {
+		ArrayList<PaymentReminderBean> objArrayList=null;
+		String query="Select file_id,file_name,day(load_date_time)'day',monthname(load_date_time) 'month',year(load_date_time) 'year',"
+				+ "rows ,reminder_status from file_load_status_master;";
+		try {
+			pstmt=conn.prepareStatement(query);
+			rs=pstmt.executeQuery();
+			objArrayList= new ArrayList<PaymentReminderBean>();
+			while(rs.next()){
+				PaymentReminderBean objBean =new PaymentReminderBean();
+				objBean.setFileId(rs.getInt("file_id"));
+				objBean.setFileName(rs.getString("file_name"));
+				objBean.setLoadDateTime(rs.getString("day")+" "+rs.getString("month")+" "+rs.getString("year"));
+				objBean.setRows(rs.getInt("rows"));
+				objBean.setReminderStatus(rs.getString("reminder_status"));
+				objArrayList.add(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objArrayList;
+	};
+	public ArrayList<PaymentReminderBean> getCustomerDetailList(int fileId,String fileName) {
+		ArrayList<PaymentReminderBean> objArrayList=null;
+		String query="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,a.total_amount,a.current_amount,"
+				+ "a.30_amount,a.60_amount,a.90_amount,a.email,a.send_status,a.remark "
+				+ "FROM file_log_master a left outer join file_load_status_master b "
+				+ "on a.file_id=? AND b.file_name=?;";
+		try {
+			pstmt=conn.prepareStatement(query);
+			pstmt.setInt(1, fileId);
+			pstmt.setString(2, fileName);
+			System.out.println(pstmt);
+			rs=pstmt.executeQuery();
+			
+			objArrayList= new ArrayList<PaymentReminderBean>();
+			while(rs.next()){
+				PaymentReminderBean objBean =new PaymentReminderBean();
+				objBean.setFileId(rs.getInt("file_id"));
+				objBean.setFileName(rs.getString("file_name"));
+				System.out.println("CODE :: "+rs.getString("customer_code"));
+				objBean.setCustomerCode(rs.getString("customer_code"));
+				objBean.setCustomerName(rs.getString("customer_name"));
+				objBean.setTotal(rs.getDouble("total_amount"));
+				objBean.setJuneCurrent(rs.getDouble("current_amount"));
+				objBean.setMay30Days(rs.getDouble("30_amount"));
+				objBean.setApril60Days(rs.getDouble("60_amount"));
+				objBean.setMarch90Days(rs.getDouble("90_amount"));
+				objBean.setEmail(rs.getString("email"));
+				objBean.setSendStatus(rs.getString("send_status"));
+				objBean.setRemark(rs.getString("remark"));
+				objArrayList.add(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objArrayList;
+	};
 }

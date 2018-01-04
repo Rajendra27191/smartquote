@@ -96,6 +96,9 @@ angular.module('sq.SmartQuoteDesktop')
         },
         'unload-view' : {
           templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.unload_file.view.html',
+        },
+        'sendreminder-view' : {
+          templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.send_reminder.view.html',
         }
       }
     })

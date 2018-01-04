@@ -575,5 +575,19 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getLoadedFileDetailList" class="action.PaymentReminderAction"
+			method="getLoadedFileDetailList">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getCustomerDetailFromFile" class="action.PaymentReminderAction"
+			method="getCustomerDetailFromFile">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

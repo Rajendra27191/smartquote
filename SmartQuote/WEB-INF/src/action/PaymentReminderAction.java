@@ -19,6 +19,7 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.PaymentReminderBean;
 import responseBeans.KeyValuePairResponseBean;
+import responseBeans.PaymentReminderResponseBean;
 import test.GlsFileReader;
 
 import com.google.gson.Gson;
@@ -30,11 +31,13 @@ import dao.PaymentReminderDao;
 @SuppressWarnings("serial")
 public class PaymentReminderAction extends ActionSupport implements ServletRequestAware {
 	private EmptyResponseBean objEmptyResponseBean = new EmptyResponseBean();
-    ArrayList<KeyValuePairBean> objFileList;
-    private KeyValuePairResponseBean objResponseBean;
+	ArrayList<KeyValuePairBean> objFileList;
+	private KeyValuePairResponseBean objResponseBean;
 	private HttpServletRequest request;
 	public File reminderFile;
 	public String fileName;
+	private PaymentReminderResponseBean objPaymentReminderResponse;// = new
+																	// PaymentReminderResponseBean();
 
 	public EmptyResponseBean getObjEmptyResponseBean() {
 		return objEmptyResponseBean;
@@ -137,13 +140,13 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 	}
 
 	public String getLoadedFileList() {
-		objResponseBean= new KeyValuePairResponseBean();
+		objResponseBean = new KeyValuePairResponseBean();
 		objResponseBean.setCode("error");
 		objResponseBean.setMessage(getText("common_error"));
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
-			objFileList= new ArrayList<KeyValuePairBean>();
-			objFileList=objDao.getFileList();
+			objFileList = new ArrayList<KeyValuePairBean>();
+			objFileList = objDao.getFileList();
 			objDao.closeAll();
 			objResponseBean.setCode("success");
 			objResponseBean.setMessage("file_list_success");
@@ -153,6 +156,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		}
 		return SUCCESS;
 	}
+
 	public String unloadPaymentReminderFile() {
 		objEmptyResponseBean.setCode("error");
 		objEmptyResponseBean.setMessage(getText("common_error"));
@@ -163,7 +167,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		System.out.println("File Id : " + fileId);
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
-			boolean isUnload=objDao.unloadReminderFile(fileId,fileName);
+			boolean isUnload = objDao.unloadReminderFile(fileId, fileName);
 			objDao.commit();
 			objDao.closeAll();
 			if (isUnload) {
@@ -175,11 +179,56 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		}
 		return SUCCESS;
 	}
+
+	public String getLoadedFileDetailList() {
+		objPaymentReminderResponse = new PaymentReminderResponseBean();
+		objPaymentReminderResponse.setCode("error");
+		objPaymentReminderResponse.setMessage(getText("common_error"));
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			ArrayList<PaymentReminderBean> objList = new ArrayList<PaymentReminderBean>();
+			objList = objDao.getFileDetailList();
+			objDao.closeAll();
+			objPaymentReminderResponse.setCode("success");
+			objPaymentReminderResponse.setMessage("file_list_success");
+			objPaymentReminderResponse.setResult(objList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
+	public String getCustomerDetailFromFile() {
+		objPaymentReminderResponse = new PaymentReminderResponseBean();
+		objPaymentReminderResponse.setCode("error");
+		objPaymentReminderResponse.setMessage(getText("common_error"));
+		int fileId = Integer.parseInt(request.getParameter("fileId"));
+		String fileName = request.getParameter("fileName");
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			ArrayList<PaymentReminderBean> objList = new ArrayList<PaymentReminderBean>();
+			objList = objDao.getCustomerDetailList(fileId,fileName);
+			objDao.closeAll();
+			objPaymentReminderResponse.setCode("success");
+			objPaymentReminderResponse.setMessage("file_list_success");
+			objPaymentReminderResponse.setResult(objList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 
+	public PaymentReminderResponseBean getObjPaymentReminderResponse() {
+		return objPaymentReminderResponse;
+	}
 
+	public void setObjPaymentReminderResponse(PaymentReminderResponseBean objPaymentReminderResponse) {
+		this.objPaymentReminderResponse = objPaymentReminderResponse;
+	}
 
 }

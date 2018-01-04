@@ -1,7 +1,7 @@
 angular.module('sq.SmartQuoteDesktop')
 .controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','$http',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,$http){
 console.log('initialise SQUserHomeController controller');
-$rootScope.initAuotoComplete();
+// $rootScope.initAuotoComplete();
 $window.pageYOffset;
 
 //CODE STARTS===============================================================================================================
@@ -81,7 +81,7 @@ $scope.confirmChangeView=function(subMenuName){
   // $state.transitionTo('vieweditquote');    
   $state.go('vieweditquote', {}, {reload: true});   
   } 
-  if(subMenuName.toLowerCase()==='load file'){
+  if(subMenuName.toLowerCase()==='payment reminder'){
   // $state.transitionTo('vieweditquote');    
   $state.go('paymentreminder.start', {}, {reload: true});   
   }

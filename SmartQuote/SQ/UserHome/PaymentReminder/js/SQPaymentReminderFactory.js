@@ -10,6 +10,8 @@ angular.module('sq.SmartQuoteDesktop')
     var ReminderFactory = {
       getFileListAPI:$resource($rootScope.projectName+'/getLoadedFileList', {}, {getFileListMethod :{method: 'POST'}}),
       unloadFileAPI:$resource($rootScope.projectName+'/unloadPaymentReminderFile?fileName=:name&fileId=:id', {}, {unloadFileMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
+      getFileDetailListAPI:$resource($rootScope.projectName+'/getLoadedFileDetailList', {}, {getFileDetailListMethod :{method: 'POST'}}),
+      getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
 
 
     };
@@ -45,6 +47,36 @@ $rootScope.$broadcast('UnloadFileDone', success);
 }, function (error) {
 // console.log(error);
 $rootScope.$broadcast('UnloadFileNotDone', error);
+});
+};
+
+objFactory.GetFileDetailList = function (){
+// console.log("GetQuoteView")
+ReminderFactory.getFileDetailListAPI.getFileDetailListMethod(function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetFileDetailListDone', success); 
+}
+},function(error){
+console.log(error);
+$rootScope.$broadcast('GetFileDetailListNotDone', error);
+});
+};
+
+objFactory.GetCustomerDetailFromFile = function (name,id){
+// console.log("GetQuoteView")
+ReminderFactory.getCustomerDetailAPI.getCustomerDetailMethod({name:name,id:id},function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetCustomerDetailFromFileDone', success); 
+}
+},function(error){
+console.log(error);
+$rootScope.$broadcast('GetCustomerDetailFromFileNotDone', error);
 });
 };
 
