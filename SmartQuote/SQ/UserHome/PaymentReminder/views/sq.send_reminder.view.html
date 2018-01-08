@@ -1,0 +1,373 @@
+<style type="text/css">
+tr td {
+  cursor: pointer;
+}
+.table>tbody>tr>td{
+  padding: 2px;
+}
+
+.main-label {
+    margin: 3% 0% 3% 0%;
+}
+
+</style>
+
+<div>
+<div class="row">
+<div class="col-md-12"><center><label class="main-label">Send Reminder</label></center></div>
+</div>
+
+<div id="fileDetailList" ng-if="showFileDetailList">
+<div class="row">
+<!-- <div class="col-md-10 col-md-offset-1">
+<div class="col-md-6" style="padding:0px;">
+	<div class="input-group">
+	<span class="input-group-addon" id="sizing-addon2"><i class="fa fa-search fa-lg" aria-hidden="true"></i></span>
+	<input type="text" class="form-control" ng-model="search.fileName" placeholder="Search existing file">
+	</div>
+</div>
+</div> -->
+	<div class="col-md-10 col-md-offset-1">
+	<table  class="table table-bordered table-striped  table-responsive">
+	<caption>- : Existing Files : -</caption>
+	<thead>
+		<tr>
+			<th><center>Sr No</center></th>
+			<th><center>File Name</center></th>
+			<th><center>Load Date Time</center></th>
+			<th><center>Total Customers</center></th>
+			<th><center>Reminder Status</center></th>
+			<th><center>Action</center></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="file in fileDetailList | filter:search " ng-if="fileDetailList.length>0"  >
+			<td><center>{{$index+1}}</center></td>
+			<td><center>{{file.fileName}}</center></td>
+			<td><center>{{file.loadDateTime}}</center></td>
+			<td><center>{{file.rows}}</center></td>
+			<td><center>{{file.reminderStatus}}</center></td>
+			<td style="text-align: center;">
+			<button  class="btn btn-default" style="padding: 2px 6px;" ng-click="openFile(file)" tooltip-placement="top" uib-tooltip="click to open file">
+				<i class="fa fa-external-link" aria-hidden="true"></i>
+			</button>
+			</td>
+		</tr>
+		<tr  ng-if="!fileDetailList.length>0">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			<div class="col-md-12">
+			<center>file not added.</center>					
+			</div>
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+	</div>
+	<!-- <div class="col-md-2"></div> -->
+</div>
+<!-- <div class="row" ng-if="(fileDetailList | filter:search).length == 0">
+	<div class="col-md-10 col-md-offset-1 " >
+		<center>file not available</center>
+	</div>
+</div> -->
+</div>
+</div><!--end fileDetailList --> 
+
+<div id="fileView" ng-if="showFileView">
+<div class="col-md-10 col-md-offset-1">
+<div id="fileInfo" class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
+<div class="panel-heading" style="padding: 5px 10px;"><label class="sub-label" style="text-transform: uppercase;">File Information</label></div>
+<div class="panel-body">
+<div class="col-md-10 col-md-offset-2">
+<div class="row">
+<div class="col-md-12">
+<div class="col-md-4"><label>File Name</label></div>
+<div class="col-md-1"><label>:</label></div>
+<div class="col-md-6">{{objFile.fileName}}</div>
+</div>
+<div class="col-md-12">
+<div class="col-md-4"><label>Load Date Time</label></div>
+<div class="col-md-1"><label>:</label></div>
+<div class="col-md-6">{{objFile.loadDateTime}}</div>
+</div>
+<div class="col-md-12">
+<div class="col-md-4"><label>Total Customer</label></div>
+<div class="col-md-1"><label>:</label></div>
+<div class="col-md-6">{{objFile.rows}}</div>
+</div>
+<div class="col-md-12">
+<div class="col-md-4"><label>Reminder Status</label></div>
+<div class="col-md-1"><label>:</label></div>
+<div class="col-md-3">
+<select name="duration" id="duration" class="form-control" ng-options="reminder.value for reminder in reminderStatus track by reminder.id" ng-model="duration" ng-change="changeDuration(duration)" required>
+</select>
+</div>
+</div>
+</div>
+<br>
+<div class="row">
+<div class="col-md-12">
+<!-- <div class="col-md-1"></div> -->
+<div class="col-md-3">
+	<button  class="btn btn-primary btn-block" ng-click="getCustomerDetailFromFile()" tooltip-placement="top" uib-tooltip="click to get file details">
+	<i class="fa fa-download" aria-hidden="true"></i> Get Records
+	</button>
+</div>
+<div class="col-md-3">
+	<button  class="btn btn-default btn-block" ng-click="duration = {id:0,value:'all'};changeDuration(duration)" tooltip-placement="top" uib-tooltip="click to get file details">
+	<i class="fa fa-refresh" aria-hidden="true"></i> Reset
+	</button>
+</div>
+<div class="col-md-3">
+	<button ng-click="closeFile()" class="btn btn-default btn-block" tooltip-placement="top" uib-tooltip="click to cancel">
+	<i class="fa fa-times" aria-hidden="true"></i> Cancel
+	</button>
+</div>
+<!-- <div class="col-md-2"></div> -->
+</div>
+</div>
+</div>
+</div>
+</div> 
+</div> 
+
+<div id="customerInfo"  ng-if="showCustomerInfo" >
+	<!-- {{duration.value=='all'}} -->
+<form name="form.customerList" novalidate>	
+
+<table  class="table table-bordered table-striped table-responsive" ng-if="duration.value!='all'">
+	<caption>- : Customer List : -</caption> 
+	<thead>
+		<tr>
+			<th><center>Cust Code</center></th>
+			<th><center>Cust Name</center></th>
+			<th ng-if="duration.value=='all'"><center>Total</center></th>
+			<th ng-if="duration.value=='all'"><center>Current</center></th>
+			<th ng-if="duration.value=='all' || duration.value=='30'"><center>30</center></th>
+			<th ng-if="duration.value=='all' || duration.value=='30' || duration.value=='60'"><center>60</center></th>
+			<th ng-if="duration.value=='all' || duration.value=='30' || duration.value=='60' || duration.value=='90'"><center>90</center></th>
+			<th><center>email</center></th>
+			<!-- <th><center>email</center></th> -->
+			<th>
+				<center>
+					<input type="checkbox" ng-model="rows.isAllSelected" ng-init="rows.isAllSelected=false;" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
+				</center>
+			</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr ng-repeat="customer in customerDetailList">
+			<td><center>{{customer.customerCode}}</center></td>
+			<td><center>{{customer.customerName}}</center></td>
+			<td ng-if="duration.value=='all'"><center>{{customer.total}}</center></td>
+			<td ng-if="duration.value=='all'"><center>{{customer.juneCurrent}}</center></td>
+			<td ng-if="duration.value=='all' || duration.value=='30'"><center>{{customer.may30Days}}</center></td>
+			<td ng-if="duration.value=='all' || duration.value=='30' || duration.value=='60'"><center>{{customer.april60Days}}</center></td>
+			<td ng-if="duration.value=='all' || duration.value=='30' || duration.value=='60' || duration.value=='90'"><center>{{customer.march90Days}}</center></td>
+			<td>
+				<center>
+					<input type="text" name="email" ng-model="customer.email">
+				</center>
+			</td>
+			<!-- <td >
+				<center>
+					<span ng-if="!editing[$index]">{{customer.email}} </span>
+					<div class="col-md-12"  ng-if="editing[$index]">
+					<input type="text" ng-model="customer.email" name="email"/>
+					<button style="cursor: pointer;margin: 0px 5px;color:green;" ng-click="updateEmail(customer,$index)"><i class="fa fa-check-circle-o fa-lg" aria-hidden="true"></i></button>
+		    		<button style="cursor: pointer;margin: 0px 5px;color:red;" ng-click="stop(customerDetailList,$index)"><i class="fa fa-times-circle-o fa-lg" aria-hidden="true"></i></button>	
+					</div>
+				</center>
+			</td> -->
+			<!-- <td>
+				<center>
+				<button style="cursor: pointer;margin: 0px 5px;" ng-click="editEmailBtnClicked(customerDetailList,$index)" tooltip-placement="top" uib-tooltip="Click to edit customer emailid."><i class="glyphicon glyphicon-pencil"></i></button>
+			</center>
+			</td> -->
+			<td>
+				<center>
+					<input type="checkbox" name="quote" ng-model="customer.selected" ng-init="customer.selected=false;" ng-change="optionToggled()" style="height: 15px; width: 15px;cursor:pointer;" >
+				</center>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<table  class="table table-bordered table-striped table-responsive"  ng-if="duration.value=='all'">
+	<caption>- : Customer List : -</caption> 
+	<thead>
+		<tr>
+			<th><center>Cust Code</center></th>
+			<th><center>Cust Name</center></th>
+			<th><center>Total</center></th>
+			<th><center>Current</center></th>
+			<th><center>30</center></th>
+			<th><center>60</center></th>
+			<th><center>90</center></th>
+			<th><center>email</center></th>
+			<!-- <th><center>email</center></th> -->
+			<th>
+				<center>
+					<input type="checkbox" ng-model="rows.isAllSelected" ng-init="rows.isAllSelected=false;" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
+				</center>
+			</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="customer in customerDetailList" ng-form="customerForm" >
+		<!-- <>	 -->
+			<td><center>{{customer.customerCode}}</center></td>
+			<td><center>{{customer.customerName}}</center></td>
+			<td><center>{{customer.total}}</center></td>
+			<td><center>{{customer.juneCurrent}}</center></td>
+			<td><center>{{customer.may30Days}}</center></td>
+			<td><center>{{customer.april60Days}}</center></td>
+			<td><center>{{customer.march90Days}}</center></td>
+			<td>
+				<center>
+					<input type="text" name="email" ng-model="customer.email" required>
+					<span class="invalid-control" ng-show="customerForm.email.$invalid">requires</span>
+				</center>
+			</td>
+			<!-- <td >
+				<center>
+					<span ng-if="!editing[$index]">{{customer.email}} </span>
+					<div class="col-md-12"  ng-if="editing[$index]">
+					<input type="text" ng-model="customer.email" name="email"/>
+					<button style="cursor: pointer;margin: 0px 5px;color:green;" ng-click="updateEmail(customer,$index)"><i class="fa fa-check-circle-o fa-lg" aria-hidden="true"></i></button>
+		    		<button style="cursor: pointer;margin: 0px 5px;color:red;" ng-click="stop(customerDetailList,$index)"><i class="fa fa-times-circle-o fa-lg" aria-hidden="true"></i></button>	
+					</div>
+				</center>
+			</td>
+			<td>
+				<center>
+				<button style="cursor: pointer;margin: 0px 5px;" ng-click="editEmailBtnClicked(customerDetailList,$index)" tooltip-placement="top" uib-tooltip="Click to edit customer emailid."><i class="glyphicon glyphicon-pencil"></i></button>
+			</center>
+			</td> -->
+			<td>
+				<center>
+					<input type="checkbox" name="quote" ng-model="customer.selected" ng-init="customer.selected=false;" ng-change="optionToggled()" style="height: 15px; width: 15px;cursor:pointer;" >
+				</center>
+			</td>
+	<!-- </ng-form>	 -->
+		</tr>
+	</tbody>
+</table>
+</form>
+<div class="row">
+<div class="col-md-12">
+<div class="col-md-3"></div>
+<div class="col-md-3">
+	<button  class="btn btn-block button-ok" ng-click="sendMailBtnClicked()" tooltip-placement="top" uib-tooltip="click to get file details" ng-disabled="disabledSendBtn">
+	<i class="fa fa-paper-plane" aria-hidden="true"></i> Send Mail
+	</button>
+</div>
+<div class="col-md-3">
+	<button  class="btn btn-block button-delete" ng-click="mailFormatBtnClicked()" tooltip-placement="top" uib-tooltip="click to get file details" ng-disabled="">
+	<i class="fa fa-envelope" aria-hidden="true"></i> Mail Format
+	</button>
+</div>
+<div class="col-md-3">
+	<button ng-click="" class="btn btn-block button-delete" tooltip-placement="top" uib-tooltip="click to cancel">
+	<i class="fa fa-times" aria-hidden="true"></i> Cancel
+	</button>
+</div>
+<!-- <div class="col-md-2"></div> -->
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- Modal -->
+<div id="emailFormatModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">
+        <center>Compose Mail</center>	
+        </h4>
+      </div>
+      <div class="modal-body">
+		<form name="form.emailFormat" novalidate class="form-horizontal">	
+			<div class="form-group">
+			  <label class="col-sm-2" for="inputTo">To,</label>
+			  <div class="col-sm-10">
+			  	<br>[customer name]<br>[Address]<br>Customer No.[option]
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="col-sm-2" for="inputHeader"></label>
+			  <div class="col-sm-10">
+			  	 <p ng-bind-html="compose.header"></p>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="col-sm-2" for="inputFrom">From</label>
+			  <div class="col-sm-10">
+			  	<select type="text" name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.email for emailConfig in emailConfigList" ng-model="compose.from"  ng-change="emailConfigChange(compose.from)" required>
+			  		<option value="">Select From email</option>
+				</select>
+				<span ng-show="form.emailFormat.inputFrom.$invalid && form.emailFormat.submitted" class="invalid-control">
+				<small>*Please select from email.</small>
+				</span>
+			  </div>
+			</div>
+			<div class="form-group">
+			  <label class="col-sm-2" for="inputSubject">Subject</label>
+			  <div class="col-sm-10"><input type="text" class="form-control" name="inputSubject" id="inputSubject" placeholder="subject" ng-model="compose.subject" ></div>
+			</div>
+
+			<div class="form-group">
+			  <label class="col-sm-2" for="inputBody">Message</label>
+			  <div class="col-sm-10">
+			  	<textarea class="form-control" id="inputBody" name="inputBody" rows="10" ng-model="compose.body" required></textarea>
+				<span ng-show="form.emailFormat.inputBody.$invalid && form.emailFormat.submitted" class="invalid-control">
+				<small>*Please enter message.</small>
+				</span>
+			  </div>
+			</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+      	<div class="row row-control">
+		<div class="col-md-6"></div>
+		<div class="col-md-3">
+			<button type="button" class="btn btn-block btn-default"  data-dismiss="modal">Close</button>
+		</div>
+		<div class="col-md-3">
+			<button type="button" class="btn btn-block  btn-primary " ng-click="acceptEmailFormatClicked()">Accept</button>
+		</div>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
+
