@@ -589,5 +589,19 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getEmailFormat" class="action.PaymentReminderAction"
+			method="getEmailFormat">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="sendReminder" class="action.PaymentReminderAction"
+			method="sendReminder">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

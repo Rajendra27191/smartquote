@@ -12,6 +12,7 @@ angular.module('sq.SmartQuoteDesktop')
       unloadFileAPI:$resource($rootScope.projectName+'/unloadPaymentReminderFile?fileName=:name&fileId=:id', {}, {unloadFileMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
       getFileDetailListAPI:$resource($rootScope.projectName+'/getLoadedFileDetailList', {}, {getFileDetailListMethod :{method: 'POST'}}),
       getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
+      getEmailFormatAPI:$resource($rootScope.projectName+'/getEmailFormat', {}, {getEmailFormatMethod :{method: 'GET'}}),
 
 
     };
@@ -80,7 +81,39 @@ $rootScope.$broadcast('GetCustomerDetailFromFileNotDone', error);
 });
 };
 
+objFactory.GetEmailFormat = function (name,id){
+// console.log("GetQuoteView")
+ReminderFactory.getEmailFormatAPI.getEmailFormatMethod(function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetEmailFormatTemplateDone', success); 
+}
+},function(error){
+console.log(error);
+$rootScope.$broadcast('GetEmailFormatTemplateNotDone', error);
+});
+};
 
+objFactory.SendReminder = function (sendReminderDetail){
+  console.log("sendReminderDetail")
+  data = $.param({sendReminderDetail:sendReminderDetail}); 
+  $http.post($rootScope.projectName+'/sendReminder', data, config)
+  .success(function (data, status, headers, config) {
+    console.log(data);
+    // if (data.code=="sessionTimeOut") {
+    //   $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    // }else{
+    //   $rootScope.$broadcast('UpdateQuoteDone', data); 
+    // }
+  })
+  .error(function (data, status, header, config) {
+    console.log(data);
+    // $rootScope.$broadcast('UpdateQuoteNotDone', data);
+  });
+
+};
 
 
 

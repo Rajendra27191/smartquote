@@ -1,7 +1,7 @@
 package pojo;
 
-public class PaymentReminderBean {
-//======= File Log Attributes
+public class PaymentReminderFileBean {
+//File Log	
 private int fileId;
 private String customerCode;
 private String customerName;
@@ -81,7 +81,7 @@ public void setRemark(String remark) {
 	this.remark = remark;
 }
 
-//======= File Load Status Attributes
+//File Load Status
 private String fileName;
 private int rows;
 private String loadDateTime;
@@ -111,6 +111,8 @@ public String getReminderStatus() {
 public void setReminderStatus(String reminderStatus) {
 	this.reminderStatus = reminderStatus;
 }
+
+
 
 
 

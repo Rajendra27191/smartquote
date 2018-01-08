@@ -6,8 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import pojo.EmailConfigBean;
+import pojo.EmailFormatBean;
 import pojo.KeyValuePairBean;
-import pojo.PaymentReminderBean;
+import pojo.PaymentReminderFileBean;
+import pojo.SendReminderBean;
 import connection.ConnectionFactory;
 
 public class PaymentReminderDao {
@@ -80,7 +83,7 @@ public class PaymentReminderDao {
 		return email;
 	}
 
-	public boolean uploadReminderFile(ArrayList<PaymentReminderBean> reminderList,String fileName) {
+	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList,String fileName) {
 		boolean isFileUploaded = false;
 		int rowCount = 0;
 		String query = "Insert Ignore Into file_log_master (file_id,customer_code,customer_name,"
@@ -145,7 +148,7 @@ public class PaymentReminderDao {
 			pstmt.setString(6, "30DAYS");
 			pstmt.setString(7, "60DAYS");
 			pstmt.setString(8, "90DAYS");
-			pstmt.setString(9, "");
+			pstmt.setString(9, "Not Send");
 			int i=pstmt.executeUpdate();
 			if(i>0)
 				isFileUploaded=true;
@@ -209,16 +212,16 @@ public class PaymentReminderDao {
 		}
 		return isUnload;
 	}
-	public ArrayList<PaymentReminderBean> getFileDetailList() {
-		ArrayList<PaymentReminderBean> objArrayList=null;
+	public ArrayList<PaymentReminderFileBean> getFileDetailList() {
+		ArrayList<PaymentReminderFileBean> objArrayList=null;
 		String query="Select file_id,file_name,day(load_date_time)'day',monthname(load_date_time) 'month',year(load_date_time) 'year',"
-				+ "rows ,reminder_status from file_load_status_master;";
+				+ "rows,reminder_status from file_load_status_master;";
 		try {
 			pstmt=conn.prepareStatement(query);
 			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<PaymentReminderBean>();
+			objArrayList= new ArrayList<PaymentReminderFileBean>();
 			while(rs.next()){
-				PaymentReminderBean objBean =new PaymentReminderBean();
+				PaymentReminderFileBean objBean =new PaymentReminderFileBean();
 				objBean.setFileId(rs.getInt("file_id"));
 				objBean.setFileName(rs.getString("file_name"));
 				objBean.setLoadDateTime(rs.getString("day")+" "+rs.getString("month")+" "+rs.getString("year"));
@@ -231,8 +234,8 @@ public class PaymentReminderDao {
 		}
 		return objArrayList;
 	};
-	public ArrayList<PaymentReminderBean> getCustomerDetailList(int fileId,String fileName) {
-		ArrayList<PaymentReminderBean> objArrayList=null;
+	public ArrayList<PaymentReminderFileBean> getCustomerDetailList(int fileId,String fileName) {
+		ArrayList<PaymentReminderFileBean> objArrayList=null;
 		String query="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,a.total_amount,a.current_amount,"
 				+ "a.30_amount,a.60_amount,a.90_amount,a.email,a.send_status,a.remark "
 				+ "FROM file_log_master a left outer join file_load_status_master b "
@@ -244,9 +247,9 @@ public class PaymentReminderDao {
 			System.out.println(pstmt);
 			rs=pstmt.executeQuery();
 			
-			objArrayList= new ArrayList<PaymentReminderBean>();
+			objArrayList= new ArrayList<PaymentReminderFileBean>();
 			while(rs.next()){
-				PaymentReminderBean objBean =new PaymentReminderBean();
+				PaymentReminderFileBean objBean =new PaymentReminderFileBean();
 				objBean.setFileId(rs.getInt("file_id"));
 				objBean.setFileName(rs.getString("file_name"));
 				System.out.println("CODE :: "+rs.getString("customer_code"));
@@ -266,5 +269,110 @@ public class PaymentReminderDao {
 			e.printStackTrace();
 		}
 		return objArrayList;
+	}
+
+	public EmailFormatBean getEmailFormatData() {
+		String query="SELECT email_id,header,body,contact_person,subject,contact_name From email_data_ref "
+				+ "WHERE email_id=1; ";
+		EmailFormatBean objBean= new EmailFormatBean();
+		try {
+			pstmt=conn.prepareStatement(query);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				objBean.setHeader(rs.getString("header"));
+				objBean.setBody(rs.getString("body"));
+				objBean.setContactPerson(rs.getString("contact_person"));
+				objBean.setSubject(rs.getString("subject"));
+				objBean.setContactName(rs.getString("contact_name"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objBean;
 	};
+	
+	public ArrayList<EmailConfigBean> getEmailConfigList() {
+		ArrayList<EmailConfigBean> objArrayList=null;
+		String query="SELECT config_id,module,email_id,outgoing_server,outgoing_port,"
+				+ "email_password,flag,user_name From email_config;";
+		try {
+			pstmt=conn.prepareStatement(query);
+			System.out.println(pstmt);
+			rs=pstmt.executeQuery();
+			objArrayList= new ArrayList<EmailConfigBean>();
+			while(rs.next()){
+				EmailConfigBean objBean =new EmailConfigBean();
+				objBean.setConfigId(rs.getInt("config_id"));
+				objArrayList.add(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objArrayList;
+	}
+
+	public boolean updateEmailData(String body){
+		boolean isUpdated=false;
+		String query="update email_data set body='"+body.replaceAll("'","\\\\'")+"' where email_id=1 ;";
+		try {
+			pstmt=conn.prepareStatement(query);
+			int i=pstmt.executeUpdate();
+			if(i>0)
+				isUpdated=true;
+			
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
+	public boolean addCustomersIntoEmailRecord(SendReminderBean objSendReminderBean){
+		boolean isUpdated=false;
+		String query="replace into email_record(config_id,file_id,cust_code,cust_name,total,"
+				+ "current,d30,d60,d90,email_id,send_status,due,remark,date)"
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,now());";
+		try {
+			pstmt=conn.prepareStatement(query);
+			final int batchSize = 50;
+			int count = 0;
+			for (int i = 0; i < objSendReminderBean.getCustomerArrayList().size(); i++) {
+				pstmt.setInt(1, objSendReminderBean.getEmailFormat().getFrom());
+				pstmt.setInt(2, objSendReminderBean.getCustomerArrayList().get(i).getFileId());
+				pstmt.setString(3, objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode());
+				pstmt.setString(4, objSendReminderBean.getCustomerArrayList().get(i).getCustomerName());
+				pstmt.setDouble(5, objSendReminderBean.getCustomerArrayList().get(i).getTotal());
+				pstmt.setDouble(6, objSendReminderBean.getCustomerArrayList().get(i).getJuneCurrent());
+				pstmt.setDouble(7, objSendReminderBean.getCustomerArrayList().get(i).getMay30Days());
+				pstmt.setDouble(8, objSendReminderBean.getCustomerArrayList().get(i).getApril60Days());
+				pstmt.setDouble(9, objSendReminderBean.getCustomerArrayList().get(i).getMarch90Days());
+				pstmt.setString(10, objSendReminderBean.getCustomerArrayList().get(i).getEmail());
+				pstmt.setString(11, "N");
+				pstmt.setString(12,objSendReminderBean.getDuration());
+				pstmt.setString(13,"");
+				pstmt.addBatch();
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+		    pstmt.executeBatch(); // Insert remaining records
+			System.out.println("Remaining Executed...!");
+			
+				isUpdated=true;
+			
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
+	
 }
