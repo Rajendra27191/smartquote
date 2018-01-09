@@ -54,7 +54,7 @@ $scope.popup2.opened = true;
 
 
 $scope.validateDate=function(dateFrom,dateTo){
-	console.log("validateDate")
+	// console.log("validateDate")
 	if(dateFrom&&dateTo){
 		var date1=moment(dateFrom).format('YYYY-MM-DD');
 		var date2=moment(dateTo).format('YYYY-MM-DD');
@@ -98,8 +98,8 @@ if ($rootScope.userData) {
 
 
 $scope.changeAgent=function(agent){
-console.log("changeAgent")
-console.log(agent);
+// console.log("changeAgent")
+// console.log(agent);
 $scope.selectedUserID=agent.code;
 $scope.selectedUserID=agent.code;
 };
@@ -123,7 +123,7 @@ $scope.init=function(){
 
 // $rootScope.initAuotoComplete();
 
-// $scope.init();
+$scope.init();
 
 
 //===============Format chart data======
@@ -132,7 +132,7 @@ function capitalize(s){
 };
 
 function formatCalloutData(response){
-console.log(response);
+// console.log(response);
 $scope.callOutData= angular.copy(response);
 };
 function formatBarChartData(response){
@@ -150,7 +150,7 @@ data.push(legend);
 data.push(column);
 $scope.objBarChart.type="ColumnChart"
 $scope.objBarChart.data=data;
-console.log($scope.agentData)
+// console.log($scope.agentData)
 $scope.objBarChart.options= {
 // title: "Result For "+$scope.agentData.agentCode.value+" From "+$rootScope.getFormattedDate($scope.agentData.fromDate)+" To "+$rootScope.getFormattedDate($scope.agentData.toDate),
 // 'legend': {'position': 'top','alignment': 'start' },
@@ -160,7 +160,7 @@ minValue: 0,
 // maxValue: 10,
 }
 };
-console.log(angular.toJson($scope.objBarChart))
+// console.log(angular.toJson($scope.objBarChart))
 
 };
 function formatPieChartData(response){
@@ -181,7 +181,7 @@ var c={};
 c={c: [{v: capitalize(value.status)},{v: value.totalCount},]};
 $scope.objPieChart.data.rows.push(c);	
 });
-console.log(angular.toJson($scope.objPieChart))
+// console.log(angular.toJson($scope.objPieChart))
 };
 
 
@@ -195,7 +195,7 @@ $scope.showDashboard=true;
 };
 
 $scope.handleGetChartDataDoneResponse=function(data){
-	console.log("handleGetChartDataDoneResponse");
+	// console.log("handleGetChartDataDoneResponse");
 	// $scope.showDashboard=false;
 	$scope.productDetails={};
 	if(data){
@@ -238,8 +238,8 @@ var cleanupEventGetProductDetailsNotDone = $scope.$on("GetChartDataNotDone", fun
 //================= Get Dashboard Results=============
 
 $scope.getDashboardResults=function(){
-console.log("getDashboardResults");
-console.log($scope.agent)
+// console.log("getDashboardResults");
+// console.log($scope.agent)
 if ($scope.dateValid) {
 $scope.init();	
 }else{

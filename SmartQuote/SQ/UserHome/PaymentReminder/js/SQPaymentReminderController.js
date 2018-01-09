@@ -343,8 +343,8 @@ console.log("$scope.selectedRows : "+$scope.selectedRows.length)
 $scope.form={};
 $scope.disabledSendBtn=true;
 $scope.compose=null;
-$scope.emailConfigList=[{email: 'test@gmail.com', id: 30 },{ email: 'twotest@gmail.com', id: 27 },{ email: 'threextest@gmail.com', id: 50 }];
-// $scope.emailConfigList=[];
+// $scope.emailConfigList=[{email: 'test@gmail.com', id: 30 },{ email: 'twotest@gmail.com', id: 27 },{ email: 'threextest@gmail.com', id: 50 }];
+$scope.emailConfigList=[];
 function initEmailFormatModal () {
 // body...
 // $scope.myText = "My name is: <h1>John Doe</h1>";
@@ -354,8 +354,9 @@ $scope.showEmailFormatModal=function(){
 $('#emailFormatModal').modal({ keyboard: false,backdrop: 'static',show: true});
 };
 $scope.assignEmailFormat=function(data){
-$scope.compose=angular.copy(data);
-// $scope.compose.from=$scope.emailConfigList[0];
+$scope.compose=angular.copy(data.objEmailFormatBean);
+$scope.emailConfigList=angular.copy(data.emailConfigList);
+$scope.compose.from="";
 };
 
 
@@ -369,7 +370,8 @@ $scope.handleGetEmailFormatTemplateDoneResponse=function(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
       $scope.showEmailFormatModal();
-      $scope.assignEmailFormat(data.objEmailFormatBean)
+      // console.log(data)
+      $scope.assignEmailFormat(data)
       }else{
         $rootScope.alertError(data.message);
       }
@@ -411,11 +413,24 @@ $scope.form.emailFormat.submitted=true;
 };
 
 //======================================================
+
+$scope.resetSendRemider=function(){
+   // $scope.sendReminderClicked();
+initSend();
+// $scope.form={};
+$scope.disabledSendBtn=true;
+$scope.compose=null;
+// $scope.emailConfigList=[];
+$scope.form.customerList.submitted=false;
+$scope.form.emailFormat.submitted=false;
+$scope.form.customerList.$setPristine();
+$scope.form.emailFormat.$setPristine();
+}
 $scope.jsonForSendMail=function(){
 var sendReminderDetail={};
 var emailFormatTemp={}
 emailFormatTemp={
-  'from':$scope.compose.from.id,
+  'from':$scope.compose.from.configId,
   'subject':$scope.compose.subject,
   'body':$scope.compose.body,
 }
@@ -427,42 +442,50 @@ sendReminderDetail={
 return angular.toJson(sendReminderDetail);
 }
 $scope.sendMailBtnClicked=function(){  
-  // console.log($scope.form);
-$scope.getAllSelectedRows();
-if ($scope.selectedRows.length>0) {
-  if ($scope.compose!=null) {
-    console.log($scope.jsonForSendMail());
-    SQPaymentReminderFactory.SendReminder($scope.jsonForSendMail());
+  console.log($scope.form);
+  if ($scope.form.emailFormat.$valid) {
+  if ($scope.form.customerList.$valid) {
+  $scope.getAllSelectedRows();
+  if ($scope.selectedRows.length>0) {
+    if ($scope.compose!=null) {
+      console.log($scope.jsonForSendMail());
+      SQPaymentReminderFactory.SendReminder($scope.jsonForSendMail());
+
+    };
+  }else{
+    // console.log("please select customer")
+    $rootScope.SQNotify("Please Select Customer", 'error')
+  }
+  }else{
 
   };
-}else{
-  console.log("please select customer")
 }
+
 
 };
 
-// $scope.handleGetEmailFormatTemplateDoneResponse=function(data){
-//   $scope.productDetails={};
-//   if(data){
-//     if (data.code) {
-//       if(data.code.toUpperCase()=='SUCCESS'){
-//       $scope.showEmailFormatModal();
-//       $scope.assignEmailFormat(data.objEmailFormatBean)
-//       }else{
-//         $rootScope.alertError(data.message);
-//       }
-//     }
-//     $rootScope.hideSpinner();
-//   }
-// };
-// var cleanupEventGetEmailFormatTemplateDone = $scope.$on("GetEmailFormatTemplateDone", function(event, message){
-//   $scope.handleGetEmailFormatTemplateDoneResponse(message);      
-// });
+$scope.handleSendReminderDoneResponse=function(data){
+  $scope.productDetails={};
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+        $rootScope.alertSuccess(data.message);
+        $scope.resetSendRemider();
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventSendReminderDone = $scope.$on("SendReminderDone", function(event, message){
+  $scope.handleSendReminderDoneResponse(message);      
+});
 
-// var cleanupEventGetEmailFormatTemplateNotDone = $scope.$on("GetEmailFormatTemplateNotDone", function(event, message){
-//   $rootScope.alertServerError("Server error");
-//   $rootScope.hideSpinner();
-// });
+var cleanupEventSendReminderNotDone = $scope.$on("SendReminderNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
 
 
 

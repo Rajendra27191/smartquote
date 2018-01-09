@@ -292,17 +292,19 @@ public class PaymentReminderDao {
 	};
 	
 	public ArrayList<EmailConfigBean> getEmailConfigList() {
+		System.out.println("inside getEmailConfigList");
 		ArrayList<EmailConfigBean> objArrayList=null;
-		String query="SELECT config_id,module,email_id,outgoing_server,outgoing_port,"
-				+ "email_password,flag,user_name From email_config;";
+		String query="Select config_id, email_id From email_config Where module='PR' AND flag='1';";
 		try {
 			pstmt=conn.prepareStatement(query);
 			System.out.println(pstmt);
 			rs=pstmt.executeQuery();
 			objArrayList= new ArrayList<EmailConfigBean>();
 			while(rs.next()){
+				System.out.println("inside while");
 				EmailConfigBean objBean =new EmailConfigBean();
 				objBean.setConfigId(rs.getInt("config_id"));
+				objBean.setEmailId(rs.getString("email_id"));
 				objArrayList.add(objBean);
 			}
 		} catch (Exception e) {

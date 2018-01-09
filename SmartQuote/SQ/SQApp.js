@@ -9,8 +9,8 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
 .run(['$rootScope','$window','storage','$templateCache',function($rootScope,$window,storage,$templateCache){
    $rootScope.projectName="/";
 
-    // var currentURL=$window.location.href; 
-  var currentURL="http://localhost:6003/smartprotest/"; 
+    var currentURL=$window.location.href; 
+  // var currentURL="http://localhost:6003/smartprotest/"; 
 
    var isSmartProTest=currentURL.includes("smartprotest");
    if (isSmartProTest) {
@@ -30,7 +30,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    storage.bind($rootScope, 'smartpro',{});
    };
    console.log("URL: "+currentURL);
-   console.log("Project: "+$rootScope.projectName);
+   // console.log("Project: "+$rootScope.projectName);
 
 }])
 .controller('SmartQuoteDesktopController',['$log','$scope','$rootScope','$window','$location','$anchorScroll','$state','$filter','$timeout','$http','notify','SQHomeServices','$interval',function($log,$scope,$rootScope,$window,$location,$anchorScroll,$state,$filter,$timeout,$http,notify,SQHomeServices,$interval){

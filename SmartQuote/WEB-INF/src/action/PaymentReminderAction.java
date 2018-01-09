@@ -211,8 +211,6 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			ArrayList<PaymentReminderFileBean> objList = new ArrayList<PaymentReminderFileBean>();
 			objList = objDao.getCustomerDetailList(fileId,fileName);
-//			ArrayList<EmailConfigBean> emailConfigList = new ArrayList<EmailConfigBean>();
-//			emailConfigList=
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
@@ -230,13 +228,14 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			EmailFormatBean objBean = new EmailFormatBean();
 			objBean = objDao.getEmailFormatData();
-			
-			
+			ArrayList<EmailConfigBean> emailConfigList = new ArrayList<EmailConfigBean>();
+			emailConfigList=objDao.getEmailConfigList();
+			System.out.println("emailConfigList >>"+emailConfigList);
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
 			objPaymentReminderResponse.setObjEmailFormatBean(objBean);
-			
+			objPaymentReminderResponse.setEmailConfigList(emailConfigList);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -259,6 +258,8 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objDao.addCustomersIntoEmailRecord(objSendReminderBean);
 			objDao.commit();
 			objDao.closeAll();
+			objEmptyResponseBean.setCode("success");
+			objEmptyResponseBean.setMessage(getText("send_reminder_success"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

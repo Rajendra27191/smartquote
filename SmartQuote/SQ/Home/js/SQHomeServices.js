@@ -99,7 +99,7 @@ angular.module('sq.SmartQuoteDesktop')
         }, function (error) {
           console.log(error);
           // $rootScope.alertServerError("Server error");
-          $rootScope.SQNotify("Server Error", error)
+          $rootScope.SQNotify("Server Error", 'error')
         });
     };
     

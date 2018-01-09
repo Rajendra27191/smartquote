@@ -23,11 +23,11 @@ angular.module('sq.SmartQuoteDesktop')
     userhome.GetProductsFromJsonFile = function (){
     $http.get($rootScope.projectName+'/products.json')
     .success(function(data) {
-    console.log(data)
+    // console.log(data)
     $rootScope.$broadcast('GetProductsFromJsonFileDone', data);
     })
     .error(function (data, status, header, config) {
-    console.log(data);
+    // console.log(data);
     $rootScope.$broadcast('GetProductsFromJsonFileNotDone', data);
     });
     };        
@@ -47,11 +47,11 @@ angular.module('sq.SmartQuoteDesktop')
     // };     
 
     userhome.GetChartData = function (data){
-    console.log(data)
+    // console.log(data)
     data = $.param({chartDetails:data}); 
     $http.post($rootScope.projectName+'/getChartData', data, config)
     .success(function (data, status, headers, config) {
-    console.log(data);
+    // console.log(data);
     if (data.code=="sessionTimeOut") {
       $rootScope.$broadcast('QuoteSessionTimeOut', data);     
     }else{
@@ -59,7 +59,7 @@ angular.module('sq.SmartQuoteDesktop')
     }
     })
     .error(function (data, status, header, config) {
-    console.log(data);
+    // console.log(data);
     $rootScope.$broadcast('GetChartDataNotDone', data);  
     });
     };     

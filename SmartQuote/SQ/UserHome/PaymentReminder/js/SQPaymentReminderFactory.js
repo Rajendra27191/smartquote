@@ -101,16 +101,16 @@ objFactory.SendReminder = function (sendReminderDetail){
   data = $.param({sendReminderDetail:sendReminderDetail}); 
   $http.post($rootScope.projectName+'/sendReminder', data, config)
   .success(function (data, status, headers, config) {
-    console.log(data);
-    // if (data.code=="sessionTimeOut") {
-    //   $rootScope.$broadcast('QuoteSessionTimeOut', data);     
-    // }else{
-    //   $rootScope.$broadcast('UpdateQuoteDone', data); 
-    // }
+    // console.log(data);
+    if (data.code=="sessionTimeOut") {
+      $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    }else{
+      $rootScope.$broadcast('SendReminderDone', data); 
+    }
   })
   .error(function (data, status, header, config) {
-    console.log(data);
-    // $rootScope.$broadcast('UpdateQuoteNotDone', data);
+    // console.log(data);
+    $rootScope.$broadcast('SendReminderNotDone', data);
   });
 
 };

@@ -9,7 +9,14 @@ tr td {
 .main-label {
     margin: 3% 0% 3% 0%;
 }
-
+.red {
+          border: solid 1px red;
+      }
+td .form-control {
+	height: 25px;
+	padding: 10px 10px;
+	border-radius: 0px;
+}
 </style>
 
 <div>
@@ -232,9 +239,10 @@ tr td {
 			<td><center>{{customer.march90Days}}</center></td>
 			<td>
 				<center>
-					<input type="text" name="email" ng-model="customer.email" required>
-					<span class="invalid-control" ng-show="customerForm.email.$invalid">requires</span>
+					<input type="text" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}">
+					<!-- <span class="invalid-control" ng-show="customerForm.email.$invalid">req</span> -->
 				</center>
+				<!-- {{customer.selected}} -->
 			</td>
 			<!-- <td >
 				<center>
@@ -315,8 +323,8 @@ tr td {
 			<div class="form-group">
 			  <label class="col-sm-2" for="inputFrom">From</label>
 			  <div class="col-sm-10">
-			  	<select type="text" name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.email for emailConfig in emailConfigList" ng-model="compose.from"  ng-change="emailConfigChange(compose.from)" required>
-			  		<option value="">Select From email</option>
+			  	<select name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.emailId for emailConfig in emailConfigList" ng-model="compose.from" ng-change="emailConfigChange(compose.from)" ng-required="true">
+			  		<option value="">-- Select From --</option>
 				</select>
 				<span ng-show="form.emailFormat.inputFrom.$invalid && form.emailFormat.submitted" class="invalid-control">
 				<small>*Please select from email.</small>
