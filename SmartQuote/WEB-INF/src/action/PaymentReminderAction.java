@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import pojo.EmailConfigBean;
 import pojo.EmailFormatBean;
+import pojo.EmailLogBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.PaymentReminderFileBean;
@@ -194,7 +195,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
-			objPaymentReminderResponse.setFileList(objList);
+			objPaymentReminderResponse.setFileLogList(objList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -214,7 +215,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
-			objPaymentReminderResponse.setFileList(objList);
+			objPaymentReminderResponse.setFileLogList(objList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -242,6 +243,29 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		}
 		return SUCCESS;
 	}
+	
+	public String updateCustomerEmailId() {
+		objEmptyResponseBean.setCode("error");
+		objEmptyResponseBean.setMessage(getText("common_error"));
+//		System.out.println("updateCustomerEmailId");
+		String custCode=request.getParameter("custCode");
+		int fileId = Integer.parseInt(request.getParameter("fileId"));
+		String email = request.getParameter("email");
+//		System.out.println(">> "+custCode+"\n"+fileId+"\n"+email);
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			boolean isUnload = objDao.updateFileLogEmailId(custCode,fileId,email);
+			objDao.commit();
+			objDao.closeAll();
+			if (isUnload) {
+				objEmptyResponseBean.setCode("success");
+				objEmptyResponseBean.setMessage(getText("email_change"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
 	public String sendReminder() {
 		objEmptyResponseBean.setCode("error");
 		objEmptyResponseBean.setMessage(getText("common_error"));
@@ -249,10 +273,6 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		System.out.println("DETAIL ::"+sendReminderDetail);
 		SendReminderBean objSendReminderBean = new SendReminderBean();
 		objSendReminderBean = new Gson().fromJson(sendReminderDetail, SendReminderBean.class);
-		
-//		System.out.println(">> "+objBean.getCustomerArrayList().size());
-//		System.out.println(">> "+objBean.getEmailFormat().getBody());
-//		System.out.println(">> "+objBean.getDuration());
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			objDao.addCustomersIntoEmailRecord(objSendReminderBean);
@@ -265,7 +285,51 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		}
 		return SUCCESS;
 	}
-
+	public String getEmailLogList() {
+		objPaymentReminderResponse = new PaymentReminderResponseBean();
+		objPaymentReminderResponse.setCode("error");
+		objPaymentReminderResponse.setMessage(getText("common_error"));
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			ArrayList<EmailLogBean> emailLogBeans=new ArrayList<EmailLogBean>();
+			emailLogBeans =objDao.getEmailLogArrayList();
+//			objDao.commit();
+			objDao.closeAll();
+			objPaymentReminderResponse.setCode("success");
+			objPaymentReminderResponse.setMessage(getText("email_log_success"));	
+			objPaymentReminderResponse.setEmailLogList(emailLogBeans);
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+	public String getEmailLogDetail() {
+		objPaymentReminderResponse = new PaymentReminderResponseBean();
+		objPaymentReminderResponse.setCode("error");
+		objPaymentReminderResponse.setMessage(getText("common_error"));
+		int batchId = Integer.parseInt(request.getParameter("batchId"));
+		String status = request.getParameter("status");
+		String query="";
+		if(status.equalsIgnoreCase("A")){
+			query="SELECT cust_code,cust_name,email_id,send_status,remark,date FROM email_record "
+					+ "where batch_id="+batchId+" order by cust_code;";
+		}else if (status.equalsIgnoreCase("Y")||status.equalsIgnoreCase("N")||status.equalsIgnoreCase("F")) {
+			query="SELECT cust_code,cust_name,email_id,send_status,remark,date FROM email_record "
+					+ "where batch_id="+batchId+" and send_status='"+status+"' order by cust_code;";
+		}
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			ArrayList<PaymentReminderFileBean> customerList=new ArrayList<PaymentReminderFileBean>();
+			customerList=objDao.getEmailLogCustomers(batchId, status,query);
+			objDao.closeAll();
+			objPaymentReminderResponse.setCode("success");
+			objPaymentReminderResponse.setMessage(getText("email_log_detail_success"));
+			objPaymentReminderResponse.setFileLogList(customerList);
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;

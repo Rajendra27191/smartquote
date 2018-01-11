@@ -123,7 +123,7 @@ $scope.init=function(){
 
 // $rootScope.initAuotoComplete();
 
-$scope.init();
+// $scope.init();
 
 
 //===============Format chart data======
@@ -216,7 +216,7 @@ $scope.handleGetChartDataDoneResponse=function(data){
 			$scope.agent=angular.copy($scope.agentData);
 			}else{
 			$scope.noDataFound=true;	
-			$scope.callOutData1= angular.copy(response);
+			$scope.callOutData1= angular.copy(data);
 			};
 		}
 	}else{

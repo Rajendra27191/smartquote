@@ -81,8 +81,9 @@ $scope.uploadFile = function(){
 	      }   
     }
 };
-
-//============ Unload File===============
+// ======================================
+//============ Unload File ==============
+// ======================================
 $scope.search={};
 $scope.fileList=[];
 $scope.getLoadedFileList = function(){
@@ -165,11 +166,13 @@ var cleanupEventUnloadFileNotDone = $scope.$on("UnloadFileNotDone", function(eve
   $rootScope.hideSpinner();
 });
 
+// ==========================================
 // ================ Send Reminder============
+// ==========================================
 $scope.fileDetailList=[];
+$scope.initSendReminderLastCall="";
 function initSend () {
 $scope.search={};
-$scope.initSendReminderLastCall="";
 $scope.customerDetailList=[];
 $scope.duration={id:0,value:'all'}
 $scope.reminderStatus=[
@@ -190,6 +193,7 @@ $scope.rows = { isAllSelected : false,};
 }
 
 $scope.initSendReminder=function(){
+  $scope.fileDetailList=[];
   $rootScope.showSpinner();
   SQPaymentReminderFactory.GetFileDetailList();
 };
@@ -198,7 +202,8 @@ $scope.handleGetFileDetailListDoneResponse=function(data){
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
-        $scope.fileDetailList=data.fileList;;
+        $scope.fileDetailList=data.fileLogList;;
+        $scope.initSendReminderLastCall="getFileDetailList";
       }else{
         $rootScope.alertError(data.message);
       }
@@ -258,8 +263,9 @@ $scope.handleGetCustomerDetailFromFileDoneResponse=function(data){
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
-        $scope.customerDetailListTemp= angular.copy(data.fileList);;
-        $scope.customerDetailList=angular.copy(data.fileList);;
+        $scope.customerDetailListTemp= angular.copy(data.fileLogList);;
+        $scope.customerDetailList=angular.copy(data.fileLogList);;
+         $scope.initSendReminderLastCall="getCustomerDetailFromFile";
         showCustomerInfoView();
       }else{
         $rootScope.alertError(data.message);
@@ -276,7 +282,43 @@ var cleanupEventGetCustomerDetailFromFileNotDone = $scope.$on("GetCustomerDetail
   $rootScope.alertServerError("Server error");
   $rootScope.hideSpinner();
 });
-//========================================================================================
+//==================================
+$scope.changeEmailId=function(customer,invalid){
+  console.log(customer)
+  console.log(invalid)
+  if (invalid) {
+  }else{
+    if (customer) {
+    if (customer.email==""||customer.email==null) {
+    }else{
+    $rootScope.showSpinner();  
+    SQPaymentReminderFactory.ChangeEmailId(customer.customerCode,customer.fileId,customer.email);
+    }
+    };
+  };
+};
+$scope.handleChangeEmailIdDoneResponse=function(data){
+  $scope.productDetails={};
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+        console.log(data)
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventChangeEmailIdDone = $scope.$on("ChangeEmailIdDone", function(event, message){
+  $scope.handleChangeEmailIdDoneResponse(message);      
+});
+
+var cleanupEventChangeEmailIdNotDone = $scope.$on("ChangeEmailIdNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+//==================================
 $scope.editing = [];
 $scope.selectedRows = []; 
 $scope.editEmailBtnClicked=function(list,index){
@@ -339,7 +381,9 @@ console.log($scope.selectedRows)
 console.log("$scope.selectedRows : "+$scope.selectedRows.length)
 };
 
+//===========================================================
 //======================= Email Format ======================
+//===========================================================
 $scope.form={};
 $scope.disabledSendBtn=true;
 $scope.compose=null;
@@ -370,6 +414,7 @@ $scope.handleGetEmailFormatTemplateDoneResponse=function(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
       $scope.showEmailFormatModal();
+       $scope.initSendReminderLastCall="getEmailFormatTemplate";
       // console.log(data)
       $scope.assignEmailFormat(data)
       }else{
@@ -415,12 +460,8 @@ $scope.form.emailFormat.submitted=true;
 //======================================================
 
 $scope.resetSendRemider=function(){
-   // $scope.sendReminderClicked();
-initSend();
-// $scope.form={};
 $scope.disabledSendBtn=true;
 $scope.compose=null;
-// $scope.emailConfigList=[];
 $scope.form.customerList.submitted=false;
 $scope.form.emailFormat.submitted=false;
 $scope.form.customerList.$setPristine();
@@ -448,9 +489,9 @@ $scope.sendMailBtnClicked=function(){
   $scope.getAllSelectedRows();
   if ($scope.selectedRows.length>0) {
     if ($scope.compose!=null) {
-      console.log($scope.jsonForSendMail());
+      // console.log($scope.jsonForSendMail());
+      $rootScope.showSpinner();
       SQPaymentReminderFactory.SendReminder($scope.jsonForSendMail());
-
     };
   }else{
     // console.log("please select customer")
@@ -470,7 +511,9 @@ $scope.handleSendReminderDoneResponse=function(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
         $rootScope.alertSuccess(data.message);
+        initSend();
         $scope.resetSendRemider();
+        $scope.initSendReminderLastCall="sendReminder";
       }else{
         $rootScope.alertError(data.message);
       }
@@ -487,8 +530,104 @@ var cleanupEventSendReminderNotDone = $scope.$on("SendReminderNotDone", function
   $rootScope.hideSpinner();
 });
 
+$scope.cancelSendReminderBtnClick=function(){
+showFileView ();
+$scope.resetSendRemider();
+};
 
+//=======================================================
+//================  Email Log Code ======================
+//=======================================================
+function initEmailLog () {
+$scope.emailLogLastCall="";
+$scope.emailLogList=[];
+}
+$scope.rowChange=function(){
+  console.log("rowChange")
+};
 
+$scope.getEmailLog=function(){
+  $rootScope.showSpinner();
+  SQPaymentReminderFactory.GetEmailLogList();
+};
+
+$scope.handleGetEmailLogListDoneResponse=function(data){
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+      $scope.emailLogLastCall="getEmailLogList";
+      $scope.emailLogList=data.emailLogList;
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventGetEmailLogListDone = $scope.$on("GetEmailLogListDone", function(event, message){
+  $scope.handleGetEmailLogListDoneResponse(message);      
+});
+
+var cleanupEventGetEmailLogListNotDone = $scope.$on("GetEmailLogListNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+//===================================
+$scope.emailLogTabClick=function(){
+  initEmailLog();
+  $scope.getEmailLog();
+};
+//===================================
+$scope.showEmailLogDetailModal=function(){
+$('#emailLogDetailModal').modal({ keyboard: false,backdrop: 'static',show: true});
+};
+//===================================
+$scope.getEmailLogDetails=function(batchId,status){
+  $rootScope.showSpinner();
+  SQPaymentReminderFactory.GetEmailLogDetails(batchId,status);
+};
+$scope.handleGetEmailLogDetailsDoneResponse=function(data){
+  $scope.emailLogDetailList=[];
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+      $scope.emailLogLastCall="getEmailLogDetailList";
+      $scope.emailLogDetailList=data.fileLogList;
+      if ($scope.emailLogDetailList.length>0) {
+      $scope.showEmailLogDetailModal();
+      } else{
+      $rootScope.alertError("Sorry no record found");  
+      };
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventGetEmailLogDetailsDone = $scope.$on("GetEmailLogDetailsDone", function(event, message){
+  $scope.handleGetEmailLogDetailsDoneResponse(message);      
+});
+
+var cleanupEventGetEmailLogDetailsNotDone = $scope.$on("GetEmailLogDetailsNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
+$scope.getLogDetail=function(emailLog,status){
+  $scope.fileName=emailLog.fileName;
+  if (status=="A") {
+  $scope.sendStatus="All";
+  }else if(status=="Y"){
+  $scope.sendStatus="Sent";
+  }else if(status=="N"){
+  $scope.sendStatus="Pending";
+  }else if(status=="F"){
+  $scope.sendStatus="Failed";
+  };
+  $scope.getEmailLogDetails(emailLog.batchId,status);
+};
+//======================================
 
 
 

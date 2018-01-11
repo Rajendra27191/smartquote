@@ -79,11 +79,7 @@ angular.module('sq.SmartQuoteDesktop')
       controller:'SQViewEditQuoteController',
       templateUrl: 'SQ/UserHome/Quote/views/sq.view_edit_quote.view.html',
     })
-   // .state('paymentloadfile', {//paymentReminderLoadFile
-   //   controller:'SQPaymentReminderController',
-   //   templateUrl:'SQ/UserHome/PaymentReminder/views/sq.load_file.view.html',
-   //  })
-     .state('paymentreminder', {
+    .state('paymentreminder', {
       // url:'/smartquote',
       abstract: true,
       controller:'SQPaymentReminderController',
@@ -99,9 +95,16 @@ angular.module('sq.SmartQuoteDesktop')
         },
         'sendreminder-view' : {
           templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.send_reminder.view.html',
+        },
+        'emaillog-view' : {
+          templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.email_log.view.html',
+        },
+        'abortemail-view' : {
+          templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.abort_email.view.html',
         }
       }
     })
+  
   
 
 }]);

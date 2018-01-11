@@ -1,9 +1,8 @@
-/action
-/connection
 /dao
 /email
 /interceptor
 /pojo
 /responseBeans
 /responseStructure
-/FileLogBean.class
+/action
+/connection

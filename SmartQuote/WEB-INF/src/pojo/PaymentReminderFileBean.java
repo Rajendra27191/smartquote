@@ -13,6 +13,7 @@ private double march90Days;
 private String email;
 private String sendStatus;
 private String remark;
+private String date;
 
 public int getFileId() {
 	return fileId;
@@ -80,6 +81,13 @@ public String getRemark() {
 public void setRemark(String remark) {
 	this.remark = remark;
 }
+public String getDate() {
+	return date;
+}
+public void setDate(String date) {
+	this.date = date;
+}
+
 
 //File Load Status
 private String fileName;

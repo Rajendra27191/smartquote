@@ -603,5 +603,26 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getEmailLogList" class="action.PaymentReminderAction"
+			method="getEmailLogList">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="updateCustomerEmailId" class="action.PaymentReminderAction"
+			method="updateCustomerEmailId">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getEmailLogDetail" class="action.PaymentReminderAction"
+			method="getEmailLogDetail">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

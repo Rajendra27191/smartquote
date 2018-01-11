@@ -14,6 +14,9 @@ angular.module('sq.SmartQuoteDesktop')
       getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
       getEmailFormatAPI:$resource($rootScope.projectName+'/getEmailFormat', {}, {getEmailFormatMethod :{method: 'GET'}}),
 
+      getEmailLogListAPI:$resource($rootScope.projectName+'/getEmailLogList', {}, {getEmailLogListMethod :{method: 'POST'}}),
+      changeEmailIdAPI:$resource($rootScope.projectName+'/updateCustomerEmailId?custCode=:custCode&fileId=:fileId&email=:email', {}, {changeEmailIdMethod :{method: 'GET'},params:{custCode:'@custCode',fileId:'@fileId',email:'@email'}}),
+      getEmailLogDetailAPI:$resource($rootScope.projectName+'/getEmailLogDetail?batchId=:batchId&status=:status', {}, {getEmailLogDetailMethod :{method: 'GET'},params:{batchId:'@batchId',status:'@status'}}),
 
     };
     var objFactory = {};
@@ -25,14 +28,14 @@ angular.module('sq.SmartQuoteDesktop')
 objFactory.GetFileList = function (){
 // console.log("GetQuoteView")
 ReminderFactory.getFileListAPI.getFileListMethod(function(success){
-console.log(success);
+// console.log(success);
 if (success.code=="sessionTimeOut") {
   $rootScope.$broadcast('SessionTimeOut', success);   
 }else{
   $rootScope.$broadcast('GetFileListDone', success); 
 }
 },function(error){
-console.log(error);
+// console.log(error);
 $rootScope.$broadcast('GetFileListNotDone', error);
 });
 };
@@ -54,14 +57,14 @@ $rootScope.$broadcast('UnloadFileNotDone', error);
 objFactory.GetFileDetailList = function (){
 // console.log("GetQuoteView")
 ReminderFactory.getFileDetailListAPI.getFileDetailListMethod(function(success){
-console.log(success);
+// console.log(success);
 if (success.code=="sessionTimeOut") {
   $rootScope.$broadcast('SessionTimeOut', success);   
 }else{
   $rootScope.$broadcast('GetFileDetailListDone', success); 
 }
 },function(error){
-console.log(error);
+// console.log(error);
 $rootScope.$broadcast('GetFileDetailListNotDone', error);
 });
 };
@@ -69,14 +72,14 @@ $rootScope.$broadcast('GetFileDetailListNotDone', error);
 objFactory.GetCustomerDetailFromFile = function (name,id){
 // console.log("GetQuoteView")
 ReminderFactory.getCustomerDetailAPI.getCustomerDetailMethod({name:name,id:id},function(success){
-console.log(success);
+// console.log(success);
 if (success.code=="sessionTimeOut") {
   $rootScope.$broadcast('SessionTimeOut', success);   
 }else{
   $rootScope.$broadcast('GetCustomerDetailFromFileDone', success); 
 }
 },function(error){
-console.log(error);
+// console.log(error);
 $rootScope.$broadcast('GetCustomerDetailFromFileNotDone', error);
 });
 };
@@ -84,20 +87,20 @@ $rootScope.$broadcast('GetCustomerDetailFromFileNotDone', error);
 objFactory.GetEmailFormat = function (name,id){
 // console.log("GetQuoteView")
 ReminderFactory.getEmailFormatAPI.getEmailFormatMethod(function(success){
-console.log(success);
+// console.log(success);
 if (success.code=="sessionTimeOut") {
   $rootScope.$broadcast('SessionTimeOut', success);   
 }else{
   $rootScope.$broadcast('GetEmailFormatTemplateDone', success); 
 }
 },function(error){
-console.log(error);
+// console.log(error);
 $rootScope.$broadcast('GetEmailFormatTemplateNotDone', error);
 });
 };
 
 objFactory.SendReminder = function (sendReminderDetail){
-  console.log("sendReminderDetail")
+  // console.log("sendReminderDetail")
   data = $.param({sendReminderDetail:sendReminderDetail}); 
   $http.post($rootScope.projectName+'/sendReminder', data, config)
   .success(function (data, status, headers, config) {
@@ -114,8 +117,50 @@ objFactory.SendReminder = function (sendReminderDetail){
   });
 
 };
+//======================================================
+objFactory.ChangeEmailId = function (custCode,fileId,email){
+// console.log("GetQuoteView")
+ReminderFactory.changeEmailIdAPI.changeEmailIdMethod({custCode:custCode,fileId:fileId,email:email},function(success){
+// console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('ChangeEmailIdDone', success); 
+}
+},function(error){
+// console.log(error);
+$rootScope.$broadcast('ChangeEmailIdNotDone', error);
+});
+};
 
+objFactory.GetEmailLogList = function (){
+// console.log("GetQuoteView")
+ReminderFactory.getEmailLogListAPI.getEmailLogListMethod(function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetEmailLogListDone', success); 
+}
+},function(error){
+// console.log(error);
+$rootScope.$broadcast('GetEmailLogListNotDone', error);
+});
+};
 
+objFactory.GetEmailLogDetails = function (batchId,status){
+ReminderFactory.getEmailLogDetailAPI.getEmailLogDetailMethod({batchId:batchId,status:status},function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetEmailLogDetailsDone', success); 
+}
+},function(error){
+// console.log(error);
+$rootScope.$broadcast('GetEmailLogDetailsNotDone', error);
+});
+};
 
 return objFactory;
 }])

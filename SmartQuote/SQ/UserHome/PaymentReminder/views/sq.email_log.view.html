@@ -1,0 +1,118 @@
+<style type="text/css">
+	.form-control{
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+	}
+	.table>thead>tr>th {
+    padding: 5px;
+	}
+	#status:hover{
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: 1px solid #adadad;
+	}
+/*	div {
+    height:50px;
+}
+.short-div {
+    height:25px;
+}*/
+</style>
+<div class="row">
+<div class="col-md-12">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Email Log</label></center></div>
+	</div>
+	<br>
+    <table  class="table table-bordered table-striped  table-responsive">
+	<!-- <caption>- : Emial Log : -</caption> -->
+	<thead>
+		<tr>
+			<th rowspan="2" style="padding:25px;"><center>Batch Id</center></th>
+			<th rowspan="2" style="padding:25px;"><center>File Name</center></th>
+			<th colspan="4"><center>Email Notification Details (Payment Reminder)</center></th>
+		</tr>
+		<tr>
+			<th><center>Total</center></th>
+			<th><center>Sent</center></th>
+			<th><center>Pending</center></th>
+			<th><center>Fail</center></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="emailLog in emailLogList | filter:search " ng-if="emailLogList.length>0" >
+			<td><center>{{emailLog.batchId}}</center></td>	
+			<td><center>{{emailLog.fileName}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'A')"><center>{{emailLog.total}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'Y')"><center>{{emailLog.sent}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'N')"><center>{{emailLog.pending}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'F')"><center>{{emailLog.fail}}</center></td>	
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>
+
+<!-- Modal -->
+<div id="emailLogDetailModal" class="modal fade" role="dialog">
+  <div class="modal-dialog" style="width: 95%;">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+        <h4 class="modal-title">
+        <center> Detail</center>	
+        </h4>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+		<div class="col-md-12">
+		<div class="col-md-2">
+			<label>Send Status</label>: <span data-ng-bind="sendStatus"></span>
+		</div>
+		<div class="col-md-2">
+			<label>File Name</label>: <span data-ng-bind="fileName"></span>
+		</div>
+		<div class="col-md-4" ng-if="sendStatus=='Failed'">
+			<label><a href="#" ng-click=""> Resend </a></label>
+		</div>
+		</div>
+		</div>
+		<br>
+		<table  class="table table-bordered table-striped  table-responsive">
+		<thead>
+			<tr>
+				<th><center>Customer Code</center></th>
+				<th><center>Customer Name</center></th>
+				<th><center>Email Id</center></th>
+				<th><center>Send Status</center></th>
+				<th><center>Remark</center></th>
+				<th><center>DateTime</center></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="customer in emailLogDetailList | filter:search " ng-if="emailLogDetailList.length>0" >
+				<td><center>{{customer.customerCode}}</center></td>	
+				<td><center>{{customer.customerName}}</center></td>	
+				<td><center>{{customer.email}}</center></td>	
+				<td><center>{{customer.sendStatus}}</center></td>	
+				<td><center>{{customer.remark}}</center></td>	
+				<td><center>{{customer.date}}</center></td>	
+			</tr>
+		</tbody>
+		</table>
+      </div>
+      <div class="modal-footer">
+      	<div class="row row-control">
+		<div class="col-md-10"></div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-block btn-default"  data-dismiss="modal">Close</button>
+		</div>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
