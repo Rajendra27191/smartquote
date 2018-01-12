@@ -35,8 +35,8 @@ td .form-control {
 </div>
 </div> -->
 	<div class="col-md-10 col-md-offset-1">
-	<table  class="table table-bordered table-striped  table-responsive">
-	<caption>- : Existing Files : -</caption>
+	<table  class="table table-striped  table-responsive">
+	<caption>- : Uploaded Files : -</caption>
 	<thead>
 		<tr>
 			<th><center>Sr No</center></th>
@@ -162,7 +162,8 @@ td .form-control {
 			<!-- <th><center>email</center></th> -->
 			<th>
 				<center>
-					<input type="checkbox" ng-model="rows.isAllSelected" ng-init="rows.isAllSelected=false;" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
+					<input type="checkbox" ng-model="rows.isAllSelected" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
+					<!-- ng-init="rows.isAllSelected=false;"  -->
 				</center>
 			</th>
 			
@@ -209,7 +210,7 @@ td .form-control {
 			<!-- <th><center>email</center></th> -->
 			<th>
 				<center>
-					<input type="checkbox" ng-model="rows.isAllSelected" ng-init="rows.isAllSelected=false;" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
+					<input type="checkbox" ng-model="rows.isAllSelected" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAll()">
 				</center>
 			</th>
 			

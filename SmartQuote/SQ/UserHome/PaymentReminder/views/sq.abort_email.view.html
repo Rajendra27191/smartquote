@@ -1,0 +1,65 @@
+<style type="text/css">
+	.table>tbody>tr>td {
+    padding: 5px;
+}
+</style>
+<div>
+<div class="row">
+<div class="col-md-12"><center><label class="main-label">Abort Email (PR)</label></center></div>
+</div>
+<div class="row" ng-if="pendingEmailList.length>0">
+<div class="col-md-12">
+<table  class="table table-striped  table-responsive" >
+	<caption>- : Pending mails : -</caption>
+	<thead>
+		<tr>
+			<th><center>Date</center></th>
+			<th>Customer Code</th>
+			<th>Customer Name</th>
+			<th>Email</th>
+			<th>
+				<center>
+				<input type="checkbox" ng-model="rowsAbort.isAllSelected" style="height: 15px; width: 15px;cursor:pointer;" ng-click="toggleAllAbort()">
+				</center>
+			</th>
+			<!-- <th><center>Action</center></th> -->
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="email in pendingEmailList | filter:search " >
+			<td><center>{{email.date}}</center></td>
+			<td>{{email.customerCode}}</td>
+			<td>{{email.customerName}}</td>
+			<td>{{email.email}}</td>
+			<td>
+				<center>
+					<input type="checkbox" name="quote" ng-model="email.selected" ng-init="email.selected=false;" ng-change="optionToggledAbort()" style="height: 15px; width: 15px;cursor:pointer;" >
+				</center>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div class="row">
+<div class="col-md-12">
+<div class="col-md-10"></div>
+<div class="col-md-2" style="padding-right: 0px;">
+		<button  class="btn btn-default btn-block" style="padding: 2px 6px;" ng-click="abortMailBtnClicked()" tooltip-placement="top" uib-tooltip="click to open file">
+		<i class="fa fa-ban" aria-hidden="true" style="color:red;"></i> Abort
+		</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+ <div ng-if="!pendingEmailList.length>0" style="padding:40px; opacity: .8;color: rgb(80, 74, 74);letter-spacing: 1px;" class="col-md-offset-2 col-md-8 ">
+        <div class="col-md-12">
+          <div class="well well-lg">
+            <center>
+              <p style="font-size: 14px;"><b>No Pending Mails Available To Abort. </b></p>
+            </center>
+          </div>
+        </div>
+  </div>

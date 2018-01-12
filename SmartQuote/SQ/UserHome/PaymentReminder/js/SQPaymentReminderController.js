@@ -495,14 +495,12 @@ $scope.sendMailBtnClicked=function(){
     };
   }else{
     // console.log("please select customer")
-    $rootScope.SQNotify("Please Select Customer", 'error')
+    $rootScope.alertError("Please Select Customer")
   }
   }else{
 
   };
 }
-
-
 };
 
 $scope.handleSendReminderDoneResponse=function(data){
@@ -615,6 +613,11 @@ var cleanupEventGetEmailLogDetailsNotDone = $scope.$on("GetEmailLogDetailsNotDon
 });
 
 $scope.getLogDetail=function(emailLog,status){
+  $scope.emailLogData=null;
+  $scope.emailLogData={
+    batchId:emailLog.batchId,
+    fileName:emailLog.fileName
+  }
   $scope.fileName=emailLog.fileName;
   if (status=="A") {
   $scope.sendStatus="All";
@@ -625,20 +628,183 @@ $scope.getLogDetail=function(emailLog,status){
   }else if(status=="F"){
   $scope.sendStatus="Failed";
   };
+
   $scope.getEmailLogDetails(emailLog.batchId,status);
 };
 //======================================
+$scope.resendReminder=function(batchId){
+  $rootScope.showSpinner();
+  SQPaymentReminderFactory.ResendReminder(batchId);
+};
+$scope.handleResendReminderDoneResponse=function(data){
+  $scope.emailLogDetailList=[];
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+      $scope.emailLogLastCall="resendReminder";
+      $('#emailLogDetailModal').modal('hide');
+      $scope.emailLogTabClick();
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventResendReminderDone = $scope.$on("ResendReminderDone", function(event, message){
+  $scope.handleResendReminderDoneResponse(message);      
+});
+
+var cleanupEventResendReminderNotDone = $scope.$on("ResendReminderNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+$scope.resendReminderClicked=function(batchId){
+if (batchId!=null) {
+$scope.resendReminder(batchId);
+};
+};
+//=======================================================
+//================  Abort Email Code ======================
+//=======================================================
+function initAbortEmail () {
+$scope.abortEmailLast="";
+$scope.pendingEmailList=[];
+$scope.rowsAbort = { isAllSelected : false,};
+}
+
+$scope.getPendingEmailList=function(){
+  $rootScope.showSpinner();
+  SQPaymentReminderFactory.GetPendingEmailList();
+};
+
+$scope.handleGetPendingEmailListDoneResponse=function(data){
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+        $scope.pendingEmailList=[];
+        $scope.pendingEmailList=data.fileLogList;
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventGetPendingEmailListDone = $scope.$on("GetPendingEmailListDone", function(event, message){
+  $scope.handleGetPendingEmailListDoneResponse(message);      
+});
+
+var cleanupEventGetPendingEmailListNotDone = $scope.$on("GetPendingEmailListNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+//===================================
+$scope.abortEmailLogTabClick=function(){
+  initAbortEmail();
+  $scope.getPendingEmailList();
+};
+//===================================
+$scope.toggleAllAbort = function() {
+   // console.log($scope.rowsAbort.isAllSelected)
+   var toggleStatus = $scope.rowsAbort.isAllSelected;
+   angular.forEach($scope.pendingEmailList, function(itm){ itm.selected = toggleStatus; });
+}
+
+$scope.optionToggledAbort = function(){
+var selectedList=[];
+ angular.forEach($scope.pendingEmailList, function(itm){ 
+  if (itm.selected) {
+    var item=itm;
+    selectedList.push(item);
+  }
+});
+if (selectedList.length==$scope.pendingEmailList.length) {
+  $scope.rowsAbort.isAllSelected=true;
+} else{
+  $scope.rowsAbort.isAllSelected=false;
+}; 
+}
+
+$scope.getAllSelectedRowsAbort = function() {
+$scope.selectedRowsForAbort = []; 
+var selectedRows = $filter("filter")($scope.pendingEmailList, {
+  selected: true
+}, true);
+angular.forEach(selectedRows, function(value, key){
+  var cust = value;
+  $scope.selectedRowsForAbort.push(cust);
+});
+};
 
 
+$scope.jsonForAbortMail=function(){
+var sendReminderDetail={};
+sendReminderDetail={
+'customerArrayList':$scope.selectedRowsForAbort,
+}
+return angular.toJson(sendReminderDetail);
+};
 
+$scope.abortMailBtnClicked=function(){  
+  $scope.getAllSelectedRowsAbort();
+  if ($scope.selectedRowsForAbort.length>0) {
+      // console.log($scope.jsonForSendMail());
+      // $rootScope.showSpinner();
+      SQPaymentReminderFactory.AbortEmail($scope.jsonForAbortMail());
+  }else{
+    $rootScope.alertError("Please Select Mail To Abort")
+  }
+};
+
+$scope.handleAbortEmailDoneResponse=function(data){
+  $scope.productDetails={};
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+        console.log(data)
+        $rootScope.alertSuccess(data.message);
+        $scope.abortEmailLogTabClick();
+
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+
+var cleanupEventAbortEmailDone = $scope.$on("AbortEmailDone", function(event, message){
+  $scope.handleAbortEmailDoneResponse(message);      
+});
+
+var cleanupEventAbortEmailNotDone = $scope.$on("AbortEmailNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
+//===================================
 $scope.$on('$destroy', function(event, message) {
-cleanupEventUnloadFileDone();
-cleanupEventUnloadFileNotDone();
 cleanupEventGetFileListDone();
 cleanupEventGetFileListNotDone();
-cleanupEventGetEmailFormatTemplateDone();
-cleanupEventGetEmailFormatTemplateNotDone();
+cleanupEventUnloadFileDone();
+cleanupEventUnloadFileNotDone();
+cleanupEventGetFileDetailListDone();
+cleanupEventGetFileDetailListNotDone();
 cleanupEventGetCustomerDetailFromFileDone();
 cleanupEventGetCustomerDetailFromFileNotDone();
+cleanupEventChangeEmailIdDone();
+cleanupEventChangeEmailIdNotDone();
+cleanupEventGetEmailFormatTemplateDone();
+cleanupEventGetEmailFormatTemplateNotDone();
+cleanupEventSendReminderDone();
+cleanupEventSendReminderNotDone();
+cleanupEventGetEmailLogListDone();
+cleanupEventGetEmailLogListNotDone();
+cleanupEventGetEmailLogDetailsDone();
+cleanupEventGetEmailLogDetailsNotDone();
+cleanupEventResendReminderDone();
+cleanupEventResendReminderNotDone();
+cleanupEventGetPendingEmailListDone();
+cleanupEventGetPendingEmailListNotDone();
+
 });
 });

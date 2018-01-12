@@ -20,12 +20,12 @@
 }*/
 </style>
 <div class="row">
-<div class="col-md-12">
-	<div class="row">
-	<div class="col-md-12"><center><label class="main-label">Email Log</label></center></div>
-	</div>
-	<br>
-    <table  class="table table-bordered table-striped  table-responsive">
+<div class="col-md-12"><center><label class="main-label">Email Log</label></center></div>
+</div>
+
+<div class="row" ng-if="emailLogList.length>0">
+<div class="col-md-12">	
+    <table  class="table table-bordered table-striped  table-responsive"  >
 	<!-- <caption>- : Emial Log : -</caption> -->
 	<thead>
 		<tr>
@@ -41,17 +41,28 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="emailLog in emailLogList | filter:search " ng-if="emailLogList.length>0" >
+		<tr ng-repeat="emailLog in emailLogList | filter:search " >
 			<td><center>{{emailLog.batchId}}</center></td>	
 			<td><center>{{emailLog.fileName}}</center></td>	
-			<td id ="status" ng-click="getLogDetail(emailLog,'A')"><center>{{emailLog.total}}</center></td>	
-			<td id ="status" ng-click="getLogDetail(emailLog,'Y')"><center>{{emailLog.sent}}</center></td>	
-			<td id ="status" ng-click="getLogDetail(emailLog,'N')"><center>{{emailLog.pending}}</center></td>	
-			<td id ="status" ng-click="getLogDetail(emailLog,'F')"><center>{{emailLog.fail}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'A')" ><center tooltip-placement="top" uib-tooltip="click to open all records">{{emailLog.total}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'Y')" ><center tooltip-placement="top" uib-tooltip="click to open sent records">{{emailLog.sent}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'N')" ><center tooltip-placement="top" uib-tooltip="click to open pending records">{{emailLog.pending}}</center></td>	
+			<td id ="status" ng-click="getLogDetail(emailLog,'F')" ><center tooltip-placement="top" uib-tooltip="click to open failed records">{{emailLog.fail}}</center></td>	
 		</tr>
 	</tbody>
 </table>
 </div>
+</div>
+
+
+<div ng-if="!emailLogList.length>0" style="padding:40px; opacity: .8;color: rgb(80, 74, 74);letter-spacing: 1px;" class="col-md-offset-2 col-md-8 ">
+    <div class="col-md-12">
+      <div class="well well-lg">
+        <center>
+          <p style="font-size: 14px;"><b>No Log Present. </b></p>
+        </center>
+      </div>
+    </div>
 </div>
 
 <!-- Modal -->
@@ -72,10 +83,10 @@
 			<label>Send Status</label>: <span data-ng-bind="sendStatus"></span>
 		</div>
 		<div class="col-md-2">
-			<label>File Name</label>: <span data-ng-bind="fileName"></span>
+			<label>File Name</label>: <span data-ng-bind="emailLogData.fileName"></span>
 		</div>
 		<div class="col-md-4" ng-if="sendStatus=='Failed'">
-			<label><a href="#" ng-click=""> Resend </a></label>
+			<label><a href="#" ng-click="resendReminderClicked(emailLogData.batchId)" tooltip-placement="top" uib-tooltip="click to resend reminder mail"> Resend Reminder</a></label>
 		</div>
 		</div>
 		</div>

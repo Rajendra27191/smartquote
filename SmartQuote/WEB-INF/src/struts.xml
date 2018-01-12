@@ -21,7 +21,8 @@
 
 		<global-results>
 			<result name="sessionTimeOut" type="json">
-				<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is expired","result": </param>
+				<param name="wrapPrefix">{"code":"sessionTimeOut","message":"Session is
+					expired","result": </param>
 				<param name="root">""</param>
 				<param name="wrapSuffix">}</param>
 				<param name="excludeNullProperties">true</param>
@@ -42,7 +43,8 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="checkSessionActive" class="action.LoginAction" method="checkSessionActive">
+		<action name="checkSessionActive" class="action.LoginAction"
+			method="checkSessionActive">
 			<result name="success" type="json">
 				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
@@ -478,7 +480,7 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		
+
 		<action name="changeQuoteStatus" class="action.QuoteAction"
 			method="changeQuoteStatus">
 			<result name="success" type="json">
@@ -548,7 +550,8 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-		<action name="getChartData" class="action.DashBoardAction" method="getChartData">
+		<action name="getChartData" class="action.DashBoardAction"
+			method="getChartData">
 			<result name="success" type="json">
 				<param name="root">objChartResponseBeans</param>
 				<param name="ignoreHierarchy">false</param>
@@ -621,6 +624,27 @@
 			method="getEmailLogDetail">
 			<result name="success" type="json">
 				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="resendReminder" class="action.PaymentReminderAction"
+			method="resendReminder">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getPendingEmailList" class="action.PaymentReminderAction"
+			method="getPendingEmailList">
+			<result name="success" type="json">
+				<param name="root">objPaymentReminderResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="abortEmail" class="action.PaymentReminderAction"
+			method="abortEmail">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponseBean</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>

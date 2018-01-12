@@ -48,10 +48,9 @@ public class PaymentReminderDao {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	public int getFileIdFromFileLoadStatus() {
-		int id=0;
+		int id = 0;
 		String query = "SELECT ifnull(MAX(file_id),0) 'file_id' FROM file_load_status;";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -84,18 +83,18 @@ public class PaymentReminderDao {
 		return email;
 	}
 
-	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList,String fileName) {
+	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList, String fileName) {
 		boolean isFileUploaded = false;
 		int rowCount = 0;
 		String query = "Insert Ignore Into file_log (file_id,customer_code,customer_name,"
-				+ "total_amount,current_amount,30_amount,60_amount,90_amount,email,send_status,remark) " 
+				+ "total_amount,current_amount,30_amount,60_amount,90_amount,email,send_status,remark) "
 				+ "values (?,?,?,?,?,?,?,?,?,?,?);";
-		int fileId=getFileIdFromFileLoadStatus();
+		int fileId = getFileIdFromFileLoadStatus();
 		try {
 			pstmt = conn.prepareStatement(query);
 			final int batchSize = 50;
 			int count = 0;
-			
+
 			for (int i = 0; i < reminderList.size(); i++) {
 				pstmt.setInt(1, fileId);
 				pstmt.setString(2, reminderList.get(i).getCustomerCode());
@@ -105,13 +104,13 @@ public class PaymentReminderDao {
 				pstmt.setDouble(6, reminderList.get(i).getMay30Days());
 				pstmt.setDouble(7, reminderList.get(i).getApril60Days());
 				pstmt.setDouble(8, reminderList.get(i).getMarch90Days());
-				String custEmail="";
+				String custEmail = "";
 				custEmail = getCustomerEmail(reminderList.get(i).getCustomerCode());
-				if(custEmail!=null){
-				}else{
-				custEmail="";
+				if (custEmail != null) {
+				} else {
+					custEmail = "";
 				}
-//				System.out.println("custEmail :" + custEmail);
+				// System.out.println("custEmail :" + custEmail);
 				pstmt.setString(9, custEmail);
 				pstmt.setString(10, reminderList.get(i).getSendStatus());
 				pstmt.setString(11, reminderList.get(i).getRemark());
@@ -124,11 +123,11 @@ public class PaymentReminderDao {
 			}
 			pstmt.executeBatch(); // Insert remaining records
 			System.out.println("Remaining Executed...!");
-			boolean savedFileStatus=saveFileLoadStatus(fileId,fileName,rowCount);
+			boolean savedFileStatus = saveFileLoadStatus(fileId, fileName, rowCount);
 			if (savedFileStatus) {
 				isFileUploaded = true;
 			}
-			
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -139,11 +138,11 @@ public class PaymentReminderDao {
 		}
 		return isFileUploaded;
 	}
-	public boolean saveFileLoadStatus(int fileId,String fileName,int rowCount) {
+
+	public boolean saveFileLoadStatus(int fileId, String fileName, int rowCount) {
 		boolean isFileUploaded = false;
 		String query = "INSERT IGNORE INTO  file_load_status (file_id,file_name,load_date_time,rows,total,"
-				+ "current_total,30_total,60_total,90_total,reminder_status) "
-				+ "values(?,?,now(),?,?,?,?,?,?,?) ";
+				+ "current_total,30_total,60_total,90_total,reminder_status) " + "values(?,?,now(),?,?,?,?,?,?,?) ";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, fileId);
@@ -155,10 +154,10 @@ public class PaymentReminderDao {
 			pstmt.setString(7, "60 DAYS");
 			pstmt.setString(8, "90 DAYS");
 			pstmt.setString(9, "Not Send");
-			int i=pstmt.executeUpdate();
-			if(i>0)
-				isFileUploaded=true;
-			
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isFileUploaded = true;
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -169,16 +168,16 @@ public class PaymentReminderDao {
 		}
 		return isFileUploaded;
 	};
-	
+
 	public ArrayList<KeyValuePairBean> getFileList() {
-		ArrayList<KeyValuePairBean> objArrayList=null;
-		String query="SELECT file_id,file_name FROM  file_load_status;";
+		ArrayList<KeyValuePairBean> objArrayList = null;
+		String query = "SELECT file_id,file_name FROM  file_load_status;";
 		try {
-			pstmt=conn.prepareStatement(query);
-			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<KeyValuePairBean>();
-			while(rs.next()){
-				KeyValuePairBean objBean =new KeyValuePairBean();
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<KeyValuePairBean>();
+			while (rs.next()) {
+				KeyValuePairBean objBean = new KeyValuePairBean();
 				objBean.setCode(String.valueOf(rs.getInt("file_id")));
 				objBean.setKey(rs.getInt("file_id"));
 				objBean.setValue(rs.getString("file_name"));
@@ -189,25 +188,25 @@ public class PaymentReminderDao {
 		}
 		return objArrayList;
 	};
-	
-	public boolean unloadReminderFile(int fileId, String fileName){
-		boolean isUnload=false;
-		String query1="DELETE FROM file_log WHERE file_id=?; ";
-		String query2="DELETE FROM  file_load_status WHERE file_id=? AND file_name=?;";
+
+	public boolean unloadReminderFile(int fileId, String fileName) {
+		boolean isUnload = false;
+		String query1 = "DELETE FROM file_log WHERE file_id=?; ";
+		String query2 = "DELETE FROM  file_load_status WHERE file_id=? AND file_name=?;";
 		try {
-		pstmt=conn.prepareStatement(query1);
-		pstmt.setInt(1, fileId);
-		int i=pstmt.executeUpdate();
-		if (i>0) {
-			pstmt=conn.prepareStatement(query2);
+			pstmt = conn.prepareStatement(query1);
 			pstmt.setInt(1, fileId);
-			pstmt.setString(2, fileName);
-			int j=pstmt.executeUpdate();
-			if(j>0)
-				isUnload=true;
-				
-		}
-		
+			int i = pstmt.executeUpdate();
+			if (i > 0) {
+				pstmt = conn.prepareStatement(query2);
+				pstmt.setInt(1, fileId);
+				pstmt.setString(2, fileName);
+				int j = pstmt.executeUpdate();
+				if (j > 0)
+					isUnload = true;
+
+			}
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -218,19 +217,20 @@ public class PaymentReminderDao {
 		}
 		return isUnload;
 	}
+
 	public ArrayList<PaymentReminderFileBean> getFileDetailList() {
-		ArrayList<PaymentReminderFileBean> objArrayList=null;
-		String query="Select file_id,file_name,day(load_date_time)'day',monthname(load_date_time) 'month',year(load_date_time) 'year',"
+		ArrayList<PaymentReminderFileBean> objArrayList = null;
+		String query = "Select file_id,file_name,day(load_date_time)'day',monthname(load_date_time) 'month',year(load_date_time) 'year',"
 				+ "rows,reminder_status from  file_load_status;";
 		try {
-			pstmt=conn.prepareStatement(query);
-			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<PaymentReminderFileBean>();
-			while(rs.next()){
-				PaymentReminderFileBean objBean =new PaymentReminderFileBean();
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<PaymentReminderFileBean>();
+			while (rs.next()) {
+				PaymentReminderFileBean objBean = new PaymentReminderFileBean();
 				objBean.setFileId(rs.getInt("file_id"));
 				objBean.setFileName(rs.getString("file_name"));
-				objBean.setLoadDateTime(rs.getString("day")+" "+rs.getString("month")+" "+rs.getString("year"));
+				objBean.setLoadDateTime(rs.getString("day") + " " + rs.getString("month") + " " + rs.getString("year"));
 				objBean.setRows(rs.getInt("rows"));
 				objBean.setReminderStatus(rs.getString("reminder_status"));
 				objArrayList.add(objBean);
@@ -240,25 +240,25 @@ public class PaymentReminderDao {
 		}
 		return objArrayList;
 	};
-	public ArrayList<PaymentReminderFileBean> getCustomerDetailList(int fileId,String fileName) {
-		ArrayList<PaymentReminderFileBean> objArrayList=null;
-		String query="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,a.total_amount,a.current_amount,"
+
+	public ArrayList<PaymentReminderFileBean> getCustomerDetailList(int fileId, String fileName) {
+		ArrayList<PaymentReminderFileBean> objArrayList = null;
+		String query = "SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,a.total_amount,a.current_amount,"
 				+ "a.30_amount,a.60_amount,a.90_amount,ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
-				+ "FROM file_log a left outer join  file_load_status b "
-				+ "on a.file_id=? AND b.file_name=?;";
+				+ "FROM file_log a left outer join  file_load_status b " + "on a.file_id=? AND b.file_name=?;";
 		try {
-			pstmt=conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, fileId);
 			pstmt.setString(2, fileName);
 			System.out.println(pstmt);
-			rs=pstmt.executeQuery();
-			
-			objArrayList= new ArrayList<PaymentReminderFileBean>();
-			while(rs.next()){
-				PaymentReminderFileBean objBean =new PaymentReminderFileBean();
+			rs = pstmt.executeQuery();
+
+			objArrayList = new ArrayList<PaymentReminderFileBean>();
+			while (rs.next()) {
+				PaymentReminderFileBean objBean = new PaymentReminderFileBean();
 				objBean.setFileId(rs.getInt("file_id"));
 				objBean.setFileName(rs.getString("file_name"));
-//				System.out.println("CODE :: "+rs.getString("customer_code"));
+				// System.out.println("CODE :: "+rs.getString("customer_code"));
 				objBean.setCustomerCode(rs.getString("customer_code"));
 				objBean.setCustomerName(rs.getString("customer_name"));
 				objBean.setTotal(rs.getDouble("total_amount"));
@@ -278,13 +278,13 @@ public class PaymentReminderDao {
 	}
 
 	public EmailFormatBean getEmailFormatData() {
-		String query="SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
+		String query = "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
 				+ "WHERE email_id=1; ";
-		EmailFormatBean objBean= new EmailFormatBean();
+		EmailFormatBean objBean = new EmailFormatBean();
 		try {
-			pstmt=conn.prepareStatement(query);
-			rs=pstmt.executeQuery();
-			while(rs.next()){
+			pstmt = conn.prepareStatement(query);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
 				objBean.setHeader(rs.getString("header"));
 				objBean.setBody(rs.getString("body"));
 				objBean.setContactPerson(rs.getString("contact_person"));
@@ -298,19 +298,19 @@ public class PaymentReminderDao {
 		}
 		return objBean;
 	};
-	
+
 	public ArrayList<EmailConfigBean> getEmailConfigList() {
 		System.out.println("inside getEmailConfigList");
-		ArrayList<EmailConfigBean> objArrayList=null;
-		String query="Select config_id, email_id From email_config Where module='PR' AND flag='1';";
+		ArrayList<EmailConfigBean> objArrayList = null;
+		String query = "Select config_id, email_id From email_config Where module='PR' AND flag='1';";
 		try {
-			pstmt=conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 			System.out.println(pstmt);
-			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<EmailConfigBean>();
-			while(rs.next()){
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<EmailConfigBean>();
+			while (rs.next()) {
 				System.out.println("inside while");
-				EmailConfigBean objBean =new EmailConfigBean();
+				EmailConfigBean objBean = new EmailConfigBean();
 				objBean.setConfigId(rs.getInt("config_id"));
 				objBean.setEmailId(rs.getString("email_id"));
 				objArrayList.add(objBean);
@@ -321,15 +321,15 @@ public class PaymentReminderDao {
 		return objArrayList;
 	}
 
-	public boolean updateEmailData(String body){
-		boolean isUpdated=false;
-		String query="update email_data set body='"+body.replaceAll("'","\\\\'")+"' where email_id=1 ;";
+	public boolean updateEmailData(String body) {
+		boolean isUpdated = false;
+		String query = "update email_data set body='" + body.replaceAll("'", "\\\\'") + "' where email_id=1 ;";
 		try {
-			pstmt=conn.prepareStatement(query);
-			int i=pstmt.executeUpdate();
-			if(i>0)
-				isUpdated=true;
-			
+			pstmt = conn.prepareStatement(query);
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isUpdated = true;
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -340,9 +340,9 @@ public class PaymentReminderDao {
 		}
 		return isUpdated;
 	}
-	
+
 	public int getBatchIdFromEmailRecordStatus() {
-		int id=0;
+		int id = 0;
 		String query = "SELECT ifnull(MAX(batch_id),0) 'batch_id' FROM email_record;";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -356,16 +356,16 @@ public class PaymentReminderDao {
 		}
 		return ++id;
 	}
-	public boolean addCustomersIntoEmailRecord(SendReminderBean objSendReminderBean){
-		boolean isUpdated=false;
-		String query="replace into email_record(config_id,batch_id,file_id,cust_code,cust_name,total,"
-				+ "current,d30,d60,d90,email_id,send_status,due,remark,date)"
-				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now());";
+
+	public boolean addCustomersIntoEmailRecord(SendReminderBean objSendReminderBean) {
+		boolean isUpdated = false;
+		String query = "replace into email_record(config_id,batch_id,file_id,cust_code,cust_name,total,"
+				+ "current,d30,d60,d90,email_id,send_status,due,remark,date)" + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now());";
 		try {
-			pstmt=conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 			final int batchSize = 50;
 			int count = 0;
-			int batchId=getBatchIdFromEmailRecordStatus();
+			int batchId = getBatchIdFromEmailRecordStatus();
 			for (int i = 0; i < objSendReminderBean.getCustomerArrayList().size(); i++) {
 				pstmt.setInt(1, objSendReminderBean.getEmailFormat().getFrom());
 				pstmt.setInt(2, batchId);
@@ -379,18 +379,18 @@ public class PaymentReminderDao {
 				pstmt.setDouble(10, objSendReminderBean.getCustomerArrayList().get(i).getMarch90Days());
 				pstmt.setString(11, objSendReminderBean.getCustomerArrayList().get(i).getEmail());
 				pstmt.setString(12, "N");
-				pstmt.setString(13,objSendReminderBean.getDuration());
-				pstmt.setString(14,"");
+				pstmt.setString(13, objSendReminderBean.getDuration());
+				pstmt.setString(14, "");
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Batch Executed...!");
 					pstmt.executeBatch();
 				}
 			}
-		    pstmt.executeBatch(); // Insert remaining records
+			pstmt.executeBatch(); // Insert remaining records
 			System.out.println("Remaining Executed...!");
-				isUpdated=true;
-			
+			isUpdated = true;
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -401,20 +401,21 @@ public class PaymentReminderDao {
 		}
 		return isUpdated;
 	}
+
 	public ArrayList<EmailLogBean> getEmailLogArrayList() {
-		ArrayList<EmailLogBean> objArrayList=null;
-		String query="SELECT batch_id,f.file_id,f.file_name,count(batch_id) 'total',"
+		ArrayList<EmailLogBean> objArrayList = null;
+		String query = "SELECT batch_id,f.file_id,f.file_name,count(batch_id) 'total',"
 				+ "sum(case when send_status='Y' then 1 else 0 end) 'sent', "
 				+ "sum(case when send_status='N' then 1 else 0 end) 'pending', "
 				+ "sum(case when send_status='F' then 1 else 0 end) 'fail' "
 				+ "FROM email_record e,file_load_status f where f.file_id=e.file_id group by e.batch_id;";
 		try {
-			pstmt=conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 			System.out.println(pstmt);
-			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<EmailLogBean>();
-			while(rs.next()){
-				EmailLogBean objBean =new EmailLogBean();
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<EmailLogBean>();
+			while (rs.next()) {
+				EmailLogBean objBean = new EmailLogBean();
 				objBean.setBatchId(rs.getInt("batch_id"));
 				objBean.setFileId(rs.getInt("file_id"));
 				objBean.setFileName(rs.getString("file_name"));
@@ -431,16 +432,16 @@ public class PaymentReminderDao {
 	}
 
 	public boolean updateFileLogEmailId(String custCode, int fileId, String email) {
-		boolean isUpdated=false;
-		String query="UPDATE file_log set changed_email=? where customer_code=? AND file_id=?;";
+		boolean isUpdated = false;
+		String query = "UPDATE file_log set changed_email=? where customer_code=? AND file_id=?;";
 		try {
-			pstmt=conn.prepareStatement(query);
+			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, email);
 			pstmt.setString(2, custCode);
 			pstmt.setInt(3, fileId);
-			int i=pstmt.executeUpdate();
-			if(i>0)
-				isUpdated=true;
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isUpdated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -451,17 +452,17 @@ public class PaymentReminderDao {
 		}
 		return isUpdated;
 	}
-	public ArrayList<PaymentReminderFileBean> getEmailLogCustomers(int batchId,String status,String query) {
-		System.out.println("inside getEmailLogCustomers");
-		ArrayList<PaymentReminderFileBean> objArrayList=null;
-		String query1=query;
+
+	public ArrayList<PaymentReminderFileBean> getEmailLogCustomers(int batchId, String status, String query) {
+		ArrayList<PaymentReminderFileBean> objArrayList = null;
+		String query1 = query;
 		try {
-			pstmt=conn.prepareStatement(query1);
+			pstmt = conn.prepareStatement(query1);
 			System.out.println(pstmt);
-			rs=pstmt.executeQuery();
-			objArrayList= new ArrayList<PaymentReminderFileBean>();
-			while(rs.next()){
-				PaymentReminderFileBean objBean =new PaymentReminderFileBean();
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<PaymentReminderFileBean>();
+			while (rs.next()) {
+				PaymentReminderFileBean objBean = new PaymentReminderFileBean();
 				objBean.setCustomerCode(rs.getString("cust_code"));
 				objBean.setCustomerName(rs.getString("cust_name"));
 				objBean.setEmail(rs.getString("email_id"));
@@ -474,5 +475,78 @@ public class PaymentReminderDao {
 			e.printStackTrace();
 		}
 		return objArrayList;
+	}
+
+	public boolean updateCustomerStatusOfEmailRecord(int batchId) {
+		boolean isUpdated = false;
+		String query = "UPDATE email_record set send_status='N',remark='' WHERE batch_id=" + batchId + " AND send_status='F'";
+		try {
+			pstmt = conn.prepareStatement(query);
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isUpdated = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
+
+	public ArrayList<PaymentReminderFileBean> getPendingEmails() {
+		ArrayList<PaymentReminderFileBean> objArrayList = null;
+		String query1 = "select date,cust_code, cust_name, email_id, send_status from email_record where send_status='N' order by date;";
+		try {
+			pstmt = conn.prepareStatement(query1);
+			System.out.println(pstmt);
+			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<PaymentReminderFileBean>();
+			while (rs.next()) {
+				PaymentReminderFileBean objBean = new PaymentReminderFileBean();
+				objBean.setDate(rs.getString("date"));
+				objBean.setCustomerCode(rs.getString("cust_code"));
+				objBean.setCustomerName(rs.getString("cust_name"));
+				objBean.setEmail(rs.getString("email_id"));
+				objBean.setSendStatus(rs.getString("send_status"));
+				objArrayList.add(objBean);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objArrayList;
+	}
+
+	public boolean abortEmailRecord(SendReminderBean objSendReminderBean) {
+		boolean isUpdated = false;
+		String query = "UPDATE email_record SET send_status='A' WHERE date=? AND cust_code=? AND email_id=?;";
+		try {
+			pstmt = conn.prepareStatement(query);
+			final int batchSize = 50;
+			int count = 0;
+			for (int i = 0; i < objSendReminderBean.getCustomerArrayList().size(); i++) {
+				pstmt.setString(1, objSendReminderBean.getCustomerArrayList().get(i).getDate());
+				pstmt.setString(2, objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode());
+				pstmt.setString(3, objSendReminderBean.getCustomerArrayList().get(i).getEmail());
+				pstmt.addBatch();
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+			System.out.println("Remaining Executed...!");
+			isUpdated = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
 	}
 }

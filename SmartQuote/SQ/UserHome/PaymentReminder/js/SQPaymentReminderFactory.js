@@ -17,6 +17,9 @@ angular.module('sq.SmartQuoteDesktop')
       getEmailLogListAPI:$resource($rootScope.projectName+'/getEmailLogList', {}, {getEmailLogListMethod :{method: 'POST'}}),
       changeEmailIdAPI:$resource($rootScope.projectName+'/updateCustomerEmailId?custCode=:custCode&fileId=:fileId&email=:email', {}, {changeEmailIdMethod :{method: 'GET'},params:{custCode:'@custCode',fileId:'@fileId',email:'@email'}}),
       getEmailLogDetailAPI:$resource($rootScope.projectName+'/getEmailLogDetail?batchId=:batchId&status=:status', {}, {getEmailLogDetailMethod :{method: 'GET'},params:{batchId:'@batchId',status:'@status'}}),
+     
+      resendReminderAPI:$resource($rootScope.projectName+'/resendReminder?batchId=:batchId', {}, {resendReminderMethod :{method: 'GET'},params:{batchId:'@batchId',status:'@status'}}),
+      getPendingEmailAPI:$resource($rootScope.projectName+'/getPendingEmailList', {}, {getPendingEmailMethod :{method: 'GET'},params:{batchId:'@batchId',status:'@status'}}),
 
     };
     var objFactory = {};
@@ -115,7 +118,6 @@ objFactory.SendReminder = function (sendReminderDetail){
     // console.log(data);
     $rootScope.$broadcast('SendReminderNotDone', data);
   });
-
 };
 //======================================================
 objFactory.ChangeEmailId = function (custCode,fileId,email){
@@ -161,6 +163,50 @@ if (success.code=="sessionTimeOut") {
 $rootScope.$broadcast('GetEmailLogDetailsNotDone', error);
 });
 };
+
+objFactory.ResendReminder = function (batchId,status){
+ReminderFactory.resendReminderAPI.resendReminderMethod({batchId:batchId},function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('ResendReminderDone', success); 
+}
+},function(error){
+// console.log(error);
+$rootScope.$broadcast('ResendReminderNotDone', error);
+});
+};
+
+objFactory.GetPendingEmailList = function (){
+ReminderFactory.getPendingEmailAPI.getPendingEmailMethod(function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetPendingEmailListDone', success); 
+}
+},function(error){
+// console.log(error);
+$rootScope.$broadcast('GetPendingEmailListNotDone', error);
+});
+};
+
+objFactory.AbortEmail = function (sendReminderDetail){
+  data = $.param({sendReminderDetail:sendReminderDetail}); 
+  $http.post($rootScope.projectName+'/abortEmail', data, config)
+  .success(function (data, status, headers, config) {
+    if (data.code=="sessionTimeOut") {
+      $rootScope.$broadcast('QuoteSessionTimeOut', data);     
+    }else{
+      $rootScope.$broadcast('AbortEmailDone', data); 
+    }
+  })
+  .error(function (data, status, header, config) {
+    $rootScope.$broadcast('AbortEmailNotDone', data);
+  });
+};
+
 
 return objFactory;
 }])
