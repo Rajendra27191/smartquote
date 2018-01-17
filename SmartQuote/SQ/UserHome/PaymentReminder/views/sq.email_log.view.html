@@ -85,18 +85,25 @@
 		<div class="col-md-2">
 			<label>File Name</label>: <span data-ng-bind="emailLogData.fileName"></span>
 		</div>
-		<div class="col-md-4" ng-if="sendStatus=='Failed'">
-			<label><a href="#" ng-click="resendReminderClicked(emailLogData.batchId)" tooltip-placement="top" uib-tooltip="click to resend reminder mail"> Resend Reminder</a></label>
-		</div>
+		<div class="col-md-2 col-md-offset-6">
+			<!-- <center></center> -->
+			<button  class="btn btn-default" ng-click="saveAsExcelClicked(emailLogData)" tooltip-placement="top" uib-tooltip="click to save as excel" style="padding:5px 10px;float:right;margin: 0px 5px;">
+			<i class="fa fa-table fa-lg" aria-hidden="true" style="color:#5cb85c;"></i>
+			</button>	
+
+			<button ng-if="sendStatus=='Failed'" class="btn btn-default" ng-click="resendReminderClicked(emailLogData.batchId)" tooltip-placement="top" uib-tooltip="click to resend reminder mail" style="padding:5px 10px;float:right;margin: 0px 5px;">
+			<i class="fa fa-paper-plane fa-lg" aria-hidden="true" style="color:#5bc0de;"></i>
+			</button>
+		</div>	
 		</div>
 		</div>
 		<br>
 		<table  class="table table-bordered table-striped  table-responsive">
 		<thead>
 			<tr>
-				<th><center>Customer Code</center></th>
-				<th><center>Customer Name</center></th>
-				<th><center>Email Id</center></th>
+				<th>Customer Code</th>
+				<th>Customer Name</th>
+				<th>Email Id</th>
 				<th><center>Send Status</center></th>
 				<th><center>Remark</center></th>
 				<th><center>DateTime</center></th>
@@ -104,9 +111,9 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="customer in emailLogDetailList | filter:search " ng-if="emailLogDetailList.length>0" >
-				<td><center>{{customer.customerCode}}</center></td>	
-				<td><center>{{customer.customerName}}</center></td>	
-				<td><center>{{customer.email}}</center></td>	
+				<td>{{customer.customerCode}}</td>	
+				<td>{{customer.customerName}}</td>	
+				<td>{{customer.email}}</td>	
 				<td><center>{{customer.sendStatus}}</center></td>	
 				<td><center>{{customer.remark}}</center></td>	
 				<td><center>{{customer.date}}</center></td>	

@@ -5,16 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import pojo.EmailConfigBean;
 import pojo.EmailFormatBean;
 import pojo.EmailLogBean;
@@ -25,11 +21,9 @@ import pojo.SendReminderBean;
 import responseBeans.KeyValuePairResponseBean;
 import responseBeans.PaymentReminderResponseBean;
 import test.GlsFileReader;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
-
 import dao.PaymentReminderDao;
 
 @SuppressWarnings("serial")
@@ -40,11 +34,19 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 	private HttpServletRequest request;
 	public File reminderFile;
 	public String fileName;
-	private PaymentReminderResponseBean objPaymentReminderResponse;// = new
-																	// PaymentReminderResponseBean();
+	PaymentReminderResponseBean objPaymentReminderResponse;// = new
+	ArrayList<PaymentReminderFileBean> listFileBeans;
 
 	public EmptyResponseBean getObjEmptyResponseBean() {
 		return objEmptyResponseBean;
+	}
+
+	public ArrayList<PaymentReminderFileBean> getListFileBeans() {
+		return listFileBeans;
+	}
+
+	public void setListFileBeans(ArrayList<PaymentReminderFileBean> listFileBeans) {
+		this.listFileBeans = listFileBeans;
 	}
 
 	public void setObjEmptyResponseBean(EmptyResponseBean objEmptyResponseBean) {
@@ -98,27 +100,31 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		GlsFileReader objFileReader = new test.FileReader();
 		System.out.println("Reminder File : " + reminderFile);
 		System.out.println("File Name : " + fileName);
-		String filename1 = "dataFile.xlsx";
-		File fileToCreate = new File(filename1);
 		ArrayList<PaymentReminderFileBean> listReminderBeans = new ArrayList<PaymentReminderFileBean>();
 		try {
-			FileUtils.copyFile(reminderFile, fileToCreate);
-			JSONArray fileString = objFileReader.readFile(filename1);
+			JSONArray fileString = objFileReader.readFile(reminderFile + "");
 			System.out.println("File String :: " + fileString);
 			listReminderBeans = new Gson().fromJson(fileString.toString(), new TypeToken<List<PaymentReminderFileBean>>() {
 			}.getType());
-			System.out.println(listReminderBeans);
+			// System.out.println(listReminderBeans);
 			JSONObject jsonObject = fileString.getJSONObject(0);
 			if (jsonObject.has("customerCode") && jsonObject.has("customerName")) {
-				System.out.println("1..");
+				// System.out.println("1..");
 				PaymentReminderDao objDao = new PaymentReminderDao();
-				boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans, fileName);
-				objDao.commit();
-				objDao.closeAll();
-				if (isFileUploaded) {
-					objEmptyResponseBean.setCode("success");
-					objEmptyResponseBean.setMessage(getText("file_load_success"));
+				boolean isFilePresent = objDao.checkIfFileExist(fileName);
+				if (isFilePresent) {
+					objEmptyResponseBean.setCode("error");
+					objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
+				} else {
+					boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans, fileName);
+					objDao.commit();
+					if (isFileUploaded) {
+						objEmptyResponseBean.setCode("success");
+						objEmptyResponseBean.setMessage(getText("file_load_success"));
+					}
 				}
+				objDao.closeAll();
+
 			} else {
 				System.out.println("2..");
 				objEmptyResponseBean.setCode("error");
@@ -171,8 +177,8 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		// System.out.println("unloadPaymentReminderFile");
 		String fileName = request.getParameter("fileName");
 		int fileId = Integer.parseInt(request.getParameter("fileId"));
-		System.out.println("File Name : " + fileName);
-		System.out.println("File Id : " + fileId);
+		// System.out.println("File Name : " + fileName);
+		// System.out.println("File Id : " + fileId);
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			boolean isUnload = objDao.unloadReminderFile(fileId, fileName);
@@ -331,18 +337,10 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objPaymentReminderResponse.setMessage(getText("common_error"));
 		int batchId = Integer.parseInt(request.getParameter("batchId"));
 		String status = request.getParameter("status");
-		String query = "";
-		if (status.equalsIgnoreCase("A")) {
-			query = "SELECT cust_code,cust_name,email_id,send_status,remark,date FROM email_record " + "where batch_id=" + batchId
-					+ " order by cust_code;";
-		} else if (status.equalsIgnoreCase("Y") || status.equalsIgnoreCase("N") || status.equalsIgnoreCase("F")) {
-			query = "SELECT cust_code,cust_name,email_id,send_status,remark,date FROM email_record " + "where batch_id=" + batchId
-					+ " and send_status='" + status + "' order by cust_code;";
-		}
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			ArrayList<PaymentReminderFileBean> customerList = new ArrayList<PaymentReminderFileBean>();
-			customerList = objDao.getEmailLogCustomers(batchId, status, query);
+			customerList = objDao.getEmailLogCustomers(batchId, status);
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage(getText("email_log_detail_success"));
@@ -415,6 +413,20 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			e.printStackTrace();
 			objEmptyResponseBean.setCode("error");
 			objEmptyResponseBean.setMessage(getText("common_error"));
+		}
+		return SUCCESS;
+	}
+
+	public String saveEmailLogAsExcel() {
+		listFileBeans = new ArrayList<PaymentReminderFileBean>();
+		int batchId = Integer.parseInt(request.getParameter("batchId"));
+		String status = request.getParameter("status");
+		try {
+			PaymentReminderDao objDao = new PaymentReminderDao();
+			listFileBeans = objDao.getEmailLogCustomers(batchId, status);
+			objDao.closeAll();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return SUCCESS;
 	}

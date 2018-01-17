@@ -114,10 +114,10 @@ var cleanupEventGetFileListNotDone = $scope.$on("GetFileListNotDone", function(e
 });
 
 $scope.initUnload =function () {
-  if ( $scope.lastCall=="getLoadedFileList") {
-  }else{
       $scope.getLoadedFileList ();
-  };
+  // if ( $scope.lastCall=="getLoadedFileList") {
+  // }else{
+  // };
 }
 
 $scope.unloadFile = function(file){
@@ -580,6 +580,7 @@ $scope.showEmailLogDetailModal=function(){
 $('#emailLogDetailModal').modal({ keyboard: false,backdrop: 'static',show: true});
 };
 //===================================
+$scope.emailLogDetailList=[];
 $scope.getEmailLogDetails=function(batchId,status){
   $rootScope.showSpinner();
   SQPaymentReminderFactory.GetEmailLogDetails(batchId,status);
@@ -616,7 +617,8 @@ $scope.getLogDetail=function(emailLog,status){
   $scope.emailLogData=null;
   $scope.emailLogData={
     batchId:emailLog.batchId,
-    fileName:emailLog.fileName
+    fileName:emailLog.fileName,
+    status:status
   }
   $scope.fileName=emailLog.fileName;
   if (status=="A") {
@@ -637,7 +639,7 @@ $scope.resendReminder=function(batchId){
   SQPaymentReminderFactory.ResendReminder(batchId);
 };
 $scope.handleResendReminderDoneResponse=function(data){
-  $scope.emailLogDetailList=[];
+
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
@@ -663,6 +665,17 @@ $scope.resendReminderClicked=function(batchId){
 if (batchId!=null) {
 $scope.resendReminder(batchId);
 };
+};
+//=======================================================
+$scope.saveAsExcel=function(batchId,status){
+   var url =$rootScope.projectName+"/saveEmailLogAsExcel?batchId="+batchId+"&status="+status;
+   window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+};
+$scope.saveAsExcelClicked=function(emailLogData){
+// console.log(emailLogData)
+if (emailLogData) {
+$scope.saveAsExcel(emailLogData.batchId,emailLogData.status);
+} 
 };
 //=======================================================
 //================  Abort Email Code ======================

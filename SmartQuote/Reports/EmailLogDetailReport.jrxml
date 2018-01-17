@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EmailLogDetailReport" language="groovy" pageWidth="1050" pageHeight="792" columnWidth="1050" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6dcf1e93-69fd-4122-818a-322d80242d87">
+	<property name="net.sf.jasperreports.export.xls.wrap.text" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.collapse.row.span" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.cell.border" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.text.truncate.at.char" value="false"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.break.after.row" value="false"/>
+	<property name="ireport.zoom" value="0.7513148009015783"/>
+	<property name="ireport.x" value="110"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/radhika/git/smartquote/SmartQuote/Reports/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subreportPath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="fileLogList" class="org.apache.struts2.views.jasperreports.ValueStackDataSource">
+		<fieldDescription><![CDATA[fileLogList]]></fieldDescription>
+	</field>
+	<field name="april60Days" class="java.lang.Double">
+		<fieldDescription><![CDATA[april60Days]]></fieldDescription>
+	</field>
+	<field name="class" class="java.lang.Class">
+		<fieldDescription><![CDATA[class]]></fieldDescription>
+	</field>
+	<field name="customerCode" class="java.lang.String">
+		<fieldDescription><![CDATA[customerCode]]></fieldDescription>
+	</field>
+	<field name="customerName" class="java.lang.String">
+		<fieldDescription><![CDATA[customerName]]></fieldDescription>
+	</field>
+	<field name="date" class="java.lang.String">
+		<fieldDescription><![CDATA[date]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[email]]></fieldDescription>
+	</field>
+	<field name="fileId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[fileId]]></fieldDescription>
+	</field>
+	<field name="fileName" class="java.lang.String">
+		<fieldDescription><![CDATA[fileName]]></fieldDescription>
+	</field>
+	<field name="juneCurrent" class="java.lang.Double">
+		<fieldDescription><![CDATA[juneCurrent]]></fieldDescription>
+	</field>
+	<field name="loadDateTime" class="java.lang.String">
+		<fieldDescription><![CDATA[loadDateTime]]></fieldDescription>
+	</field>
+	<field name="march90Days" class="java.lang.Double">
+		<fieldDescription><![CDATA[march90Days]]></fieldDescription>
+	</field>
+	<field name="may30Days" class="java.lang.Double">
+		<fieldDescription><![CDATA[may30Days]]></fieldDescription>
+	</field>
+	<field name="remark" class="java.lang.String">
+		<fieldDescription><![CDATA[remark]]></fieldDescription>
+	</field>
+	<field name="reminderStatus" class="java.lang.String">
+		<fieldDescription><![CDATA[reminderStatus]]></fieldDescription>
+	</field>
+	<field name="rows" class="java.lang.Integer">
+		<fieldDescription><![CDATA[rows]]></fieldDescription>
+	</field>
+	<field name="sendStatus" class="java.lang.String">
+		<fieldDescription><![CDATA[sendStatus]]></fieldDescription>
+	</field>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[total]]></fieldDescription>
+	</field>
+	<columnHeader>
+		<band height="20">
+			<staticText>
+				<reportElement uuid="b1197559-a287-4173-b4fd-8f2699711dc8" mode="Opaque" x="0" y="0" width="150" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a0b27ea5-926b-4415-b560-a67453f6bce0" mode="Opaque" x="150" y="0" width="250" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="da759984-f97f-43d5-b26b-fe9f8d1512c0" mode="Opaque" x="400" y="0" width="250" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Email]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a1b4721-84a2-4bef-ad35-1e2afc34d951" mode="Opaque" x="650" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Send Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="85004c92-a558-49db-b0d4-041d870c1606" mode="Opaque" x="750" y="0" width="150" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="85004c92-a558-49db-b0d4-041d870c1606" mode="Opaque" x="900" y="0" width="150" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Load Date Time]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ce237b68-639e-4818-b3d4-1c280603a916" x="750" y="0" width="150" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="7fb19582-16ee-491b-80f1-d8ef68fa2831" x="150" y="0" width="250" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customerName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9bb5d771-c19e-4cfc-a365-0036ca64d846" x="650" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sendStatus}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="88df3c5e-8f73-4cb8-9fe5-8a5b6e24d11d" x="0" y="0" width="150" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customerCode}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ce237b68-639e-4818-b3d4-1c280603a916" x="900" y="0" width="150" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cd249da1-b3bd-4b01-aa61-c08088929059" x="400" y="0" width="250" height="20" isPrintInFirstWholeBand="true"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

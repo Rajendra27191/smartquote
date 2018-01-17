@@ -1,8 +1,13 @@
+/action
+/connection
 /dao
+/demoPDFMaster.jasper
+/demoPDFMaster_subreport1.jasper
 /email
+/global.properties
+/global_es.properties
 /interceptor
 /pojo
 /responseBeans
 /responseStructure
-/action
-/connection
+/struts.xml

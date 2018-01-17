@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
@@ -267,17 +266,14 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		ExcelFileSplit objFileSplit = new ExcelFileSplit();
 		try {
 			System.out.println("Product File: " + productFile);
-			String filename = "dataFile.xlsx";
-			File fileToCreate = new File(filename);
-			FileUtils.copyFile(productFile, fileToCreate);
-
-			// JSONArray fileString = objFileReader.readFile(filename);
-			// System.out.println("File Content: " + fileString);
+//			String filename = "dataFile.xlsx";
+//			File fileToCreate = new File(filename);
+//			FileUtils.copyFile(productFile, fileToCreate);
 			String projectPath = request.getSession().getServletContext().getRealPath("/");
 			GlsFileReader objSubFileReader;
 			JSONArray subFileString;
 
-			int subFileCount = objFileSplit.splitFile(filename, projectPath);
+			int subFileCount = objFileSplit.splitFile(productFile+"", projectPath);
 
 			ArrayList<ProductBean> productList = null;
 			ProductDao objProductDao = null;
@@ -384,10 +380,10 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		try {
 			System.out.println("Product File With Promo Price: " + productFile);
-			String filename = "dataFile.xlsx";
-			File fileToCreate = new File(filename);
-			FileUtils.copyFile(productFile, fileToCreate);
-			JSONArray fileString = objFileReader.readFile(filename);
+//			String filename = "dataFile.xlsx";
+//			File fileToCreate = new File(filename);
+//			FileUtils.copyFile(productFile, fileToCreate);
+			JSONArray fileString = objFileReader.readFile(productFile+"");
 			System.out.println("File Content: " + fileString);
 			
 			ArrayList<ProductBean> productList = null;
@@ -439,10 +435,11 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		GlsFileReader objFileReader = new test.FileReader();
 		try {
 			System.out.println("Product File With Promo Price: " + productFile);
-			String filename = "dataFile.xlsx";
-			File fileToCreate = new File(filename);
-			FileUtils.copyFile(productFile, fileToCreate);
-			JSONArray fileString = objFileReader.readFile(filename);
+//			String filename = "dataFile.xlsx";
+//			File fileToCreate = new File(filename);
+//			FileUtils.copyFile(productFile, fileToCreate);
+			
+			JSONArray fileString = objFileReader.readFile(productFile+"");
 			System.out.println("File Content: " + fileString);
 			ArrayList<ProductCodeUpdateBean> productCodeList = null;
 			ProductDao objProductDao = null;
