@@ -6,20 +6,20 @@ $scope.errorMessage=[];
 $scope.upload={};
 $scope.lastCall="";
 $scope.onExcelSelect = function($files)  {
-console.log("onExcelSelect");
-  console.log($files);
+// console.log("onExcelSelect");
+  // console.log($files);
      for (var i = 0; i < $files.length; i++) {
       if(($files[i].name.split('.').pop() == 'xlsx' || $files[i].name.split('.').pop() == 'xls')){
-       console.log("valid file");
+       // console.log("valid file");
        latestExcelFile = $files[i];
       }
       else{
-       console.log("invalid file");
+       // console.log("invalid file");
        $scope.isValid=true;
        $timeout(function() {
        $scope.isValid=false;
             }, 3000);
-        console.log('Please upload valid excel file.');
+        // console.log('Please upload valid excel file.');
        $scope.invalidFile=true;
        latestExcelFile = {};
        document.getElementById('emailTemplate').value = '';
@@ -28,7 +28,7 @@ console.log("onExcelSelect");
 };
 
 $scope.loadFile = function(){
-  console.log(latestExcelFile)
+  // console.log(latestExcelFile)
   var reminderFile=latestExcelFile;
   var uploadUrl=$rootScope.projectName+"/loadPaymentReminderFile";
   var fd= new FormData();
@@ -51,7 +51,7 @@ $scope.loadFile = function(){
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
     }else{
-      console.log(data); 
+      // console.log(data); 
       $rootScope.alertError(data.message);                             
       document.getElementById('emailTemplate').value = '';
       latestExcelFile = {};
@@ -74,7 +74,7 @@ $scope.uploadFile = function(){
       }, 3000);
     }else {   
     	 if ((latestExcelFile.size / 1024) < 15360) {//6144
-      		console.log(latestExcelFile.size);
+      		// console.log(latestExcelFile.size);
       		$scope.loadFile(); 
 	      }else{
 	          $rootScope.alertError("File size must ne less than 15MB"); 
@@ -221,7 +221,7 @@ var cleanupEventGetFileDetailListNotDone = $scope.$on("GetFileDetailListNotDone"
 });
 
 $scope.sendReminderClicked=function(){
-  console.log("sendReminderClicked");
+  // console.log("sendReminderClicked");
   initSend();
   $scope.initSendReminder();
 };
@@ -253,7 +253,7 @@ $scope.duration=duration;
 
 $scope.getCustomerDetailFromFile=function(){
 if ($scope.objFile) {
-console.log($scope.duration);
+// console.log($scope.duration);
 $rootScope.showSpinner();
 SQPaymentReminderFactory.GetCustomerDetailFromFile($scope.objFile.fileName,$scope.objFile.fileId);
 };
@@ -284,8 +284,8 @@ var cleanupEventGetCustomerDetailFromFileNotDone = $scope.$on("GetCustomerDetail
 });
 //==================================
 $scope.changeEmailId=function(customer,invalid){
-  console.log(customer)
-  console.log(invalid)
+  // console.log(customer)
+  // console.log(invalid)
   if (invalid) {
   }else{
     if (customer) {
@@ -335,13 +335,13 @@ var customerEmail=""
 $scope.stop = function(list,index){    
 $scope.editing[index] = false;
 customerEmail=angular.copy($scope.customerDetailListTemp[index]);
-console.log(customerEmail)
+// console.log(customerEmail)
 list[index]=angular.copy(customerEmail); 
 };
 
 $scope.updateEmail=function(customer,index){
-console.log(index);
-console.log(customer);
+// console.log(index);
+// console.log(customer);
 if (customer.email) {
 $scope.customerDetailListTemp[index]=angular.copy(customer);
 $scope.editing[index] = false;
@@ -377,8 +377,8 @@ angular.forEach(selectedRows, function(value, key){
   var cust = value;
   $scope.selectedRows.push(cust);
 });
-console.log($scope.selectedRows)
-console.log("$scope.selectedRows : "+$scope.selectedRows.length)
+// console.log($scope.selectedRows)
+// console.log("$scope.selectedRows : "+$scope.selectedRows.length)
 };
 
 //===========================================================
@@ -398,9 +398,11 @@ $scope.showEmailFormatModal=function(){
 $('#emailFormatModal').modal({ keyboard: false,backdrop: 'static',show: true});
 };
 $scope.assignEmailFormat=function(data){
-$scope.compose=angular.copy(data.objEmailFormatBean);
-$scope.emailConfigList=angular.copy(data.emailConfigList);
+// $scope.compose=angular.copy(data.objEmailFormatBean);
+$scope.compose={}
+$scope.emailConfigList=angular.copy(data.emailFormatList);
 $scope.compose.from="";
+
 };
 
 
@@ -413,10 +415,11 @@ $scope.handleGetEmailFormatTemplateDoneResponse=function(data){
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
+        // console.log(data)
+      $scope.assignEmailFormat(data)
       $scope.showEmailFormatModal();
        $scope.initSendReminderLastCall="getEmailFormatTemplate";
       // console.log(data)
-      $scope.assignEmailFormat(data)
       }else{
         $rootScope.alertError(data.message);
       }
@@ -442,13 +445,18 @@ $scope.mailFormatBtnClicked=function(){
   };
 };
 
-$scope.emailConfigChange=function(){
-console.log($scope.compose.from)
+$scope.emailConfigChange=function(from){
+// console.log(from)
+// console.log($scope.compose.from)
+$scope.compose.header=from.header;
+$scope.compose.subject=from.subject;
+$scope.compose.body=from.body;
+// $scope.compose.body=from.body;
 };
 
 
 $scope.acceptEmailFormatClicked=function(){
-console.log($scope.form)
+// console.log($scope.form)
 if ($scope.form.emailFormat.$valid) {
 $('#emailFormatModal').modal('hide');
 $scope.disabledSendBtn=false;
@@ -483,7 +491,7 @@ sendReminderDetail={
 return angular.toJson(sendReminderDetail);
 }
 $scope.sendMailBtnClicked=function(){  
-  console.log($scope.form);
+  // console.log($scope.form);
   if ($scope.form.emailFormat.$valid) {
   if ($scope.form.customerList.$valid) {
   $scope.getAllSelectedRows();
@@ -541,7 +549,7 @@ $scope.emailLogLastCall="";
 $scope.emailLogList=[];
 }
 $scope.rowChange=function(){
-  console.log("rowChange")
+  // console.log("rowChange")
 };
 
 $scope.getEmailLog=function(){
@@ -773,7 +781,7 @@ $scope.handleAbortEmailDoneResponse=function(data){
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
-        console.log(data)
+        // console.log(data)
         $rootScope.alertSuccess(data.message);
         $scope.abortEmailLogTabClick();
 

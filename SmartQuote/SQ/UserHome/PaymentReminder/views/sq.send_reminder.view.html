@@ -20,6 +20,9 @@ td .form-control {
 .col-md-12{
 	margin-bottom: 5px;
 }
+#emailFormatModal .modal-body .col-md-2 {
+    width: 10.666667%;
+}
 </style>
 
 <div>
@@ -43,7 +46,7 @@ td .form-control {
 	<thead>
 		<tr>
 			<th><center>Sr No</center></th>
-			<th><center>File Name</center></th>
+			<th>File Name</th>
 			<th><center>Load Date Time</center></th>
 			<th><center>Total Customers</center></th>
 			<th><center>Reminder Status</center></th>
@@ -53,7 +56,7 @@ td .form-control {
 	<tbody>
 		<tr ng-repeat="file in fileDetailList | filter:search " ng-if="fileDetailList.length>0"  ng-click="openFile(file)" tooltip-placement="top" uib-tooltip="click to open file">
 			<td><center>{{$index+1}}</center></td>
-			<td><center>{{file.fileName}}</center></td>
+			<td>{{file.fileName}}</td>
 			<td><center>{{file.loadDateTime}}</center></td>
 			<td><center>{{file.rows}}</center></td>
 			<td><center>{{file.reminderStatus}}</center></td>
@@ -276,10 +279,10 @@ td .form-control {
 
 <!-- Modal -->
 <div id="emailFormatModal" class="modal fade" role="dialog">
-  <div class="modal-dialog" style="width:70%;">
+  <div class="modal-dialog" style="width:70%;margin:10px auto;">
     <!-- Modal content-->
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header" style="padding: 10px;">
         <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
         <h4 class="modal-title">
         <center>Compose Mail</center>	
@@ -298,12 +301,18 @@ td .form-control {
 			  <label class="col-md-2" for="inputHeader"></label>
 			  <div class="col-md-10">
 			  	 <p ng-bind-html="compose.header"></p>
+			  	 	Overdue amount Details :<br>
+					[(90days before)3rd month :..$]<br>
+					[(60days before)2nd month :..$]<br>
+					[(30days before)1st month :..$]<br>
+					[Current month :..$]<br>
+					[Total:..$]<br>
 			  </div>
 			</div>
 			<div class="col-md-12">
 			  <label class="col-md-2" for="inputFrom">From</label>
 			  <div class="col-md-10">
-			  	<select name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.emailId for emailConfig in emailConfigList" ng-model="compose.from" ng-change="emailConfigChange(compose.from)" ng-required="true">
+			  	<select name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.emailId for emailConfig in emailConfigList" ng-model="compose.from" ng-change="emailConfigChange(compose.from)" ng-required="true" style="height: 30px;padding: 6px 12px;">
 			  		<option value="">-- Select From --</option>
 				</select>
 				<span ng-show="form.emailFormat.inputFrom.$invalid && form.emailFormat.submitted" class="invalid-control">
@@ -313,29 +322,29 @@ td .form-control {
 			</div>
 			<div class="col-md-12">
 			  <label class="col-md-2" for="inputSubject">Subject</label>
-			  <div class="col-md-10"><input type="text" class="form-control" name="inputSubject" id="inputSubject" placeholder="subject" ng-model="compose.subject" ></div>
+			  <div class="col-md-10"><input type="text" class="form-control" name="inputSubject" id="inputSubject" placeholder="subject" ng-model="compose.subject" style="height: 30px;padding: 6px 12px;"></div>
 			</div>
 
 			<div class="col-md-12">
 			  <label class="col-md-2" for="inputBody">Message</label>
 			  <div class="col-md-10">
-			  	<textarea class="form-control" id="inputBody" name="inputBody" rows="8" ng-model="compose.body" required></textarea>
+			  	<textarea class="form-control" id="inputBody" name="inputBody" rows="11" ng-model="compose.body" required></textarea>
 				<span ng-show="form.emailFormat.inputBody.$invalid && form.emailFormat.submitted" class="invalid-control">
 				<small>*Please enter message.</small>
 				</span>
 			  </div>
 			</div>
-			<div class="col-md-12">
+			<!-- <div class="col-md-12">
 			  <label class="col-md-2" for="inputBody">Footer</label>
 			  <div class="col-md-10">
 			  		<br>
 			  		<p><label>Regards ,</label><br>{{compose.contactName}}<br>{{compose.name}}<br>{{compose.footer}}</p>			  		
 			  </div>
-			</div>
+			</div> -->
 			</div>
 		</form>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="padding: 10px;">
       	<div class="row row-control">
 		<div class="col-md-6"></div>
 		<div class="col-md-3">

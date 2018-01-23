@@ -10,30 +10,38 @@ import responseStructure.Response;
 
 public class PaymentReminderResponseBean extends Response {
 private ArrayList<PaymentReminderFileBean> fileLogList = new ArrayList<PaymentReminderFileBean>();
-private EmailFormatBean objEmailFormatBean = new EmailFormatBean();
-private ArrayList<EmailConfigBean> emailConfigList= new  ArrayList<EmailConfigBean>();
+//private EmailFormatBean objEmailFormatBean = new EmailFormatBean();
+private ArrayList<EmailFormatBean> emailFormatList= new  ArrayList<EmailFormatBean>();
 private ArrayList<EmailLogBean> emailLogList= new  ArrayList<EmailLogBean>();
+//
+//public EmailFormatBean getObjEmailFormatBean() {
+//	return objEmailFormatBean;
+//}
+//
+//public void setObjEmailFormatBean(EmailFormatBean objEmailFormatBean) {
+//	this.objEmailFormatBean = objEmailFormatBean;
+//}
 
-public EmailFormatBean getObjEmailFormatBean() {
-	return objEmailFormatBean;
-}
-
-public void setObjEmailFormatBean(EmailFormatBean objEmailFormatBean) {
-	this.objEmailFormatBean = objEmailFormatBean;
-}
 
 
-
-public ArrayList<EmailConfigBean> getEmailConfigList() {
-	return emailConfigList;
-}
-
-public void setEmailConfigList(ArrayList<EmailConfigBean> emailConfigList) {
-	this.emailConfigList = emailConfigList;
-}
+//public ArrayList<EmailConfigBean> getEmailConfigList() {
+//	return emailConfigList;
+//}
+//
+//public void setEmailConfigList(ArrayList<EmailConfigBean> emailConfigList) {
+//	this.emailConfigList = emailConfigList;
+//}
 
 public ArrayList<EmailLogBean> getEmailLogList() {
 	return emailLogList;
+}
+
+public ArrayList<EmailFormatBean> getEmailFormatList() {
+	return emailFormatList;
+}
+
+public void setEmailFormatList(ArrayList<EmailFormatBean> emailFormatList) {
+	this.emailFormatList = emailFormatList;
 }
 
 public void setEmailLogList(ArrayList<EmailLogBean> emailLogList) {

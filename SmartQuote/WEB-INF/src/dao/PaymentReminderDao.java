@@ -303,48 +303,53 @@ public class PaymentReminderDao {
 		return objArrayList;
 	}
 
-	public EmailFormatBean getEmailFormatData() {
-		String query = "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
-				+ "WHERE email_id=1; ";
-		EmailFormatBean objBean = new EmailFormatBean();
+	public ArrayList<EmailFormatBean> getEmailFormatData() {
+		ArrayList<EmailFormatBean> objArrayList = null;
+//		String query = "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
+//				+ "WHERE email_id=1; ";
+		String query = "SELECT a.config_id,a.email_id,header,body,contact_person,subject "
+				+ "FROM email_config a, email_data_ref b where a.config_id=b.config_id;";
+	
 		try {
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
+			objArrayList = new ArrayList<EmailFormatBean>();
 			while (rs.next()) {
+				EmailFormatBean objBean = new EmailFormatBean();
+				objBean.setConfigId(rs.getInt("config_id"));
+				objBean.setEmailId(rs.getString("email_id"));
 				objBean.setHeader(rs.getString("header"));
 				objBean.setBody(rs.getString("body"));
 				objBean.setContactPerson(rs.getString("contact_person"));
 				objBean.setSubject(rs.getString("subject"));
-				objBean.setContactName(rs.getString("contact_name"));
-				objBean.setName(rs.getString("name"));
-				objBean.setFooter(rs.getString("footer"));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return objBean;
-	};
-
-	public ArrayList<EmailConfigBean> getEmailConfigList() {
-		System.out.println("inside getEmailConfigList");
-		ArrayList<EmailConfigBean> objArrayList = null;
-		String query = "Select config_id, email_id From email_config Where module='PR' AND flag='1';";
-		try {
-			pstmt = conn.prepareStatement(query);
-			System.out.println(pstmt);
-			rs = pstmt.executeQuery();
-			objArrayList = new ArrayList<EmailConfigBean>();
-			while (rs.next()) {
-				EmailConfigBean objBean = new EmailConfigBean();
-				objBean.setConfigId(rs.getInt("config_id"));
-				objBean.setEmailId(rs.getString("email_id"));
 				objArrayList.add(objBean);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return objArrayList;
-	}
+	};
+
+//	public ArrayList<EmailConfigBean> getEmailConfigList() {
+//		System.out.println("inside getEmailConfigList");
+//		ArrayList<EmailConfigBean> objArrayList = null;
+//		String query = "Select config_id, email_id From email_config Where module='PR' AND flag='1';";
+//		try {
+//			pstmt = conn.prepareStatement(query);
+//			System.out.println(pstmt);
+//			rs = pstmt.executeQuery();
+//			objArrayList = new ArrayList<EmailConfigBean>();
+//			while (rs.next()) {
+//				EmailConfigBean objBean = new EmailConfigBean();
+//				objBean.setConfigId(rs.getInt("config_id"));
+//				objBean.setEmailId(rs.getString("email_id"));
+//				objArrayList.add(objBean);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return objArrayList;
+//	}
 
 	public boolean updateEmailData(String body) {
 		boolean isUpdated = false;

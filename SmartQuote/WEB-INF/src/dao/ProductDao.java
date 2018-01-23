@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import pojo.KeyValuePairBean;
@@ -18,7 +16,7 @@ public class ProductDao {
 	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement pstmt = null;
-	
+
 	public ProductDao() {
 		conn = new ConnectionFactory().getConnection();
 		try {
@@ -50,14 +48,12 @@ public class ProductDao {
 	}
 
 	public ArrayList<KeyValuePairBean> getProductList(String productLike) {
-//		System.out.println("getProductList init :::"+df.format(dateobj));
+		// System.out.println("getProductList init :::"+df.format(dateobj));
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
-		System.out.println("T1: "+ System.currentTimeMillis());
-		String getProdustList = "SELECT item_code, "
-				+ "ifnull(item_description, 'No Description') item_description,"
-				+ "ifnull(description2, 'No Description') description2, "
-				+ "ifnull(description3, 'No Description') description3 "
+		System.out.println("T1: " + System.currentTimeMillis());
+		String getProdustList = "SELECT item_code, " + "ifnull(item_description, 'No Description') item_description,"
+				+ "ifnull(description2, 'No Description') description2, " + "ifnull(description3, 'No Description') description3 "
 				+ "FROM product_master";
 		System.out.println("Query>>");
 		System.out.println(getProdustList);
@@ -68,16 +64,13 @@ public class ProductDao {
 			while (rs.next()) {
 				objKeyValuePairBean = new KeyValuePairBean();
 				objKeyValuePairBean.setCode(rs.getString("item_code"));
-				objKeyValuePairBean.setValue(
-						rs.getString("item_code") 
-						+ " ( " + rs.getString("item_description") 
-					    +" " + rs.getString("description2") 
-						+" " + rs.getString("description3") + " )");
+				objKeyValuePairBean.setValue(rs.getString("item_code") + " ( " + rs.getString("item_description") + " "
+						+ rs.getString("description2") + " " + rs.getString("description3") + " )");
 				pairBeans.add(objKeyValuePairBean);
 				rsCount = rsCount + 1;
 			}
-			System.out.println("T2: "+ System.currentTimeMillis());
-			System.out.println("RowCount>>"+rsCount);
+			System.out.println("T2: " + System.currentTimeMillis());
+			System.out.println("RowCount>>" + rsCount);
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -86,7 +79,7 @@ public class ProductDao {
 			}
 			e.printStackTrace();
 		}
-//		System.out.println("getProductList deinit :::"+df.format(dateobj));
+		// System.out.println("getProductList deinit :::"+df.format(dateobj));
 		return pairBeans;
 	}
 
@@ -117,8 +110,7 @@ public class ProductDao {
 			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,"
-					+ " qty_break0,gst_flag, promo_price) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?, ?)";
+					+ " qty_break0,gst_flag, promo_price) " + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?, ?)";
 			pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -140,7 +132,7 @@ public class ProductDao {
 			pstmt.setDouble(18, objBean.getQtyBreak0());
 			pstmt.setString(19, objBean.getGstFlag());
 			pstmt.setDouble(20, objBean.getPromoPrice());
-//			System.out.println("GST FLAG"+objBean.getGstFlag());
+			// System.out.println("GST FLAG"+objBean.getGstFlag());
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
@@ -159,8 +151,7 @@ public class ProductDao {
 		String getUserGroups = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice "
-				+ " FROM product_master WHERE item_code = ?";
+				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice " + " FROM product_master WHERE item_code = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			pstmt.setString(1, productCode);
@@ -197,14 +188,14 @@ public class ProductDao {
 		}
 		return objBean;
 	}
+
 	public ProductBean getProductDetailsWithAlternatives(String productCode) {
-		ProductBean objBean=new ProductBean();
-		String getProductDetails="SELECT item_code, item_description, description2, "
+		ProductBean objBean = new ProductBean();
+		String getProductDetails = "SELECT item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
-				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice "
-				+ " FROM product_master WHERE item_code = ?";
-		
+				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice " + " FROM product_master WHERE item_code = ?";
+
 		try {
 			pstmt = conn.prepareStatement(getProductDetails);
 			pstmt.setString(1, productCode);
@@ -231,18 +222,18 @@ public class ProductDao {
 				objBean.setGstFlag(rs.getString("gst_flag"));
 				objBean.setPromoPrice(rs.getDouble("promoPrice"));
 			}
-			ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
-			boolean isAltAdded=false;
-			arrayProductBeans=getAlternatives(productCode);
-			if(arrayProductBeans.size()>0){
-				isAltAdded=true;
+			ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
+			boolean isAltAdded = false;
+			arrayProductBeans = getAlternatives(productCode);
+			if (arrayProductBeans.size() > 0) {
+				isAltAdded = true;
 			}
 			if (isAltAdded) {
-//				System.out.println("If rs.next");
-//				objBean.setAlternativeProductAdded(true);	
+				// System.out.println("If rs.next");
+				// objBean.setAlternativeProductAdded(true);
 				objBean.setAlternativeProductList(arrayProductBeans);
 			}
-			
+
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -253,31 +244,32 @@ public class ProductDao {
 		}
 		return objBean;
 	}
+
 	public ArrayList<ProductBean> getAlternatives(String productCode) {
-//		System.out.println("GET Alternatives...");
-//		System.out.println("Product Code"+productCode);
-//		ArrayList<AlternateProductBean> arrayAlternateProductBeans=new ArrayList<AlternateProductBean>();
-		ArrayList<ProductBean> arrayProductBeans=new ArrayList<ProductBean>();
-		String getAlternatives="SELECT a.alternative_product_id 'alt_product_id', "
-//				+ "a.alternative_default_price 'alt_default_price', "
+		// System.out.println("GET Alternatives...");
+		// System.out.println("Product Code"+productCode);
+		// ArrayList<AlternateProductBean> arrayAlternateProductBeans=new
+		// ArrayList<AlternateProductBean>();
+		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
+		String getAlternatives = "SELECT a.alternative_product_id 'alt_product_id', "
+				// + "a.alternative_default_price 'alt_default_price', "
 				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
 				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
-				+ "p.price4exGST 'alt_price4exGST',"
-				+ "ifnull(p.gst_flag, 'NO') 'alt_gst_flag', p.promo_price as promoPrice "
+				+ "p.price4exGST 'alt_price4exGST'," + "ifnull(p.gst_flag, 'NO') 'alt_gst_flag', p.promo_price as promoPrice "
 				+ "FROM alternative_product_master a, product_master p "
 				+ "WHERE a.main_product_id = ? AND p.item_code=a.alternative_product_id;";
-		
+
 		try {
 			pstmt = conn.prepareStatement(getAlternatives);
 			pstmt.setString(1, productCode);
 			rs = pstmt.executeQuery();
-			ProductBean objProductBean=null;
+			ProductBean objProductBean = null;
 			while (rs.next()) {
-				objProductBean=new ProductBean();
+				objProductBean = new ProductBean();
 				objProductBean.setItemCode(rs.getString("alt_product_id"));
-//				objProductBean.setAltDefaultPrice(rs.getDouble("alt_default_price"));
-//				System.out.println("alt_product_id >>"+rs.getString("alt_product_id"));
+				// objProductBean.setAltDefaultPrice(rs.getDouble("alt_default_price"));
+				// System.out.println("alt_product_id >>"+rs.getString("alt_product_id"));
 				objProductBean.setItemDescription(rs.getString("alt_item_desc"));
 				objProductBean.setDescription2(rs.getString("alt_item_desc2"));
 				objProductBean.setDescription3(rs.getString("alt_item_desc3"));
@@ -290,22 +282,24 @@ public class ProductDao {
 				objProductBean.setPrice4exGST(rs.getDouble("alt_price4exGST"));
 				objProductBean.setGstFlag(rs.getString("alt_gst_flag"));
 				objProductBean.setPromoPrice(rs.getDouble("promoPrice"));
-				
+
 				arrayProductBeans.add(objProductBean);
 			}
-//			System.out.println("GET Alternatives List Size ..."+arrayProductBeans.size());
+			// System.out.println("GET Alternatives List Size ..."+arrayProductBeans.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return arrayProductBeans;
 	}
+
 	public boolean updateProduct(ProductBean objBean) {
 		boolean isCustomerUpdated = false;
 		try {
 			String updateCustQuery = "UPDATE product_master SET item_code = ?, item_description = ?, description2 = ?, "
 					+ " description3 = ?, unit = ?, price0exGST = ?, qty_break1 = ?, price1exGST = ?, qty_break2 = ?, "
 					+ " price2exGST = ?, qty_break3 = ?, price3exGST = ?, qty_break4 = ?, price4exGST = ?, avg_cost = ?, "
-					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?, gst_flag = ?, promo_price= ? " + " WHERE item_code = ? ";
+					+ " tax_code = ?, created_by = 0, product_group_code = ?, qty_break0 = ?, gst_flag = ?, promo_price= ? "
+					+ " WHERE item_code = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
@@ -361,6 +355,160 @@ public class ProductDao {
 		return isDeleted;
 	}
 
+	public boolean truncateProductStaging() {
+		boolean isTruncate = false;
+		try {
+			String deleteGroupQuery = "TRUNCATE TABLE product_master_staging;";
+			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			pstmt.executeUpdate();
+			isTruncate = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isTruncate;
+	};
+
+	public boolean addToProductStaging(ArrayList<ProductBean> productList) {
+		boolean isFileUploaded = false;
+		String truncateQuery = "TRUNCATE TABLE product_master_staging;";
+		String productQuery = "REPLACE INTO product_master_staging (item_code, item_description, description2, "
+				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, "
+				+ "product_group_code,gst_flag,priority,last_buy_date) "
+				+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?,?,?)";
+		try {
+			pstmt = conn.prepareStatement(truncateQuery);
+			System.out.println(pstmt);
+			int j = pstmt.executeUpdate();
+			// System.out.println("J" + j);
+			pstmt = conn.prepareStatement(productQuery);
+			final int batchSize = 5000;
+			int count = 0;
+			for (int i = 0; i < productList.size(); i++) {
+				pstmt.setString(1, productList.get(i).getItemCode());
+				pstmt.setString(2, productList.get(i).getItemDescription());
+				pstmt.setString(3, productList.get(i).getDescription2());
+				pstmt.setString(4, productList.get(i).getDescription3());
+				pstmt.setString(5, productList.get(i).getUnit());
+				pstmt.setDouble(6, productList.get(i).getPrice0exGST());
+				pstmt.setDouble(7, productList.get(i).getQtyBreak1());
+				pstmt.setDouble(8, productList.get(i).getPrice1exGST());
+				pstmt.setDouble(9, productList.get(i).getQtyBreak2());
+				pstmt.setDouble(10, productList.get(i).getPrice2exGST());
+				pstmt.setDouble(11, productList.get(i).getQtyBreak3());
+				pstmt.setDouble(12, productList.get(i).getPrice3exGST());
+				pstmt.setDouble(13, productList.get(i).getQtyBreak4());
+				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
+				pstmt.setDouble(15, productList.get(i).getLastBuyPrice());
+				pstmt.setString(16, productList.get(i).getTaxCode());
+				pstmt.setString(17, productList.get(i).getGroup());
+				String gstExempt = productList.get(i).getTaxCode();
+				if (gstExempt.equalsIgnoreCase("E")) {
+					pstmt.setString(18, "YES");
+				} else {
+					pstmt.setString(18, "NO");
+				}
+				pstmt.setInt(19, productList.get(i).getPriority());
+//				System.out.println("getLastBuyDate() : " + productList.get(i).getLastBuyDate());
+				pstmt.setString(20, productList.get(i).getLastBuyDate());
+				pstmt.addBatch();
+				if (++count % batchSize == 0) {
+					System.out.println("Staging Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+			System.out.println("Staging Remaining Executed...!");
+			isFileUploaded = true;
+
+		} catch (Exception e) {
+			System.out.println("SQLException 1 :" + e);
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("SQLException 2 :" + e1);
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
+	public boolean addToProductStaging1() {
+		boolean isFileUploaded = false;
+		String truncateQuery = "TRUNCATE TABLE product_master_staging1;";
+		String productQuery = "INSERT INTO product_master_staging1 "
+				+ "SELECT item_code, min(priority), max(last_buy_date) FROM product_master_staging group by 1; ";
+		try {
+			pstmt = conn.prepareStatement(truncateQuery);
+			System.out.println(pstmt);
+			int j = pstmt.executeUpdate();
+			// System.out.println("J" + j);
+			pstmt = conn.prepareStatement(productQuery);
+			int i = pstmt.executeUpdate();
+			isFileUploaded = true;
+
+		} catch (Exception e) {
+			System.out.println("SQLException 1 :" + e);
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("SQLException 2 :" + e1);
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
+	public ArrayList<ProductBean> getFilterdProductFromStaging() {
+		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
+		try {
+			String productQuery = "SELECT a.item_code,item_description,description2,description3,"
+					+ "unit,qty_break0,price0exGST,qty_break1,price1exGST,qty_break2,"
+					+ "price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,avg_cost,"
+					+ "tax_code,created_by,product_group_code,gst_flag " + "FROM product_master_staging a,  product_master_staging1 b "
+					+ "WHERE a.item_code = b.item_code and a.priority = b.priority and a.last_buy_date = b.last_buy_date;";
+			pstmt = conn.prepareStatement(productQuery);
+			rs = pstmt.executeQuery();
+			ProductBean objProductBean = null;
+			while (rs.next()) {
+				objProductBean = new ProductBean();
+				objProductBean.setItemCode(rs.getString("item_code"));
+				objProductBean.setItemDescription(rs.getString("item_description"));
+				objProductBean.setDescription2(rs.getString("description2"));
+				objProductBean.setDescription3(rs.getString("description3"));
+				objProductBean.setUnit(rs.getString("unit"));
+				objProductBean.setQtyBreak0(rs.getInt("qty_break0"));
+				objProductBean.setPrice0exGST(rs.getDouble("price0exGST"));
+				objProductBean.setQtyBreak1(rs.getInt("qty_break1"));
+				objProductBean.setPrice1exGST(rs.getDouble("price1exGST"));
+				objProductBean.setQtyBreak2(rs.getInt("qty_break2"));
+				objProductBean.setPrice2exGST(rs.getDouble("price2exGST"));
+				objProductBean.setQtyBreak3(rs.getInt("qty_break3"));
+				objProductBean.setPrice3exGST(rs.getDouble("price3exGST"));
+				objProductBean.setQtyBreak4(rs.getInt("qty_break4"));
+				objProductBean.setPrice4exGST(rs.getDouble("price4exGST"));
+				objProductBean.setAvgcost(rs.getDouble("avg_cost"));
+				objProductBean.setTaxCode(rs.getString("tax_code"));
+				objProductBean.setCreated_by(rs.getString("created_by"));
+				objProductBean.setGroup(rs.getString("product_group_code"));
+				objProductBean.setGstFlag(rs.getString("gst_flag"));
+				arrayProductBeans.add(objProductBean);
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		return arrayProductBeans;
+	}
+
 	public boolean uploadProductFile(ArrayList<ProductBean> productList) {
 		boolean isFileUploaded = false;
 		try {
@@ -387,19 +535,15 @@ public class ProductDao {
 				pstmt.setDouble(12, productList.get(i).getPrice3exGST());
 				pstmt.setDouble(13, productList.get(i).getQtyBreak4());
 				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
-//				pstmt.setDouble(15, productList.get(i).getAvgcost());
 				pstmt.setDouble(15, productList.get(i).getLastBuyPrice());
 				pstmt.setString(16, productList.get(i).getTaxCode());
-//				pstmt.setDouble(17, productList.get(i).getQtyBreak0());
 				pstmt.setString(17, productList.get(i).getGroup());
-				String gstExempt=productList.get(i).getTaxCode();
+				String gstExempt = productList.get(i).getTaxCode();
 				if (gstExempt.equalsIgnoreCase("E")) {
-					pstmt.setString(18,"YES");
+					pstmt.setString(18, "YES");
 				} else {
-					pstmt.setString(18,"NO");
+					pstmt.setString(18, "NO");
 				}
-//				System.out.println("Promo Price :: "+productList.get(i).getPromoPrice());
-//				pstmt.setDouble(20, productList.get(i).getPromoPrice());
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Batch Executed...!");
@@ -421,9 +565,10 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	}
+
 	public boolean uploadProductPromoPrice(ArrayList<ProductBean> productList) {
 		boolean isFileUploaded = false;
-		
+
 		try {
 			String productQuery = "UPDATE product_master set promo_price = ? where item_code = ? ;";
 			pstmt = conn.prepareStatement(productQuery);
@@ -439,8 +584,8 @@ public class ProductDao {
 				}
 			}
 			pstmt.executeBatch();
-//			System.out.println("Remaining Executed...!");
-//			System.out.println("Promo Price updated...!");
+			// System.out.println("Remaining Executed...!");
+			// System.out.println("Promo Price updated...!");
 			isFileUploaded = true;
 		} catch (Exception e) {
 			System.out.println("SQLException 1 :" + e);
@@ -451,7 +596,7 @@ public class ProductDao {
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				conn.commit();
 			} catch (SQLException e) {
@@ -460,12 +605,11 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	};
-	
-	public boolean addCodeInProductCodeVersion(ArrayList<ProductCodeUpdateBean> productCodeList) throws Exception{
+
+	public boolean addCodeInProductCodeVersion(ArrayList<ProductCodeUpdateBean> productCodeList) throws Exception {
 		System.out.println("addCodeInProductCodeVersion");
 		boolean isInserted = false;
-		String insertQryOnProductCodeVersion="INSERT IGNORE INTO product_code_version (old_item_code,new_item_code)"
-				+ " VALUES(?,?);";
+		String insertQryOnProductCodeVersion = "INSERT IGNORE INTO product_code_version (old_item_code,new_item_code)" + " VALUES(?,?);";
 		pstmt = conn.prepareStatement(insertQryOnProductCodeVersion);
 		final int batchSize = 5000;
 		int count = 0;
@@ -479,81 +623,85 @@ public class ProductDao {
 			}
 		}
 		pstmt.executeBatch();
-		isInserted=true;
+		isInserted = true;
 		return isInserted;
 	}
-	
-	public boolean updateCodeInProductMaster() throws Exception{
+
+	public boolean updateCodeInProductMaster() throws Exception {
 		System.out.println("updateCodeInProductMaster");
 		boolean isUpdated = false;
-		int result=0;
-		String updateProductCode="update product_master a, product_code_version b "
+		int result = 0;
+		String updateProductCode = "update product_master a, product_code_version b "
 				+ "set a.item_code = b.new_item_code where a.item_code = b.old_item_code ";
 		pstmt = conn.prepareStatement(updateProductCode);
-//		System.out.println(pstmt.);
+		// System.out.println(pstmt.);
 		pstmt.executeUpdate();
-	
-		if (result>0) {
-			isUpdated=true;
+
+		if (result > 0) {
+			isUpdated = true;
 		}
 		return isUpdated;
 	}
-	public boolean updateCodeInCreateQuoteDetails() throws Exception{
+
+	public boolean updateCodeInCreateQuoteDetails() throws Exception {
 		System.out.println("updateCodeInCreateQuoteDetails");
 		boolean isUpdated = false;
-		int result=0;
-		String updateProductCode="update create_quote_details a, product_code_version b "
+		int result = 0;
+		String updateProductCode = "update create_quote_details a, product_code_version b "
 				+ "set a.product_id = b.new_item_code where a.product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
 		pstmt.executeUpdate();
-		if (result>0) {
-			isUpdated=true;
+		if (result > 0) {
+			isUpdated = true;
 		}
 		return isUpdated;
 	}
-	public boolean updateMainIdInAlternativeMaster() throws Exception{
+
+	public boolean updateMainIdInAlternativeMaster() throws Exception {
 		System.out.println("updateMainIdInAlternativeMaster");
 		boolean isUpdated = false;
-		int result=0;
-		String updateProductCode="update alternative_product_master a, product_code_version b "
+		int result = 0;
+		String updateProductCode = "update alternative_product_master a, product_code_version b "
 				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
 		pstmt.executeUpdate();
-		if (result>0) {
-			isUpdated=true;
+		if (result > 0) {
+			isUpdated = true;
 		}
 		return isUpdated;
 	}
-	public boolean updateAltIdAlternativeMaster() throws Exception{
+
+	public boolean updateAltIdAlternativeMaster() throws Exception {
 		System.out.println("updateAltIdAlternativeMaster");
 		boolean isUpdated = false;
-		int result=0;
-		String updateProductCode="update alternative_product_master a, product_code_version b "
+		int result = 0;
+		String updateProductCode = "update alternative_product_master a, product_code_version b "
 				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
 		pstmt.executeUpdate();
-		if (result>0) {
-			isUpdated=true;
+		if (result > 0) {
+			isUpdated = true;
 		}
 		return isUpdated;
 	}
+
 	public boolean updateProductCode(ArrayList<ProductCodeUpdateBean> productCodeList) {
 		System.out.println("updateProductCode");
-		boolean isFileUploaded=false,isInserted= false;
+		boolean isFileUploaded = false, isInserted = false;
 		try {
-			System.out.println("Product Code List "+productCodeList);
-			isInserted=addCodeInProductCodeVersion(productCodeList);
+			System.out.println("Product Code List " + productCodeList);
+			isInserted = addCodeInProductCodeVersion(productCodeList);
 			if (isInserted) {
 				updateCodeInProductMaster();
 				updateCodeInCreateQuoteDetails();
 				updateMainIdInAlternativeMaster();
 				updateAltIdAlternativeMaster();
-				isFileUploaded=true;
+				isFileUploaded = true;
 			}
-			
+
 		} catch (Exception e) {
-		e.printStackTrace();
-		}finally{
+			e.printStackTrace();
+		} finally {
 			try {
 				conn.commit();
 			} catch (SQLException e) {
@@ -562,8 +710,9 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	}
+
 	public boolean deletedPreviousProduct(String productCodeString) {
-		System.out.println("deletedPreviousProduct :: "+productCodeString);
+		System.out.println("deletedPreviousProduct :: " + productCodeString);
 		boolean isDeleted = false;
 		try {
 			String deleteGroupQuery = "DELETE FROM product_master WHERE item_code in(?)";
@@ -585,8 +734,7 @@ public class ProductDao {
 	public ArrayList<ProductBean> getAllProductDetailsList(int fromLimit, int toLimit) {
 		ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 		ProductBean objBean = null;
-		String getUserGroups = "SELECT item_code, pm.product_group_code, "
-				+ " ifnull(item_description, '') item_description, "
+		String getUserGroups = "SELECT item_code, pm.product_group_code, " + " ifnull(item_description, '') item_description, "
 				+ " ifnull(description2, '') description2, description3, unit,"
 				+ " ifnull(qty_break0, '0.0') qty_break0, ifnull(price0exGST, '') price0exGST, "
 				+ " ifnull(qty_break1, '0.0') qty_break1, ifnull(price1exGST, '0.0') price1exGST, "

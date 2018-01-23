@@ -97,7 +97,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objEmptyResponseBean.setCode("error");
 		objEmptyResponseBean.setMessage(getText("common_error"));
 		System.out.println("loadPaymentReminderFile");
-		GlsFileReader objFileReader = new test.FileReader();
+		PaymentReminderFileReader objFileReader = new PaymentReminderFileReader();
 		System.out.println("Reminder File : " + reminderFile);
 		System.out.println("File Name : " + fileName);
 		ArrayList<PaymentReminderFileBean> listReminderBeans = new ArrayList<PaymentReminderFileBean>();
@@ -244,16 +244,16 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objPaymentReminderResponse.setMessage(getText("common_error"));
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
-			EmailFormatBean objBean = new EmailFormatBean();
-			objBean = objDao.getEmailFormatData();
-			ArrayList<EmailConfigBean> emailConfigList = new ArrayList<EmailConfigBean>();
-			emailConfigList = objDao.getEmailConfigList();
-			System.out.println("emailConfigList >>" + emailConfigList);
+//			EmailFormatBean objBean = new EmailFormatBean();
+//			objBean = objDao.getEmailFormatData();
+			ArrayList<EmailFormatBean> emailFormatList = new ArrayList<EmailFormatBean>();
+			emailFormatList = objDao.getEmailFormatData();
+			System.out.println("emailConfigList >>" + emailFormatList);
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
-			objPaymentReminderResponse.setObjEmailFormatBean(objBean);
-			objPaymentReminderResponse.setEmailConfigList(emailConfigList);
+//			objPaymentReminderResponse.setObjEmailFormatBean(objBean);
+			objPaymentReminderResponse.setEmailFormatList(emailFormatList);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -297,11 +297,17 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objSendReminderBean = new Gson().fromJson(sendReminderDetail, SendReminderBean.class);
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
-			objDao.addCustomersIntoEmailRecord(objSendReminderBean);
-			objDao.commit();
+			boolean isEmailDataUpdated = false, isCustomer = false;
+			isEmailDataUpdated = objDao.updateEmailData(objSendReminderBean.getEmailFormat().getBody());
+			if (isEmailDataUpdated) {
+				isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
+			}
+			if (isCustomer) {
+				objDao.commit();
+				objEmptyResponseBean.setCode("success");
+				objEmptyResponseBean.setMessage(getText("send_reminder_success"));
+			}
 			objDao.closeAll();
-			objEmptyResponseBean.setCode("success");
-			objEmptyResponseBean.setMessage(getText("send_reminder_success"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			objEmptyResponseBean.setCode("error");

@@ -43,6 +43,26 @@ public class ProductBean {
 //	private double altDefaultPrice;
 	private double promoPrice;
 	private double lastBuyPrice;
+	
+	private int priority;
+	private String lastBuyDate;
+	
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public String getLastBuyDate() {
+		return lastBuyDate;
+	}
+
+	public void setLastBuyDate(String lastBuyDate) {
+		this.lastBuyDate = lastBuyDate;
+	}
+
 	private String lineComment;
 
 	public int getQuoteId() {
