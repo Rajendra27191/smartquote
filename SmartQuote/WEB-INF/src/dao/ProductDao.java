@@ -495,6 +495,7 @@ public class ProductDao {
 				objProductBean.setQtyBreak4(rs.getInt("qty_break4"));
 				objProductBean.setPrice4exGST(rs.getDouble("price4exGST"));
 				objProductBean.setAvgcost(rs.getDouble("avg_cost"));
+				objProductBean.setLastBuyPrice(rs.getDouble("avg_cost"));
 				objProductBean.setTaxCode(rs.getString("tax_code"));
 				objProductBean.setCreated_by(rs.getString("created_by"));
 				objProductBean.setGroup(rs.getString("product_group_code"));

@@ -195,7 +195,8 @@ $scope.showDashboard=true;
 };
 
 $scope.handleGetChartDataDoneResponse=function(data){
-	// console.log("handleGetChartDataDoneResponse");
+	console.log("handleGetChartDataDoneResponse");
+	console.log(data)
 	// $scope.showDashboard=false;
 	$scope.productDetails={};
 	if(data){

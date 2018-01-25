@@ -1,4 +1,4 @@
-<div>
+<div id="unloadFile">
 <div class="row">
 <div class="col-md-12"><center><label class="main-label">Unload File</label></center></div>
 </div>
@@ -20,7 +20,7 @@
 		<i class="fa fa-file-excel-o fa-3x" aria-hidden="true" style="color:#5cb85c;"></i>
 	</div>
 	<div class="col-md-8">
-		<h5 style="font-size: 15px;">File Name:</h5>
+		<h5 style="font-size: 15px;margin-top: 0px;margin-bottom: 5px;">File Name:</h5>
 		{{file.value}}
 	</div>
 	<div class="col-md-2">
@@ -42,8 +42,6 @@
 </div>
 </div>	
 
-</div>
-
  <div ng-if="!fileList.length>0" style="padding:40px; opacity: .8;color: rgb(80, 74, 74);letter-spacing: 1px;" class="col-md-offset-2 col-md-8 ">
         <div class="col-md-12">
           <div class="well well-lg">
@@ -53,7 +51,7 @@
           </div>
         </div>
  </div>
-
+</div>
 <!-- <div class="col-md-8 col-md-offset-2" ng-if="!fileList.length>0"> 
 	<div class="col-md-12">
 	<div class="col-md-12 bs-callout bs-callout-success" > 

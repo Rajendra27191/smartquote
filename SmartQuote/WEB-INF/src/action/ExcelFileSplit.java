@@ -26,9 +26,289 @@ import org.json.JSONObject;
 import test.GlsFileReader;
 
 public class ExcelFileSplit implements GlsFileReader {
-	@Override
-	public JSONArray readFile(String arg0) throws FileNotFoundException, InvalidFormatException, IOException, JSONException {
-		return null;
+	public String convertToCamelCase(String str) {
+		String s = str.replaceAll("[^a-zA-Z0-9]", " ");
+		String lower = s.toLowerCase();
+		String[] parts = lower.split(" ");
+		String camelString = "";
+		for (int i = 0; i < parts.length; i++) {
+			String p = parts[i];
+			if (i == 0) {
+				try {
+					p = String.valueOf(p.charAt(0)).toLowerCase() + p.substring(1).toLowerCase();
+					camelString = camelString + p;
+				} catch (Exception e) {
+					p = p.substring(0).toLowerCase();
+					camelString = camelString + p;
+				}
+			} else {
+				try {
+					p = String.valueOf(p.charAt(0)).toUpperCase() + p.substring(1).toLowerCase();
+					camelString = camelString + p;
+				} catch (Exception e) {
+					p = p.substring(0).toLowerCase();
+					camelString = camelString + p;
+				}
+			}
+		}
+		return camelString;
+	}
+
+	public JSONArray readFile(String filename) throws InvalidFormatException, IOException, JSONException {
+		String headerValue = "";
+		ArrayList<String> headerList = new ArrayList<String>();
+		DataFormatter formatter = new DataFormatter();
+		JSONArray rows = new JSONArray();
+		String cellValue = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		InputStream ExcelFileToRead = new FileInputStream(filename);
+		XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+		XSSFSheet sheet1 = wb.getSheetAt(0);
+		JSONObject jRow = null;
+		int rowStart = sheet1.getFirstRowNum(); // Math.min(15,sheet1.getFirstRowNum());
+		int rowEnd = sheet1.getLastRowNum() + 1; // Math.max(1400,sheet1.getLastRowNum());
+		for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+			jRow = new JSONObject();
+			Row r = sheet1.getRow(rowNum);
+			if (r == null) {
+				continue;
+			}
+			int lastColumn = r.getLastCellNum();
+			if (rowNum == 0) {
+				for (int cn = 0; cn < lastColumn; cn++) {
+					Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+					// System.out.println("CELL :" + c);
+					if (c == null) {
+						cellValue = null;
+					} else {
+						switch (c.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+							headerValue = formatter.formatCellValue(c);
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							headerValue = formatter.formatCellValue(c) + "0";
+							break;
+						default:
+							break;
+						}
+						// headerValue = convertToCamelCase(headerValue);
+						headerValue = headerValue.replaceAll("[^a-zA-Z0-9]", "");
+						headerValue = String.valueOf(headerValue.charAt(0)).toLowerCase() + headerValue.substring(1);
+						headerList.add(headerValue);
+					}
+				}
+			} else {
+				for (int cn = 0; cn < lastColumn; cn++) {
+					Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+					if (c == null) {
+						cellValue = null;
+					} else {
+						switch (c.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+							cellValue = formatter.formatCellValue(c);
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							if (DateUtil.isCellDateFormatted(c)) {
+								try {
+									cellValue = sdf.format(c.getDateCellValue());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+							} else {
+								cellValue = formatter.formatCellValue(c) + "";
+							}
+							break;
+						case Cell.CELL_TYPE_BLANK:
+							cellValue = "";
+							break;
+						default:
+							break;
+						}
+					}
+					// System.out.println(headerList.get(cn));
+					// System.out.println(cellValue);
+					jRow.put(headerList.get(cn), cellValue);
+				}
+				rows.put(jRow);
+			}
+		}
+		return rows;
+	}
+
+	public int splitFileIntoMultiples(String filename, String filePath) throws InvalidFormatException, IOException, JSONException {
+		System.out.println("splitFile....");
+		String headerValue = "";
+		ArrayList<String> headerList = new ArrayList<String>();
+		DataFormatter formatter = new DataFormatter();
+		int rowCount = 0;
+		int subFileCount = 0;
+		String FILE_NAME = "";
+		String cellValue = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		InputStream ExcelFileToRead = new FileInputStream(filename);
+		XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+		XSSFSheet sheet1 = wb.getSheetAt(0);
+		XSSFWorkbook workbook = null;
+		XSSFSheet sheet = null;
+		// JSONArray rows = new JSONArray();
+		// JSONObject jRow = null;
+		File file = null;
+		FileOutputStream outputStream = null;
+		System.out.println("Project Path: " + filePath);
+		file = new File(filePath + "ExcelFiles");
+		if (file.exists()) {
+			System.out.println("Distroyed existing directory!");
+			delete(file);
+		}
+		int rowStart = sheet1.getFirstRowNum();
+		int rowEnd = sheet1.getLastRowNum() + 1;
+		// System.out.println("rowStart >> "+rowStart+" rowEnd >> "+rowEnd);
+		for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+			// System.out.println("ROW :: "+rowNum);
+			Row r = sheet1.getRow(rowNum);
+			if (r == null) {
+				continue;
+			}
+			int lastColumn = r.getLastCellNum();
+			if (rowCount == 0) {
+				workbook = new XSSFWorkbook();
+				sheet = workbook.createSheet("subfile");
+				FILE_NAME = "subFile" + subFileCount + ".xlsx";
+			}
+			Row writeRow = null;
+			// jRow = new JSONObject();
+			Cell writeCell;
+			int colNum = 0;
+			if (rowNum == 0) {
+				writeRow = sheet.createRow(rowCount);
+				colNum = 0;
+				for (int cn = 0; cn < lastColumn; cn++) {
+					Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+					if (c == null) {
+						cellValue = null;
+					} else {
+						switch (c.getCellType()) {
+						case Cell.CELL_TYPE_STRING:
+							headerValue = formatter.formatCellValue(c);
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							headerValue = formatter.formatCellValue(c) + "0";
+							break;
+						default:
+							break;
+						}
+						headerList.add(headerValue);
+						writeCell = writeRow.createCell(colNum++);
+						writeCell.setCellValue((String) headerValue);
+					}
+				}
+				rowCount++;
+			} else {
+				if (rowCount == 0) {
+					writeRow = sheet.createRow(rowCount);
+					colNum = 0;
+					for (String temp : headerList) {
+						writeCell = writeRow.createCell(colNum++);
+						writeCell.setCellValue((String) temp);
+					}
+					writeRow = sheet.createRow(++rowCount);
+					colNum = 0;
+					for (int cn = 0; cn < lastColumn; cn++) {
+						Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+						if (c == null) {
+							cellValue = null;
+						} else {
+							switch (c.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								cellValue = formatter.formatCellValue(c);
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								if (DateUtil.isCellDateFormatted(c)) {
+									try {
+										cellValue = sdf.format(c.getDateCellValue());
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								} else {
+									cellValue = formatter.formatCellValue(c) + "";
+								}
+								break;
+							case Cell.CELL_TYPE_BLANK:
+								cellValue = "0";
+								break;
+
+							default:
+								break;
+							}
+						}
+						writeCell = writeRow.createCell(colNum++);
+						writeCell.setCellValue((String) cellValue);
+					}
+				} else {
+					writeRow = sheet.createRow(rowCount);
+					colNum = 0;
+					for (int cn = 0; cn < lastColumn; cn++) {
+						Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
+						if (c == null) {
+							cellValue = null;
+						} else {
+							switch (c.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								cellValue = formatter.formatCellValue(c);
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								if (DateUtil.isCellDateFormatted(c)) {
+									try {
+										cellValue = sdf.format(c.getDateCellValue());
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								} else {
+									cellValue = formatter.formatCellValue(c) + "";
+								}
+								break;
+							case Cell.CELL_TYPE_BLANK:
+								cellValue = "";
+								break;
+
+							default:
+								break;
+							}
+						}
+						writeCell = writeRow.createCell(colNum++);
+						writeCell.setCellValue((String) cellValue);
+					}
+				}
+				// rows.put(jRow);
+				if (rowCount == 10000) {
+					if (!file.exists()) {
+						System.out.println("Directory is created!");
+						file.mkdir();
+					}
+					outputStream = new FileOutputStream(file + "/" + FILE_NAME);
+					workbook.write(outputStream);
+					outputStream.close();
+					rowCount = 0;
+					subFileCount++;
+				} else {
+					rowCount++;
+				}
+			}
+		}
+
+		if (rowCount > 0) {
+			FILE_NAME = "subFile" + subFileCount + ".xlsx";
+			file = new File(filePath + "ExcelFiles");
+			if (!file.exists()) {
+				System.out.println("Directory is created!");
+				file.mkdir();
+			}
+			outputStream = new FileOutputStream(file + "/" + FILE_NAME);
+			workbook.write(outputStream);
+			outputStream.close();
+			subFileCount++;
+		}
+		return subFileCount;
 	}
 
 	public int splitFile(String filename, String filePath) throws InvalidFormatException, IOException, JSONException {
@@ -171,7 +451,6 @@ public class ExcelFileSplit implements GlsFileReader {
 						i++;
 					}
 				}
-
 				rows.put(jRow);
 				if (rowCount == 10000) {
 					if (!file.exists()) {
@@ -204,7 +483,6 @@ public class ExcelFileSplit implements GlsFileReader {
 	}
 
 	public static void delete(File file) throws IOException {
-
 		if (file.isDirectory()) {
 			// directory is empty, then delete it
 			if (file.list().length == 0) {
@@ -225,7 +503,6 @@ public class ExcelFileSplit implements GlsFileReader {
 					System.out.println("Directory is deleted : " + file.getAbsolutePath());
 				}
 			}
-
 		} else {
 			// if file, then delete it
 			file.delete();

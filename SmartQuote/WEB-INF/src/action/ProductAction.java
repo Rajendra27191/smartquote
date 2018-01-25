@@ -273,16 +273,19 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			String projectPath = request.getSession().getServletContext().getRealPath("/");
 			GlsFileReader objSubFileReader;
 			JSONArray subFileString;
-			int subFileCount = objFileSplit.splitFile(productFile + "", projectPath);
+			// int subFileCount = objFileSplit.splitFile(productFile + "",
+			// projectPath);
+			int subFileCount = objFileSplit.splitFileIntoMultiples(productFile + "", projectPath);
 			ArrayList<ProductBean> productList = null;
 			ArrayList<ProductBean> filteredProductList = null;
 			ProductDao objProductDao = null;
 			for (int j = 0; j < subFileCount; j++) {
 				try {
 					String subFilePath = projectPath + "ExcelFiles/subFile" + j + ".xlsx";
-					objSubFileReader = new test.FileReader();
+//					objSubFileReader = new test.FileReader();
 					subFileString = new JSONArray();
-					subFileString = objSubFileReader.readFile(subFilePath);
+//					subFileString = objSubFileReader.readFile(subFilePath);
+					subFileString = objFileSplit.readFile(subFilePath);
 					System.out.println("subFileCount:" + subFileCount);
 					System.out.println(subFilePath);
 					System.out.println("subFileString :" + subFileString);
@@ -299,27 +302,27 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 						}
 					}
 					objProductDao = new ProductDao();
-					boolean isDeleted=false;
-					boolean isAddedToStaging=false;
-					boolean isAddedToStaging1=false;
-					boolean isFileUploaded=false;
+					boolean isDeleted = false;
+					boolean isAddedToStaging = false;
+					boolean isAddedToStaging1 = false;
+					boolean isFileUploaded = false;
 					isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
 					if (isDeleted) {
-						isAddedToStaging = objProductDao.addToProductStaging(productList);	
-						isAddedToStaging1=objProductDao.addToProductStaging1();
+						isAddedToStaging = objProductDao.addToProductStaging(productList);
+						isAddedToStaging1 = objProductDao.addToProductStaging1();
 					}
 					filteredProductList = new ArrayList<ProductBean>();
 					if (isAddedToStaging1) {
-						filteredProductList = objProductDao.getFilterdProductFromStaging();		
+						filteredProductList = objProductDao.getFilterdProductFromStaging();
 					}
-					if (filteredProductList.size()>0) {
-						isFileUploaded=objProductDao.uploadProductFile(filteredProductList);
-					}		
+					if (filteredProductList.size() > 0) {
+						isFileUploaded = objProductDao.uploadProductFile(filteredProductList);
+					}
 					objProductDao.commit();
 					if (isFileUploaded) {
 						objEmptyResponse.setCode("success");
 						objEmptyResponse.setMessage(getText("product_file_uploaded"));
-						CommonLoadAction.createProductFile(projectPath);
+						// CommonLoadAction.createProductFile(projectPath);
 					} else {
 						objEmptyResponse.setCode("error");
 						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
@@ -332,12 +335,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				}
 			}
 			if (objEmptyResponse.getCode() == "success") {
+				// System.out.println("CREATE JSON FILE");
 				CommonLoadAction.createProductFile(projectPath);
 				File fileToDelete = new File(projectPath + "ExcelFiles");
 				ExcelFileSplit.delete(fileToDelete);
 				ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList<ProductGroupBean>();
 				distinctProductGroupList = objProductDao.getDistinctProductGroupList();
-
 				System.out.println("Distinct Product Group List Size :" + distinctProductGroupList.size());
 				if (distinctProductGroupList.size() > 0) {
 					ProductGroupDao objProductGroupDao = new ProductGroupDao();
