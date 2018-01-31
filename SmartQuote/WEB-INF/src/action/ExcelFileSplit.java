@@ -2,7 +2,7 @@ package action;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+//import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -132,6 +132,7 @@ public class ExcelFileSplit implements GlsFileReader {
 				rows.put(jRow);
 			}
 		}
+		ExcelFileToRead.close();
 		return rows;
 	}
 
@@ -150,21 +151,17 @@ public class ExcelFileSplit implements GlsFileReader {
 		XSSFSheet sheet1 = wb.getSheetAt(0);
 		XSSFWorkbook workbook = null;
 		XSSFSheet sheet = null;
-		// JSONArray rows = new JSONArray();
-		// JSONObject jRow = null;
 		File file = null;
 		FileOutputStream outputStream = null;
-		System.out.println("Project Path: " + filePath);
+//		System.out.println("Project Path: " + filePath);
 		file = new File(filePath + "ExcelFiles");
 		if (file.exists()) {
-			System.out.println("Distroyed existing directory!");
+//			System.out.println("Distroyed existing directory!");
 			delete(file);
 		}
 		int rowStart = sheet1.getFirstRowNum();
 		int rowEnd = sheet1.getLastRowNum() + 1;
-		// System.out.println("rowStart >> "+rowStart+" rowEnd >> "+rowEnd);
 		for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-			// System.out.println("ROW :: "+rowNum);
 			Row r = sheet1.getRow(rowNum);
 			if (r == null) {
 				continue;
@@ -300,7 +297,7 @@ public class ExcelFileSplit implements GlsFileReader {
 			FILE_NAME = "subFile" + subFileCount + ".xlsx";
 			file = new File(filePath + "ExcelFiles");
 			if (!file.exists()) {
-				System.out.println("Directory is created!");
+//				System.out.println("Directory is created!");
 				file.mkdir();
 			}
 			outputStream = new FileOutputStream(file + "/" + FILE_NAME);
@@ -308,6 +305,8 @@ public class ExcelFileSplit implements GlsFileReader {
 			outputStream.close();
 			subFileCount++;
 		}
+		
+		ExcelFileToRead.close();
 		return subFileCount;
 	}
 
@@ -484,29 +483,23 @@ public class ExcelFileSplit implements GlsFileReader {
 
 	public static void delete(File file) throws IOException {
 		if (file.isDirectory()) {
-			// directory is empty, then delete it
 			if (file.list().length == 0) {
 				file.delete();
-				System.out.println("Directory is deleted : " + file.getAbsolutePath());
+//				System.out.println("Directory is deleted : " + file.getAbsolutePath());
 			} else {
-				// list all the directory contents
 				String files[] = file.list();
 				for (String temp : files) {
-					// construct the file structure
 					File fileDelete = new File(file, temp);
-					// recursive delete
 					delete(fileDelete);
 				}
-				// check the directory again, if empty then delete it
 				if (file.list().length == 0) {
 					file.delete();
-					System.out.println("Directory is deleted : " + file.getAbsolutePath());
+//					System.out.println("Directory is deleted : " + file.getAbsolutePath());
 				}
 			}
 		} else {
-			// if file, then delete it
 			file.delete();
-			System.out.println("File is deleted : " + file.getAbsolutePath());
+//			System.out.println("File is deleted : " + file.getAbsolutePath());
 		}
 	}
 }

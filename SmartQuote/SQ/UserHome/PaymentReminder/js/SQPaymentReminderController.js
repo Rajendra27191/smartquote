@@ -9,7 +9,7 @@ $scope.onExcelSelect = function($files)  {
 // console.log("onExcelSelect");
   // console.log($files);
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'xlsx' || $files[i].name.split('.').pop() == 'xls')){
+      if(($files[i].name.split('.').pop() == 'xlsx')){
        // console.log("valid file");
        latestExcelFile = $files[i];
       }
@@ -144,17 +144,18 @@ if (file) {
 $scope.handleUnloadFileDoneResponse=function(data){
   $scope.productDetails={};
   if(data){
+    console.log(data)
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
         $rootScope.alertSuccess(data.message);
         $scope.lastCall='unload';
         $scope.initUnload();
-        // $rootScope.hideSpinner();
       }else{
         $rootScope.alertError(data.message);
       }
     }
   }
+    $rootScope.hideSpinner();
 };
 
 var cleanupEventUnloadFileDone = $scope.$on("UnloadFileDone", function(event, message){
@@ -174,7 +175,8 @@ $scope.initSendReminderLastCall="";
 function initSend () {
 $scope.search={};
 $scope.customerDetailList=[];
-$scope.duration={id:0,value:'all'}
+// $scope.duration={id:0,value:'all'}
+$scope.duration="";
 $scope.reminderStatus=[
 {id:0,value:'all'},
 {id:1,value:'30'},
@@ -184,7 +186,7 @@ $scope.reminderStatus=[
 $scope.showFileDetailList=true;
 $scope.showFileView=false;
 $scope.showCustomerInfo=false;
-
+$scope.disabledFileInfo=false;
 $scope.isAllSelected=false;
 $scope.selectedRows = [];
 $scope.rows = { isAllSelected : false,};
@@ -246,17 +248,36 @@ $scope.objFile=angular.copy(file);
 $scope.closeFile=function(){
 initSend();
 };
+
 $scope.changeDuration=function(duration){
-// initSend();
+console.log(duration)
+if(duration) {
 $scope.duration=duration;
+$scope.invalidDuration=false; 
+}else{
+$scope.invalidDuration=true; 
+$scope.duration="";
+}
+};
+$scope.resetFileInfo=function(){
+$scope.duration="";
+$scope.disabledFileInfo=false;
+showFileView ();
+// $scope.resetSendRemider();
 };
 
 $scope.getCustomerDetailFromFile=function(){
-if ($scope.objFile) {
 // console.log($scope.duration);
+if ($scope.duration) {
+if ($scope.objFile) {
+$scope.invalidDuration=false;
 $rootScope.showSpinner();
 SQPaymentReminderFactory.GetCustomerDetailFromFile($scope.objFile.fileName,$scope.objFile.fileId);
 };
+}else{
+  $scope.invalidDuration=true;
+};
+
 };
 $scope.handleGetCustomerDetailFromFileDoneResponse=function(data){
   $scope.productDetails={};
@@ -266,7 +287,8 @@ $scope.handleGetCustomerDetailFromFileDoneResponse=function(data){
         $scope.customerDetailListTemp= angular.copy(data.fileLogList);;
         $scope.customerDetailList=angular.copy(data.fileLogList);;
          $scope.initSendReminderLastCall="getCustomerDetailFromFile";
-        showCustomerInfoView();
+          showCustomerInfoView();
+          $scope.disabledFileInfo=true;
       }else{
         $rootScope.alertError(data.message);
       }
@@ -445,15 +467,39 @@ $scope.mailFormatBtnClicked=function(){
   };
 };
 
-$scope.emailConfigChange=function(from){
-// console.log(from)
-// console.log($scope.compose.from)
-$scope.compose.header=from.header;
-$scope.compose.subject=from.subject;
-$scope.compose.body=from.body;
-// $scope.compose.body=from.body;
+$scope.assignToCompose=function(data){
+$scope.compose.header=data.header;
+$scope.compose.subject=data.subject;
+$scope.compose.body=data.body;
 };
 
+$scope.inputReminderChanged=function(reminder,from){
+  console.log("inputReminderChanged");
+  console.log(reminder);
+  if (reminder) {
+    angular.forEach($scope.emailConfigList, function(value, key){
+      if (reminder==value.templateId && from.configId ==value.configId) {
+      $scope.assignToCompose(value);
+      };
+    });
+
+  } else{
+
+  };
+};
+$scope.inputFromChanged=function(from){
+  console.log("inputFromChanged")
+  // console.log(from)
+  if (from) {
+    $scope.showInputReminder=true;
+    $scope.compose.header="";
+    $scope.compose.subject="";
+    $scope.compose.body="";
+    $scope.compose.reminder="";
+  } else{
+    $scope.showInputReminder=false;
+  };
+};
 
 $scope.acceptEmailFormatClicked=function(){
 // console.log($scope.form)
@@ -468,6 +514,7 @@ $scope.form.emailFormat.submitted=true;
 //======================================================
 
 $scope.resetSendRemider=function(){
+$scope.disabledFileInfo=false;
 $scope.disabledSendBtn=true;
 $scope.compose=null;
 $scope.form.customerList.submitted=false;
@@ -482,6 +529,7 @@ emailFormatTemp={
   'from':$scope.compose.from.configId,
   'subject':$scope.compose.subject,
   'body':$scope.compose.body,
+  'templateId':$scope.compose.reminder,
 }
 sendReminderDetail={
 'customerArrayList':$scope.selectedRows,
@@ -497,7 +545,7 @@ $scope.sendMailBtnClicked=function(){
   $scope.getAllSelectedRows();
   if ($scope.selectedRows.length>0) {
     if ($scope.compose!=null) {
-      // console.log($scope.jsonForSendMail());
+      console.log($scope.jsonForSendMail());
       $rootScope.showSpinner();
       SQPaymentReminderFactory.SendReminder($scope.jsonForSendMail());
     };
@@ -540,6 +588,11 @@ $scope.cancelSendReminderBtnClick=function(){
 showFileView ();
 $scope.resetSendRemider();
 };
+$scope.closeEmailFormatClicked=function(){
+  $scope.compose={}
+  $scope.showInputReminder=false;
+  $scope.disabledSendBtn=true;
+}
 
 //=======================================================
 //================  Email Log Code ======================
@@ -829,3 +882,4 @@ cleanupEventGetPendingEmailListNotDone();
 
 });
 });
+

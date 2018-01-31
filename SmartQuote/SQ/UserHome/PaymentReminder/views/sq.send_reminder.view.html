@@ -89,7 +89,7 @@ td .form-control {
 	</div>
 </div> -->
 </div>
-</div><!--end fileDetailList --> 
+
 
 <div id="fileView" ng-if="showFileView">
 <div class="col-md-10 col-md-offset-1">
@@ -116,9 +116,13 @@ td .form-control {
 <div class="col-md-12">
 <div class="col-md-4"><label>Reminder Status</label></div>
 <div class="col-md-1"><label>:</label></div>
-<div class="col-md-3">
-<select name="duration" id="duration" class="form-control" ng-options="reminder.value for reminder in reminderStatus track by reminder.id" ng-model="duration" ng-change="changeDuration(duration)" required>
+<div class="col-md-5">
+<select name="duration" id="duration" class="form-control" ng-options="reminder.value for reminder in reminderStatus track by reminder.id" ng-model="duration" ng-change="changeDuration(duration)" required ng-disabled="disabledFileInfo">
+<option value=""> Select Reminder Status </option>
 </select>
+<span ng-show="invalidDuration" class="invalid-control">
+<small>*Please select reminder status.</small>
+</span>
 </div>
 </div>
 </div>
@@ -127,12 +131,13 @@ td .form-control {
 <div class="col-md-12">
 <!-- <div class="col-md-1"></div> -->
 <div class="col-md-3">
-	<button  class="btn btn-primary btn-block" ng-click="getCustomerDetailFromFile()" tooltip-placement="top" uib-tooltip="click to get file details">
+	<button  class="btn btn-primary btn-block" ng-click="getCustomerDetailFromFile()" tooltip-placement="top" uib-tooltip="click to get file details" ng-disabled="disabledFileInfo">
 	<i class="fa fa-download" aria-hidden="true"></i> Get Records
 	</button>
 </div>
 <div class="col-md-3">
-	<button  class="btn btn-default btn-block" ng-click="duration = {id:0,value:'all'};changeDuration(duration)" tooltip-placement="top" uib-tooltip="click to get file details">
+	<button  class="btn btn-default btn-block" ng-click="duration='';resetFileInfo(duration)" tooltip-placement="top" uib-tooltip="click to get file details">
+		<!--duration = {id:0,value:'all'};  -->
 	<i class="fa fa-refresh" aria-hidden="true"></i> Reset
 	</button>
 </div>
@@ -312,17 +317,37 @@ td .form-control {
 			<div class="col-md-12">
 			  <label class="col-md-2" for="inputFrom">From</label>
 			  <div class="col-md-10">
-			  	<select name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.emailId for emailConfig in emailConfigList" ng-model="compose.from" ng-change="emailConfigChange(compose.from)" ng-required="true" style="height: 30px;padding: 6px 12px;">
+			  	<select name="inputFrom" id="inputFrom" class="form-control" ng-options="emailConfig as emailConfig.emailId for emailConfig in emailConfigList | unique: 'emailId'" ng-model="compose.from"  ng-required="true" style="height: 30px;padding: 6px 12px;" ng-change="inputFromChanged(compose.from)">
 			  		<option value="">-- Select From --</option>
 				</select>
+				<!-- ng-change="emailConfigChange(compose.from)" -->
 				<span ng-show="form.emailFormat.inputFrom.$invalid && form.emailFormat.submitted" class="invalid-control">
 				<small>*Please select from email.</small>
 				</span>
 			  </div>
 			</div>
+			<div class="col-md-12" ng-if="showInputReminder">
+			  <label class="col-md-2" for="inputFrom">Reminder</label>
+			  <div class="col-md-10">
+			  	<select name="inputReminder" id="inputReminder" class="form-control" ng-model="compose.reminder" ng-required="true" style="height: 30px;padding: 6px 12px;" ng-change="inputReminderChanged(compose.reminder,compose.from)">
+			  		<option value="">-- Select Reminder --</option>
+			  		<option value="1">First Reminder</option>
+			  		<option value="2">Second Reminder</option>
+			  		<option value="3">Final Reminder</option>
+				</select>
+				<span ng-show="form.emailFormat.inputReminder.$invalid && form.emailFormat.submitted" class="invalid-control">
+				<small>*Please select reminder.</small>
+				</span>
+			  </div>
+			</div>
 			<div class="col-md-12">
 			  <label class="col-md-2" for="inputSubject">Subject</label>
-			  <div class="col-md-10"><input type="text" class="form-control" name="inputSubject" id="inputSubject" placeholder="subject" ng-model="compose.subject" style="height: 30px;padding: 6px 12px;"></div>
+			  <div class="col-md-10">
+			  	<input type="text" class="form-control" name="inputSubject" id="inputSubject" placeholder="subject" ng-model="compose.subject" style="height: 30px;padding: 6px 12px;" ng-required="true">
+			  	<span ng-show="form.emailFormat.inputSubject.$invalid && form.emailFormat.submitted" class="invalid-control">
+				<small>*Please add subject.</small>
+				</span>
+			  </div>
 			</div>
 
 			<div class="col-md-12">
@@ -348,7 +373,7 @@ td .form-control {
       	<div class="row row-control">
 		<div class="col-md-6"></div>
 		<div class="col-md-3">
-			<button type="button" class="btn btn-block btn-default"  data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-block btn-default"  data-dismiss="modal" ng-click="closeEmailFormatClicked()">Close</button>
 		</div>
 		<div class="col-md-3">
 			<button type="button" class="btn btn-block  btn-primary " ng-click="acceptEmailFormatClicked()">Accept</button>
@@ -359,7 +384,7 @@ td .form-control {
   </div>
 </div>
 
-
+</div> 
 
          
 

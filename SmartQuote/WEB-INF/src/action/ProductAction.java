@@ -109,7 +109,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		try {
 			ProductDao objDao = new ProductDao();
 			valuePairBeans = objDao.getProductList(productLike);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			data.setCode("success");
 			data.setMessage(getText("list_loaded"));
@@ -132,12 +132,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		ProductDao objDao = new ProductDao();
 		isProductExist = objDao.isProductExist(objBean.getItemCode());
-		objDao.commit();
+//		objDao.commit();
 		objDao.closeAll();
 		if (!isProductExist) {
 			ProductDao objDao1 = new ProductDao();
 			isProductCreated = objDao1.saveProduct(objBean);
-			objDao1.commit();
+//			objDao1.commit();
 			objDao1.closeAll();
 			if (isProductCreated) {
 				objEmptyResponse.setCode("success");
@@ -163,7 +163,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			productDetailsResponse.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
 			ProductBean objBean = objDao.getProductDetails(productCode);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
 				productDetailsResponse.setCode("success");
@@ -184,7 +184,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			productDetailsResponse.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
 			ProductBean objBean = objDao.getProductDetailsWithAlternatives(productCode);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
 				productDetailsResponse.setCode("success");
@@ -206,7 +206,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 			arrayProductBeans = objDao.getAlternatives(productCode);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			if (arrayProductBeans.size() > 0) {
 				objAlternativesResponseList.setCode("success");
@@ -228,7 +228,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		ProductDao objDao1 = new ProductDao();
 		isProductUpdated = objDao1.updateProduct(objBean);
-		objDao1.commit();
+//		objDao1.commit();
 		objDao1.closeAll();
 		if (isProductUpdated) {
 			objEmptyResponse.setCode("success");
@@ -247,7 +247,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		// productCode = "1";
 		ProductDao objDao = new ProductDao();
 		boolean isDeleted = objDao.deleteProduct(productCode);
-		objDao.commit();
+//		objDao.commit();
 		objDao.closeAll();
 		if (isDeleted) {
 			objEmptyResponse.setCode("success");
@@ -265,75 +265,61 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 		ExcelFileSplit objFileSplit = new ExcelFileSplit();
+		ProductDao objProductDao = new ProductDao();
 		try {
 			System.out.println("Product File: " + productFile);
-			// String filename = "dataFile.xlsx";
-			// File fileToCreate = new File(filename);
-			// FileUtils.copyFile(productFile, fileToCreate);
 			String projectPath = request.getSession().getServletContext().getRealPath("/");
-			GlsFileReader objSubFileReader;
 			JSONArray subFileString;
-			// int subFileCount = objFileSplit.splitFile(productFile + "",
-			// projectPath);
 			int subFileCount = objFileSplit.splitFileIntoMultiples(productFile + "", projectPath);
 			ArrayList<ProductBean> productList = null;
-			ArrayList<ProductBean> filteredProductList = null;
-			ProductDao objProductDao = null;
+			objProductDao.truncateProductStaging("product_master_staging");
+			objProductDao.truncateProductStaging("product_master_staging1");
+//			objProductDao.commit();
+			boolean isDeleted = false, isAddedToStaging = false, isAddedToStaging1 = false, isFileUploaded = false;
+			String subFilePath = "";
 			for (int j = 0; j < subFileCount; j++) {
 				try {
-					String subFilePath = projectPath + "ExcelFiles/subFile" + j + ".xlsx";
-//					objSubFileReader = new test.FileReader();
+					subFilePath = projectPath + "ExcelFiles/subFile" + j + ".xlsx";
 					subFileString = new JSONArray();
-//					subFileString = objSubFileReader.readFile(subFilePath);
 					subFileString = objFileSplit.readFile(subFilePath);
-					System.out.println("subFileCount:" + subFileCount);
-					System.out.println(subFilePath);
-					System.out.println("subFileString :" + subFileString);
 					productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
 					}.getType());
-					System.out.println("Total Products: " + productList.size());
 					// =============
-					String productCodeString = "";
-					for (int i = 0; i < productList.size() && productList != null; i++) {
-						if (i == 0) {
-							productCodeString = "'" + productList.get(i).getItemCode().trim() + "'";
-						} else {
-							productCodeString = productCodeString + ", '" + productList.get(i).getItemCode().trim() + "'";
-						}
-					}
-					objProductDao = new ProductDao();
-					boolean isDeleted = false;
-					boolean isAddedToStaging = false;
-					boolean isAddedToStaging1 = false;
-					boolean isFileUploaded = false;
-					isDeleted = objProductDao.deletedPreviousProduct(productCodeString);
-					if (isDeleted) {
-						isAddedToStaging = objProductDao.addToProductStaging(productList);
-						isAddedToStaging1 = objProductDao.addToProductStaging1();
-					}
-					filteredProductList = new ArrayList<ProductBean>();
-					if (isAddedToStaging1) {
-						filteredProductList = objProductDao.getFilterdProductFromStaging();
-					}
-					if (filteredProductList.size() > 0) {
-						isFileUploaded = objProductDao.uploadProductFile(filteredProductList);
-					}
-					objProductDao.commit();
-					if (isFileUploaded) {
-						objEmptyResponse.setCode("success");
-						objEmptyResponse.setMessage(getText("product_file_uploaded"));
-						// CommonLoadAction.createProductFile(projectPath);
-					} else {
-						objEmptyResponse.setCode("error");
-						objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
-					}
-
+					isAddedToStaging = objProductDao.addToProductStaging(productList);
+					if(!isAddedToStaging)
+						break;	
 				} catch (Exception e) {
 					System.out.println("Error in " + j);
 					e.printStackTrace();
 					break;
 				}
 			}
+			// =======Without split======
+//			subFileString = new JSONArray();
+//			subFileString = objFileSplit.readFile(productFile + "");
+//			productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
+//			}.getType());
+//			isAddedToStaging = objProductDao.addToProductStaging(productList);
+			// =============
+//			objProductDao.commit();
+			if (isAddedToStaging) {
+				isDeleted = objProductDao.deletedPreviousProduct();
+			}
+			if (isDeleted) {
+				isAddedToStaging1 = objProductDao.addToProductStaging1();
+			}
+			if (isAddedToStaging && isAddedToStaging1) {
+				isFileUploaded=objProductDao.addToProductMaster();
+			}
+//			objProductDao.commit();
+			if (isFileUploaded) {
+				objEmptyResponse.setCode("success");
+				objEmptyResponse.setMessage(getText("product_file_uploaded"));
+			} else {
+				objEmptyResponse.setCode("error");
+				objEmptyResponse.setMessage(getText("product_file_not_uploaded"));
+			}
+			System.out.println("Product Master Prepared...!");
 			if (objEmptyResponse.getCode() == "success") {
 				// System.out.println("CREATE JSON FILE");
 				CommonLoadAction.createProductFile(projectPath);
@@ -351,10 +337,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 						System.out.println("New Product Group insertion unsuccessfully...");
 					}
 				}
-				objProductDao.commit();
-				objProductDao.closeAll();
+//				objProductDao.commit();
+				System.out.println("Product File Created...!");
 			}
-
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -375,6 +360,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			objProductDao.closeAll();
 		}
 		System.out.println("Done");
 
@@ -502,7 +489,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			objProductBeans = objDao.getAllProductDetailsList(fromLimit, toLimit);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
 			objProductDetailResponseList.setMessage(getText("details_loaded"));
@@ -524,7 +511,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			System.out.println("prodLike:" + productLike);
 			objProductBeans = objDao.getSearchedProductDetailsList(productLike);
-			objDao.commit();
+//			objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
 			objProductDetailResponseList.setMessage(getText("details_loaded"));

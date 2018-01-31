@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
 
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
@@ -19,11 +19,6 @@ public class ProductDao {
 
 	public ProductDao() {
 		conn = new ConnectionFactory().getConnection();
-		try {
-			conn.setAutoCommit(false);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void commit() {
@@ -72,11 +67,6 @@ public class ProductDao {
 			System.out.println("T2: " + System.currentTimeMillis());
 			System.out.println("RowCount>>" + rsCount);
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		// System.out.println("getProductList deinit :::"+df.format(dateobj));
@@ -94,11 +84,6 @@ public class ProductDao {
 				isProductExist = true;
 			}
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isProductExist;
@@ -136,11 +121,6 @@ public class ProductDao {
 			pstmt.executeUpdate();
 			isProductCreated = true;
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isProductCreated;
@@ -179,11 +159,6 @@ public class ProductDao {
 				objBean.setPromoPrice(rs.getDouble("promoPrice"));
 			}
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return objBean;
@@ -235,11 +210,6 @@ public class ProductDao {
 			}
 
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return objBean;
@@ -326,11 +296,6 @@ public class ProductDao {
 			pstmt.executeUpdate();
 			isCustomerUpdated = true;
 		} catch (SQLException e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isCustomerUpdated;
@@ -345,29 +310,20 @@ public class ProductDao {
 			pstmt.executeUpdate();
 			isDeleted = true;
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isDeleted;
 	}
 
-	public boolean truncateProductStaging() {
+	public boolean truncateProductStaging(String tablename) {
 		boolean isTruncate = false;
 		try {
-			String deleteGroupQuery = "TRUNCATE TABLE product_master_staging;";
+			String deleteGroupQuery = "TRUNCATE TABLE "+ tablename;
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
+			System.out.println(pstmt);
 			pstmt.executeUpdate();
 			isTruncate = true;
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isTruncate;
@@ -375,18 +331,14 @@ public class ProductDao {
 
 	public boolean addToProductStaging(ArrayList<ProductBean> productList) {
 		boolean isFileUploaded = false;
-		String truncateQuery = "TRUNCATE TABLE product_master_staging;";
-		String productQuery = "REPLACE INTO product_master_staging (item_code, item_description, description2, "
+		String productQuery = "INSERT INTO product_master_staging (item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, "
 				+ "product_group_code,gst_flag,priority,last_buy_date) "
 				+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?,?,?)";
 		try {
-			pstmt = conn.prepareStatement(truncateQuery);
-			System.out.println(pstmt);
-			int j = pstmt.executeUpdate();
-			// System.out.println("J" + j);
 			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);
 			final int batchSize = 5000;
 			int count = 0;
 			for (int i = 0; i < productList.size(); i++) {
@@ -414,7 +366,8 @@ public class ProductDao {
 					pstmt.setString(18, "NO");
 				}
 				pstmt.setInt(19, productList.get(i).getPriority());
-//				System.out.println("getLastBuyDate() : " + productList.get(i).getLastBuyDate());
+				// System.out.println("getLastBuyDate() : " +
+				// productList.get(i).getLastBuyDate());
 				pstmt.setString(20, productList.get(i).getLastBuyDate());
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
@@ -423,17 +376,10 @@ public class ProductDao {
 				}
 			}
 			pstmt.executeBatch(); // Insert remaining records
-			System.out.println("Staging Remaining Executed...!");
+			// System.out.println("Staging Remaining Executed...!");
 			isFileUploaded = true;
 
 		} catch (Exception e) {
-			System.out.println("SQLException 1 :" + e);
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				System.out.println("SQLException 2 :" + e1);
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isFileUploaded;
@@ -441,31 +387,39 @@ public class ProductDao {
 
 	public boolean addToProductStaging1() {
 		boolean isFileUploaded = false;
-		String truncateQuery = "TRUNCATE TABLE product_master_staging1;";
 		String productQuery = "INSERT INTO product_master_staging1 "
 				+ "SELECT item_code, min(priority), max(last_buy_date) FROM product_master_staging group by 1; ";
 		try {
-			pstmt = conn.prepareStatement(truncateQuery);
-			System.out.println(pstmt);
-			int j = pstmt.executeUpdate();
-			// System.out.println("J" + j);
 			pstmt = conn.prepareStatement(productQuery);
+			@SuppressWarnings("unused")
 			int i = pstmt.executeUpdate();
+			System.out.println(pstmt);
 			isFileUploaded = true;
-
 		} catch (Exception e) {
-			System.out.println("SQLException 1 :" + e);
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				System.out.println("SQLException 2 :" + e1);
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isFileUploaded;
 	}
+	public boolean addToProductMaster() {
+		boolean isFileUploaded = false;
+		String productQuery = "INSERT IGNORE INTO product_master "
+				+ "SELECT a.item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
+				+ "qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, qty_break4, price4exGST, "
+				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000' "
+				+ "FROM product_master_staging a use index (item_code_idx), product_master_staging1 b "
+				+ "WHERE a.item_code = b.item_code and a.priority = b.priority and a.last_buy_date = b.last_buy_date;";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);
+			@SuppressWarnings("unused")
+			int i = pstmt.executeUpdate();
 
+			isFileUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
 	public ArrayList<ProductBean> getFilterdProductFromStaging() {
 		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 		try {
@@ -475,6 +429,7 @@ public class ProductDao {
 					+ "tax_code,created_by,product_group_code,gst_flag " + "FROM product_master_staging a,  product_master_staging1 b "
 					+ "WHERE a.item_code = b.item_code and a.priority = b.priority and a.last_buy_date = b.last_buy_date;";
 			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);
 			rs = pstmt.executeQuery();
 			ProductBean objProductBean = null;
 			while (rs.next()) {
@@ -504,7 +459,6 @@ public class ProductDao {
 			}
 
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 		return arrayProductBeans;
@@ -518,6 +472,7 @@ public class ProductDao {
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, product_group_code,gst_flag) "
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?)";
 			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);
 			final int batchSize = 5000;
 			int count = 0;
 
@@ -555,13 +510,6 @@ public class ProductDao {
 			System.out.println("Remaining Executed...!");
 			isFileUploaded = true;
 		} catch (Exception e) {
-			System.out.println("SQLException 1 :" + e);
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				System.out.println("SQLException 2 :" + e1);
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isFileUploaded;
@@ -589,20 +537,7 @@ public class ProductDao {
 			// System.out.println("Promo Price updated...!");
 			isFileUploaded = true;
 		} catch (Exception e) {
-			System.out.println("SQLException 1 :" + e);
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				System.out.println("SQLException 2 :" + e1);
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return isFileUploaded;
 	};
@@ -712,21 +647,15 @@ public class ProductDao {
 		return isFileUploaded;
 	}
 
-	public boolean deletedPreviousProduct(String productCodeString) {
-		System.out.println("deletedPreviousProduct :: " + productCodeString);
+	public boolean deletedPreviousProduct() {
 		boolean isDeleted = false;
 		try {
-			String deleteGroupQuery = "DELETE FROM product_master WHERE item_code in(?)";
+			String deleteGroupQuery = "DELETE a.* FROM product_master a, product_master_staging b " + "WHERE a.item_code = b.item_code;";
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
-			pstmt.setString(1, productCodeString);
+			System.out.println(pstmt);
 			pstmt.executeUpdate();
 			isDeleted = true;
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return isDeleted;
@@ -777,11 +706,6 @@ public class ProductDao {
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return objProductBeans;
@@ -834,11 +758,6 @@ public class ProductDao {
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 		return objProductBeans;
@@ -859,12 +778,6 @@ public class ProductDao {
 				objProductGroupBeans.add(objBean);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
 		}
 

@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import pojo.EmailConfigBean;
 import pojo.EmailFormatBean;
 import pojo.EmailLogBean;
 import pojo.KeyValuePairBean;
@@ -221,17 +219,22 @@ public class PaymentReminderDao {
 			System.out.println(pstmt);
 			int i = pstmt.executeUpdate();
 			int j=0;
+			System.out.println("I "+i);
 			if (i > 0) {
 				pstmt = conn.prepareStatement(query2);
 				pstmt.setInt(1, fileId);
 				j = pstmt.executeUpdate();
+				System.out.println("J "+j);
 			}
+			int x=0;
 			if (j > 0){
 				pstmt = conn.prepareStatement(query3);
 				pstmt.setInt(1, fileId);
 				pstmt.setString(2, fileName);
-				int x = pstmt.executeUpdate();
+				x = pstmt.executeUpdate();
+				System.out.println("X "+x);
 			}
+		
 				isUnload = true;
 		} catch (Exception e) {
 			try {
@@ -307,7 +310,7 @@ public class PaymentReminderDao {
 		ArrayList<EmailFormatBean> objArrayList = null;
 //		String query = "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
 //				+ "WHERE email_id=1; ";
-		String query = "SELECT a.config_id,a.email_id,header,body,contact_person,subject "
+		String query = "SELECT a.config_id,b.template_id,a.email_id,header,body,contact_person,subject "
 				+ "FROM email_config a, email_data_ref b where a.config_id=b.config_id;";
 	
 		try {
@@ -317,6 +320,7 @@ public class PaymentReminderDao {
 			while (rs.next()) {
 				EmailFormatBean objBean = new EmailFormatBean();
 				objBean.setConfigId(rs.getInt("config_id"));
+				objBean.setTemplateId(rs.getInt("template_id"));
 				objBean.setEmailId(rs.getString("email_id"));
 				objBean.setHeader(rs.getString("header"));
 				objBean.setBody(rs.getString("body"));
@@ -329,27 +333,6 @@ public class PaymentReminderDao {
 		}
 		return objArrayList;
 	};
-
-//	public ArrayList<EmailConfigBean> getEmailConfigList() {
-//		System.out.println("inside getEmailConfigList");
-//		ArrayList<EmailConfigBean> objArrayList = null;
-//		String query = "Select config_id, email_id From email_config Where module='PR' AND flag='1';";
-//		try {
-//			pstmt = conn.prepareStatement(query);
-//			System.out.println(pstmt);
-//			rs = pstmt.executeQuery();
-//			objArrayList = new ArrayList<EmailConfigBean>();
-//			while (rs.next()) {
-//				EmailConfigBean objBean = new EmailConfigBean();
-//				objBean.setConfigId(rs.getInt("config_id"));
-//				objBean.setEmailId(rs.getString("email_id"));
-//				objArrayList.add(objBean);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return objArrayList;
-//	}
 
 	public boolean updateEmailData(String body) {
 		boolean isUpdated = false;
@@ -393,7 +376,9 @@ public class PaymentReminderDao {
 //		System.out.println(objSendReminderBean);
 		boolean isUpdated = false;
 		String query = "replace into email_record(config_id,batch_id,file_id,cust_code,cust_name,total,"
-				+ "current,d30,d60,d90,email_id,send_status,due,remark,date,file_name,file_unload_status)" + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?);";
+				+ "current,d30,d60,d90,email_id,send_status,due,remark,date,file_name,file_unload_status,"
+				+ "template_id,subject,body)" 
+				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?);";
 		try {
 			pstmt = conn.prepareStatement(query);
 			final int batchSize = 50;
@@ -416,6 +401,9 @@ public class PaymentReminderDao {
 				pstmt.setString(14, "");
 				pstmt.setString(15, objSendReminderBean.getCustomerArrayList().get(i).getFileName());
 				pstmt.setInt(16, 0);
+				pstmt.setInt(17,objSendReminderBean.getEmailFormat().getTemplateId());
+				pstmt.setString(18,objSendReminderBean.getEmailFormat().getSubject());
+				pstmt.setString(19,objSendReminderBean.getEmailFormat().getBody());		
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Batch Executed...!");

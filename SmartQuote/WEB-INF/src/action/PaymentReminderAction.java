@@ -5,12 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import pojo.EmailConfigBean;
 import pojo.EmailFormatBean;
 import pojo.EmailLogBean;
@@ -21,9 +24,11 @@ import pojo.SendReminderBean;
 import responseBeans.KeyValuePairResponseBean;
 import responseBeans.PaymentReminderResponseBean;
 import test.GlsFileReader;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.opensymphony.xwork2.ActionSupport;
+
 import dao.PaymentReminderDao;
 
 @SuppressWarnings("serial")
@@ -298,10 +303,20 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			boolean isEmailDataUpdated = false, isCustomer = false;
-			isEmailDataUpdated = objDao.updateEmailData(objSendReminderBean.getEmailFormat().getBody());
-			if (isEmailDataUpdated) {
-				isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
-			}
+			String customerCodeString = "";
+//			for (int i = 0; i < objSendReminderBean.getCustomerArrayList().size() && objSendReminderBean.getCustomerArrayList() != null; i++) {
+//				if (i == 0) {
+//					customerCodeString = "'" + objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim() + "'";
+//				} else {
+//					customerCodeString = customerCodeString + ", '" + objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim() + "'";
+//				}
+//			}
+//			System.out.println("Cust List: "+customerCodeString);
+//			isEmailDataUpdated = objDao.updateEmailData(objSendReminderBean.getEmailFormat().getBody());
+//			if (isEmailDataUpdated) {
+//				isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
+//			}
+			isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
 			if (isCustomer) {
 				objDao.commit();
 				objEmptyResponseBean.setCode("success");
