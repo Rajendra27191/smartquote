@@ -26,6 +26,24 @@ import org.json.JSONObject;
 import test.GlsFileReader;
 
 public class ExcelFileSplit implements GlsFileReader {
+	static XSSFWorkbook workbook = null;
+	static XSSFSheet sheet = null;
+	File file = null;
+	FileOutputStream outputStream = null;
+	ArrayList<String> headerList = null;
+	DataFormatter formatter = null;
+	static int rowCount = 0, subFileCount = 0;
+	static String FILE_NAME = "", headerValue = "", cellValue = "";
+	SimpleDateFormat sdf = null;
+	XSSFWorkbook wb = null;
+	XSSFSheet sheet1 = null;
+	int rowStart = 0, rowEnd = 0, rowNum = 0;
+	
+	public ExcelFileSplit() {
+		formatter = new DataFormatter();
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+	}
+	
 	public String convertToCamelCase(String str) {
 		String s = str.replaceAll("[^a-zA-Z0-9]", " ");
 		String lower = s.toLowerCase();
@@ -67,14 +85,17 @@ public class ExcelFileSplit implements GlsFileReader {
 		JSONObject jRow = null;
 		int rowStart = sheet1.getFirstRowNum(); // Math.min(15,sheet1.getFirstRowNum());
 		int rowEnd = sheet1.getLastRowNum() + 1; // Math.max(1400,sheet1.getLastRowNum());
+		int lastColumn = 0;
 		for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
 			jRow = new JSONObject();
 			Row r = sheet1.getRow(rowNum);
 			if (r == null) {
 				continue;
 			}
-			int lastColumn = r.getLastCellNum();
+					
 			if (rowNum == 0) {
+				lastColumn=r.getLastCellNum();
+//				System.out.println("lastColumn : "+lastColumn);
 				for (int cn = 0; cn < lastColumn; cn++) {
 					Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
 					// System.out.println("CELL :" + c);
@@ -98,6 +119,7 @@ public class ExcelFileSplit implements GlsFileReader {
 					}
 				}
 			} else {
+//				System.out.println("lastColumn : "+lastColumn);
 				for (int cn = 0; cn < lastColumn; cn++) {
 					Cell c = r.getCell(cn, Row.RETURN_BLANK_AS_NULL);
 					if (c == null) {
@@ -125,7 +147,8 @@ public class ExcelFileSplit implements GlsFileReader {
 							break;
 						}
 					}
-					// System.out.println(headerList.get(cn));
+//					 System.out.println("CN : "+cn);
+//					 System.out.println(headerList.get(cn)+" : "+cellValue);
 					// System.out.println(cellValue);
 					jRow.put(headerList.get(cn), cellValue);
 				}
@@ -137,42 +160,32 @@ public class ExcelFileSplit implements GlsFileReader {
 	}
 
 	public int splitFileIntoMultiples(String filename, String filePath) throws InvalidFormatException, IOException, JSONException {
-		System.out.println("splitFile....");
-		String headerValue = "";
-		ArrayList<String> headerList = new ArrayList<String>();
-		DataFormatter formatter = new DataFormatter();
-		int rowCount = 0;
-		int subFileCount = 0;
-		String FILE_NAME = "";
-		String cellValue = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		headerList = new ArrayList<String>();
+		rowCount = 0; subFileCount = 0; FILE_NAME = ""; headerValue = ""; cellValue = "";
 		InputStream ExcelFileToRead = new FileInputStream(filename);
-		XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
-		XSSFSheet sheet1 = wb.getSheetAt(0);
-		XSSFWorkbook workbook = null;
-		XSSFSheet sheet = null;
-		File file = null;
-		FileOutputStream outputStream = null;
-//		System.out.println("Project Path: " + filePath);
+		wb = new XSSFWorkbook(ExcelFileToRead);
+		sheet1 = wb.getSheetAt(0);
+		Row r = null, writeRow = null;
+		int lastColumn = 0;
+		
 		file = new File(filePath + "ExcelFiles");
 		if (file.exists()) {
-//			System.out.println("Distroyed existing directory!");
 			delete(file);
 		}
-		int rowStart = sheet1.getFirstRowNum();
-		int rowEnd = sheet1.getLastRowNum() + 1;
-		for (int rowNum = rowStart; rowNum < rowEnd; rowNum++) {
-			Row r = sheet1.getRow(rowNum);
+		rowStart = sheet1.getFirstRowNum();
+		rowEnd = sheet1.getLastRowNum() + 1;
+		for (rowNum = rowStart; rowNum < rowEnd; rowNum++) {
+			r = sheet1.getRow(rowNum);
 			if (r == null) {
 				continue;
 			}
-			int lastColumn = r.getLastCellNum();
+			lastColumn = r.getLastCellNum();
 			if (rowCount == 0) {
 				workbook = new XSSFWorkbook();
 				sheet = workbook.createSheet("subfile");
 				FILE_NAME = "subFile" + subFileCount + ".xlsx";
 			}
-			Row writeRow = null;
+			writeRow = null;
 			// jRow = new JSONObject();
 			Cell writeCell;
 			int colNum = 0;
@@ -305,7 +318,7 @@ public class ExcelFileSplit implements GlsFileReader {
 			outputStream.close();
 			subFileCount++;
 		}
-		
+		System.out.println("File Splitting done...!");
 		ExcelFileToRead.close();
 		return subFileCount;
 	}

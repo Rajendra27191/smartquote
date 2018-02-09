@@ -318,7 +318,7 @@ public class ProductDao {
 	public boolean truncateProductStaging(String tablename) {
 		boolean isTruncate = false;
 		try {
-			String deleteGroupQuery = "TRUNCATE TABLE "+ tablename;
+			String deleteGroupQuery = "TRUNCATE TABLE " + tablename;
 			PreparedStatement pstmt = conn.prepareStatement(deleteGroupQuery);
 			System.out.println(pstmt);
 			pstmt.executeUpdate();
@@ -333,9 +333,9 @@ public class ProductDao {
 		boolean isFileUploaded = false;
 		String productQuery = "INSERT INTO product_master_staging (item_code, item_description, description2, "
 				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
-				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0, "
-				+ "product_group_code,gst_flag,priority,last_buy_date) "
-				+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?,?,?)";
+				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by, qty_break0,"
+				+ " product_group_code, gst_flag, priority, last_buy_date, item_status, item_condition, supplier)"
+				+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, ?,?,?,?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);
@@ -369,6 +369,11 @@ public class ProductDao {
 				// System.out.println("getLastBuyDate() : " +
 				// productList.get(i).getLastBuyDate());
 				pstmt.setString(20, productList.get(i).getLastBuyDate());
+				
+				pstmt.setString(21, productList.get(i).getStatus());
+				pstmt.setString(22,productList.get(i).getCondition());
+				pstmt.setString(23, productList.get(i).getSupplier());
+							
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Staging Batch Executed...!");
@@ -400,14 +405,28 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	}
+
+	public boolean addToProductStagingFinal(String query) {
+		boolean isFileUploaded = false;
+		String productQuery = query;
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			@SuppressWarnings("unused")
+			int i = pstmt.executeUpdate();
+			System.out.println(pstmt);
+			isFileUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
 	public boolean addToProductMaster() {
 		boolean isFileUploaded = false;
-		String productQuery = "INSERT IGNORE INTO product_master "
-				+ "SELECT a.item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
+		String productQuery = "INSERT INTO product_master "
+				+ "SELECT item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
 				+ "qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, qty_break4, price4exGST, "
-				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000' "
-				+ "FROM product_master_staging a use index (item_code_idx), product_master_staging1 b "
-				+ "WHERE a.item_code = b.item_code and a.priority = b.priority and a.last_buy_date = b.last_buy_date;";
+				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000' " + "FROM product_master_staging_final;";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);
@@ -420,6 +439,7 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	}
+
 	public ArrayList<ProductBean> getFilterdProductFromStaging() {
 		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 		try {
@@ -782,5 +802,20 @@ public class ProductDao {
 		}
 
 		return objProductGroupBeans;
+	}
+
+	public int getProgressCount() {
+		int insertCount = 0;
+		String getUserGroups = "select count(*)'count' from product_master_staging;";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				insertCount = rs.getInt("count");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return insertCount;
 	}
 }

@@ -40,13 +40,19 @@ public class ProductBean {
 	private int altForQuoteDetailId;
 	private ArrayList<ProductBean> alternativeProductList;
 	private ProductBean altProd;
-//	private double altDefaultPrice;
+	// private double altDefaultPrice;
 	private double promoPrice;
 	private double lastBuyPrice;
-	
+
 	private int priority;
 	private String lastBuyDate;
+
+	private String status;
+	private String condition;
+	private String supplier;
 	
+	private String lineComment;
+
 	public int getPriority() {
 		return priority;
 	}
@@ -62,8 +68,6 @@ public class ProductBean {
 	public void setLastBuyDate(String lastBuyDate) {
 		this.lastBuyDate = lastBuyDate;
 	}
-
-	private String lineComment;
 
 	public int getQuoteId() {
 		return quoteId;
@@ -337,20 +341,6 @@ public class ProductBean {
 		this.altProd = altProd;
 	}
 
-	@Override
-	public String toString() {
-		return "ProductBean [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", description2=" + description2
-				+ ", description3=" + description3 + ", unit=" + unit + ", qtyBreak0=" + qtyBreak0 + ", price0exGST=" + price0exGST
-				+ ", qtyBreak1=" + qtyBreak1 + ", price1exGST=" + price1exGST + ", qtyBreak2=" + qtyBreak2 + ", price2exGST=" + price2exGST
-				+ ", qtyBreak3=" + qtyBreak3 + ", price3exGST=" + price3exGST + ", qtyBreak4=" + qtyBreak4 + ", price4exGST=" + price4exGST
-				+ ", avgcost=" + avgcost + ", taxCode=" + taxCode + ", created_by=" + created_by + ", itemQty=" + itemQty + ", total="
-				+ total + ", quotePrice=" + quotePrice + ", currentSupplierPrice=" + currentSupplierPrice + ", currentSupplierGP="
-				+ currentSupplierGP + ", currentSupplierTotal=" + currentSupplierTotal + ", gpRequired=" + gpRequired
-				+ ", productGroupCode=" + productGroupCode + ", productGroupName=" + productGroupName + ", gstFlag=" + gstFlag
-				+ ", savings=" + savings + ", quoteId=" + quoteId + ", isNewProduct=" + isNewProduct + ", isAlternative=" + isAlternative
-				+ ", alternativeProductList=" + alternativeProductList + ", altProd=" + altProd + "]";
-	}
-
 	public int getAltForQuoteDetailId() {
 		return altForQuoteDetailId;
 	}
@@ -367,13 +357,13 @@ public class ProductBean {
 		this.quoteDetailId = quoteDetailId;
 	}
 
-//	public double getAltDefaultPrice() {
-//		return altDefaultPrice;
-//	}
-//
-//	public void setAltDefaultPrice(double altDefaultPrice) {
-//		this.altDefaultPrice = altDefaultPrice;
-//	}
+	// public double getAltDefaultPrice() {
+	// return altDefaultPrice;
+	// }
+	//
+	// public void setAltDefaultPrice(double altDefaultPrice) {
+	// this.altDefaultPrice = altDefaultPrice;
+	// }
 
 	public double getPromoPrice() {
 		return promoPrice;
@@ -407,4 +397,29 @@ public class ProductBean {
 		this.lineComment = lineComment;
 	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public String getCondition() {
+		return condition;
+	}
+
+	public String getSupplier() {
+		return supplier;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+	}
+
+	
 }

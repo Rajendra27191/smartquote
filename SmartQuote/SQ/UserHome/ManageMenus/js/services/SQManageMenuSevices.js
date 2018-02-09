@@ -11,6 +11,7 @@ var ManageServices = {
 	
 //UserGroup API	
 setUserGroupAPI:$resource($rootScope.projectName+'/getAssignedAccess?userGroupId=:userGroupId', {}, {setUserGroupMethod :{method: 'GET'},params:{userGroupId:'@userGroupId'}}),
+getProductUploadProgressAPI:$resource($rootScope.projectName+'/getProductUploadProgress', {}, {getProductUploadProgressMethod :{method: 'POST'}}),
 //Services API	
 getServicesAPI:$resource($rootScope.projectName+'/getServices', {}, {getServicesMethod :{method: 'POST'}}),
 createServiceAPI:$resource($rootScope.projectName+'/createService?service=:service', {}, {createServiceMethod :{method: 'GET'},params:{service:'@service'}}),
@@ -737,6 +738,21 @@ $rootScope.$broadcast('DeleteOfferNotDone', error);
 });
 }  
 //================= Manage Customer=========================
+
+manageMenu.GetProductUploadProgress = function (){
+console.log("GetProductUploadProgress")
+ManageServices.getProductUploadProgressAPI.getProductUploadProgressMethod(function(success){
+console.log(success);
+if (success.code=="sessionTimeOut") {
+$rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+$rootScope.$broadcast('GetProductUploadProgressDone', success); 
+}
+},function(error){
+console.log(error);
+$rootScope.$broadcast('GetProductUploadProgressNotDone', error); 
+});
+};
 
 return manageMenu;
 }])

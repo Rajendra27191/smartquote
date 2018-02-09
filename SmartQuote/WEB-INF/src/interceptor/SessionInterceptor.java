@@ -48,7 +48,7 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 		@SuppressWarnings("rawtypes")
 		Map session = ActionContext.getContext().getSession();
 		boolean status = isLoggedIn(request);
-		System.out.println("Intercepter Status: " + status);
+		
 
 		String url = request.getServletPath();
 		String actionName[] = url.split("/");
@@ -73,14 +73,19 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 				valuArrayList.add(URLEncoder.encode(paramValue, "UTF-8"));
 			}
 		}
-		System.out.println("Param Name :" + paramName + " | valuArrayList: " + valuArrayList);
-		System.out.println((new StringBuilder("Json1 = ")).append(gson.toJson(objMapList)).toString());
+		
 
 		String result = java.net.URLDecoder.decode(String.valueOf(valuArrayList), "UTF-8");
 		result = result.substring(1, result.length() - 1);
-		System.out.println("Result1: " + result);
-
-		System.out.println("status  = " + status);
+		if (url.equals("/getProductUploadProgress")){
+		}else{
+			System.out.println("Intercepter Status: " + status);
+			System.out.println("Param Name :" + paramName + " | valuArrayList: " + valuArrayList);
+			System.out.println((new StringBuilder("Json1 = ")).append(gson.toJson(objMapList)).toString());
+			System.out.println("Result1: " + result);
+			System.out.println("status  = " + status);
+		}
+	
 		if (!status) {
 			CommonLoadAction cLoadAction = null;
 			if (url.equals("/createQuote")) {

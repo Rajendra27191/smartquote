@@ -4,17 +4,47 @@
     padding: 6px 12px;
     font-size: 14px;
 	}
-	
+	.main-label{
+		    margin: 3% 0% 3% 0%;
+	}
+	#bigCircle{
+position: relative;
+width: 140px;
+margin:  0 auto;
+
+}
+
+.progress-wrapper{
+/* width: 80%;     */
+position: relative;
+margin: auto;
+font-size: 20px;
+}
+.progress1{
+position: absolute;
+color: #337ab7;
+font-weight: 100;
+line-height: 1;
+/* margin: 40% 35%; */
+}
+.progress{
+height: 20px;
+margin-bottom: 0px;
+}
+.progress-bar{
+padding: 0px;
+}
 
 </style>
 
 <div class="container" onload=""> 
-<div class="row">
-<div class="col-md-6 col-md-offset-3">
-<!-- <form name="form.myForm" method="POST" enctype="multipart/form-data" action="http://192.169.1.118:8080/smartquote/uploadProductByXlsx" novalidate> -->
 	<div class="row">
 	<div class="col-md-12"><center><label class="main-label">Manage Product File</label></center></div>
 	</div>
+<div class="row">
+<div class="col-md-6 col-md-offset-3">
+<!-- <form name="form.myForm" method="POST" enctype="multipart/form-data" action="http://192.169.1.118:8080/smartquote/uploadProductByXlsx" novalidate> -->
+	
 	<br>
 	<div class="row row-control">
 	<div class="col-md-3"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
@@ -55,7 +85,49 @@
 </div>
 <div class="col-md-3"></div>
 </div>
+
+
+<!-- {{progressCount}}  -->
+
+<div ng-if="showProgressBar" style="position:absolute;top:0;left:0;height:100%;width:100%;background-color:rgba(255,255,255,0.2);z-index:1100;">
+<center style='margin: auto; margin-top: 300px;'>
+<div  >
+<div id="bigCircle" >
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()" > 
+	{{progressCount}} <span style="font-size:15px;">%</span>
+	<br> Loading
 </div>
+<round-progress max="100" current="progressCount" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div>	
+</div>
+</div>
+</center>
+</div>
+<!-- <div id="bigCircle" >
+<div class="progress-wrapper">
+<div class="progress1 ng-cloak" ng-style="getStyle()" > 
+	{{count}} <span style="font-size:15px;">%</span>
+	<br> Loading
+</div>
+<round-progress max="100" current="count" color="#00a1f1" bgcolor="#eaeaea" radius="{{radius}}" semi="false"
+rounded="false" stroke="25" clockwise="true" responsive="true" duration="800" animation="easeOutCubic" offset="0"
+animation-delay="0">
+</round-progress>
+</div>
+</div> -->
+
+<!-- <div  style='position: fixed; z-index: 1031; left: 0; right: 0; width: 100%; height: 100%; margin: auto; rgba(255,255,255,0.2); opacity: .4;'>
+<center style='margin: auto; margin-top: 250px;'>
+
+</center>
+</div> -->
+
+
 
 <!-- Floating Social Media bar Starts -->
 <!-- <div class="float-sm">
@@ -64,5 +136,7 @@
     <a href="" target="_blank"> Like us!</a>
   </div>
 </div> -->
+
+
 
 

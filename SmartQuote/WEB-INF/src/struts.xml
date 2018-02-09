@@ -647,6 +647,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getProductUploadProgress" class="action.ProductAction"
+			method="getProductUploadProgress">
+			<result name="success" type="json">
+				<param name="root">objProgressBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="saveEmailLogAsExcel" class="action.PaymentReminderAction"
 			method="saveEmailLogAsExcel">
 			<result name="success" type="jasper">

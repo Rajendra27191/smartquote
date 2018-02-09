@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQUploadProductFileController',['$scope','$rootScope','$log','$state','$timeout','$http','SQHomeServices','$upload',function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,$upload){
+.controller('SQUploadProductFileController', function($scope,$rootScope,$log,$state,$timeout,$http,SQHomeServices,$upload,$interval,SQManageMenuServices){
 console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];
@@ -27,11 +27,16 @@ console.log("onExcelSelect");
 };
 
 $scope.uploadProductsFile = function(){
+  $scope.totalFileCount=0;
+  $scope.currentFileCount=0;
   var productFile=latestExcelFile;
   var uploadUrl=$rootScope.projectName+"/uploadProductByXlsx";
   var fd= new FormData();
   fd.append('productFile',productFile);
-  $rootScope.showSpinner();
+  // $rootScope.showSpinner();
+  $timeout(function() {
+  $scope.showProgressBar=true;
+  },1000);
   $http.post(uploadUrl, fd,{
     withCredentials: true,
     headers: {'Content-Type': undefined },
@@ -39,24 +44,40 @@ $scope.uploadProductsFile = function(){
   })
   .success(function(data, status, header, config){
     if(data.code.toUpperCase()=="SUCCESS"){
-      $rootScope.alertSuccess(data.message);
-      document.getElementById('fileTypeExcelHost').value = '';
-      latestExcelFile = {};
-      $scope.upload={};
+     
+      $scope.progressCount=100;
+      
+      $timeout(function() {
+        $rootScope.alertSuccess(data.message);
+        document.getElementById('fileTypeExcelHost').value = '';
+        latestExcelFile = {};
+        $scope.upload={};
+        $scope.showProgressBar=false;
+        $scope.progressCount=0;
+        $scope.currentProgressCount=0;
+        $rootScope.initAuotoComplete(true);      
+      },2000);
+     
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
     }else{
       console.log(data); 
-      $rootScope.alertError(data.message);                             
-      document.getElementById('fileTypeExcelHost').value = '';
+       $rootScope.alertError(data.message);   
       latestExcelFile = {};
       $scope.upload={};
+      $scope.showProgressBar=false;
+      $scope.progressCount=0;
+      $scope.currentProgressCount=0; 
+      document.getElementById('fileTypeExcelHost').value = '';      
     }
-    $rootScope.hideSpinner();
+    // $rootScope.hideSpinner();
+    
+
   })
   .error(function(data, status, header, config){
     $rootScope.alertServerError("Server error");
     $rootScope.hideSpinner();
+    $scope.showProgressBar=false;
   });
 };
 $scope.uploadProductsWithPromoPrice = function(){
@@ -106,6 +127,7 @@ var productFile=latestExcelFile;
   .success(function(data, status, header, config){
     if(data.code.toUpperCase()=="SUCCESS"){
       $rootScope.alertSuccess(data.message);
+      $rootScope.initAuotoComplete(true);
       document.getElementById('fileTypeExcelHost').value = '';
       latestExcelFile = {};
       $scope.upload={};
@@ -170,5 +192,67 @@ $scope.addExcelToServer = function(){
     }
 };
 
-}]);
+//============================================================
+$scope.progressCount=0;
+$scope.currentProgressCount=0;
+$scope.checkUploadProgress=function(){
+  if ($scope.showProgressBar) {
+  SQManageMenuServices.GetProductUploadProgress();
+  };
+};
+
+$scope.handleGetProductUploadProgressDoneResponse=function(data){
+if(data){
+$scope.totalFileCount=data.totalFileCount;
+$scope.currentFileCount=data.currentFileCount;
+if ($scope.currentFileCount!=0 && $scope.totalFileCount!=0) {
+ $scope.currentProgressCount= ($scope.currentFileCount/$scope.totalFileCount)*100;
+ $scope.progressCount=$scope.currentProgressCount.toFixed(2);
+}else{
+  $scope.progressCount=0;
+};
+}
+};
+
+var cleanupEventGetProductUploadProgressDone = $scope.$on("GetProductUploadProgressDone", function(event, message){
+$scope.handleGetProductUploadProgressDoneResponse(message);      
+});
+
+var cleanupEventGetProductUploadProgressNotDone = $scope.$on("GetProductUploadProgressNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
+$scope.radius=100;
+$scope.getStyle = function(){
+  var transform = 'translateY(-50%) ' + 'translateX(-50%)';
+  return {
+  'top': '50%',
+  'bottom': 'auto',
+  'left': '50%',
+  'transform': transform,
+  '-moz-transform': transform,
+  '-webkit-transform': transform,
+  'font-size': 16 + 'px',
+  'font-weight': 'bold',
+  }
+  };
+$interval($scope.checkUploadProgress, 5000);
+
+// $scope.count=0;
+// $scope.checkProgress=function(){
+//   if ($scope.count==100) {
+//   } else{
+//   $scope.count++;
+//   };
+// }
+
+// $interval($scope.checkProgress, 1000);
+
+
+
+
+
+
+});
 

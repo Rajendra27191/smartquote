@@ -19,6 +19,7 @@ import pojo.KeyValuePairBean;
 import pojo.ProductBean;
 import pojo.ProductCodeUpdateBean;
 import pojo.ProductGroupBean;
+import pojo.UploadProgressBean;
 import responseBeans.AlternativeProductResponseBean;
 import responseBeans.ProductDetailResponseList;
 import responseBeans.ProductResponseBean;
@@ -40,10 +41,22 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	private ProductResponseBean productDetailsResponse = new ProductResponseBean();
 	private ProductDetailResponseList objProductDetailResponseList = new ProductDetailResponseList();
 	private AlternativeProductResponseBean objAlternativesResponseList = new AlternativeProductResponseBean();
+	UploadProgressBean objProgressBean = new UploadProgressBean();;
 
 	public File productFile;
 	private int fromLimit;
 	private int toLimit;
+
+	private static int totalFileCount;
+	private static int currentFileCount;
+
+	public UploadProgressBean getObjProgressBean() {
+		return objProgressBean;
+	}
+
+	public void setObjProgressBean(UploadProgressBean objProgressBean) {
+		this.objProgressBean = objProgressBean;
+	}
 
 	public int getFromLimit() {
 		return fromLimit;
@@ -109,7 +122,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		try {
 			ProductDao objDao = new ProductDao();
 			valuePairBeans = objDao.getProductList(productLike);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			data.setCode("success");
 			data.setMessage(getText("list_loaded"));
@@ -132,12 +145,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		ProductDao objDao = new ProductDao();
 		isProductExist = objDao.isProductExist(objBean.getItemCode());
-//		objDao.commit();
+		// objDao.commit();
 		objDao.closeAll();
 		if (!isProductExist) {
 			ProductDao objDao1 = new ProductDao();
 			isProductCreated = objDao1.saveProduct(objBean);
-//			objDao1.commit();
+			// objDao1.commit();
 			objDao1.closeAll();
 			if (isProductCreated) {
 				objEmptyResponse.setCode("success");
@@ -163,7 +176,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			productDetailsResponse.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
 			ProductBean objBean = objDao.getProductDetails(productCode);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
 				productDetailsResponse.setCode("success");
@@ -184,7 +197,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			productDetailsResponse.setMessage(getText("common_error"));
 			ProductDao objDao = new ProductDao();
 			ProductBean objBean = objDao.getProductDetailsWithAlternatives(productCode);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			if (objBean != null) {
 				productDetailsResponse.setCode("success");
@@ -206,7 +219,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 			arrayProductBeans = objDao.getAlternatives(productCode);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			if (arrayProductBeans.size() > 0) {
 				objAlternativesResponseList.setCode("success");
@@ -228,7 +241,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 		ProductDao objDao1 = new ProductDao();
 		isProductUpdated = objDao1.updateProduct(objBean);
-//		objDao1.commit();
+		// objDao1.commit();
 		objDao1.closeAll();
 		if (isProductUpdated) {
 			objEmptyResponse.setCode("success");
@@ -247,7 +260,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		// productCode = "1";
 		ProductDao objDao = new ProductDao();
 		boolean isDeleted = objDao.deleteProduct(productCode);
-//		objDao.commit();
+		// objDao.commit();
 		objDao.closeAll();
 		if (isDeleted) {
 			objEmptyResponse.setCode("success");
@@ -266,17 +279,24 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setMessage(getText("common_error"));
 		ExcelFileSplit objFileSplit = new ExcelFileSplit();
 		ProductDao objProductDao = new ProductDao();
+		totalFileCount = 0;
+		currentFileCount = 0;
 		try {
 			System.out.println("Product File: " + productFile);
 			String projectPath = request.getSession().getServletContext().getRealPath("/");
 			JSONArray subFileString;
-			int subFileCount = objFileSplit.splitFileIntoMultiples(productFile + "", projectPath);
+			int subFileCount = 0;
+			subFileCount = objFileSplit.splitFileIntoMultiples(productFile + "", projectPath);
 			ArrayList<ProductBean> productList = null;
 			objProductDao.truncateProductStaging("product_master_staging");
-			objProductDao.truncateProductStaging("product_master_staging1");
-//			objProductDao.commit();
-			boolean isDeleted = false, isAddedToStaging = false, isAddedToStaging1 = false, isFileUploaded = false;
+			objProductDao.truncateProductStaging("product_master_staging2");
+			objProductDao.truncateProductStaging("product_master_staging3");
+			objProductDao.truncateProductStaging("product_master_staging_final");
+			// objProductDao.commit();
+			boolean isAddedToStaging = false, isAddedToStagingFinal = false, isFileUploaded = false;
 			String subFilePath = "";
+			totalFileCount = subFileCount;
+			System.out.println("subFileCount :: " + subFileCount);
 			for (int j = 0; j < subFileCount; j++) {
 				try {
 					subFilePath = projectPath + "ExcelFiles/subFile" + j + ".xlsx";
@@ -285,33 +305,106 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
 					}.getType());
 					// =============
+					System.out.println("productList size : " + productList.size());
 					isAddedToStaging = objProductDao.addToProductStaging(productList);
-					if(!isAddedToStaging)
-						break;	
+					currentFileCount = j;
+					// System.out.println("CU"+currentFileCount);
+					if (!isAddedToStaging)
+						break;
 				} catch (Exception e) {
 					System.out.println("Error in " + j);
 					e.printStackTrace();
 					break;
 				}
 			}
-			// =======Without split======
-//			subFileString = new JSONArray();
-//			subFileString = objFileSplit.readFile(productFile + "");
-//			productList = new Gson().fromJson(subFileString.toString(), new TypeToken<List<ProductBean>>() {
-//			}.getType());
-//			isAddedToStaging = objProductDao.addToProductStaging(productList);
-			// =============
-//			objProductDao.commit();
+			// without split
+			// subFileString = objFileSplit.readFile(productFile + "");
+			// productList = new Gson().fromJson(subFileString.toString(), new
+			// TypeToken<List<ProductBean>>() {
+			// }.getType());
+
 			if (isAddedToStaging) {
-				isDeleted = objProductDao.deletedPreviousProduct();
+				String query0 = "delete from product_master_staging where item_status in('k','z') OR item_condition in('t','o','n');";
+				String query1 = "DELETE a.* FROM product_master a, product_master_staging b WHERE a.item_code = b.item_code;";
+
+				String query2 = "insert into product_master_staging_final "
+						+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
+						+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
+						+ "a.qty_break3,a.price3exGST,a.qty_break4,a.price4exGST,a.avg_cost,a.tax_code,"
+						+ "a.created_by,a.product_group_code,a.gst_flag,a.promo_price,a.priority,"
+						+ "a.last_buy_date,a.supplier from product_master_staging a,"
+						+ "(select item_code, min(priority) priority, count(*) from product_master_staging "
+						+ "group by item_code having count(*) = 1) b " + "where a.item_code = b.item_code and a.priority = b.priority;";
+
+				String query3 = "insert into product_master_staging2 "
+						+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
+						+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
+						+ "a.qty_break3,a.price3exGST,a.qty_break4,a.price4exGST,a.avg_cost,a.tax_code,"
+						+ "a.created_by,a.product_group_code,a.gst_flag,a.promo_price,a.priority,"
+						+ "a.last_buy_date,a.supplier from product_master_staging a,"
+						+ "(select item_code, min(priority) priority, count(*) from product_master_staging"
+						+ " group by item_code having count(*) > 1) b " + "where a.item_code = b.item_code and a.priority = b.priority;";
+
+				String query4 = "insert into product_master_staging_final "
+						// + "select a.* from product_master_staging2 a,"
+						+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
+						+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
+						+ "a.qty_break3,a.price3exGST,a.qty_break4,a.price4exGST,a.avg_cost,a.tax_code,"
+						+ "a.created_by,a.product_group_code,a.gst_flag,a.promo_price,a.priority,"
+						+ "a.last_buy_date,a.supplier from product_master_staging2 a,"
+						+ " (select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging2 "
+						+ " group by item_code having count(*) = 1) b "
+						+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date";
+
+				String query5 = "insert into product_master_staging3 " + "select a.* from product_master_staging2 a, "
+						+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging2 "
+						+ "group by item_code having count(*) > 1) b "
+						+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date;";
+
+				String query6 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+						+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging3 "
+						+ "group by item_code having count(*) > 1) b "
+						+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date "
+						+ "and a.item_code regexp a.supplier group by a.item_code;";
+
+				String query7 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+						+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging3 "
+						+ "group by item_code having count(*) = 1) b "
+						+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date;";
+
+				String query8 = "insert ignore into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+						+ "(select item_code, min(avg_cost) avg_cost, max(last_buy_date) last_buy_date, count(*) "
+						+ "from product_master_staging3 " + "group by item_code having count(*) > 1) b "
+						+ "where a.item_code = b.item_code and a.avg_cost = b.avg_cost and a.last_buy_date = b.last_buy_date "
+						+ "and a.item_code not in (select c.item_code from product_master_staging3 c where c.item_code = a.item_code "
+						+ "and c.item_code regexp c.supplier and c.last_buy_date = b.last_buy_date and b.avg_cost = c.avg_cost) "
+						+ "group by item_code;";
+
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query0);
+				System.out.println("executed query0 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query1);
+				System.out.println("executed query1 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query2);
+				System.out.println("executed query2 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query3);
+				System.out.println("executed query3 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query4);
+				System.out.println("executed query4 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query5);
+				System.out.println("executed query5 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query6);
+				System.out.println("executed query6 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query7);
+				System.out.println("executed query7 " + isAddedToStagingFinal);
+				isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query8);
+				System.out.println("executed query8 " + isAddedToStagingFinal);
+
 			}
-			if (isDeleted) {
-				isAddedToStaging1 = objProductDao.addToProductStaging1();
+
+			if (isAddedToStagingFinal) {
+				isFileUploaded = objProductDao.addToProductMaster();
 			}
-			if (isAddedToStaging && isAddedToStaging1) {
-				isFileUploaded=objProductDao.addToProductMaster();
-			}
-//			objProductDao.commit();
+
 			if (isFileUploaded) {
 				objEmptyResponse.setCode("success");
 				objEmptyResponse.setMessage(getText("product_file_uploaded"));
@@ -323,8 +416,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			if (objEmptyResponse.getCode() == "success") {
 				// System.out.println("CREATE JSON FILE");
 				CommonLoadAction.createProductFile(projectPath);
-				File fileToDelete = new File(projectPath + "ExcelFiles");
-				ExcelFileSplit.delete(fileToDelete);
+				// File fileToDelete = new File(projectPath + "ExcelFiles");
+				// ExcelFileSplit.delete(fileToDelete);
 				ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList<ProductGroupBean>();
 				distinctProductGroupList = objProductDao.getDistinctProductGroupList();
 				System.out.println("Distinct Product Group List Size :" + distinctProductGroupList.size());
@@ -337,8 +430,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 						System.out.println("New Product Group insertion unsuccessfully...");
 					}
 				}
-//				objProductDao.commit();
+				// objProductDao.commit();
 				System.out.println("Product File Created...!");
+
 			}
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
@@ -360,11 +454,18 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			objProductDao.closeAll();
 		}
 		System.out.println("Done");
 
+		return SUCCESS;
+	}
+
+	public String getProductUploadProgress() {
+		// System.out.println(totalFileCount +" :: "+currentFileCount);
+		objProgressBean.setTotalFileCount(totalFileCount);
+		objProgressBean.setCurrentFileCount(currentFileCount);
 		return SUCCESS;
 	}
 
@@ -489,7 +590,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ProductDao objDao = new ProductDao();
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			objProductBeans = objDao.getAllProductDetailsList(fromLimit, toLimit);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
 			objProductDetailResponseList.setMessage(getText("details_loaded"));
@@ -511,7 +612,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			ArrayList<ProductBean> objProductBeans = new ArrayList<ProductBean>();
 			System.out.println("prodLike:" + productLike);
 			objProductBeans = objDao.getSearchedProductDetailsList(productLike);
-//			objDao.commit();
+			// objDao.commit();
 			objDao.closeAll();
 			objProductDetailResponseList.setCode("success");
 			objProductDetailResponseList.setMessage(getText("details_loaded"));
