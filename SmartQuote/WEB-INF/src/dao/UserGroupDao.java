@@ -375,7 +375,7 @@ public class UserGroupDao {
 		return userID;
 	}
 
-	public UserBean getUserDetails(int userId) {
+	public UserBean getUserDetails(int userId,String templateSrc) {
 		UserBean objBean = null;
 		String getUserGroups = "SELECT user_id, user_group_id, user_name, email, password, contact, "
 				+ " valid_from, valid_to "
@@ -394,6 +394,8 @@ public class UserGroupDao {
 				objBean.setContact(rs.getString("contact"));
 				objBean.setValidFrom(rs.getDate("valid_from"));
 				objBean.setValidTo(rs.getDate("valid_to"));
+				String templateUrl=templateSrc+"UserId_"+rs.getInt("user_id")+".png";;
+				objBean.setTemplateUrl(templateUrl);
 			}
 		} catch (Exception e) {
 			try {

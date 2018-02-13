@@ -13,6 +13,16 @@ public class UserBean {
 	private Date validFrom;
 	private Date validTo;
 	private String language;
+	private String templateUrl;
+
+	
+	public String getTemplateUrl() {
+		return templateUrl;
+	}
+
+	public void setTemplateUrl(String templateUrl) {
+		this.templateUrl = templateUrl;
+	}
 
 	public int getUserId() {
 		return userId;

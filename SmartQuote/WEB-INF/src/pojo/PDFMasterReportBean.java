@@ -3,6 +3,7 @@ package pojo;
 import java.util.ArrayList;
 
 public class PDFMasterReportBean {
+	private int dedicatedAccountManagerId;
 	private String dedicatedAccountManager;
 	private String dedicatedAccountManagerEmail;
 	private String dedicatedAccountManagerContact;
@@ -158,6 +159,17 @@ public class PDFMasterReportBean {
 	public void setDedicatedAccountManagerContact(String dedicatedAccountManagerContact) {
 		this.dedicatedAccountManagerContact = dedicatedAccountManagerContact;
 	}
+
+	public int getDedicatedAccountManagerId() {
+		return dedicatedAccountManagerId;
+	}
+
+	public void setDedicatedAccountManagerId(int dedicatedAccountManagerId) {
+		this.dedicatedAccountManagerId = dedicatedAccountManagerId;
+	}
+
+
+	
 
 //	public ArrayList<CalculationBean> getListCalculationBean() {
 //		return listCalculationBean;

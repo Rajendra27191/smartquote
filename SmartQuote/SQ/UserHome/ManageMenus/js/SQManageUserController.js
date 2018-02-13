@@ -6,6 +6,14 @@ $scope.form={};
 $scope.manageUser={};
 $scope.isUserNameSelected=false;
 
+$scope.filepreview="";
+var latestFile=null;
+$scope.errorMessage=[];
+$scope.upload={};
+$scope.file = {};
+var logoFile=null;
+
+
 $scope.today = function() {
     $scope.dt = new Date();
     return $scope.dt;
@@ -59,6 +67,13 @@ $scope.dateValid=true;
 // toDate.setYear($scope.today().getYear()+1);
 $scope.manageUser={'userValidFrom':$scope.today(),'userValidTo':$scope.validToDate()};
 
+$scope.filepreview="";
+latestFile=null;
+$scope.errorMessage=[];
+$scope.upload={};
+$scope.file = {};
+logoFile=null;
+document.getElementById('fileTypeExcelHost').value = '';
 };
 
 $scope.validToDate=function(){
@@ -156,6 +171,58 @@ $scope.jsonToCreateUser=function(){
 
 }
 
+
+
+$scope.addUser=function(){
+  var uploadUrl=$rootScope.projectName+"/createUser";
+  var fd= new FormData();
+  if(logoFile){
+  console.log(logoFile)
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('userDetails',$scope.jsonToCreateUser());
+  $http.post(uploadUrl, fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+  		if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('SaveUserDone', data); 
+        }
+  })
+  .error(function(data, status, header, config){
+  	 $rootScope.$broadcast('SaveUserNotDone', data);
+   });
+}
+
+$scope.editUser=function(){
+  var uploadUrl=$rootScope.projectName+"/updateUserDetails";
+  var fd= new FormData();
+  if(logoFile){
+  console.log(logoFile)
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('userDetails',$scope.jsonToCreateUser());
+  $http.post(uploadUrl, fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+  		if (data.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', data);   
+        }else{
+        $rootScope.$broadcast('UpdateUserDetailsDone', data); 
+        }
+  })
+  .error(function(data, status, header, config){
+  	 $rootScope.$broadcast('UpdateUserDetailsNotDone', data);
+   });
+}
+
 $scope.saveUser=function(userType){
 	console.log("saveUser");
 	$scope.onlyspaceError=false;
@@ -166,14 +233,17 @@ $scope.saveUser=function(userType){
 		if($scope.dateValid){
 			if ($scope.buttonstatus=='add') {
 				console.log("ADD")
-				var	userDetails=$scope.jsonToCreateUser();
 				$rootScope.showSpinner();
-				SQManageMenuServices.SaveUser(userDetails);
+				// var	userDetails=$scope.jsonToCreateUser();
+				// SQManageMenuServices.SaveUser(userDetails);
+				$scope.addUser();
+
 			}else if ($scope.buttonstatus=='edit'){
 				console.log("UPDATE")
-				var	userDetails=$scope.jsonToCreateUser();
 				$rootScope.showSpinner();
-				SQManageMenuServices.UpdateUserDetails(userDetails);
+				// var	userDetails=$scope.jsonToCreateUser();
+				// SQManageMenuServices.UpdateUserDetails(userDetails);
+				$scope.editUser();
 			}	
 			}else{
 				$scope.dateValid=false;
@@ -284,7 +354,10 @@ $scope.setDate = function(year, month, day) {
     console.log(dt);
     return dt;
  };
-
+function getTimeStamp(){
+	var timestamp = new Date().getTime();
+	return  timestamp;
+}
 $scope.setUserDetails=function(userdata){
 console.log(userdata);
 var validFrom=userdata.validFrom;
@@ -308,7 +381,6 @@ $rootScope.userGroups.forEach(function(element,index){
 		userType=element;
 	}
 });
-
 console.log("userType")
 console.log(userType)
 $scope.manageUser={
@@ -318,8 +390,9 @@ $scope.manageUser={
 	'userEmailId':userdata.emailId,'userContactNo':userdata.contact,
 	'userValidFrom':validFrom,
 	'userValidTo':validTo,
+	'templateUrl':userdata.templateUrl+"?"+getTimeStamp(),
 };
-
+// $scope.filepreview=$scope.manageUser.templateUrl+"?"+getTimeStamp();
 };
 
 $scope.handleGetUserDetailsDoneResponse=function(data){
@@ -408,6 +481,41 @@ $rootScope.hideSpinner();
 });
 /*=============================================*/
 
+
+$scope.onFileSelect = function($files){
+console.log("onFileSelect");
+console.log($files);
+console.log($files.length);
+// console.log($files.height);
+if ($files.length>0) {
+     for (var i = 0; i < $files.length; i++) {
+      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+       console.log("valid file");
+       latestFile = $files[i];
+       $scope.file=latestFile
+       console.log("File",latestFile.size+" bytes");
+       console.log("File",(latestFile.size / 1024)+" kb");
+       console.log("")
+	      if ((latestFile.size / 1024) <=1024) {//6144
+		  $scope.invalidFileSize=false;		      	
+	      logoFile=latestFile;
+	      }else{
+			console.log("invalid file size");
+			$scope.invalidFileSize=true;
+			// $rootScope.alertError("File size must ne less than 15KB"); 
+	      }
+      }else{
+       console.log("invalid file");
+       $scope.isInvalid=true;
+       $scope.invalidFile=true;
+       latestFile = {};
+       document.getElementById('fileTypeExcelHost').value = '';
+       }
+   }
+}else{
+	$scope.isFileNull=true;
+};
+ };
 
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventSaveUserDone();

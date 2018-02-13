@@ -128,9 +128,11 @@ public class CustComparisonDao {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objPdfMasterReportBean = new PDFMasterReportBean();
+				objPdfMasterReportBean.setDedicatedAccountManagerId(rs.getInt("sales_person_id"));
 				objPdfMasterReportBean.setDedicatedAccountManager(rs.getString("sales_person_name"));
 				objPdfMasterReportBean.setDedicatedAccountManagerEmail(rs.getString("sales_person_email"));
 				objPdfMasterReportBean.setDedicatedAccountManagerContact(rs.getString("sales_person_contact"));
+				
 				
 				objPdfMasterReportBean.setEmail(rs.getString("email"));
 				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesRepInfoPage" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a7ad0a0f-7806-4b4b-b53f-5c5fff3b6bce">
-	<property name="ireport.zoom" value="1.3310000000000004"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesRepInfoPage" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a7ad0a0f-7806-4b4b-b53f-5c5fff3b6bce">
+	<property name="ireport.zoom" value="1.0000000000000009"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="48"/>
+	<property name="ireport.y" value="103"/>
+	<parameter name="salesRepProfilePath" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -64,9 +65,11 @@
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="421" splitType="Stretch">
+		<band height="842" splitType="Stretch">
 			<textField>
-				<reportElement uuid="9406d720-4526-48a2-8164-39f4fd1ff29a" x="191" y="108" width="295" height="20" forecolor="#C00000"/>
+				<reportElement uuid="9406d720-4526-48a2-8164-39f4fd1ff29a" x="215" y="108" width="295" height="20" forecolor="#C00000">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
+				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
 					<font size="15" isBold="true"/>
@@ -74,8 +77,8 @@
 				<textFieldExpression><![CDATA[$F{dedicatedAccountManager}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="92c0763f-c052-48c1-bbdc-1d61f83f0885" x="191" y="150" width="295" height="20" forecolor="#C00000">
-					<printWhenExpression><![CDATA[$F{dedicatedAccountManagerContact}!=null]]></printWhenExpression>
+				<reportElement uuid="92c0763f-c052-48c1-bbdc-1d61f83f0885" x="215" y="150" width="295" height="20" forecolor="#C00000">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
@@ -84,7 +87,9 @@
 				<textFieldExpression><![CDATA[$F{dedicatedAccountManagerContact}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="ec032faf-c033-42ad-a585-40167f8ee541" x="191" y="129" width="295" height="20" forecolor="#C00000"/>
+				<reportElement uuid="ec032faf-c033-42ad-a585-40167f8ee541" x="215" y="129" width="295" height="20" forecolor="#C00000">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
+				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
 					<font size="15" isBold="true"/>
@@ -92,7 +97,9 @@
 				<textFieldExpression><![CDATA[$F{dedicatedAccountManagerEmail}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="f26a55ab-61c1-4b63-ba86-4c6c0874241a" x="15" y="108" width="176" height="20"/>
+				<reportElement uuid="f26a55ab-61c1-4b63-ba86-4c6c0874241a" x="39" y="108" width="176" height="20">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
+				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
 					<font size="15" isBold="true"/>
@@ -100,7 +107,9 @@
 				<text><![CDATA[Sales Rep Name     :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f0417c03-bb97-4b5f-a608-78b1f1c2c7fd" x="15" y="129" width="176" height="20"/>
+				<reportElement uuid="f0417c03-bb97-4b5f-a608-78b1f1c2c7fd" x="39" y="129" width="176" height="20">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
+				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
 					<font size="15" isBold="true"/>
@@ -108,8 +117,8 @@
 				<text><![CDATA[Sales Rep Email      :]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ef7213cd-9913-4a1a-950f-cca7a659bf78" x="15" y="150" width="176" height="20">
-					<printWhenExpression><![CDATA[$F{dedicatedAccountManagerContact}!=null]]></printWhenExpression>
+				<reportElement uuid="ef7213cd-9913-4a1a-950f-cca7a659bf78" x="39" y="150" width="176" height="20">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}==""||$P{salesRepProfilePath}==null]]></printWhenExpression>
 				</reportElement>
 				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
 				<textElement>
@@ -117,6 +126,12 @@
 				</textElement>
 				<text><![CDATA[Sales Rep Contact  :]]></text>
 			</staticText>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement uuid="7ad85fc2-405b-486a-94c9-60dd36e50e39" x="0" y="0" width="595" height="842">
+					<printWhenExpression><![CDATA[$P{salesRepProfilePath}!=""||$P{salesRepProfilePath}!=null]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{salesRepProfilePath}]]></imageExpression>
+			</image>
 		</band>
 	</detail>
 </jasperReport>

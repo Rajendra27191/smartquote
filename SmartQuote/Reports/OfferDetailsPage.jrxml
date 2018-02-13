@@ -23,7 +23,7 @@
 	</field>
 	<detail>
 		<band height="842" splitType="Stretch">
-			<image onErrorType="Blank">
+			<image scaleImage="FillFrame" onErrorType="Blank">
 				<reportElement uuid="efd4ba49-fc3e-498f-832b-0e2ab603461e" x="0" y="0" width="595" height="842"/>
 				<imageExpression><![CDATA[$F{offerTemplate}]]></imageExpression>
 			</image>

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.commons.io.FileUtils;
+
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
@@ -220,5 +223,36 @@ public class CommonLoadAction extends ActionSupport {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean createTemplate(String filename,File logoImage,String folderPath){
+		boolean isLogoCreated=false;
+		System.out.println("filename >> "+filename);
+		System.out.println("logoImage >> "+logoImage);
+		String projectLogoPath=System.getProperty("user.dir")+folderPath;
+		System.out.println("projectLogoPath "+projectLogoPath);
+		File fileToCreate = new File(projectLogoPath+filename);
+		try {
+			System.out.println("fileToCreate :: "+fileToCreate);
+			FileUtils.copyFile(logoImage, fileToCreate);
+			isLogoCreated=true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return isLogoCreated;
+	}
+	public static boolean deleteTemplate(String destFileName,String folderPath) {
+		boolean isTemplateDeleted = false;
+		String projectTemplatePath = System.getProperty("user.dir") +folderPath;
+//		System.out.println("projectTemplatePath ::" + projectTemplatePath);
+		File deleteTemplate = new File(projectTemplatePath + destFileName);
+//		System.out.println("fileTocreate" + deleteTemplate);
+		try {
+			deleteTemplate.delete();
+			isTemplateDeleted = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isTemplateDeleted;
 	}
 }

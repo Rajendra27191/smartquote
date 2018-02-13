@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quote_report" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8db8e68c-96db-4599-b0f5-5c8299cef66a">
 	<property name="ireport.zoom" value="0.8264462809917612"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="62"/>
+	<property name="ireport.y" value="273"/>
 	<style name="text_style" hAlign="Center" vAlign="Top" fontSize="16" isBold="true">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$P{customerLogoPath}!=""&&$P{customerLogoPath}!=null]]></conditionExpression>

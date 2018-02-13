@@ -2,6 +2,10 @@
 	.input-group-btn .btn {
     padding: 3px 12px;
   }
+  .col-md-8 .dropdown-menu {
+    max-height: 165px;
+    overflow-y: auto;
+}
 </style>
 <div class="container">
 <form name="form.userManageUser" novalidate>
@@ -104,8 +108,27 @@
  	</span>
     </div>
 	</div>
+	
+	<div class="row row-control">
+	<div class="col-md-4"><label class="sub-label">Profile Template</label></div>
+	<div class="col-md-8">
+	<input type = 'file' class = 'form-control'  fileinput="file"  ng-file-select = "onFileSelect($files)"  id = 'fileTypeExcelHost' name="userProfile"  filepreview="filepreview" style="margin-bottom: 2%;">
+	<span class="invalid-control">
+	<small ng-show="invalidFileSize" style="color: red;">*File size must be less than 1MB.</small>
+	<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
+	</span>
+    </div>
+	</div>
 
+	<div class="row row-control" >
+	<div class="col-md-4"></div>
+	<div class="col-md-6" ng-if="!invalidFileSize && !isInvalid && !isFileNull">	
+ 	<img class="img-thumbnail"  ng-src="{{filepreview}}" class="img-responsive" ng-show="filepreview" alt-SRC src="Images/no-image.png" style="height:250px;width:250px;" />	
+ 	
+ 	<a target="blank" ng-if="filepreview=='' && manageUser.templateUrl" ng-href="{{manageUser.templateUrl}}" tooltip-placement="top" uib-tooltip="click to open"><img class="img-thumbnail" ng-src="{{manageUser.templateUrl}}" style="height:150px;width:150px;" alt-SRC src="Images/no-image.png" ></a>
 
+	</div>
+	</div>
 
 
 

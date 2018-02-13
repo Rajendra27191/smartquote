@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MainFooterPage" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5b112444-68d2-40a8-9471-fa6cdb01e8bc">
-	<property name="ireport.zoom" value="0.6997610703146006"/>
+	<property name="ireport.zoom" value="0.4344965696050322"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="footerImg1Path" class="java.lang.String"/>
@@ -50,9 +50,9 @@
 		<fieldDescription><![CDATA[submittedBy]]></fieldDescription>
 	</field>
 	<detail>
-		<band height="722" splitType="Stretch">
+		<band height="755" splitType="Stretch">
 			<image scaleImage="RealSize" onErrorType="Blank">
-				<reportElement uuid="bd01e5d4-f4c2-48cb-bad5-821d02290364" x="0" y="0" width="595" height="722"/>
+				<reportElement uuid="bd01e5d4-f4c2-48cb-bad5-821d02290364" x="0" y="0" width="595" height="755"/>
 				<imageExpression><![CDATA[$P{backCoverPath}]]></imageExpression>
 			</image>
 		</band>

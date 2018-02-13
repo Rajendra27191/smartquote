@@ -2,6 +2,7 @@ package action;
 
 import interceptor.SessionInterceptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class UserGroupAction extends ActionSupport implements
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private UserDetailResponse userDetailsResponse = new UserDetailResponse();
 	private DetailResponseBean objDetailResponseBean= new DetailResponseBean();
-	
+	public File logoFile;
 	public UserGroupResponse getData() {
 		return data;
 	}
@@ -222,6 +223,8 @@ public class UserGroupAction extends ActionSupport implements
 			// "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
 			
 			System.out.println("userDetails: "+ userDetails);
+//			System.out.println("Logo file ::: " + logoFile);
+			
 			UserBean objUserBean = new UserBean();
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			objUserBean = gson.fromJson(userDetails, UserBean.class);
@@ -240,6 +243,12 @@ public class UserGroupAction extends ActionSupport implements
 				objUserGroupDao.commit();
 				objUserGroupDao.closeAll();
 				if (userID>0) {
+					if (logoFile!=null) {
+						String filename = "UserId_" + userID + ".png";
+						boolean isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
+						System.out.println("LOGO saved ::: "+filename +" : "+isLogoSaved);
+						objDetailResponseBean.setGenratedUrl(getText("sales_rep_template_url")+filename);
+					}
 					objDetailResponseBean.setCode("success");
 					objDetailResponseBean.setGenratedId(userID);
 					objDetailResponseBean.setMessage(getText("user_created"));
@@ -263,7 +272,7 @@ public class UserGroupAction extends ActionSupport implements
 			userDetailsResponse.setCode("error");
 			userDetailsResponse.setMessage(getText("common_error"));
 			UserGroupDao objUserDao = new UserGroupDao();
-			UserBean objUserBean = objUserDao.getUserDetails(userId);
+			UserBean objUserBean = objUserDao.getUserDetails(userId,getText("sales_rep_template_url"));
 			objUserDao.commit();
 			objUserDao.closeAll();
 			if (objUserBean != null) {
@@ -291,6 +300,19 @@ public class UserGroupAction extends ActionSupport implements
 		objUserGroupDao.closeAll();
 
 		if (isUserUpdated) {
+			if (logoFile!=null) {
+				String filename = "UserId_" + objUserBean.getUserId() + ".png";
+				File file = new File(filename);
+				boolean isLogoSaved=false;
+				if (!file.exists()) {
+					isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
+					System.out.println("1.LOGO saved ::: "+filename);
+				}else{
+					file.delete();
+					isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
+					System.out.println("2.LOGO saved ::: "+filename);
+				}
+			}
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("user_updated"));
 		} else {
@@ -307,6 +329,8 @@ public class UserGroupAction extends ActionSupport implements
 		objDao.commit();
 		objDao.closeAll();
 		if (isDeleted) {
+			String filename = "UserId_" + userId + ".png";
+			CommonLoadAction.deleteTemplate(filename,getText("sales_rep_template_folder_path") );
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("user_deleted"));
 		} else {
