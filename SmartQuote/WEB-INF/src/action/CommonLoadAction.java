@@ -1,11 +1,18 @@
 package action;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 import pojo.CustomerBean;
 import pojo.EmptyResponseBean;
@@ -254,5 +261,32 @@ public class CommonLoadAction extends ActionSupport {
 			e.printStackTrace();
 		}
 		return isTemplateDeleted;
+	}
+		
+	public static boolean convertPdfToImage(String srcFileName,String destDirPath,String destFileName){
+        String sourceDir = srcFileName; // Pdf files are read from this folder
+        String destinationDir = destDirPath; // converted images from pdf document are saved here
+        PDDocument document = null;
+		 try {
+	            File pdfFile = new File(sourceDir);
+	            document = PDDocument.load(pdfFile);
+	            PDFRenderer renderer = new PDFRenderer(document);
+	            System.out.println(System.currentTimeMillis());
+	            BufferedImage image = renderer.renderImage(0, 2);
+	            File imageFile = new File(destinationDir + destFileName);
+	            imageFile.mkdirs();
+                ImageIO.write(image, "png", imageFile);
+                System.out.println("One...!");
+                System.out.println(System.currentTimeMillis()); 
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }finally{
+	        	try {
+					document.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+		return true;
 	}
 }

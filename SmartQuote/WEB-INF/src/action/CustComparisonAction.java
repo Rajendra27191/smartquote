@@ -18,6 +18,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 
+
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
@@ -435,8 +436,19 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
 			list.add(jasperPrint);
-			list.add(jasperPrint2);
-
+			
+			List<JasperPrint> list1 = new ArrayList<JasperPrint>();
+			list1.add(jasperPrint2);
+			
+//			JRPdfExporter exporter = new JRPdfExporter();
+//			exporter.setExporterInput(SimpleExporterInput.getInstance(list)); //Set as export input my list with JasperPrint s
+//			exporter.setExporterInput(SimpleExporterInput.getInstance(list1));
+//			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("/home/radhika/Documents/Give Away POS_Part1.pdf")); //or any other out streaam
+//			SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+//			configuration.setCreatingBatchModeBookmarks(true); //add this so your bookmarks work, you may set other parameters
+//			exporter.setConfiguration(configuration);
+//			exporter.exportReport();
+			
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
 			exp.exportReport();

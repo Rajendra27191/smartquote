@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/struts2-dojo-plugin-2.3.16.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/groovy-all-1.8.5.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/gson-2.2.4.jar"/>
-	<classpathentry kind="lib" path="WEB-INF/lib/jasperreports-5.1.2.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/javamail-1.4.1.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/javassist-3.11.0.GA.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jdt-compiler-3.1.1.jar"/>
@@ -43,5 +42,8 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/iText-2.1.7.jar"/>
 	<classpathentry kind="lib" path="/home/radhika/Documents/JAVA/apache-tomcat-7.0.42/lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/struts2-jasperreports-plugin-2.3.4.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/fontbox-2.0.8.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/pdfbox-2.0.8.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/jasperreports-5.1.2.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>

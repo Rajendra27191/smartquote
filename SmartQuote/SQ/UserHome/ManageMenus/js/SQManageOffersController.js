@@ -137,14 +137,15 @@ $scope.onFileSelect = function($files){
 console.log("onFileSelect");
 if ($files.length>0) {
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+      //
+      if(($files[i].name.split('.').pop() == 'pdf'||$files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
        console.log("valid file");
        latestFile = $files[i];
        $scope.file=latestFile
        console.log("File",latestFile.size+" bytes");
        console.log("File",(latestFile.size / 1024)+" kb");
        console.log("")
-        if ((latestFile.size / 1024) <=1024) {//6144 15360
+        if ((latestFile.size / 1024) <=2048) {//6144 15360 2048
 	      templateFile=latestFile;
         $scope.invalidFileSize=false;  
         $scope.isInvalid=false;         
@@ -172,6 +173,7 @@ $scope.jsonToSaveOffer=function(){
  var offerDetail={};    
  offerDetail={
   "offerName":$scope.manageOffers.offer,
+  "offerTemplate":templateFile.name,
  };   
  if ($scope.saveStatus=='edit') {
   offerDetail.id=$scope.manageOffers.id;
