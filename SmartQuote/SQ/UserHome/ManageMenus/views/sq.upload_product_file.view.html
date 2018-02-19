@@ -34,7 +34,9 @@ margin-bottom: 0px;
 .progress-bar{
 padding: 0px;
 }
-
+ #prFileFormat tr{
+ 	text-align: center;
+ }
 </style>
 
 <div class="container" onload=""> 
@@ -108,6 +110,120 @@ animation-delay="0">
 </div>
 </center>
 </div>
+
+<!-- {{upload.type}}  products newProductCode-->
+<br>
+<center ng-if="upload.type"><span style="color: red;">* Note: The file should be in following format.</span></center> 
+
+<div id="scrollDiv">
+<div class="row" ng-if="upload.type=='products'">
+<div class="col-md-10 col-md-offset-1"  style="overflow-x: scroll;">
+<center>
+ <table class="table table-bordered" id="prFileFormat">
+    <thead>
+      <tr>
+        <th>Item Code</th>
+        <th>Group</th> 
+        <th>Item Description</th> 
+        <th>Description (2)</th> 
+        <th>Description (3)</th> 
+        <th>Unit</th> 
+        <th>Price 0 (ex GST)</th> 
+        <th>Qty Break 1</th> 
+        <th>Price 1 (ex GST)</th> 
+        <th>Qty Break 2	</th> 
+        <th>Price 2 (ex GST)</th> 
+        <th>Qty Break 3</th> 
+        <th>Price 3 (ex GST)</th> 
+        <th>Qty Break 4	</th> 
+        <th>Price 4 (ex GST)</th> 
+        <th>Priority</th> 
+        <th>Last Buy Date</th> 
+        <th>Last Buy Price</th> 
+        <th>Tax Code</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in records track by $index">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+
+    </tbody>
+  </table>
+</center>	
+</div>
+</div>
+</div>
+
+
+<div class="row" ng-if="upload.type=='promoPrice'">
+<div class="col-md-4 col-md-offset-4">
+<center>
+ <table class="table table-bordered" id="prFileFormat">
+    <thead>
+      <tr >
+        <th>Item Code</th>
+        <th>Promo Price</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in records track by $index">
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</center>	
+</div>
+</div>
+
+<div class="row" ng-if="upload.type=='newProductCode'">
+<div class="col-md-4 col-md-offset-4">
+<center>
+ <table class="table table-bordered" id="prFileFormat">
+    <thead>
+      <tr>
+        <th>Old Item Code</th>
+        <th>New Item Code</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="p in records track by $index">
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</center>	
+</div>
+</div>
+
+
+
+</div>
+
+
+
+
+
 <!-- <div id="bigCircle" >
 <div class="progress-wrapper">
 <div class="progress1 ng-cloak" ng-style="getStyle()" > 

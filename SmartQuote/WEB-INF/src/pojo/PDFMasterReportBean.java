@@ -168,6 +168,17 @@ public class PDFMasterReportBean {
 		this.dedicatedAccountManagerId = dedicatedAccountManagerId;
 	}
 
+	@Override
+	public String toString() {
+		return "PDFMasterReportBean [dedicatedAccountManagerId=" + dedicatedAccountManagerId + ", dedicatedAccountManager="
+				+ dedicatedAccountManager + ", dedicatedAccountManagerEmail=" + dedicatedAccountManagerEmail
+				+ ", dedicatedAccountManagerContact=" + dedicatedAccountManagerContact + ", Contact=" + Contact + ", email=" + email
+				+ ", quoteId=" + quoteId + ", quoteDate=" + quoteDate + ", proposalFor=" + proposalFor + ", submittedBy=" + submittedBy
+				+ ", quoteAttn=" + quoteAttn + ", custId=" + custId + ", isAlternativeAdded=" + isAlternativeAdded + ", isGstInclusive="
+				+ isGstInclusive + ", offerList=" + offerList + ", termConditionList=" + termConditionList + ", objCalculationBean="
+				+ objCalculationBean + ", arrayPdfSubReportBean=" + arrayPdfSubReportBean + "]";
+	}
+
 
 	
 

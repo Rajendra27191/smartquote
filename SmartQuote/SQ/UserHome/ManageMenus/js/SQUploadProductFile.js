@@ -4,6 +4,13 @@ console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];
 $scope.upload={};
+$scope.records = [
+        "",
+        "",
+        "",
+        "",
+        "",
+    ]
 $scope.onExcelSelect = function($files)  {
 console.log("onExcelSelect");
   console.log($files);

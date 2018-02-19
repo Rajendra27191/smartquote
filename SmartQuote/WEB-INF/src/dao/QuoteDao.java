@@ -324,6 +324,7 @@ public class QuoteDao {
 			pstmt= conn.prepareStatement(query);
 			pstmt.setInt(1, quote_id);
 			rsService = pstmt.executeQuery();
+			System.out.println(pstmt);
 			while(rsService.next()){
 				objOfferBean = new OfferBean();
 				objOfferBean.setCode(rsService.getString("id"));

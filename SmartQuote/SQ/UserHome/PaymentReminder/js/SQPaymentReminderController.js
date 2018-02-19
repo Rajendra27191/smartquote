@@ -854,6 +854,85 @@ var cleanupEventAbortEmailNotDone = $scope.$on("AbortEmailNotDone", function(eve
   $rootScope.alertServerError("Server error");
   $rootScope.hideSpinner();
 });
+//=======================================================
+//================ Email Upload Code ====================
+//=======================================================
+var latestEmailExcelFile;
+
+$scope.onEmailExcelSelect = function($files)  {
+// console.log("onExcelSelect");
+  // console.log($files);
+     for (var i = 0; i < $files.length; i++) {
+      if(($files[i].name.split('.').pop() == 'xlsx')){
+       // console.log("valid file");
+       latestEmailExcelFile = $files[i];
+      }
+      else{
+       // console.log("invalid file");
+       $scope.isEmailFileValid=true;
+       $timeout(function() {
+       $scope.isEmailFileValid=false;
+            }, 3000);
+        // console.log('Please upload valid excel file.');
+       $scope.invalidEmailFile=true;
+       latestEmailExcelFile = {};
+       document.getElementById('emailFile').value = '';
+       }
+      }
+};
+
+$scope.loadEmailFile = function(){
+  // console.log(latestEmailExcelFile)
+  var reminderFile=latestEmailExcelFile;
+  var uploadUrl=$rootScope.projectName+"/loadPaymentReminderEmailFile";
+  var fd= new FormData();
+  fd.append('reminderFile',reminderFile);
+  fd.append('fileName',reminderFile.name);
+  $rootScope.showSpinner();
+  $http.post(uploadUrl, fd,{
+    // withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+    if(data.code.toUpperCase()=="SUCCESS"){
+      $rootScope.alertSuccess(data.message);
+      document.getElementById('emailFile').value = '';
+      latestEmailExcelFile = {};
+      // $scope.lastCall='load';
+    }else if(data.code=="sessionTimeOut"){
+      $rootScope.$broadcast('SessionTimeOut', data); 
+    }else{
+      // console.log(data); 
+      // $rootScope.alertError(data.message);                             
+      $rootScope.alertError(data.message+"\n"+"All three fields are mandatory");                             
+      document.getElementById('emailFile').value = '';
+      latestEmailExcelFile = {};
+    }
+    $rootScope.hideSpinner();
+  })
+  .error(function(data, status, header, config){
+    $rootScope.alertServerError("Server error");
+    $rootScope.hideSpinner();
+  });
+};
+
+$scope.uploadEmailFile = function(){
+  if(latestEmailExcelFile === undefined || latestEmailExcelFile === {} || document.getElementById('emailFile').value === '')
+    {
+      $scope.isEmailFileRequired=true;
+      $timeout(function() {
+      $scope.isEmailFileRequired=false;
+      }, 3000);
+    }else {   
+       if ((latestEmailExcelFile.size / 1024) < 15360) {//6144
+          $scope.loadEmailFile();
+        }else{
+          $rootScope.alertError("File size must ne less than 15MB"); 
+        }   
+    }
+};
+
 
 //===================================
 $scope.$on('$destroy', function(event, message) {

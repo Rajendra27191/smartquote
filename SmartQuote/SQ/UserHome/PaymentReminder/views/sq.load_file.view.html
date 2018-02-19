@@ -4,7 +4,11 @@
     padding: 6px 12px;
     font-size: 14px;
 	}
-	
+
+	#prFileFormat td{
+	padding: 10px;
+	}
+ 	
 
 </style>
 
@@ -16,7 +20,7 @@
 	</div>
 	<br>
 	<div class="row row-control">
-	<div class="col-md-3"><label class="sub-label">Product File</label> <span class="asteric">*</span></div>
+	<div class="col-md-3"><label class="sub-label">Reminder File</label> <span class="asteric">*</span></div>
 	<div class="col-md-9">
 	<input type = 'file' class = 'form-control' ng-file-select = "onExcelSelect($files)"  id = 'emailTemplate' name="productFile" required>
 	<span class="invalid-control">
@@ -46,9 +50,69 @@
 <br>
 <center><span style="color: red;">* Note: The file should be in following format.</span></center> 
 <div class="row">
-<div class="col-md-12">
+<div class="col-md-10 col-md-offset-1">
 <center>
-<img src="Images/reminder_format.png" class="img-responsive" />	
+<!-- <img src="Images/reminder_format.png" class="img-responsive" />	 -->
+<table class="table table-bordered" id="prFileFormat">
+    <thead>
+      <tr>
+        <th>Customer Code</th>
+        <th>Customer Name</th>
+        <th>Total</th>
+        <th>June(Current)</th>
+        <th>May(30Days)</th>
+        <th>April(60Days)</th>
+        <th>March(90Days)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+       <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+       <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </center>	
 </div>
 </div>

@@ -116,11 +116,11 @@
 		<label class="sub-label">Template</label> <span class="asteric">* </span>
 		</div>
 		<div class="col-md-9">
-			<input type = 'file' class = 'form-control' ng-file-select = "onFileSelect($files)" fileinput="file" id = 'fileOfferTemplate' name="offerTemplate" filepreview="filepreview" required>
+			<input type = 'file' class = 'form-control' ng-file-select = "onFileSelect($files)" fileinput="file" id = 'fileOfferTemplate' name="offerTemplate" filepreview="filepreview" ng-required="saveStatus=='add'">
 			<!-- <span ng-show="((form.manageOffers.offerTemplate.$dirty && form.manageOffers.offerTemplate.$invalid) || (form.manageOffers.offerTemplate.$invalid && form.manageOffers.submitted))" class="invalid-control">
 			<small>* please select offer template.</small>
 			</span>	 -->
-			<small class="text-muted">Note : For quick uploading use image as template. <i class="glyphicon glyphicon-question-sign" tooltip-placement="top" uib-tooltip="Supported File Format : (.png, .jpg, .jpeg, .gif, .pdf)"></i></small>
+			<p class="text-muted">Note : For quick uploading use image as template. <i class="glyphicon glyphicon-question-sign" tooltip-placement="top" uib-tooltip="Supported File Format : (.png, .jpg, .jpeg, .gif, .pdf)"></i></p>
 			<span class="invalid-control">
 			<small ng-show="invalidFileSize" style="color: red;">*File size must be less than 2MB.</small>
 			<small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif,.pdf).</small>

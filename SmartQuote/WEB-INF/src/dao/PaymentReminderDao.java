@@ -80,7 +80,7 @@ public class PaymentReminderDao {
 		}
 		return email;
 	}
-	
+
 	public boolean checkIfFileExist(String fileName) {
 		boolean isFileExist = false;
 		String getUserGroups = "SELECT file_name FROM file_load_status WHERE file_name = ?";
@@ -218,24 +218,24 @@ public class PaymentReminderDao {
 			pstmt.setString(1, fileName);
 			System.out.println(pstmt);
 			int i = pstmt.executeUpdate();
-			int j=0;
-			System.out.println("I "+i);
+			int j = 0;
+			System.out.println("I " + i);
 			if (i > 0) {
 				pstmt = conn.prepareStatement(query2);
 				pstmt.setInt(1, fileId);
 				j = pstmt.executeUpdate();
-				System.out.println("J "+j);
+				System.out.println("J " + j);
 			}
-			int x=0;
-			if (j > 0){
+			int x = 0;
+			if (j > 0) {
 				pstmt = conn.prepareStatement(query3);
 				pstmt.setInt(1, fileId);
 				pstmt.setString(2, fileName);
 				x = pstmt.executeUpdate();
-				System.out.println("X "+x);
+				System.out.println("X " + x);
 			}
-		
-				isUnload = true;
+
+			isUnload = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -308,11 +308,12 @@ public class PaymentReminderDao {
 
 	public ArrayList<EmailFormatBean> getEmailFormatData() {
 		ArrayList<EmailFormatBean> objArrayList = null;
-//		String query = "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
-//				+ "WHERE email_id=1; ";
+		// String query =
+		// "SELECT email_id,header,body,contact_person,subject,contact_name,name,footer From email_data_ref "
+		// + "WHERE email_id=1; ";
 		String query = "SELECT a.config_id,b.template_id,a.email_id,header,body,contact_person,subject "
 				+ "FROM email_config a, email_data_ref b where a.config_id=b.config_id;";
-	
+
 		try {
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
@@ -369,15 +370,12 @@ public class PaymentReminderDao {
 		}
 		return ++id;
 	}
-	
-
 
 	public boolean addCustomersIntoEmailRecord(SendReminderBean objSendReminderBean) {
-//		System.out.println(objSendReminderBean);
+		// System.out.println(objSendReminderBean);
 		boolean isUpdated = false;
 		String query = "replace into email_record(config_id,batch_id,file_id,cust_code,cust_name,total,"
-				+ "current,d30,d60,d90,email_id,send_status,due,remark,date,file_name,file_unload_status,"
-				+ "template_id,subject,body)" 
+				+ "current,d30,d60,d90,email_id,send_status,due,remark,date,file_name,file_unload_status," + "template_id,subject,body)"
 				+ "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,now(),?,?,?,?,?);";
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -401,9 +399,9 @@ public class PaymentReminderDao {
 				pstmt.setString(14, "");
 				pstmt.setString(15, objSendReminderBean.getCustomerArrayList().get(i).getFileName());
 				pstmt.setInt(16, 0);
-				pstmt.setInt(17,objSendReminderBean.getEmailFormat().getTemplateId());
-				pstmt.setString(18,objSendReminderBean.getEmailFormat().getSubject());
-				pstmt.setString(19,objSendReminderBean.getEmailFormat().getBody());		
+				pstmt.setInt(17, objSendReminderBean.getEmailFormat().getTemplateId());
+				pstmt.setString(18, objSendReminderBean.getEmailFormat().getSubject());
+				pstmt.setString(19, objSendReminderBean.getEmailFormat().getBody());
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Batch Executed...!");
@@ -580,5 +578,55 @@ public class PaymentReminderDao {
 		return isUpdated;
 	}
 
+	public boolean uploadReminderFileEmail(ArrayList<PaymentReminderFileBean> reminderList) {
+		boolean isUpdated = false;
+		String query = "Replace Into file_log_emails (customer_code,customer_name,email) " + "values (?,?,?);";
+		try {
+			pstmt = conn.prepareStatement(query);
+			final int batchSize = 1000;
+			int count = 0;
+			for (int i = 0; i < reminderList.size(); i++) {
+				pstmt.setString(1, reminderList.get(i).getCustomerCode());
+				pstmt.setString(2, reminderList.get(i).getCustomerName());
+				pstmt.setString(3, reminderList.get(i).getEmail().toLowerCase().replace(" ", ""));
+				//.replace(" ", "")
+				pstmt.addBatch();
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+			System.out.println("Remaining Executed...!");
+			isUpdated = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
 
+	public boolean executeQuery(String queryStr) {
+		boolean isUpdated = false;
+		String query = queryStr;
+		try {
+			pstmt = conn.prepareStatement(query);
+			System.out.println(pstmt);
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isUpdated = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isUpdated;
+	}
 }

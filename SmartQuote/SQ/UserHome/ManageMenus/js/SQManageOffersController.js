@@ -173,8 +173,11 @@ $scope.jsonToSaveOffer=function(){
  var offerDetail={};    
  offerDetail={
   "offerName":$scope.manageOffers.offer,
-  "offerTemplate":templateFile.name,
- };   
+  // "offerTemplate":templateFile.name,
+ }
+ if (templateFile) {
+  offerDetail.offerTemplate=templateFile.name;
+  }
  if ($scope.saveStatus=='edit') {
   offerDetail.id=$scope.manageOffers.id;
  }
@@ -185,12 +188,9 @@ $scope.saveOffer=function(){
 console.log("saveOffer")
 if ($scope.form.manageOffers.$valid) {
 		$log.debug("valid form");
+    var formData= new FormData();
     if ($scope.saveStatus=='add') {
     var uploadUrl=$rootScope.projectName+"/createOffer";
-    } else{
-	  var uploadUrl=$rootScope.projectName+"/updateOffer";
-    };    
-    var formData= new FormData();
     if(templateFile){
     console.log(templateFile)
     formData.append('templateFile',templateFile);
@@ -200,6 +200,17 @@ if ($scope.form.manageOffers.$valid) {
     }else{
        $scope.isInvalid=true;    
     }
+    } else{
+    var uploadUrl=$rootScope.projectName+"/updateOffer";
+    if(templateFile){
+    console.log(templateFile)
+    formData.append('templateFile',templateFile);    
+    }
+    formData.append('offerDetail',$scope.jsonToSaveOffer());
+    $rootScope.showSpinner();
+    SQManageMenuServices.SaveDataWithFile(uploadUrl,formData);
+    };    
+    
 	}else{
 		$log.debug("invalid form");
 		$scope.form.manageOffers.submitted=true;

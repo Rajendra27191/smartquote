@@ -124,12 +124,14 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 					boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans, fileName);
 					objDao.commit();
 					if (isFileUploaded) {
+						String query1="update file_log a, file_log_emails b set a.email = b.email "
+								+ "where a.customer_code = b.customer_code;";
+						objDao.executeQuery(query1);
 						objEmptyResponseBean.setCode("success");
 						objEmptyResponseBean.setMessage(getText("file_load_success"));
 					}
 				}
 				objDao.closeAll();
-
 			} else {
 				System.out.println("2..");
 				objEmptyResponseBean.setCode("error");
@@ -249,15 +251,15 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objPaymentReminderResponse.setMessage(getText("common_error"));
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
-//			EmailFormatBean objBean = new EmailFormatBean();
-//			objBean = objDao.getEmailFormatData();
+			// EmailFormatBean objBean = new EmailFormatBean();
+			// objBean = objDao.getEmailFormatData();
 			ArrayList<EmailFormatBean> emailFormatList = new ArrayList<EmailFormatBean>();
 			emailFormatList = objDao.getEmailFormatData();
 			System.out.println("emailConfigList >>" + emailFormatList);
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");
-//			objPaymentReminderResponse.setObjEmailFormatBean(objBean);
+			// objPaymentReminderResponse.setObjEmailFormatBean(objBean);
 			objPaymentReminderResponse.setEmailFormatList(emailFormatList);
 
 		} catch (Exception e) {
@@ -304,18 +306,26 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			boolean isEmailDataUpdated = false, isCustomer = false;
 			String customerCodeString = "";
-//			for (int i = 0; i < objSendReminderBean.getCustomerArrayList().size() && objSendReminderBean.getCustomerArrayList() != null; i++) {
-//				if (i == 0) {
-//					customerCodeString = "'" + objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim() + "'";
-//				} else {
-//					customerCodeString = customerCodeString + ", '" + objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim() + "'";
-//				}
-//			}
-//			System.out.println("Cust List: "+customerCodeString);
-//			isEmailDataUpdated = objDao.updateEmailData(objSendReminderBean.getEmailFormat().getBody());
-//			if (isEmailDataUpdated) {
-//				isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
-//			}
+			// for (int i = 0; i <
+			// objSendReminderBean.getCustomerArrayList().size() &&
+			// objSendReminderBean.getCustomerArrayList() != null; i++) {
+			// if (i == 0) {
+			// customerCodeString = "'" +
+			// objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim()
+			// + "'";
+			// } else {
+			// customerCodeString = customerCodeString + ", '" +
+			// objSendReminderBean.getCustomerArrayList().get(i).getCustomerCode().trim()
+			// + "'";
+			// }
+			// }
+			// System.out.println("Cust List: "+customerCodeString);
+			// isEmailDataUpdated =
+			// objDao.updateEmailData(objSendReminderBean.getEmailFormat().getBody());
+			// if (isEmailDataUpdated) {
+			// isCustomer =
+			// objDao.addCustomersIntoEmailRecord(objSendReminderBean);
+			// }
 			isCustomer = objDao.addCustomersIntoEmailRecord(objSendReminderBean);
 			if (isCustomer) {
 				objDao.commit();
@@ -448,6 +458,64 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objDao.closeAll();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+
+	public String loadPaymentReminderEmailFile() {
+		objEmptyResponseBean.setCode("error");
+		objEmptyResponseBean.setMessage(getText("common_error"));
+		System.out.println("loadPaymentReminderEmailFile");
+		ExcelFileSplit objFileReader = new ExcelFileSplit();
+		System.out.println("Reminder Email  File : " + reminderFile);
+		System.out.println("File Name : " + fileName);
+		ArrayList<PaymentReminderFileBean> listReminderBeans = new ArrayList<PaymentReminderFileBean>();
+		try {
+			JSONArray fileString = objFileReader.readFile(reminderFile + "");
+			System.out.println("File String :: " + fileString);
+			listReminderBeans = new Gson().fromJson(fileString.toString(), new TypeToken<List<PaymentReminderFileBean>>() {
+			}.getType());
+			System.out.println(listReminderBeans);
+			JSONObject jsonObject = fileString.getJSONObject(0);
+			if (jsonObject.has("customerCode") && jsonObject.has("customerName") && jsonObject.has("email")) {
+				PaymentReminderDao objDao = new PaymentReminderDao();
+				boolean isFileUploaded = objDao.uploadReminderFileEmail(listReminderBeans);
+				objDao.commit();
+				String query1="",query2="";
+				if (isFileUploaded) {
+					query1="update file_log a, file_log_emails b set a.email = b.email "
+							+ "where a.customer_code = b.customer_code;";
+					query2="update customer_master a, file_log_emails b set a.email = b.email "
+							+ "where a.customer_code = b.customer_code;";
+					objDao.executeQuery(query1);
+					objDao.executeQuery(query2);
+					
+					objEmptyResponseBean.setCode("success");
+					objEmptyResponseBean.setMessage(getText("file_load_success"));
+				}
+				objDao.closeAll();
+			} else {
+				System.out.println("2..");
+				objEmptyResponseBean.setCode("error");
+				objEmptyResponseBean.setMessage(getText("file_column_invalid"));
+			}
+
+		} catch (FileNotFoundException e) {
+			objEmptyResponseBean.setCode("error");
+			objEmptyResponseBean.setMessage(getText("product_file_not_found"));
+			e.printStackTrace();
+		} catch (InvalidFormatException e) {
+			objEmptyResponseBean.setCode("error");
+			objEmptyResponseBean.setMessage(getText("error_file_format"));
+			e.printStackTrace();
+		} catch (JSONException e) {
+			objEmptyResponseBean.setCode("error");
+			objEmptyResponseBean.setMessage(getText("error_file_parse"));
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+			objEmptyResponseBean.setCode("error");
+			objEmptyResponseBean.setMessage(getText("common_error"));
 		}
 		return SUCCESS;
 	}

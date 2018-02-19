@@ -165,6 +165,10 @@ $scope.jsonToCreateUser=function(){
 		"validTo":moment($scope.manageUser.userValidTo).format('YYYY-MM-DD'),};
 	}
 
+	if (logoFile) {
+		user.templateUrl = logoFile.name;
+	};
+
 	
 	//console.log(JSON.stringify(user));
 	return JSON.stringify(user);
@@ -489,14 +493,14 @@ console.log($files.length);
 // console.log($files.height);
 if ($files.length>0) {
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+      if(($files[i].name.split('.').pop() == 'pdf'||$files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
        console.log("valid file");
        latestFile = $files[i];
        $scope.file=latestFile
        console.log("File",latestFile.size+" bytes");
        console.log("File",(latestFile.size / 1024)+" kb");
-       console.log("")
-	      if ((latestFile.size / 1024) <=1024) {//6144
+       // console.log("")
+	      if ((latestFile.size / 1024) <= 2048) {//6144
 		  $scope.invalidFileSize=false;		      	
 	      logoFile=latestFile;
 	      }else{

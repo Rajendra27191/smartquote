@@ -101,6 +101,9 @@ angular.module('sq.SmartQuoteDesktop')
         },
         'abortemail-view' : {
           templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.abort_email.view.html',
+        },
+        'loademail-view' : {
+          templateUrl: 'SQ/UserHome/PaymentReminder/views/sq.load_email.view.html',
         }
       }
     })

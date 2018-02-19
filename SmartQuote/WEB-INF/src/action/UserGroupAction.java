@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
@@ -28,15 +29,15 @@ import com.opensymphony.xwork2.ActionSupport;
 import dao.UserGroupDao;
 
 @SuppressWarnings("serial")
-public class UserGroupAction extends ActionSupport implements
-		ServletRequestAware {
+public class UserGroupAction extends ActionSupport implements ServletRequestAware {
 	private HttpServletRequest request;
 	private UserGroupResponse data = new UserGroupResponse();
 	private MenuResponse menuResponse = new MenuResponse();
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
 	private UserDetailResponse userDetailsResponse = new UserDetailResponse();
-	private DetailResponseBean objDetailResponseBean= new DetailResponseBean();
+	private DetailResponseBean objDetailResponseBean = new DetailResponseBean();
 	public File logoFile;
+
 	public UserGroupResponse getData() {
 		return data;
 	}
@@ -74,7 +75,7 @@ public class UserGroupAction extends ActionSupport implements
 	 */
 
 	public String getUserGroups() {
-		System.out.println("SESSION : "+ServletActionContext.getRequest().getSession()) ;
+		System.out.println("SESSION : " + ServletActionContext.getRequest().getSession());
 		ArrayList<KeyValuePairBean> valuePairBeans = new ArrayList<KeyValuePairBean>();
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		try {
@@ -96,7 +97,7 @@ public class UserGroupAction extends ActionSupport implements
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		SessionInterceptor interceptor = new SessionInterceptor();
 		boolean v = interceptor.isLoggedIn(request);
-		System.out.println("Session : "+v);
+		System.out.println("Session : " + v);
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));
@@ -117,13 +118,11 @@ public class UserGroupAction extends ActionSupport implements
 		String userGroupName = request.getParameter("userGroupName");
 		String allMenuJson = request.getParameter("checkedMenuList");
 
+		System.out.println("username : " + userGroupName + " \nmenu : " + allMenuJson);
 
-		System.out.println("username : "+userGroupName+" \nmenu : "+allMenuJson);
-		
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
-		menuList = new Gson().fromJson(allMenuJson,
-				new TypeToken<List<MenuBean>>() {
-				}.getType());
+		menuList = new Gson().fromJson(allMenuJson, new TypeToken<List<MenuBean>>() {
+		}.getType());
 		UserGroupDao objDao = new UserGroupDao();
 		int userGroupId = objDao.createUserGroup(userGroupName);
 		if (userGroupId != 0) {
@@ -145,9 +144,8 @@ public class UserGroupAction extends ActionSupport implements
 		int userGroupId = Integer.parseInt(request.getParameter("userGroupId"));
 		String allMenuJson = request.getParameter("checkedMenuList");
 		ArrayList<MenuBean> menuList = new ArrayList<MenuBean>();
-		menuList = new Gson().fromJson(allMenuJson,
-				new TypeToken<List<MenuBean>>() {
-				}.getType());
+		menuList = new Gson().fromJson(allMenuJson, new TypeToken<List<MenuBean>>() {
+		}.getType());
 		if (userGroupId != 0) {
 			UserGroupDao objDao = new UserGroupDao();
 			boolean isDeleted = objDao.deleteUserGroupAccess(userGroupId);
@@ -169,8 +167,7 @@ public class UserGroupAction extends ActionSupport implements
 		try {
 			menuResponse.setCode("success");
 			menuResponse.setMessage(getText("list_loaded"));
-			menuResponse.setResult(objUserGroupDao
-					.getAssignedAccess(userGroupId));
+			menuResponse.setResult(objUserGroupDao.getAssignedAccess(userGroupId));
 			objUserGroupDao.commit();
 			objUserGroupDao.closeAll();
 		} catch (Exception e) {
@@ -219,35 +216,37 @@ public class UserGroupAction extends ActionSupport implements
 	public String createUser() {
 		try {
 			String userDetails = request.getParameter("userDetails");
-			// userDetails =
-			// "{\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
-			
-			System.out.println("userDetails: "+ userDetails);
-//			System.out.println("Logo file ::: " + logoFile);
-			
+			System.out.println("userDetails: " + userDetails);
+
 			UserBean objUserBean = new UserBean();
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 			objUserBean = gson.fromJson(userDetails, UserBean.class);
 			boolean isUserAlreadyRegistered = false;
 
 			UserGroupDao objUserDao = new UserGroupDao();
-			isUserAlreadyRegistered = objUserDao.isRegisterdUser(objUserBean
-					.getEmailId());
+			isUserAlreadyRegistered = objUserDao.isRegisterdUser(objUserBean.getEmailId());
 			objUserDao.commit();
 			objUserDao.closeAll();
-			System.out.println("isUserAlreadyRegistered: "+ isUserAlreadyRegistered);
+			System.out.println("isUserAlreadyRegistered: " + isUserAlreadyRegistered);
 			if (!isUserAlreadyRegistered) {
 				UserGroupDao objUserGroupDao = new UserGroupDao();
-//				isUserCreated = objUserGroupDao.saveUser(objUserBean);
+				// isUserCreated = objUserGroupDao.saveUser(objUserBean);
 				int userID = objUserGroupDao.saveUser(objUserBean);
 				objUserGroupDao.commit();
 				objUserGroupDao.closeAll();
-				if (userID>0) {
-					if (logoFile!=null) {
+				String extension = FilenameUtils.getExtension(objUserBean.getTemplateUrl());
+				if (userID > 0) {
+					if (logoFile != null) {
 						String filename = "UserId_" + userID + ".png";
-						boolean isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
-						System.out.println("LOGO saved ::: "+filename +" : "+isLogoSaved);
-						objDetailResponseBean.setGenratedUrl(getText("sales_rep_template_url")+filename);
+						boolean isLogoSaved=false;
+						if (extension.equals("pdf")) {
+							String destDirPath = System.getProperty("user.dir") + getText("sales_rep_template_folder_path");
+							isLogoSaved= CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
+						}else{
+							isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile, getText("sales_rep_template_folder_path"));	
+						}
+						System.out.println("LOGO saved ::: " + filename + " : " + isLogoSaved);
+						objDetailResponseBean.setGenratedUrl(getText("sales_rep_template_url") + filename);
 					}
 					objDetailResponseBean.setCode("success");
 					objDetailResponseBean.setGenratedId(userID);
@@ -272,7 +271,7 @@ public class UserGroupAction extends ActionSupport implements
 			userDetailsResponse.setCode("error");
 			userDetailsResponse.setMessage(getText("common_error"));
 			UserGroupDao objUserDao = new UserGroupDao();
-			UserBean objUserBean = objUserDao.getUserDetails(userId,getText("sales_rep_template_url"));
+			UserBean objUserBean = objUserDao.getUserDetails(userId, getText("sales_rep_template_url"));
 			objUserDao.commit();
 			objUserDao.closeAll();
 			if (objUserBean != null) {
@@ -288,8 +287,6 @@ public class UserGroupAction extends ActionSupport implements
 
 	public String updateUserDetails() {
 		String userDetails = request.getParameter("userDetails");
-		// userDetails =
-		// "{\"userId\":\"3\",\"userGroupId\":\"1\",\"userName\":\"Chetan Choudhari(cc)\",\"emailId\":\"chetan@giantleapsystems.com\",\"password\":\"chetan@123\",\"userType\":\"\",\"contact\":\"1324578920\",\"validFrom\":\"2012-12-01\",\"validTo\":\"2018-12-31\",\"language\":\"es\"}";
 		UserBean objUserBean = new UserBean();
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		objUserBean = gson.fromJson(userDetails, UserBean.class);
@@ -298,19 +295,23 @@ public class UserGroupAction extends ActionSupport implements
 		isUserUpdated = objUserGroupDao.updateUser(objUserBean);
 		objUserGroupDao.commit();
 		objUserGroupDao.closeAll();
-
+		String extension = FilenameUtils.getExtension(objUserBean.getTemplateUrl());
 		if (isUserUpdated) {
-			if (logoFile!=null) {
+			if (logoFile != null) {
 				String filename = "UserId_" + objUserBean.getUserId() + ".png";
 				File file = new File(filename);
-				boolean isLogoSaved=false;
-				if (!file.exists()) {
-					isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
-					System.out.println("1.LOGO saved ::: "+filename);
-				}else{
+				boolean isLogoSaved = false;
+				if (file.exists()) {
 					file.delete();
-					isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile,getText("sales_rep_template_folder_path"));
-					System.out.println("2.LOGO saved ::: "+filename);
+				}
+				
+				if (extension.equals("pdf")) {
+					String destDirPath = System.getProperty("user.dir") + getText("sales_rep_template_folder_path");
+					isLogoSaved= CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
+//					System.out.println("1.LOGO saved ::: " + filename);	
+				}else{
+					isLogoSaved = CommonLoadAction.createTemplate(filename, logoFile, getText("sales_rep_template_folder_path"));
+//					System.out.println("2.LOGO saved ::: " + filename);	
 				}
 			}
 			objEmptyResponse.setCode("success");
@@ -330,7 +331,7 @@ public class UserGroupAction extends ActionSupport implements
 		objDao.closeAll();
 		if (isDeleted) {
 			String filename = "UserId_" + userId + ".png";
-			CommonLoadAction.deleteTemplate(filename,getText("sales_rep_template_folder_path") );
+			CommonLoadAction.deleteTemplate(filename, getText("sales_rep_template_folder_path"));
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("user_deleted"));
 		} else {

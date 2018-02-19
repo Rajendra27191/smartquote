@@ -320,7 +320,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 					.setOfferList(objQuoteDao.getOfferList(objPdfMasterReportBean.getQuoteId(), getText("offer_template_url")));
 			objPdfMasterReportBean.setTermConditionList(objQuoteDao.getTermAndConditionList(objPdfMasterReportBean.getQuoteId()));
 			objQuoteDao.closeAll();
-			// System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList());
+			 System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList().toString());
 
 			JRBeanCollectionDataSource beanColDataSourceHeaderPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSourceProductDetailPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
