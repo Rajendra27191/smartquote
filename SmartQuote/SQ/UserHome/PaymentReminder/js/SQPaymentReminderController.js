@@ -4,12 +4,14 @@ console.log('initialise SQPaymentReminder Controller');
 var latestExcelFile;
 $scope.errorMessage=[];
 $scope.upload={};
+
+
 $scope.lastCall="";
 $scope.onExcelSelect = function($files)  {
 // console.log("onExcelSelect");
   // console.log($files);
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'xlsx')){
+      if(($files[i].name.split('.').pop() == 'xlsx' || $files[i].name.split('.').pop() == 'xml')){
        // console.log("valid file");
        latestExcelFile = $files[i];
       }
@@ -64,6 +66,43 @@ $scope.loadFile = function(){
   });
 };
 
+$scope.loadFileByXml = function(){
+  // console.log(latestExcelFile)
+  var reminderFile=latestExcelFile;
+  var uploadUrl=$rootScope.projectName+"/loadPaymentReminderFileByXml";
+  var fd= new FormData();
+  fd.append('reminderFile',reminderFile);
+  fd.append('fileName',reminderFile.name);
+  // console.log(fd.get('reminderFile'));
+  // console.log(fd.get('hi'));
+  $rootScope.showSpinner();
+  $http.post(uploadUrl, fd,{
+    // withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function(data, status, header, config){
+    if(data.code.toUpperCase()=="SUCCESS"){
+      $rootScope.alertSuccess(data.message);
+      document.getElementById('emailTemplate').value = '';
+      latestExcelFile = {};
+      $scope.lastCall='load';
+    }else if(data.code=="sessionTimeOut"){
+      $rootScope.$broadcast('SessionTimeOut', data); 
+    }else{
+      // console.log(data); 
+      $rootScope.alertError(data.message);                             
+      document.getElementById('emailTemplate').value = '';
+      latestExcelFile = {};
+    }
+    $rootScope.hideSpinner();
+  })
+  .error(function(data, status, header, config){
+    $rootScope.alertServerError("Server error");
+    $rootScope.hideSpinner();
+  });
+};
+
 $scope.uploadFile = function(){
   if(latestExcelFile === undefined || latestExcelFile === {} || document.getElementById('emailTemplate').value === '')
     {
@@ -75,7 +114,14 @@ $scope.uploadFile = function(){
     }else {   
     	 if ((latestExcelFile.size / 1024) < 15360) {//6144
       		// console.log(latestExcelFile.size);
-      		$scope.loadFile(); 
+          var fileType=latestExcelFile.name.split('.').pop();
+          console.log(fileType)
+          if (fileType=="xlsx") {
+      		// $scope.loadFile();   
+          };
+          if (fileType=="xml") {
+            $scope.loadFileByXml();
+          };
 	      }else{
 	          $rootScope.alertError("File size must ne less than 15MB"); 
 	      }   

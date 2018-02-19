@@ -20,6 +20,7 @@ import pojo.EmailLogBean;
 import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.PaymentReminderFileBean;
+import pojo.Report;
 import pojo.SendReminderBean;
 import responseBeans.KeyValuePairResponseBean;
 import responseBeans.PaymentReminderResponseBean;
@@ -124,7 +125,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 					boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans, fileName);
 					objDao.commit();
 					if (isFileUploaded) {
-						String query1="update file_log a, file_log_emails b set a.email = b.email "
+						String query1 = "update file_log a, file_log_emails b set a.email = b.email "
 								+ "where a.customer_code = b.customer_code;";
 						objDao.executeQuery(query1);
 						objEmptyResponseBean.setCode("success");
@@ -481,15 +482,14 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 				PaymentReminderDao objDao = new PaymentReminderDao();
 				boolean isFileUploaded = objDao.uploadReminderFileEmail(listReminderBeans);
 				objDao.commit();
-				String query1="",query2="";
+				String query1 = "", query2 = "";
 				if (isFileUploaded) {
-					query1="update file_log a, file_log_emails b set a.email = b.email "
-							+ "where a.customer_code = b.customer_code;";
-					query2="update customer_master a, file_log_emails b set a.email = b.email "
+					query1 = "update file_log a, file_log_emails b set a.email = b.email " + "where a.customer_code = b.customer_code;";
+					query2 = "update customer_master a, file_log_emails b set a.email = b.email "
 							+ "where a.customer_code = b.customer_code;";
 					objDao.executeQuery(query1);
 					objDao.executeQuery(query2);
-					
+
 					objEmptyResponseBean.setCode("success");
 					objEmptyResponseBean.setMessage(getText("file_load_success"));
 				}
@@ -516,6 +516,21 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			e.printStackTrace();
 			objEmptyResponseBean.setCode("error");
 			objEmptyResponseBean.setMessage(getText("common_error"));
+		}
+		return SUCCESS;
+	}
+
+	public String loadPaymentReminderFileByXml() {
+		System.out.println("loadPaymentReminderFileByXml");
+		objEmptyResponseBean.setCode("error");
+		objEmptyResponseBean.setMessage(getText("common_error"));
+		// System.out.println("Reminder File : " + reminderFile);
+		// System.out.println("File Name : " + fileName);
+		XMLReader objFileReader = new XMLReader();
+		Report objReport; // = new Report();
+		objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
+		if (objReport != null) {
+			Report objValidReport = objFileReader.validateCustomerDetails(objReport);
 		}
 		return SUCCESS;
 	}
