@@ -1,0 +1,102 @@
+<style type="text/css">
+	.form-control{
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+	}
+	
+
+</style>
+
+<div id="loadEmail"> 
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+	<div class="row">
+	<div class="col-md-12"><center><label class="main-label">Load Email File</label></center></div>
+	</div>
+	<br>
+	<div class="row row-control">
+	<div class="col-md-3"><label class="sub-label">File</label> <span class="asteric">*</span></div>
+	<div class="col-md-9">
+	<input type = 'file' class = 'form-control' ng-file-select = "onEmailExcelSelect($files)"  id = 'emailFile' name="emailFile" required>
+	<span class="invalid-control">
+	<small ng-show="isEmailFileRequired" style="color: red;">*Please select file to upload.</small>
+	<small ng-show="isEmailFileValid" style="color: red;">*Please select valid file (only .xlsx).</small>
+	</span>
+	<!-- ngf-pattern="'.xls,.csv,.xlsx'" accept=".xls,.csv,.xlsx" ngf-max-size="20MB" -->
+	</div>
+	<!-- <div class="col-md-3"></div> -->
+	</div>
+
+	<br>
+	<div class="row">
+		<div class="col-md-8"></div>
+		<div class="col-md-4">
+		<button id="create" ng-click="uploadEmailFile()" class="btn btn-block button-ok">
+			<!-- <i class="fa fa-cloud-upload" aria-hidden="true"></i> Upload -->
+			<i class="fa fa-upload" aria-hidden="true"></i> Upload
+		</button>	
+		</div>
+	</div>
+
+<!-- </form> -->
+</div>
+<div class="col-md-2"></div>
+</div>
+<br>
+<center><span style="color: red;">* Note: The file should be in following format.</span></center> 
+<div class="row">
+<div class="col-md-8 col-md-offset-2">
+<center>
+ <table class="table table-bordered" id="prFileFormat">
+    <thead>
+      <tr>
+        <th>Customer Code</th>
+        <th>Email</th>
+        <th>Customer Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</center>	
+</div>
+</div>
+</div>
+	
+
+
+<!-- Floating Social Media bar Starts -->
+<!-- <div class="float-sm">
+  <div class="fl-fl float-fb">
+    <i class="fa fa-facebook" style="font-size: 20px;color: #fff; padding: 10px 0;"></i>
+    <a href="" target="_blank"> Like us!</a>
+  </div>
+</div> -->
+
+
