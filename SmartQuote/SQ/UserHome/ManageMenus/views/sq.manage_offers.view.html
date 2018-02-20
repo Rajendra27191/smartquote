@@ -47,15 +47,15 @@
 </script> -->
 <div class="col-md-12" ng-repeat="offer in offerList | filter:search ">			
 	<div class="col-md-12 bs-callout bs-callout-primary">
-	<div class="col-md-3">
+	<div class="col-md-2">
 		<!-- popover-animation="true" popover-trigger="'mouseenter'" uib-popover-template="dynamicPopover.templateUrl" ng-mouseenter="imageHover(offer.offerTemplate)" -->
 		<a target="blank" ng-href="{{offer.offerTemplate}}" tooltip-placement="top" uib-tooltip="click to open">
 		<img class="img-thumbnail" ng-src="{{offer.offerTemplate}}" style="height: 50px;width:50px;" alt-SRC src="Images/no-image.png" >
 		</a>
 		
 	</div>
-	<div class="col-md-7">
-		<h4>Offer :</h4>
+	<div class="col-md-8">
+		<h4 style="font-size:16px;">Offer :</h4>
 		{{offer.offerName}}
 	</div>
 	<div class="col-md-1">
