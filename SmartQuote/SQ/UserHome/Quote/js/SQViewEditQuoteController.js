@@ -364,6 +364,7 @@ array[objIndex].code = true;
 };
 $scope.checkSelectedOffers=function(){
 console.log("checkSelectedOffers")
+console.log($scope.selectedOfferList)
 if ($scope.selectedOfferList!='' && $scope.offerArray!='') {
 for (var j =0; j<$scope.selectedOfferList.length; j++) {
 // console.log("checkSelectedOffers loop :"+j)	

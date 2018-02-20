@@ -5,10 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+
 import pojo.EmailFormatBean;
 import pojo.EmailLogBean;
 import pojo.KeyValuePairBean;
 import pojo.PaymentReminderFileBean;
+import pojo.Report.Detail.CustomerWrapper.CustomerHeader;
+import pojo.Report.Detail.CustomerWrapper.CustomerTotal;
+import pojo.Report.Detail.CustomerWrapper.TransactionWrapper.CustomerTransactions.Transactions;
 import pojo.SendReminderBean;
 import connection.ConnectionFactory;
 
@@ -102,6 +107,7 @@ public class PaymentReminderDao {
 		return isFileExist;
 	}
 
+	// Delete this method
 	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList, String fileName) {
 		boolean isFileUploaded = false;
 		int rowCount = 0;
@@ -142,10 +148,11 @@ public class PaymentReminderDao {
 			}
 			pstmt.executeBatch(); // Insert remaining records
 			System.out.println("Remaining Executed...!");
-			boolean savedFileStatus = saveFileLoadStatus(fileId, fileName, rowCount);
-			if (savedFileStatus) {
-				isFileUploaded = true;
-			}
+			// boolean savedFileStatus = saveFileLoadStatus(fileId, fileName,
+			// rowCount);
+			// if (savedFileStatus) {
+			// isFileUploaded = true;
+			// }
 
 		} catch (Exception e) {
 			try {
@@ -158,10 +165,100 @@ public class PaymentReminderDao {
 		return isFileUploaded;
 	}
 
-	public boolean saveFileLoadStatus(int fileId, String fileName, int rowCount) {
+	public boolean loadReminderFileByXmlToFileLog(CustomerHeader customerHeader, CustomerTotal customerTotal, int fileId) {
+		boolean isFileUploaded = false;
+		String query = "Insert Ignore Into file_log (" + "file_id,customer_code,customer_name,"
+				+ "post_dated_amount,total_amount,current_amount," + "30_amount,60_amount,90_amount," + "email,"
+				+ "contact_no,contact_person,sales_rep_id) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+		try {
+			pstmt = conn.prepareStatement(query);
+			System.out.println(pstmt);
+			pstmt.setInt(1, fileId);
+			pstmt.setString(2, customerHeader.getCustomerWithTrans().get(0).getAccountcode());
+			pstmt.setString(3, customerHeader.getCustomerWithTrans().get(0).getShortname());
+
+			pstmt.setDouble(4, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTotPostdatedTrans()));
+			pstmt.setDouble(5, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTotBalTrans()));
+			pstmt.setDouble(6, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTotCurrentTrans()));
+			pstmt.setDouble(7, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTot30DaysTrans()));
+			pstmt.setDouble(8, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTot60DaysTrans()));
+			pstmt.setDouble(9, Double.parseDouble(customerTotal.getCustomerTransTotal().get(0).getWsTot90PlusTrans()));
+
+			String custEmail = "";
+			custEmail = getCustomerEmail(customerHeader.getCustomerWithTrans().get(0).getAccountcode());
+			if (custEmail != null) {
+			} else {
+				custEmail = "";
+			}
+			pstmt.setString(10, custEmail);
+			pstmt.setString(11, customerHeader.getCustomerDetails().get(0).getCustomerDetails1().get(0).getNaPhone());
+			pstmt.setString(12, customerHeader.getCustomerDetails().get(0).getCustomerDetails1().get(0).getDrDebNotes());
+			pstmt.setString(13, customerHeader.getCustomerDetails().get(0).getCustomerDetails3().get(0).getRepCode());
+
+			int i = pstmt.executeUpdate();
+			if (i > 0)
+				isFileUploaded = true;
+
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
+	public boolean loadReminderFileByXmlTransactions(int fileId, String custCode, List<Transactions> list) {
+		boolean isFileUploaded = false;
+		String query = "Insert Ignore Into file_log_transactions (file_id,customer_code,trans_date,trans_type,ref,order_no,detail,"
+				+ "postdated_amount,current_amount,30_days_amount,60_days_amount,90_days_amount) " + "values (?,?,?,?,?,?,?,?,?,?,?,?);";
+		try {
+			pstmt = conn.prepareStatement(query);
+			System.out.println(pstmt);
+
+			final int batchSize = 50;
+			int count = 0;
+			for (int i = 0; i < list.size(); i++) {
+				pstmt.setInt(1, fileId);
+				pstmt.setString(2, custCode);
+				pstmt.setString(3, list.get(i).getTransDate());
+				pstmt.setString(4, list.get(i).getTransType());
+				pstmt.setString(5, list.get(i).getLn1Expr17());
+				pstmt.setString(6, list.get(i).getLn1Expr36());
+				pstmt.setString(7, list.get(i).getDrTrOrderNo());
+				pstmt.setString(8, list.get(i).getTrAmount());// postdated
+				pstmt.setString(9, list.get(i).getLfCurrentAmt());
+				pstmt.setString(10, list.get(i).getLf30DaysAmt());
+				pstmt.setString(11, list.get(i).getLf60DaysAmt());
+				pstmt.setString(12, list.get(i).getLf90DaysAmt());
+				pstmt.addBatch();
+
+				if (++count % batchSize == 0) {
+					System.out.println("Batch Executed...!");
+					pstmt.executeBatch();
+				}
+			}
+			pstmt.executeBatch(); // Insert remaining records
+
+			System.out.println("Remaining Executed...!");
+			isFileUploaded = true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
+
+	public boolean saveFileLoadStatus(int fileId, String fileName, int rowCount, String startDate, String endDate) {
 		boolean isFileUploaded = false;
 		String query = "INSERT IGNORE INTO  file_load_status (file_id,file_name,load_date_time,rows,total,"
-				+ "current_total,30_total,60_total,90_total,reminder_status) " + "values(?,?,now(),?,?,?,?,?,?,?) ";
+				+ "current_total,30_total,60_total,90_total,reminder_status,start_date,end_date) " + "values(?,?,now(),?,?,?,?,?,?,?,?,?) ";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, fileId);
@@ -173,6 +270,8 @@ public class PaymentReminderDao {
 			pstmt.setString(7, "60 DAYS");
 			pstmt.setString(8, "90 DAYS");
 			pstmt.setString(9, "Not Send");
+			pstmt.setString(10, startDate);
+			pstmt.setString(11, endDate);
 			int i = pstmt.executeUpdate();
 			if (i > 0)
 				isFileUploaded = true;
@@ -250,7 +349,7 @@ public class PaymentReminderDao {
 	public ArrayList<PaymentReminderFileBean> getFileDetailList() {
 		ArrayList<PaymentReminderFileBean> objArrayList = null;
 		String query = "Select file_id,file_name,day(load_date_time)'day',monthname(load_date_time) 'month',year(load_date_time) 'year',"
-				+ "rows,reminder_status from  file_load_status;";
+				+ "rows,reminder_status, start_date, end_date from  file_load_status;";
 		try {
 			pstmt = conn.prepareStatement(query);
 			rs = pstmt.executeQuery();
@@ -262,6 +361,8 @@ public class PaymentReminderDao {
 				objBean.setLoadDateTime(rs.getString("day") + " " + rs.getString("month") + " " + rs.getString("year"));
 				objBean.setRows(rs.getInt("rows"));
 				objBean.setReminderStatus(rs.getString("reminder_status"));
+				objBean.setStartDate(rs.getString("start_date"));
+				objBean.setEndDate(rs.getString("end_date"));
 				objArrayList.add(objBean);
 			}
 		} catch (Exception e) {
@@ -589,7 +690,7 @@ public class PaymentReminderDao {
 				pstmt.setString(1, reminderList.get(i).getCustomerCode());
 				pstmt.setString(2, reminderList.get(i).getCustomerName());
 				pstmt.setString(3, reminderList.get(i).getEmail().toLowerCase().replace(" ", ""));
-				//.replace(" ", "")
+				// .replace(" ", "")
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Batch Executed...!");

@@ -88,12 +88,13 @@ public void setDate(String date) {
 	this.date = date;
 }
 
-
 //File Load Status
 private String fileName;
 private int rows;
 private String loadDateTime;
 private String reminderStatus;
+private String startDate;
+private String endDate;
 
 public String getFileName() {
 	return fileName;
@@ -118,6 +119,18 @@ public String getReminderStatus() {
 }
 public void setReminderStatus(String reminderStatus) {
 	this.reminderStatus = reminderStatus;
+}
+public String getStartDate() {
+	return startDate;
+}
+public String getEndDate() {
+	return endDate;
+}
+public void setStartDate(String startDate) {
+	this.startDate = startDate;
+}
+public void setEndDate(String endDate) {
+	this.endDate = endDate;
 }
 
 

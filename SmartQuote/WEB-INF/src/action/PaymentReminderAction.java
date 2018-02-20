@@ -1,5 +1,9 @@
 package action;
 
+import pojo.Report.Detail;
+import pojo.Report.PageHeader;
+import pojo.Report.Detail.CustomerWrapper;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +25,10 @@ import pojo.EmptyResponseBean;
 import pojo.KeyValuePairBean;
 import pojo.PaymentReminderFileBean;
 import pojo.Report;
+import pojo.Report.Detail.CustomerWrapper.CustomerHeader;
+import pojo.Report.Detail.CustomerWrapper.CustomerHeader.CustomerDetails;
+import pojo.Report.Detail.CustomerWrapper.CustomerHeader.CustomerWithTrans;
+import pojo.Report.Detail.CustomerWrapper.CustomerTotal;
 import pojo.SendReminderBean;
 import responseBeans.KeyValuePairResponseBean;
 import responseBeans.PaymentReminderResponseBean;
@@ -524,14 +532,86 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		System.out.println("loadPaymentReminderFileByXml");
 		objEmptyResponseBean.setCode("error");
 		objEmptyResponseBean.setMessage(getText("common_error"));
-		// System.out.println("Reminder File : " + reminderFile);
-		// System.out.println("File Name : " + fileName);
+		boolean isUploaded = false, isFilePresent = false;
 		XMLReader objFileReader = new XMLReader();
+		PaymentReminderDao objDao = null;
 		Report objReport; // = new Report();
-		objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
-		if (objReport != null) {
-			Report objValidReport = objFileReader.validateCustomerDetails(objReport);
+		String queryStr = "",query1="",query2="";
+		try {
+			objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
+			if (objReport != null) {
+				Report objValidReport = objFileReader.validateCustomerDetails(objReport);
+				objDao = new PaymentReminderDao();
+				isFilePresent = objDao.checkIfFileExist(fileName);
+				if (isFilePresent) {
+					objEmptyResponseBean.setCode("error");
+					objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
+				} else {
+					String className = "", startDate = "", endDate = "";
+					
+					boolean isFileLogAdded = false, isFileTransactionAdded = false, isFileLoadStatusAdded = false;
+					int fileId = objDao.getFileIdFromFileLoadStatus(), rowCount = 0;
+
+					List<Object> pageList = objReport.getSkipOneOrReportInfoOrPageHeader();
+					for (int pageCount = 0; pageCount < pageList.size(); pageCount++) {
+						className = pageList.get(pageCount).getClass().getSimpleName();
+						if (className.equals("Detail")) {
+							Detail objDetail = (Detail) pageList.get(pageCount);
+							if (objDetail.getCustomerWrapper().size() > 0) {
+								for (int j = 0; j < objDetail.getCustomerWrapper().size(); j++) {
+									CustomerWrapper objCustomerWrapper = objDetail.getCustomerWrapper().get(j);
+									if (objCustomerWrapper.getCustomerHeader().size() > 0
+											&& objCustomerWrapper.getCustomerTotal().size() > 0) {
+										// Add to file_log
+										isFileLogAdded = objDao.loadReminderFileByXmlToFileLog(objCustomerWrapper.getCustomerHeader()
+												.get(0), objCustomerWrapper.getCustomerTotal().get(0), fileId);
+									}
+									if (objCustomerWrapper.getTransactionWrapper().size() > 0) {
+										isFileTransactionAdded = objDao.loadReminderFileByXmlTransactions(fileId, objCustomerWrapper
+												.getCustomerHeader().get(0).getCustomerWithTrans().get(0).getAccountcode(),
+												objCustomerWrapper.getTransactionWrapper().get(0).getCustomerTransactions().get(0)
+														.getTransactions());
+									}
+									rowCount++;
+								}
+							}
+						}
+					}
+					//
+					PageHeader objPageHeader = (PageHeader) pageList.get(1);
+					if (isFileTransactionAdded) {
+						startDate = objPageHeader.getStartDate();//sdf.format();
+						endDate = objPageHeader.getEndDate();//sdf.format();
+									
+						isFileLoadStatusAdded = objDao.saveFileLoadStatus(fileId, fileName, rowCount, startDate,endDate);
+						queryStr = "DELETE FROM file_log_transactions WHERE trans_type='CU';";
+						objDao.executeQuery(queryStr);
+						
+						query1 = "update file_log a, file_log_emails b set a.email = b.email " + "where a.customer_code = b.customer_code;";
+						query2 = "update customer_master a, file_log_emails b set a.email = b.email "
+								+ "where a.customer_code = b.customer_code;";
+						objDao.executeQuery(query1);
+						objDao.executeQuery(query2);
+					}
+
+					if (isFileLoadStatusAdded) {
+						objEmptyResponseBean.setCode("success");
+						objEmptyResponseBean.setMessage(getText("file_load_success"));
+						objDao.commit();
+						objDao.closeAll();
+					}
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			objEmptyResponseBean.setCode("error");
+			objEmptyResponseBean.setMessage(getText("common_error"));
+		} finally {
+			objDao.closeAll();
 		}
+
 		return SUCCESS;
 	}
 
