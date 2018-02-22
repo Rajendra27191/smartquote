@@ -70,7 +70,7 @@ public class PaymentReminderDao {
 
 	public String getCustomerEmail(String customerCode) {
 		String email = null;
-		System.out.println("getCustomerEmail" + customerCode);
+//		System.out.println("getCustomerEmail : " + customerCode);
 		String query = "SELECT email FROM customer_master WHERE customer_code = ?;";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(query);
@@ -108,62 +108,62 @@ public class PaymentReminderDao {
 	}
 
 	// Delete this method
-	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList, String fileName) {
-		boolean isFileUploaded = false;
-		int rowCount = 0;
-		String query = "Insert Ignore Into file_log (file_id,customer_code,customer_name,"
-				+ "total_amount,current_amount,30_amount,60_amount,90_amount,email,send_status,remark) "
-				+ "values (?,?,?,?,?,?,?,?,?,?,?);";
-		int fileId = getFileIdFromFileLoadStatus();
-		try {
-			pstmt = conn.prepareStatement(query);
-			final int batchSize = 50;
-			int count = 0;
-
-			for (int i = 0; i < reminderList.size(); i++) {
-				pstmt.setInt(1, fileId);
-				pstmt.setString(2, reminderList.get(i).getCustomerCode());
-				pstmt.setString(3, reminderList.get(i).getCustomerName());
-				pstmt.setDouble(4, reminderList.get(i).getTotal());
-				pstmt.setDouble(5, reminderList.get(i).getJuneCurrent());
-				pstmt.setDouble(6, reminderList.get(i).getMay30Days());
-				pstmt.setDouble(7, reminderList.get(i).getApril60Days());
-				pstmt.setDouble(8, reminderList.get(i).getMarch90Days());
-				String custEmail = "";
-				custEmail = getCustomerEmail(reminderList.get(i).getCustomerCode());
-				if (custEmail != null) {
-				} else {
-					custEmail = "";
-				}
-				// System.out.println("custEmail :" + custEmail);
-				pstmt.setString(9, custEmail);
-				pstmt.setString(10, reminderList.get(i).getSendStatus());
-				pstmt.setString(11, reminderList.get(i).getRemark());
-				pstmt.addBatch();
-				rowCount++;
-				if (++count % batchSize == 0) {
-					System.out.println("Batch Executed...!");
-					pstmt.executeBatch();
-				}
-			}
-			pstmt.executeBatch(); // Insert remaining records
-			System.out.println("Remaining Executed...!");
-			// boolean savedFileStatus = saveFileLoadStatus(fileId, fileName,
-			// rowCount);
-			// if (savedFileStatus) {
-			// isFileUploaded = true;
-			// }
-
-		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			e.printStackTrace();
-		}
-		return isFileUploaded;
-	}
+//	public boolean uploadReminderFile(ArrayList<PaymentReminderFileBean> reminderList, String fileName) {
+//		boolean isFileUploaded = false;
+//		int rowCount = 0;
+//		String query = "Insert Ignore Into file_log (file_id,customer_code,customer_name,"
+//				+ "total_amount,current_amount,30_amount,60_amount,90_amount,email,send_status,remark) "
+//				+ "values (?,?,?,?,?,?,?,?,?,?,?);";
+//		int fileId = getFileIdFromFileLoadStatus();
+//		try {
+//			pstmt = conn.prepareStatement(query);
+//			final int batchSize = 50;
+//			int count = 0;
+//
+//			for (int i = 0; i < reminderList.size(); i++) {
+//				pstmt.setInt(1, fileId);
+//				pstmt.setString(2, reminderList.get(i).getCustomerCode());
+//				pstmt.setString(3, reminderList.get(i).getCustomerName());
+//				pstmt.setDouble(4, reminderList.get(i).getTotal());
+//				pstmt.setDouble(5, reminderList.get(i).getJuneCurrent());
+//				pstmt.setDouble(6, reminderList.get(i).getMay30Days());
+//				pstmt.setDouble(7, reminderList.get(i).getApril60Days());
+//				pstmt.setDouble(8, reminderList.get(i).getMarch90Days());
+//				String custEmail = "";
+//				custEmail = getCustomerEmail(reminderList.get(i).getCustomerCode());
+//				if (custEmail != null) {
+//				} else {
+//					custEmail = "";
+//				}
+//				// System.out.println("custEmail :" + custEmail);
+//				pstmt.setString(9, custEmail);
+//				pstmt.setString(10, reminderList.get(i).getSendStatus());
+//				pstmt.setString(11, reminderList.get(i).getRemark());
+//				pstmt.addBatch();
+//				rowCount++;
+//				if (++count % batchSize == 0) {
+//					System.out.println("Batch Executed...!");
+//					pstmt.executeBatch();
+//				}
+//			}
+//			pstmt.executeBatch(); // Insert remaining records
+//			System.out.println("Remaining Executed...!");
+//			// boolean savedFileStatus = saveFileLoadStatus(fileId, fileName,
+//			// rowCount);
+//			// if (savedFileStatus) {
+//			// isFileUploaded = true;
+//			// }
+//
+//		} catch (Exception e) {
+//			try {
+//				conn.rollback();
+//			} catch (SQLException e1) {
+//				e1.printStackTrace();
+//			}
+//			e.printStackTrace();
+//		}
+//		return isFileUploaded;
+//	}
 
 	public boolean loadReminderFileByXmlToFileLog(CustomerHeader customerHeader, CustomerTotal customerTotal, int fileId) {
 		boolean isFileUploaded = false;
@@ -218,7 +218,7 @@ public class PaymentReminderDao {
 			pstmt = conn.prepareStatement(query);
 			System.out.println(pstmt);
 
-			final int batchSize = 50;
+			final int batchSize = 100;
 			int count = 0;
 			for (int i = 0; i < list.size(); i++) {
 				pstmt.setInt(1, fileId);

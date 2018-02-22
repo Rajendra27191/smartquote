@@ -418,7 +418,15 @@ $scope.editing[index] = false;
 
 $scope.toggleAll = function() {
    var toggleStatus = $scope.rows.isAllSelected;
-   angular.forEach($scope.customerDetailList, function(itm){ itm.selected = toggleStatus; });
+   angular.forEach($scope.customerDetailList, function(itm){ 
+    // console.log(itm)
+    if (itm.total < 0) {
+
+    } else{
+    itm.selected = toggleStatus;   
+    };
+    
+  });
 }
 
  $scope.optionToggled = function(){
@@ -449,6 +457,16 @@ angular.forEach(selectedRows, function(value, key){
 // console.log("$scope.selectedRows : "+$scope.selectedRows.length)
 };
 
+$scope.validateCustomerData=function(customer,duration){
+  var result = false;
+  // console.log(customer)
+  if (duration == "90") {
+     if (customer.march90Days < 0) {
+      result =true;
+    };
+  } 
+  return result;
+}
 //===========================================================
 //======================= Email Format ======================
 //===========================================================
@@ -826,7 +844,10 @@ $scope.abortEmailLogTabClick=function(){
 $scope.toggleAllAbort = function() {
    // console.log($scope.rowsAbort.isAllSelected)
    var toggleStatus = $scope.rowsAbort.isAllSelected;
-   angular.forEach($scope.pendingEmailList, function(itm){ itm.selected = toggleStatus; });
+   angular.forEach($scope.pendingEmailList, function(itm){ 
+    // console.log(itm)
+    itm.selected = toggleStatus; 
+  });
 }
 
 $scope.optionToggledAbort = function(){

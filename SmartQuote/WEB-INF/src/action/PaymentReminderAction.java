@@ -107,65 +107,70 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		this.fileName = fileName;
 	}
 
-	public String loadPaymentReminderFile() {
-		objEmptyResponseBean.setCode("error");
-		objEmptyResponseBean.setMessage(getText("common_error"));
-		System.out.println("loadPaymentReminderFile");
-		PaymentReminderFileReader objFileReader = new PaymentReminderFileReader();
-		System.out.println("Reminder File : " + reminderFile);
-		System.out.println("File Name : " + fileName);
-		ArrayList<PaymentReminderFileBean> listReminderBeans = new ArrayList<PaymentReminderFileBean>();
-		try {
-			JSONArray fileString = objFileReader.readFile(reminderFile + "");
-			System.out.println("File String :: " + fileString);
-			listReminderBeans = new Gson().fromJson(fileString.toString(), new TypeToken<List<PaymentReminderFileBean>>() {
-			}.getType());
-			// System.out.println(listReminderBeans);
-			JSONObject jsonObject = fileString.getJSONObject(0);
-			if (jsonObject.has("customerCode") && jsonObject.has("customerName")) {
-				// System.out.println("1..");
-				PaymentReminderDao objDao = new PaymentReminderDao();
-				boolean isFilePresent = objDao.checkIfFileExist(fileName);
-				if (isFilePresent) {
-					objEmptyResponseBean.setCode("error");
-					objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
-				} else {
-					boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans, fileName);
-					objDao.commit();
-					if (isFileUploaded) {
-						String query1 = "update file_log a, file_log_emails b set a.email = b.email "
-								+ "where a.customer_code = b.customer_code;";
-						objDao.executeQuery(query1);
-						objEmptyResponseBean.setCode("success");
-						objEmptyResponseBean.setMessage(getText("file_load_success"));
-					}
-				}
-				objDao.closeAll();
-			} else {
-				System.out.println("2..");
-				objEmptyResponseBean.setCode("error");
-				objEmptyResponseBean.setMessage(getText("file_column_invalid"));
-			}
-
-		} catch (FileNotFoundException e) {
-			objEmptyResponseBean.setCode("error");
-			objEmptyResponseBean.setMessage(getText("product_file_not_found"));
-			e.printStackTrace();
-		} catch (InvalidFormatException e) {
-			objEmptyResponseBean.setCode("error");
-			objEmptyResponseBean.setMessage(getText("error_file_format"));
-			e.printStackTrace();
-		} catch (JSONException e) {
-			objEmptyResponseBean.setCode("error");
-			objEmptyResponseBean.setMessage(getText("error_file_parse"));
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-			objEmptyResponseBean.setCode("error");
-			objEmptyResponseBean.setMessage(getText("common_error"));
-		}
-		return SUCCESS;
-	}
+	// public String loadPaymentReminderFile() {
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("common_error"));
+	// System.out.println("loadPaymentReminderFile");
+	// PaymentReminderFileReader objFileReader = new
+	// PaymentReminderFileReader();
+	// System.out.println("Reminder File : " + reminderFile);
+	// System.out.println("File Name : " + fileName);
+	// ArrayList<PaymentReminderFileBean> listReminderBeans = new
+	// ArrayList<PaymentReminderFileBean>();
+	// try {
+	// JSONArray fileString = objFileReader.readFile(reminderFile + "");
+	// System.out.println("File String :: " + fileString);
+	// listReminderBeans = new Gson().fromJson(fileString.toString(), new
+	// TypeToken<List<PaymentReminderFileBean>>() {
+	// }.getType());
+	// // System.out.println(listReminderBeans);
+	// JSONObject jsonObject = fileString.getJSONObject(0);
+	// if (jsonObject.has("customerCode") && jsonObject.has("customerName")) {
+	// // System.out.println("1..");
+	// PaymentReminderDao objDao = new PaymentReminderDao();
+	// boolean isFilePresent = objDao.checkIfFileExist(fileName);
+	// if (isFilePresent) {
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
+	// } else {
+	// boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans,
+	// fileName);
+	// objDao.commit();
+	// if (isFileUploaded) {
+	// String query1 =
+	// "update file_log a, file_log_emails b set a.email = b.email "
+	// + "where a.customer_code = b.customer_code;";
+	// objDao.executeQuery(query1);
+	// objEmptyResponseBean.setCode("success");
+	// objEmptyResponseBean.setMessage(getText("file_load_success"));
+	// }
+	// }
+	// objDao.closeAll();
+	// } else {
+	// System.out.println("2..");
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("file_column_invalid"));
+	// }
+	//
+	// } catch (FileNotFoundException e) {
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("product_file_not_found"));
+	// e.printStackTrace();
+	// } catch (InvalidFormatException e) {
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("error_file_format"));
+	// e.printStackTrace();
+	// } catch (JSONException e) {
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("error_file_parse"));
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// objEmptyResponseBean.setCode("error");
+	// objEmptyResponseBean.setMessage(getText("common_error"));
+	// }
+	// return SUCCESS;
+	// }
 
 	public String getLoadedFileList() {
 		objResponseBean = new KeyValuePairResponseBean();
@@ -536,7 +541,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		XMLReader objFileReader = new XMLReader();
 		PaymentReminderDao objDao = null;
 		Report objReport; // = new Report();
-		String queryStr = "",query1="",query2="";
+		String queryStr = "", query1 = "", query2 = "", query3 = "";
 		try {
 			objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
 			if (objReport != null) {
@@ -548,7 +553,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 					objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
 				} else {
 					String className = "", startDate = "", endDate = "";
-					
+
 					boolean isFileLogAdded = false, isFileTransactionAdded = false, isFileLoadStatusAdded = false;
 					int fileId = objDao.getFileIdFromFileLoadStatus(), rowCount = 0;
 
@@ -563,14 +568,25 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 									if (objCustomerWrapper.getCustomerHeader().size() > 0
 											&& objCustomerWrapper.getCustomerTotal().size() > 0) {
 										// Add to file_log
-										isFileLogAdded = objDao.loadReminderFileByXmlToFileLog(objCustomerWrapper.getCustomerHeader()
-												.get(0), objCustomerWrapper.getCustomerTotal().get(0), fileId);
+//										System.out.println(objCustomerWrapper.getCustomerHeader().toString());
+//										System.out.println(objCustomerWrapper.getCustomerTotal().toString());
+										if (objCustomerWrapper.getCustomerTotal().get(0).getCustomerTransTotal().size() > 0
+												&& objCustomerWrapper.getCustomerHeader().get(0).getCustomerWithTrans().size() > 0
+												&& objCustomerWrapper.getCustomerHeader().get(0).getCustomerDetails().size() > 0) {
+											isFileLogAdded = objDao.loadReminderFileByXmlToFileLog(objCustomerWrapper.getCustomerHeader()
+													.get(0), objCustomerWrapper.getCustomerTotal().get(0), fileId);
+										}
+
 									}
 									if (objCustomerWrapper.getTransactionWrapper().size() > 0) {
-										isFileTransactionAdded = objDao.loadReminderFileByXmlTransactions(fileId, objCustomerWrapper
-												.getCustomerHeader().get(0).getCustomerWithTrans().get(0).getAccountcode(),
-												objCustomerWrapper.getTransactionWrapper().get(0).getCustomerTransactions().get(0)
-														.getTransactions());
+										if (objCustomerWrapper.getTransactionWrapper().get(0).getCustomerTransactions().get(0)
+												.getTransactions().size() > 0) {
+											isFileTransactionAdded = objDao.loadReminderFileByXmlTransactions(fileId, objCustomerWrapper
+													.getCustomerHeader().get(0).getCustomerWithTrans().get(0).getAccountcode(),
+													objCustomerWrapper.getTransactionWrapper().get(0).getCustomerTransactions().get(0)
+															.getTransactions());
+										}
+
 									}
 									rowCount++;
 								}
@@ -580,18 +596,30 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 					//
 					PageHeader objPageHeader = (PageHeader) pageList.get(1);
 					if (isFileTransactionAdded) {
-						startDate = objPageHeader.getStartDate();//sdf.format();
-						endDate = objPageHeader.getEndDate();//sdf.format();
-									
-						isFileLoadStatusAdded = objDao.saveFileLoadStatus(fileId, fileName, rowCount, startDate,endDate);
-						queryStr = "DELETE FROM file_log_transactions WHERE trans_type='CU';";
+						startDate = objPageHeader.getStartDate();// sdf.format();
+						endDate = objPageHeader.getEndDate();// sdf.format();
+
+						isFileLoadStatusAdded = objDao.saveFileLoadStatus(fileId, fileName, rowCount, startDate, endDate);
+						queryStr = "DELETE FROM file_log_transactions WHERE trans_type='CU' OR ref LIKE 'C00%';";
 						objDao.executeQuery(queryStr);
-						
+
 						query1 = "update file_log a, file_log_emails b set a.email = b.email " + "where a.customer_code = b.customer_code;";
 						query2 = "update customer_master a, file_log_emails b set a.email = b.email "
 								+ "where a.customer_code = b.customer_code;";
+						query3 = "UPDATE file_log a INNER JOIN "
+								+ "(SELECT file_id, customer_code, ifnull(sum(outstanding_bal), 0) outstanding_bal, "
+								+ "ifnull(sum(postdated_amount), 0) postdated_amount, ifnull(sum(current_amount), 0) current_amount,"
+								+ "ifnull(sum(30_days_amount), 0) 30_days_amount,  ifnull(sum(60_days_amount), 0) 60_days_amount,"
+								+ "ifnull(sum(90_days_amount), 0) 90_days_amount "
+								+ "FROM file_log_transactions GROUP BY file_id, customer_code) b "
+								+ "ON a.file_id = b.file_id AND a.customer_code = b.customer_code "
+								+ "SET a.current_amount = b.current_amount, a.30_amount = 30_days_amount, "
+								+ "a.60_amount = 60_days_amount, a.90_amount = 90_days_amount, "
+								+ "a.post_dated_amount = postdated_amount, "
+								+ "a.total_amount = (b.postdated_amount + b.current_amount + b.30_days_amount + b.60_days_amount + b.90_days_amount);";
 						objDao.executeQuery(query1);
 						objDao.executeQuery(query2);
+						objDao.executeQuery(query3);
 					}
 
 					if (isFileLoadStatusAdded) {
@@ -610,6 +638,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objEmptyResponseBean.setMessage(getText("common_error"));
 		} finally {
 			objDao.closeAll();
+			System.out.println("Done...");
 		}
 
 		return SUCCESS;
