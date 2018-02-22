@@ -611,11 +611,26 @@ sendReminderDetail={
 }
 return angular.toJson(sendReminderDetail);
 }
+
+var validSelectedCustomers =true;
+$scope.validateSelectedCustomerList=function(){
+validSelectedCustomers =true;
+$scope.getAllSelectedRows();
+console.log($scope.selectedRows);
+angular.forEach($scope.selectedRows, function(value, key){
+      if (value.email == "" || value.email == null || value.email == " ")  {
+        validSelectedCustomers = false;
+      };
+});
+
+};  
+
 $scope.sendMailBtnClicked=function(){  
-  // console.log($scope.form);
+  console.log($scope.form);
+  console.log($scope.form.customerList.$valid);
   if ($scope.form.emailFormat.$valid) {
-  if ($scope.form.customerList.$valid) {
-  $scope.getAllSelectedRows();
+  $scope.validateSelectedCustomerList();  
+  if (validSelectedCustomers) {
   if ($scope.selectedRows.length>0) {
     if ($scope.compose!=null) {
       console.log($scope.jsonForSendMail());
@@ -629,6 +644,7 @@ $scope.sendMailBtnClicked=function(){
   }else{
 
   };
+
 }
 };
 
