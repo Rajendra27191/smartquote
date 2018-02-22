@@ -11,7 +11,7 @@ $scope.onExcelSelect = function($files)  {
 // console.log("onExcelSelect");
   // console.log($files);
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'xlsx' || $files[i].name.split('.').pop() == 'xml')){
+      if(($files[i].name.split('.').pop() == 'xml')){
        // console.log("valid file");
        latestExcelFile = $files[i];
       }
@@ -116,9 +116,9 @@ $scope.uploadFile = function(){
       		// console.log(latestExcelFile.size);
           var fileType=latestExcelFile.name.split('.').pop();
           console.log(fileType)
-          if (fileType=="xlsx") {
+        //   if (fileType=="xlsx") {
       		// $scope.loadFile();   
-          };
+        //   };
           if (fileType=="xml") {
             $scope.loadFileByXml();
           };
@@ -416,14 +416,20 @@ $scope.editing[index] = false;
 } 
 }
 
-$scope.toggleAll = function() {
+$scope.toggleAll = function(duration) {
    var toggleStatus = $scope.rows.isAllSelected;
+   console.log(duration)
    angular.forEach($scope.customerDetailList, function(itm){ 
     // console.log(itm)
     if (itm.total < 0) {
-
     } else{
-    itm.selected = toggleStatus;   
+      if (duration == '90') { 
+            if (itm.march90Days > 0) {
+            itm.selected = toggleStatus;
+            };
+      }else{
+        itm.selected = toggleStatus;
+      }
     };
     
   });
@@ -465,6 +471,9 @@ $scope.validateCustomerData=function(customer,duration){
       result =true;
     };
   } 
+  if (customer.total < 0) {
+    result =true;
+  };
   return result;
 }
 //===========================================================

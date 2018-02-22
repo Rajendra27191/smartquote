@@ -529,6 +529,8 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			e.printStackTrace();
 			objEmptyResponseBean.setCode("error");
 			objEmptyResponseBean.setMessage(getText("common_error"));
+		}finally{
+			System.out.println("Done...");
 		}
 		return SUCCESS;
 	}
