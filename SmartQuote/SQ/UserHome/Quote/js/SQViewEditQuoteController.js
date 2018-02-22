@@ -1280,11 +1280,16 @@ if ($scope.customerQuote.saveWithAlternative) {
 
 $scope.updateQuote=function(){
 $log.debug("updateQuote call");
-// console.log();
+console.log($scope.form.addCustomerQuote);
+console.log($scope.customerQuote);
 if ($scope.form.addCustomerQuote.$valid) {
- // $scope.jsonToCreateQuote();
- // $log.debug(JSON.stringify($scope.customerQuote));
-	if ($scope.customerQuote.productList.length>0) {
+	if ($scope.customerQuote.salesPerson.value == null) {
+		$rootScope.moveToTop();
+		$scope.form.addCustomerQuote.salesPerson.$invalid = true;
+		$scope.form.addCustomerQuote.submitted=true;
+		$scope.form.addCustomerQuote.salesPerson.$error.required=true;
+	} else{
+		if ($scope.customerQuote.productList.length>0) {
 		isSalesPersonExist=false;
 		isSupplierExist=false;
 		angular.forEach($scope.currentSupplierList, function(currentSupplierName, key){
@@ -1298,7 +1303,6 @@ if ($scope.form.addCustomerQuote.$valid) {
 					}	
 				}
 			}
-			
 		});
 		if (isSupplierExist) {
 			if (isSupplierExist) {
@@ -1318,6 +1322,9 @@ if ($scope.form.addCustomerQuote.$valid) {
 		$scope.showAddProductError=true;
 		$('#addProductLink').focus();
 	}
+	};
+
+ 	
 }else{
 	$log.debug("invalid form");
 	$rootScope.moveToTop();

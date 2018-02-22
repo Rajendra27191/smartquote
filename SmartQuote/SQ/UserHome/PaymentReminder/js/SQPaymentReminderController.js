@@ -627,7 +627,6 @@ angular.forEach($scope.selectedRows, function(value, key){
 
 $scope.sendMailBtnClicked=function(){  
   console.log($scope.form);
-  console.log($scope.form.customerList.$valid);
   if ($scope.form.emailFormat.$valid) {
   $scope.validateSelectedCustomerList();  
   if (validSelectedCustomers) {
