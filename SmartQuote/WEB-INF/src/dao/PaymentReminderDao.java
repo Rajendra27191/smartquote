@@ -588,7 +588,7 @@ public class PaymentReminderDao {
 			for (int i = 0; i < reminderList.size(); i++) {
 				pstmt.setString(1, reminderList.get(i).getCustomerCode());
 				pstmt.setString(2, reminderList.get(i).getCustomerName());
-				pstmt.setString(3, reminderList.get(i).getEmail().toLowerCase().replace(" ", ""));
+				pstmt.setString(3, reminderList.get(i).getEmail().replace(" ", ""));
 				//.replace(" ", "")
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {

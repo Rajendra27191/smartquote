@@ -472,10 +472,10 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		ArrayList<PaymentReminderFileBean> listReminderBeans = new ArrayList<PaymentReminderFileBean>();
 		try {
 			JSONArray fileString = objFileReader.readFile(reminderFile + "");
-			System.out.println("File String :: " + fileString);
+//			System.out.println("File String :: " + fileString);
 			listReminderBeans = new Gson().fromJson(fileString.toString(), new TypeToken<List<PaymentReminderFileBean>>() {
 			}.getType());
-			System.out.println(listReminderBeans);
+//			System.out.println(listReminderBeans);
 			JSONObject jsonObject = fileString.getJSONObject(0);
 			if (jsonObject.has("customerCode") && jsonObject.has("customerName") && jsonObject.has("email")) {
 				PaymentReminderDao objDao = new PaymentReminderDao();
@@ -517,6 +517,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 			objEmptyResponseBean.setCode("error");
 			objEmptyResponseBean.setMessage(getText("common_error"));
 		}
+		System.out.println("Done...");
 		return SUCCESS;
 	}
 
