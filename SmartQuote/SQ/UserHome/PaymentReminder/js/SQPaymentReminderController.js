@@ -539,7 +539,7 @@ sendReminderDetail={
 return angular.toJson(sendReminderDetail);
 }
 $scope.sendMailBtnClicked=function(){  
-  // console.log($scope.form);
+  console.log($scope.form);
   if ($scope.form.emailFormat.$valid) {
   if ($scope.form.customerList.$valid) {
   $scope.getAllSelectedRows();
