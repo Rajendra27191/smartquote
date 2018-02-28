@@ -192,7 +192,7 @@ td .form-control {
 			<td ng-if="duration.value=='30' || duration.value=='60' || duration.value=='90'"><center>{{customer.march90Days}}</center></td>
 			<td>
 				<center>
-					<input type="text" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-blur="changeEmailId(customer,customerForm.email.$invalid)">
+					<input type="text" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}" ng-pattern="emailRegex" ng-blur="changeEmailId(customer,customerForm.email.$invalid)">
 					<!-- <span class="invalid-control" ng-show="customerForm.email.$error.required">req</span> -->
 					<span class="invalid-control" ng-show="customerForm.email.$error.pattern">invalid emailid</span>
 					
