@@ -243,10 +243,43 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		objPaymentReminderResponse.setMessage(getText("common_error"));
 		int fileId = Integer.parseInt(request.getParameter("fileId"));
 		String fileName = request.getParameter("fileName");
+		String duration = request.getParameter("duration");
+		String query = "";
 		try {
 			PaymentReminderDao objDao = new PaymentReminderDao();
 			ArrayList<PaymentReminderFileBean> objList = new ArrayList<PaymentReminderFileBean>();
-			objList = objDao.getCustomerDetailList(fileId, fileName);
+			if (duration.equalsIgnoreCase("all")) {
+				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
+						+ "a.total_amount,a.current_amount,a.30_amount,a.60_amount,a.90_amount,"
+						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
+						+ "FROM file_log a join  file_load_status b "
+						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
+						+ "AND (a.total_amount > 0 OR a.current_amount OR 30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0)";
+
+			}else if(duration.equalsIgnoreCase("30")){
+				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
+						+ "a.30_amount,a.60_amount,a.90_amount,"
+						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
+						+ "FROM file_log a join  file_load_status b "
+						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
+						+ "AND (30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0)";
+			}else if(duration.equalsIgnoreCase("60")){
+				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
+						+ "a.60_amount,a.90_amount,"
+						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
+						+ "FROM file_log a join  file_load_status b "
+						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
+						+ "AND (a.60_amount > 0 OR a.90_amount > 0)";
+			}else if(duration.equalsIgnoreCase("90")){
+				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
+						+ "a.90_amount,"
+						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
+						+ "FROM file_log a join  file_load_status b "
+						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
+						+ "AND (a.90_amount > 0)";
+			}
+			
+			objList = objDao.getCustomerDetailList(duration,query);
 			objDao.closeAll();
 			objPaymentReminderResponse.setCode("success");
 			objPaymentReminderResponse.setMessage("file_list_success");

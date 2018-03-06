@@ -318,7 +318,7 @@ if ($scope.duration) {
 if ($scope.objFile) {
 $scope.invalidDuration=false;
 $rootScope.showSpinner();
-SQPaymentReminderFactory.GetCustomerDetailFromFile($scope.objFile.fileName,$scope.objFile.fileId);
+SQPaymentReminderFactory.GetCustomerDetailFromFile($scope.objFile.fileName,$scope.objFile.fileId,$scope.duration.value);
 };
 }else{
   $scope.invalidDuration=true;
@@ -330,6 +330,7 @@ $scope.handleGetCustomerDetailFromFileDoneResponse=function(data){
   if(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
+        console.log(data);
         $scope.customerDetailListTemp= angular.copy(data.fileLogList);;
         $scope.customerDetailList=angular.copy(data.fileLogList);;
          $scope.initSendReminderLastCall="getCustomerDetailFromFile";

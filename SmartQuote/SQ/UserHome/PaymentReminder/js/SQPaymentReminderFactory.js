@@ -11,7 +11,7 @@ angular.module('sq.SmartQuoteDesktop')
       getFileListAPI:$resource($rootScope.projectName+'/getLoadedFileList', {}, {getFileListMethod :{method: 'POST'}}),
       unloadFileAPI:$resource($rootScope.projectName+'/unloadPaymentReminderFile?fileName=:name&fileId=:id', {}, {unloadFileMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
       getFileDetailListAPI:$resource($rootScope.projectName+'/getLoadedFileDetailList', {}, {getFileDetailListMethod :{method: 'POST'}}),
-      getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id'}}),
+      getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id&duration=:duration', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id',duration:'@duration'}}),
       getEmailFormatAPI:$resource($rootScope.projectName+'/getEmailFormat', {}, {getEmailFormatMethod :{method: 'GET'}}),
 
       getEmailLogListAPI:$resource($rootScope.projectName+'/getEmailLogList', {}, {getEmailLogListMethod :{method: 'POST'}}),
@@ -72,9 +72,9 @@ $rootScope.$broadcast('GetFileDetailListNotDone', error);
 });
 };
 
-objFactory.GetCustomerDetailFromFile = function (name,id){
+objFactory.GetCustomerDetailFromFile = function (name,id,duration){
 // console.log("GetQuoteView")
-ReminderFactory.getCustomerDetailAPI.getCustomerDetailMethod({name:name,id:id},function(success){
+ReminderFactory.getCustomerDetailAPI.getCustomerDetailMethod({name:name,id:id,duration:duration},function(success){
 // console.log(success);
 if (success.code=="sessionTimeOut") {
   $rootScope.$broadcast('SessionTimeOut', success);   
