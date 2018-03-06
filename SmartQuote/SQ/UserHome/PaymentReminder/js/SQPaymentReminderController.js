@@ -427,8 +427,19 @@ $scope.toggleAll = function(duration) {
             if (itm.march90Days > 0) {
             itm.selected = toggleStatus;
             };
-      }else{
-        itm.selected = toggleStatus;
+      }else if(duration == '60'){
+            if (itm.march90Days > 0 || itm.april60Days > 0) {
+            itm.selected = toggleStatus;
+            };
+      }else if(duration == '30'){
+            if (itm.march90Days > 0 || itm.april60Days > 0 || itm.may30Days > 0) {
+            itm.selected = toggleStatus;
+            };
+      }else if(duration == 'all'){
+            if (itm.march90Days > 0 || itm.april60Days > 0 || itm.may30Days > 0 || itm.juneCurrent > 0 || itm.total > 0 ) {
+            itm.selected = toggleStatus;
+            };
+        // itm.selected = toggleStatus;
       }
     };
     
@@ -467,11 +478,21 @@ $scope.validateCustomerData=function(customer,duration){
   var result = false;
   // console.log(customer)
   if (duration == "90") {
-     if (customer.march90Days < 0) {
+     if (customer.march90Days <= 0) {
       result =true;
     };
   } 
-  if (customer.total < 0) {
+  if (duration == "60") {
+     if (customer.march90Days <= 0  && customer.april60Days <= 0 ) {
+      result =true;
+    };
+  } 
+  if (duration == "30") {
+     if (customer.march90Days <= 0  && customer.april60Days <= 0 && customer.may30Days <= 0) {
+      result =true;
+    };
+  }
+  if (customer.total <= 0) {
     result =true;
   };
   return result;
