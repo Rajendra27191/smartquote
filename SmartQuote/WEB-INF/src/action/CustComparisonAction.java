@@ -349,8 +349,8 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JRBeanCollectionDataSource beanColDataSourceFooterPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSalesRepInfoPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			
-			JRBeanCollectionDataSource beanColDataProposalPageList1 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
-			JRBeanCollectionDataSource beanColDataProposalPageList2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
+			JRBeanCollectionDataSource beanColDataProposalPageList1 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getProposalPageList1());
+			JRBeanCollectionDataSource beanColDataProposalPageList2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getProposalPageList2());
 
 			String mainHeaderPageSrc = dirPath + "/MainHeaderPage.jasper";
 			String productDetailsPageSrc = dirPath + "/ProductDetailsPage.jasper";
