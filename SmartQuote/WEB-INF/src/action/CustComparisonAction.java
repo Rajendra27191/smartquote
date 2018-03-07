@@ -381,10 +381,9 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			list.add(jasperPrintFooter);
 
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
+			exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
-			// exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,
-			// "Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
-			// response.setContentType("text/pdf");
+			 response.setContentType("text/pdf");
 			// response.setHeader ("Content-Disposition",
 			// "attachment; filename=\""+"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf\"");
 
