@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProposalPages1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a843f55b-9bac-48b5-b5e4-ef78d90cf0b6">
-	<property name="ireport.zoom" value="0.5131581182307068"/>
+	<property name="ireport.zoom" value="0.3504938994813925"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="23"/>
+	<property name="ireport.y" value="0"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -11,16 +11,10 @@
 	</field>
 	<detail>
 		<band height="842" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="05086ac1-6ee1-4034-a7a1-101b5acaadb2" x="143" y="117" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[pageTemplateSrc]]></text>
-			</staticText>
-			<textField>
-				<reportElement uuid="e13a7bd6-3650-4a2c-8bc7-e5f2c649afdc" x="61" y="211" width="392" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$F{pageTemplateSrc}]]></textFieldExpression>
-			</textField>
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement uuid="560d8ead-8e4f-4da6-9c0e-e41b985113c8" x="0" y="0" width="595" height="842"/>
+				<imageExpression><![CDATA[$F{pageTemplateSrc}]]></imageExpression>
+			</image>
 		</band>
 	</detail>
 </jasperReport>

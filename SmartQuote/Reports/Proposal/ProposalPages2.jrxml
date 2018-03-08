@@ -3,7 +3,18 @@
 	<property name="ireport.zoom" value="0.42409761837248483"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="pageTemplateSrc" class="java.lang.String">
+		<fieldDescription><![CDATA[pageTemplateSrc]]></fieldDescription>
+	</field>
 	<detail>
-		<band height="842" splitType="Stretch"/>
+		<band height="842" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement uuid="c9d7f7ef-6350-48a0-9928-8181d36929bb" x="0" y="0" width="595" height="842"/>
+				<imageExpression><![CDATA[$F{pageTemplateSrc}]]></imageExpression>
+			</image>
+		</band>
 	</detail>
 </jasperReport>

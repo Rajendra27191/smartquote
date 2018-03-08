@@ -290,10 +290,10 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 
 			exportParameters.put("alternativeAdded", objPdfMasterReportBean.isAlternativeAdded());
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
-			
+
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
-			
+
 			exportParameters.put("frontCoverPath", imgDirPath + "/front_cover.jpg");
 			exportParameters.put("backCoverPath", imgDirPath + "/back_cover.jpg");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
@@ -325,38 +325,40 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			objPdfMasterReportBean.setTermConditionList(objQuoteDao.getTermAndConditionList(objPdfMasterReportBean.getQuoteId()));
 			objQuoteDao.closeAll();
 			System.out.println("OFFER LIST ::" + objPdfMasterReportBean.getOfferList().toString());
-			
+
 			ArrayList<PdfPageBean> proposalPageList1 = new ArrayList<PdfPageBean>();
-			for (int i = 1; i <=7 ; i++) {
+			for (int i = 1; i <= 7; i++) {
 				PdfPageBean objPageBean = new PdfPageBean();
-				objPageBean.setPageTemplateSrc(imgDirPath+"/pdf_output_images/Binder1a-"+i+".png");
+				objPageBean.setPageTemplateSrc(imgDirPath + "/pdf_output_images/Binder1a-" + i + ".png");
 				proposalPageList1.add(objPageBean);
 			}
-			
+
 			ArrayList<PdfPageBean> proposalPageList2 = new ArrayList<PdfPageBean>();
-			for (int i = 8; i <=9 ; i++) {
+			for (int i = 8; i <= 9; i++) {
 				PdfPageBean objPageBean = new PdfPageBean();
-				objPageBean.setPageTemplateSrc(imgDirPath+"/pdf_output_images/Binder1a-"+i+".png");
-				proposalPageList1.add(objPageBean);
+				objPageBean.setPageTemplateSrc(imgDirPath + "/pdf_output_images/Binder1a-" + i + ".png");
+				proposalPageList2.add(objPageBean);
 			}
 			// add pages list in quote bean
 			objPdfMasterReportBean.setProposalPageList1(proposalPageList1);
 			objPdfMasterReportBean.setProposalPageList2(proposalPageList2);
-			
+
 			JRBeanCollectionDataSource beanColDataSourceHeaderPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSourceProductDetailPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
 					.getArrayPdfSubReportBean());
 			JRBeanCollectionDataSource beanColDataSourceFooterPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSalesRepInfoPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
-			
-			JRBeanCollectionDataSource beanColDataProposalPageList1 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getProposalPageList1());
-			JRBeanCollectionDataSource beanColDataProposalPageList2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0).getProposalPageList2());
+
+			JRBeanCollectionDataSource beanColDataProposalPageList1 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
+					.getProposalPageList1());
+			JRBeanCollectionDataSource beanColDataProposalPageList2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
+					.getProposalPageList2());
 
 			String mainHeaderPageSrc = dirPath + "/MainHeaderPage.jasper";
 			String productDetailsPageSrc = dirPath + "/ProductDetailsPage.jasper";
 			String mainFooterPageSrc = dirPath + "/MainFooterPage.jasper";
 			String salesRepInfoPageSrc = dirPath + "/SalesRepInfoPage.jasper";
-			
+
 			String proposalPageList1Src = dirPath + "/ProposalPages1.jasper";
 			String proposalPageList2Src = dirPath + "/ProposalPages2.jasper";
 
@@ -364,7 +366,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			FileInputStream reportProDetail = new FileInputStream(productDetailsPageSrc);
 			FileInputStream reportFooter = new FileInputStream(mainFooterPageSrc);
 			FileInputStream reportSalesRep = new FileInputStream(salesRepInfoPageSrc);
-			
+
 			FileInputStream reportProposalPageList1 = new FileInputStream(proposalPageList1Src);
 			FileInputStream reportProposalPageList2 = new FileInputStream(proposalPageList2Src);
 
@@ -389,17 +391,19 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 					beanColDataSourceProductDetailPage);
 			JasperPrint jasperPrintFooter = JasperFillManager.fillReport(reportFooter, exportParameters, beanColDataSourceFooterPage);
 			JasperPrint jasperPrintSalesRep = JasperFillManager.fillReport(reportSalesRep, exportParameters, beanColDataSalesRepInfoPage);
-			
-			JasperPrint jasperPrintProposalPageList1 = JasperFillManager.fillReport(reportProposalPageList1, exportParameters, beanColDataProposalPageList1);
-			JasperPrint jasperPrintProposalPageList2 = JasperFillManager.fillReport(reportProposalPageList2, exportParameters, beanColDataProposalPageList2);
+
+			JasperPrint jasperPrintProposalPageList1 = JasperFillManager.fillReport(reportProposalPageList1, exportParameters,
+					beanColDataProposalPageList1);
+			JasperPrint jasperPrintProposalPageList2 = JasperFillManager.fillReport(reportProposalPageList2, exportParameters,
+					beanColDataProposalPageList2);
 
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
-			list.add(jasperPrintHeader);
+
+			list.add(jasperPrintProposalPageList1);
+			// list.add(jasperPrintHeader);
 			list.add(jasperPrintSalesRep);
 			list.add(jasperPrintProDetail);
-	
-			
 
 			JRBeanCollectionDataSource beanColDataSourceForOfferDetailsPage = null;
 			String OfferDetailsPageSrc = "";
@@ -413,15 +417,15 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 						beanColDataSourceForOfferDetailsPage);
 				list.add(jasperPrintOfferDetail);
 			}
-			list.add(jasperPrintFooter);
-			list.add(jasperPrintProposalPageList1);
+
+			list.add(jasperPrintProposalPageList2);
+			// list.add(jasperPrintFooter);
 
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
-			// exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
-			// response.setContentType("text/pdf");
-			// response.setHeader ("Content-Disposition",
-			// "attachment; filename=\""+"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf\"");
+			exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "Proposal_" + objPdfMasterReportBean.getQuoteId() + ".pdf");
+			response.setContentType("text/pdf");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + "Proposal_" + objPdfMasterReportBean.getQuoteId() + ".pdf\"");
 
 			exp.exportReport();
 			System.out.println("Done...!");
