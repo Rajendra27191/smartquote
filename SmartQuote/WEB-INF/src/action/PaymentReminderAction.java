@@ -107,71 +107,6 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		this.fileName = fileName;
 	}
 
-	// public String loadPaymentReminderFile() {
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("common_error"));
-	// System.out.println("loadPaymentReminderFile");
-	// PaymentReminderFileReader objFileReader = new
-	// PaymentReminderFileReader();
-	// System.out.println("Reminder File : " + reminderFile);
-	// System.out.println("File Name : " + fileName);
-	// ArrayList<PaymentReminderFileBean> listReminderBeans = new
-	// ArrayList<PaymentReminderFileBean>();
-	// try {
-	// JSONArray fileString = objFileReader.readFile(reminderFile + "");
-	// System.out.println("File String :: " + fileString);
-	// listReminderBeans = new Gson().fromJson(fileString.toString(), new
-	// TypeToken<List<PaymentReminderFileBean>>() {
-	// }.getType());
-	// // System.out.println(listReminderBeans);
-	// JSONObject jsonObject = fileString.getJSONObject(0);
-	// if (jsonObject.has("customerCode") && jsonObject.has("customerName")) {
-	// // System.out.println("1..");
-	// PaymentReminderDao objDao = new PaymentReminderDao();
-	// boolean isFilePresent = objDao.checkIfFileExist(fileName);
-	// if (isFilePresent) {
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("File " + fileName + " Exist "));
-	// } else {
-	// boolean isFileUploaded = objDao.uploadReminderFile(listReminderBeans,
-	// fileName);
-	// objDao.commit();
-	// if (isFileUploaded) {
-	// String query1 =
-	// "update file_log a, file_log_emails b set a.email = b.email "
-	// + "where a.customer_code = b.customer_code;";
-	// objDao.executeQuery(query1);
-	// objEmptyResponseBean.setCode("success");
-	// objEmptyResponseBean.setMessage(getText("file_load_success"));
-	// }
-	// }
-	// objDao.closeAll();
-	// } else {
-	// System.out.println("2..");
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("file_column_invalid"));
-	// }
-	//
-	// } catch (FileNotFoundException e) {
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("product_file_not_found"));
-	// e.printStackTrace();
-	// } catch (InvalidFormatException e) {
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("error_file_format"));
-	// e.printStackTrace();
-	// } catch (JSONException e) {
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("error_file_parse"));
-	// e.printStackTrace();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// objEmptyResponseBean.setCode("error");
-	// objEmptyResponseBean.setMessage(getText("common_error"));
-	// }
-	// return SUCCESS;
-	// }
-
 	public String getLoadedFileList() {
 		objResponseBean = new KeyValuePairResponseBean();
 		objResponseBean.setCode("error");
@@ -254,7 +189,8 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
 						+ "FROM file_log a join  file_load_status b "
 						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
-						+ "AND (a.total_amount > 0 OR a.current_amount OR 30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0)";
+						+ "AND (a.total_amount > 0 OR a.current_amount > 0 OR 30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0) "
+						+ "order by a.customer_name";
 
 			}else if(duration.equalsIgnoreCase("30")){
 				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
@@ -262,21 +198,24 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
 						+ "FROM file_log a join  file_load_status b "
 						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
-						+ "AND (30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0)";
+						+ "AND (30_amount > 0 OR a.60_amount > 0 OR a.90_amount > 0) "
+						+ "order by a.customer_name";
 			}else if(duration.equalsIgnoreCase("60")){
 				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
 						+ "a.60_amount,a.90_amount,"
 						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
 						+ "FROM file_log a join  file_load_status b "
 						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
-						+ "AND (a.60_amount > 0 OR a.90_amount > 0)";
+						+ "AND (a.60_amount > 0 OR a.90_amount > 0) "
+						+ "order by a.customer_name";
 			}else if(duration.equalsIgnoreCase("90")){
 				query ="SELECT a.file_id,b.file_name, a.customer_code,a.customer_name,"
 						+ "a.90_amount,"
 						+ "ifnull(a.changed_email,a.email) 'email',a.send_status,a.remark "
 						+ "FROM file_log a join  file_load_status b "
 						+ "on a.file_id="+fileId+" AND b.file_name='"+fileName+"' "
-						+ "AND (a.90_amount > 0)";
+						+ "AND (a.90_amount > 0) "
+						+ "order by a.customer_name";
 			}
 			
 			objList = objDao.getCustomerDetailList(duration,query);
