@@ -14,8 +14,8 @@ public class UserBean {
 	private Date validTo;
 	private String language;
 	private String templateUrl;
+	private String paymentReminderAccess;
 
-	
 	public String getTemplateUrl() {
 		return templateUrl;
 	}
@@ -104,11 +104,19 @@ public class UserBean {
 		this.language = language;
 	}
 
+	public String getPaymentReminderAccess() {
+		return paymentReminderAccess;
+	}
+
+	public void setPaymentReminderAccess(String paymentReminderAccess) {
+		this.paymentReminderAccess = paymentReminderAccess;
+	}
+
 	@Override
 	public String toString() {
-		return "UserBean [userId=" + userId + ", userGroupId=" + userGroupId + ", userName=" + userName + ", emailId=" + emailId
-				+ ", password=" + password + ", userType=" + userType + ", contact=" + contact + ", validFrom=" + validFrom + ", validTo="
-				+ validTo + ", language=" + language + "]";
+		return "UserBean [userId=" + userId + ", userGroupId=" + userGroupId + ", userName=" + userName + ", emailId=" + emailId + ", password="
+				+ password + ", userType=" + userType + ", contact=" + contact + ", validFrom=" + validFrom + ", validTo=" + validTo + ", language="
+				+ language + "]";
 	}
 
 }

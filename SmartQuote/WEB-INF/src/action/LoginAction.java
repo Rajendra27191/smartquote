@@ -106,7 +106,6 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 					objLoginResponse.setOfferList(objOfferDao.getOfferList(getText("offer_template_folder_path"),getText("offer_template_url"),getText("alt_offer_template_url")));
 					objOfferDao.closeAll();
 				}
-				
 			} catch (Exception e) {
 				objLoginResponse.setCode("error");
 				objLoginResponse.setMessage("Error, Please Contact Administrator...!");

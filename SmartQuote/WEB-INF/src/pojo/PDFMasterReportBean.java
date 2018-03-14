@@ -19,6 +19,10 @@ public class PDFMasterReportBean {
 	private boolean isAlternativeAdded;
 	private boolean isGstInclusive;
 	private ArrayList<OfferBean> offerList;
+	
+	private ArrayList<PdfPageBean> proposalPageList1;
+	private ArrayList<PdfPageBean> proposalPageList2;
+	
 	private ArrayList<KeyValuePairBean> termConditionList;
 	private CalculationBean objCalculationBean=new CalculationBean();
 //	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
@@ -178,6 +182,23 @@ public class PDFMasterReportBean {
 				+ isGstInclusive + ", offerList=" + offerList + ", termConditionList=" + termConditionList + ", objCalculationBean="
 				+ objCalculationBean + ", arrayPdfSubReportBean=" + arrayPdfSubReportBean + "]";
 	}
+
+	public ArrayList<PdfPageBean> getProposalPageList1() {
+		return proposalPageList1;
+	}
+
+	public void setProposalPageList1(ArrayList<PdfPageBean> proposalPageList1) {
+		this.proposalPageList1 = proposalPageList1;
+	}
+
+	public ArrayList<PdfPageBean> getProposalPageList2() {
+		return proposalPageList2;
+	}
+
+	public void setProposalPageList2(ArrayList<PdfPageBean> proposalPageList2) {
+		this.proposalPageList2 = proposalPageList2;
+	}
+
 
 
 	

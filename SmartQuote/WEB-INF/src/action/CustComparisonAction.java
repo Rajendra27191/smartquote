@@ -18,13 +18,13 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.engine.export.JRPdfExporterParameter;
 
-
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.ServletResponseAware;
 
 import pojo.EmptyResponseBean;
 import pojo.PDFMasterReportBean;
 import pojo.PDFSubReportBean;
+import pojo.PdfPageBean;
 import pojo.QuoteBean;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -268,7 +268,9 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 	public void exportPDF() {
 		try {
 			exportParameters = new HashMap<String, Object>();
-			String dirPath = request.getSession().getServletContext().getRealPath("/Reports");
+			String dirPath = request.getSession().getServletContext().getRealPath("/Reports/Proposal");
+			// System.out.println(dirPath);
+
 			CustComparisonDao objCustComparisonDao = new CustComparisonDao();
 			PDFMasterReportBean objPdfMasterReportBean = objCustComparisonDao.getQuoteInfo(quoteId);
 			ArrayList<PDFSubReportBean> productList = objPdfMasterReportBean.getArrayPdfSubReportBean();
@@ -288,8 +290,10 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 
 			exportParameters.put("alternativeAdded", objPdfMasterReportBean.isAlternativeAdded());
 			arrayPdfMasterReportBeans.add(objPdfMasterReportBean);
+
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
+
 			exportParameters.put("frontCoverPath", imgDirPath + "/front_cover.jpg");
 			exportParameters.put("backCoverPath", imgDirPath + "/back_cover.jpg");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
@@ -320,7 +324,24 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 					.setOfferList(objQuoteDao.getOfferList(objPdfMasterReportBean.getQuoteId(), getText("offer_template_url")));
 			objPdfMasterReportBean.setTermConditionList(objQuoteDao.getTermAndConditionList(objPdfMasterReportBean.getQuoteId()));
 			objQuoteDao.closeAll();
-			 System.out.println("OFFER LIST ::"+objPdfMasterReportBean.getOfferList().toString());
+			System.out.println("OFFER LIST ::" + objPdfMasterReportBean.getOfferList().toString());
+
+			ArrayList<PdfPageBean> proposalPageList1 = new ArrayList<PdfPageBean>();
+			for (int i = 1; i <= 7; i++) {
+				PdfPageBean objPageBean = new PdfPageBean();
+				objPageBean.setPageTemplateSrc(imgDirPath + "/pdf_output_images/Binder1a-" + i + ".png");
+				proposalPageList1.add(objPageBean);
+			}
+
+			ArrayList<PdfPageBean> proposalPageList2 = new ArrayList<PdfPageBean>();
+			for (int i = 8; i <= 9; i++) {
+				PdfPageBean objPageBean = new PdfPageBean();
+				objPageBean.setPageTemplateSrc(imgDirPath + "/pdf_output_images/Binder1a-" + i + ".png");
+				proposalPageList2.add(objPageBean);
+			}
+			// add pages list in quote bean
+			objPdfMasterReportBean.setProposalPageList1(proposalPageList1);
+			objPdfMasterReportBean.setProposalPageList2(proposalPageList2);
 
 			JRBeanCollectionDataSource beanColDataSourceHeaderPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSourceProductDetailPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
@@ -328,15 +349,26 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JRBeanCollectionDataSource beanColDataSourceFooterPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 			JRBeanCollectionDataSource beanColDataSalesRepInfoPage = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans);
 
+			JRBeanCollectionDataSource beanColDataProposalPageList1 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
+					.getProposalPageList1());
+			JRBeanCollectionDataSource beanColDataProposalPageList2 = new JRBeanCollectionDataSource(arrayPdfMasterReportBeans.get(0)
+					.getProposalPageList2());
+
 			String mainHeaderPageSrc = dirPath + "/MainHeaderPage.jasper";
 			String productDetailsPageSrc = dirPath + "/ProductDetailsPage.jasper";
 			String mainFooterPageSrc = dirPath + "/MainFooterPage.jasper";
 			String salesRepInfoPageSrc = dirPath + "/SalesRepInfoPage.jasper";
 
+			String proposalPageList1Src = dirPath + "/ProposalPages1.jasper";
+			String proposalPageList2Src = dirPath + "/ProposalPages2.jasper";
+
 			FileInputStream reportHeader = new FileInputStream(mainHeaderPageSrc);
 			FileInputStream reportProDetail = new FileInputStream(productDetailsPageSrc);
 			FileInputStream reportFooter = new FileInputStream(mainFooterPageSrc);
 			FileInputStream reportSalesRep = new FileInputStream(salesRepInfoPageSrc);
+
+			FileInputStream reportProposalPageList1 = new FileInputStream(proposalPageList1Src);
+			FileInputStream reportProposalPageList2 = new FileInputStream(proposalPageList2Src);
 
 			exportParameters.put("objCalculationBean", arrayPdfMasterReportBeans.get(0).getObjCalculationBean());
 			exportParameters.put("pdfMasterBean", objPdfMasterReportBean);
@@ -360,9 +392,16 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JasperPrint jasperPrintFooter = JasperFillManager.fillReport(reportFooter, exportParameters, beanColDataSourceFooterPage);
 			JasperPrint jasperPrintSalesRep = JasperFillManager.fillReport(reportSalesRep, exportParameters, beanColDataSalesRepInfoPage);
 
+			JasperPrint jasperPrintProposalPageList1 = JasperFillManager.fillReport(reportProposalPageList1, exportParameters,
+					beanColDataProposalPageList1);
+			JasperPrint jasperPrintProposalPageList2 = JasperFillManager.fillReport(reportProposalPageList2, exportParameters,
+					beanColDataProposalPageList2);
+
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
-			list.add(jasperPrintHeader);
+
+			list.add(jasperPrintProposalPageList1);
+			// list.add(jasperPrintHeader);
 			list.add(jasperPrintSalesRep);
 			list.add(jasperPrintProDetail);
 
@@ -378,15 +417,15 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 						beanColDataSourceForOfferDetailsPage);
 				list.add(jasperPrintOfferDetail);
 			}
-			list.add(jasperPrintFooter);
+
+			list.add(jasperPrintProposalPageList2);
+			// list.add(jasperPrintFooter);
 
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
-			// exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME,
-			// "Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf");
-			// response.setContentType("text/pdf");
-			// response.setHeader ("Content-Disposition",
-			// "attachment; filename=\""+"Quote_"+objPdfMasterReportBean.getQuoteId()+".pdf\"");
+			exp.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "Proposal_" + objPdfMasterReportBean.getQuoteId() + ".pdf");
+			response.setContentType("text/pdf");
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + "Proposal_" + objPdfMasterReportBean.getQuoteId() + ".pdf\"");
 
 			exp.exportReport();
 			System.out.println("Done...!");
@@ -436,19 +475,24 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
 			list.add(jasperPrint);
-			
+
 			List<JasperPrint> list1 = new ArrayList<JasperPrint>();
 			list1.add(jasperPrint2);
-			
-//			JRPdfExporter exporter = new JRPdfExporter();
-//			exporter.setExporterInput(SimpleExporterInput.getInstance(list)); //Set as export input my list with JasperPrint s
-//			exporter.setExporterInput(SimpleExporterInput.getInstance(list1));
-//			exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("/home/radhika/Documents/Give Away POS_Part1.pdf")); //or any other out streaam
-//			SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
-//			configuration.setCreatingBatchModeBookmarks(true); //add this so your bookmarks work, you may set other parameters
-//			exporter.setConfiguration(configuration);
-//			exporter.exportReport();
-			
+
+			// JRPdfExporter exporter = new JRPdfExporter();
+			// exporter.setExporterInput(SimpleExporterInput.getInstance(list));
+			// //Set as export input my list with JasperPrint s
+			// exporter.setExporterInput(SimpleExporterInput.getInstance(list1));
+			// exporter.setExporterOutput(new
+			// SimpleOutputStreamExporterOutput("/home/radhika/Documents/Give Away POS_Part1.pdf"));
+			// //or any other out streaam
+			// SimplePdfExporterConfiguration configuration = new
+			// SimplePdfExporterConfiguration();
+			// configuration.setCreatingBatchModeBookmarks(true); //add this so
+			// your bookmarks work, you may set other parameters
+			// exporter.setConfiguration(configuration);
+			// exporter.exportReport();
+
 			exp.setParameter(JRPdfExporterParameter.JASPER_PRINT_LIST, list);
 			exp.setParameter(JRExporterParameter.OUTPUT_STREAM, response.getOutputStream());
 			exp.exportReport();

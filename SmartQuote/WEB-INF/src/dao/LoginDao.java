@@ -54,7 +54,7 @@ public class LoginDao {
 //					+ " contact, valid_from, valid_to FROM user_master"
 //					+ " WHERE email = ? AND password = ?";
 			String isUserPresentQuery="SELECT a.user_id, b.user_group_id,b.user_group_name, "
-					+ "a.user_name, a.email, a.password,a.contact, a.valid_from, a.valid_to "
+					+ "a.user_name, a.email, a.password,a.contact, a.valid_from, a.valid_to, payment_reminder_access "
 					+ "FROM user_master a "
 					+ "LEFT OUTER JOIN user_group b ON a.user_group_id=b.user_group_id "
 					+ "WHERE a.email = ? AND a.password = ?;";
@@ -75,6 +75,7 @@ public class LoginDao {
 				objBean.setContact(rs.getString("contact"));
 				objBean.setValidFrom(rs.getDate("valid_from"));
 				objBean.setValidTo(rs.getDate("valid_to"));
+				objBean.setPaymentReminderAccess(rs.getString("payment_reminder_access"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

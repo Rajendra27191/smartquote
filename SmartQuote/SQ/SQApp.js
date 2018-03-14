@@ -10,7 +10,8 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    $rootScope.projectName="/";
 
      var currentURL=$window.location.href; 
-// var currentURL="http://localhost:6003/smartprotest/"; 
+var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+     
 
    var isSmartProTest=currentURL.includes("smartprotest");
    if (isSmartProTest) {
@@ -51,10 +52,10 @@ $rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z
  SQHomeServices.apiCallToCheckUserSession();
 /*================ Check user is in sesssion========================*/
  $scope.setLocalStorageData=function(data){
-    // console.log("setLocalStorageData")
-    // console.log(data)
+//     console.log("setLocalStorageData")
+     console.log(data)
     if (data) {
-      if (data.userNavMenu&&data.userData&&data.userList&&data.customerList&&data.supplierList&&data.termConditionList&&data.offerList) {
+      if (data.userNavMenu && data.userData && data.userList && data.customerList && data.supplierList && data.termConditionList&&data.offerList) {
       $rootScope.isUserSignIn=true;
       $rootScope.userNavMenu=data.userNavMenu;
       $rootScope.userData={
@@ -64,6 +65,7 @@ $rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z
                            'emailId':data.userData.emailId,
                            'contact':data.userData.contact,
                            'userName':data.userData.userName,
+                           'paymentReminderAccess':data.userData.paymentReminderAccess,
                            'validFrom':data.userData.validFrom,
                            'validTo':data.userData.validTo
                          }
@@ -79,8 +81,16 @@ $rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z
     }else{
        $rootScope.isUserSignIn=false;
     }
-    // console.log($rootScope.userNavMenu)
  };
+ 
+ $scope.isPaymentReminderAccess=function(menuName){
+	 var isAccess = true;
+	 if (menuName == "Application" && $rootScope.userData.paymentReminderAccess == "NO") {
+		 isAccess = false;
+	}
+	 return isAccess;
+ }
+ 
  $scope.clearLocalStorageData=function(){
     $rootScope.isUserSignIn=false;
     $rootScope.userNavMenu=[];
@@ -214,6 +224,7 @@ $scope.handleUserLogInDoneResponse=function(data){
                              'emailId':data.userData.emailId,
                              'contact':data.userData.contact,
                              'userName':data.userData.userName,
+                             'paymentReminderAccess':data.userData.paymentReminderAccess,
                              'validFrom':data.userData.validFrom,
                              'validTo':data.userData.validTo
                            }
@@ -236,6 +247,7 @@ $scope.handleUserLogInDoneResponse=function(data){
                              'emailId':data.userData.emailId,
                              'contact':data.userData.contact,
                              'userName':data.userData.userName,
+                             'paymentReminderAccess':data.userData.paymentReminderAccess,
                              'validFrom':data.userData.validFrom,
                              'validTo':data.userData.validTo
                            }

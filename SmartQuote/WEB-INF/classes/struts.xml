@@ -555,13 +555,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-<!-- 		<action name="loadPaymentReminderFile" class="action.PaymentReminderAction" -->
-<!-- 			method="loadPaymentReminderFile"> -->
-<!-- 			<result name="success" type="json"> -->
-<!-- 				<param name="root">objEmptyResponseBean</param> -->
-<!-- 				<param name="ignoreHierarchy">false</param> -->
-<!-- 			</result> -->
-<!-- 		</action> -->
 		<action name="loadPaymentReminderFileByXml" class="action.PaymentReminderAction"
 			method="loadPaymentReminderFileByXml">
 			<result name="success" type="json">

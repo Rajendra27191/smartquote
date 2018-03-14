@@ -346,8 +346,9 @@ public class UserGroupDao {
 //		boolean isUserCreated = false;
 		int userID=0;
 		try {
-			String createUserQuery = "INSERT IGNORE INTO user_master (user_group_id, user_name, email, password, contact, valid_from, valid_to) "
-					+ " VALUES(?, ?, ?, ?, ?, ?, ?)";
+			String createUserQuery = "INSERT IGNORE INTO user_master (user_group_id, user_name, email, password, "
+					+ " contact, valid_from, valid_to, payment_reminder_access) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pstmt = null;
 			pstmt=conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, objUserBean.getUserGroupId());
@@ -357,6 +358,7 @@ public class UserGroupDao {
 			pstmt.setString(5, objUserBean.getContact());
 			pstmt.setDate(6, objUserBean.getValidFrom());
 			pstmt.setDate(7, objUserBean.getValidTo());
+			pstmt.setString(8, objUserBean.getPaymentReminderAccess());
 			System.out.println("Create User Query: " + pstmt.toString());
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
@@ -378,7 +380,7 @@ public class UserGroupDao {
 	public UserBean getUserDetails(int userId,String templateSrc) {
 		UserBean objBean = null;
 		String getUserGroups = "SELECT user_id, user_group_id, user_name, email, password, contact, "
-				+ " valid_from, valid_to "
+				+ " valid_from, valid_to, payment_reminder_access "
 				+ " FROM user_master WHERE user_id = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
@@ -394,6 +396,7 @@ public class UserGroupDao {
 				objBean.setContact(rs.getString("contact"));
 				objBean.setValidFrom(rs.getDate("valid_from"));
 				objBean.setValidTo(rs.getDate("valid_to"));
+				objBean.setPaymentReminderAccess(rs.getString("payment_reminder_access"));
 				String templateUrl=templateSrc+"UserId_"+rs.getInt("user_id")+".png";;
 				objBean.setTemplateUrl(templateUrl);
 			}
@@ -412,7 +415,7 @@ public class UserGroupDao {
 		boolean isUserUpdated = false;
 		try {
 			String updateCustQuery = "UPDATE user_master SET user_group_id = ?, user_name = ?, email = ?, password= ?, "
-					+ " contact = ?, valid_from = ?, valid_to = ? "
+					+ " contact = ?, valid_from = ?, valid_to = ?, payment_reminder_access = ? "
 					+ " WHERE user_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setInt(1, objUserBean.getUserGroupId());
@@ -422,7 +425,8 @@ public class UserGroupDao {
 			pstmt.setString(5, objUserBean.getContact());
 			pstmt.setDate(6, objUserBean.getValidFrom());
 			pstmt.setDate(7, objUserBean.getValidTo());
-			pstmt.setInt(8, objUserBean.getUserId());
+			pstmt.setString(8, objUserBean.getPaymentReminderAccess());
+			pstmt.setInt(9, objUserBean.getUserId());
 			System.out.println("Query: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isUserUpdated = true;

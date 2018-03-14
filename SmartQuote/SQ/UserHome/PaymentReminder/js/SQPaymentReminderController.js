@@ -1,3 +1,4 @@
+
 angular.module('sq.SmartQuoteDesktop')
 .controller('SQPaymentReminderController',function($window,$scope,$rootScope,$log,$state,$timeout,$http,$upload,SQPaymentReminderFactory,$filter){
 console.log('initialise SQPaymentReminder Controller');
