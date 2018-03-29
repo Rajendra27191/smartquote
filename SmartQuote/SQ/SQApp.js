@@ -10,7 +10,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    $rootScope.projectName="/";
 
      var currentURL=$window.location.href; 
-//var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
      
 
    var isSmartProTest=currentURL.includes("smartprotest");
@@ -44,6 +44,7 @@ $scope.errormsg='';
 $rootScope.isAdmin=false;
 $rootScope.isSessionExpired=false;
 $rootScope.isUserSignIn=false;
+$rootScope.initDashBoard=true;
 // $rootScope.scrollpos=0;
 $rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
 
@@ -92,7 +93,9 @@ $rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z
  }
  
  $scope.clearLocalStorageData=function(){
+  console.log("clearLocalStorageData")
     $rootScope.isUserSignIn=false;
+    $rootScope.initDashBoard=true;
     $rootScope.userNavMenu=[];
     $rootScope.userData={};
     $rootScope.userList=[];
@@ -113,6 +116,7 @@ $rootScope.$on("sesssion", function(event, data){
     if(data.code=="success"){
       $('#mySpinner').hide();
       // $rootScope.initAuotoComplete();
+          // $rootScope.initDashBoard=false;
           if ($rootScope.storageName.toLowerCase()=="smartprotest") {
             $scope.setLocalStorageData($rootScope.smartprotest);
           }else{
@@ -140,6 +144,7 @@ $rootScope.$on("sesssion", function(event, data){
 // $state.transitionTo('home.start');
 // }
 
+// console.log("$rootScope.initDashBoard :" ,$rootScope.initDashBoard)
 /*===================================================*/
 $rootScope.initAuotoComplete=function(callWithTimeStamp){
 console.log("$rootScope.initAuotoComplete...");
@@ -234,7 +239,6 @@ $scope.handleUserLogInDoneResponse=function(data){
       $rootScope.smartprotest.serviceList=data.serviceList;
       $rootScope.smartprotest.termConditionList=data.termConditionList;
       $rootScope.smartprotest.offerList=data.offerList;
-
       $scope.setLocalStorageData($rootScope.smartprotest);
 
       }else{

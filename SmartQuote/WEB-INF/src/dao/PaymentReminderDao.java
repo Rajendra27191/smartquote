@@ -229,8 +229,8 @@ public class PaymentReminderDao {
 				pstmt.setString(3, list.get(i).getTransDate());
 				pstmt.setString(4, list.get(i).getTransType());
 				pstmt.setString(5, list.get(i).getLn1Expr17());
-				pstmt.setString(6, list.get(i).getLn1Expr36());
-				pstmt.setString(7, list.get(i).getDrTrOrderNo());
+				pstmt.setString(6, list.get(i).getDrTrOrderNo());
+				pstmt.setString(7, list.get(i).getLn1Expr36());
 				pstmt.setString(8, list.get(i).getTrAmount());// postdated
 				pstmt.setString(9, list.get(i).getLfCurrentAmt());
 				pstmt.setString(10, list.get(i).getLf30DaysAmt());
