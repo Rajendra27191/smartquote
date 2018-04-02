@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quote_report" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="8db8e68c-96db-4599-b0f5-5c8299cef66a">
 	<property name="ireport.zoom" value="0.8264462809917612"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="273"/>
+	<property name="ireport.y" value="345"/>
 	<style name="text_style" hAlign="Center" vAlign="Top" fontSize="16" isBold="true">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$P{customerLogoPath}!=""&&$P{customerLogoPath}!=null]]></conditionExpression>
@@ -62,13 +62,13 @@
 		<fieldDescription><![CDATA[objCalculationBean]]></fieldDescription>
 	</field>
 	<detail>
-		<band height="755" splitType="Stretch">
-			<image scaleImage="RealSize" onErrorType="Blank">
-				<reportElement uuid="2738194b-eac6-4ec6-997e-9bce250a9023" mode="Opaque" x="0" y="0" width="595" height="755"/>
+		<band height="842" splitType="Stretch">
+			<image scaleImage="FillFrame" onErrorType="Blank">
+				<reportElement uuid="2738194b-eac6-4ec6-997e-9bce250a9023" mode="Opaque" x="0" y="0" width="595" height="842"/>
 				<imageExpression><![CDATA[$P{frontCoverPath}]]></imageExpression>
 			</image>
 			<image scaleImage="RetainShape" hAlign="Center" vAlign="Top" onErrorType="Icon">
-				<reportElement uuid="d5fb89ec-f073-4027-b5e4-9b64c4a83325" mode="Transparent" x="83" y="665" width="256" height="63">
+				<reportElement uuid="d5fb89ec-f073-4027-b5e4-9b64c4a83325" mode="Transparent" x="83" y="735" width="256" height="63">
 					<printWhenExpression><![CDATA[$P{customerLogoPath}!=""&&$P{customerLogoPath}!=null]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -77,7 +77,7 @@
 				<imageExpression><![CDATA[$P{customerLogoPath}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement uuid="a349d358-24ca-40e5-8c67-804a7241e9d1" style="text_style" x="64" y="664" width="274" height="40">
+				<reportElement uuid="a349d358-24ca-40e5-8c67-804a7241e9d1" style="text_style" x="64" y="734" width="274" height="25">
 					<printWhenExpression><![CDATA[$P{customerLogoPath}==""||$P{customerLogoPath}==null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -86,7 +86,7 @@
 				<text><![CDATA[Business Proposal For :]]></text>
 			</staticText>
 			<textField pattern="">
-				<reportElement uuid="a3e04b2b-f8d1-4367-a89e-12e54f71cd76" style="text_style" x="64" y="690" width="274" height="65" forecolor="#C00000">
+				<reportElement uuid="a3e04b2b-f8d1-4367-a89e-12e54f71cd76" style="text_style" x="64" y="760" width="274" height="65" forecolor="#C00000">
 					<printWhenExpression><![CDATA[$P{customerLogoPath}==""||$P{customerLogoPath}==null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -95,14 +95,14 @@
 				<textFieldExpression><![CDATA[$F{proposalFor}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="800e3dbc-16c6-4260-871c-9e51bca9bb14" style="text_style" x="370" y="664" width="220" height="25"/>
+				<reportElement uuid="800e3dbc-16c6-4260-871c-9e51bca9bb14" style="text_style" x="370" y="734" width="220" height="25"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="20" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Proposal Attn :]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="ddd3e761-8a8c-42b8-85cc-63fcec08b5db" style="text_style" x="370" y="690" width="220" height="65" forecolor="#C00000"/>
+				<reportElement uuid="ddd3e761-8a8c-42b8-85cc-63fcec08b5db" style="text_style" x="370" y="760" width="220" height="65" forecolor="#C00000"/>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="20" isBold="true"/>
 				</textElement>

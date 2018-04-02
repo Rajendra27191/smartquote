@@ -247,7 +247,7 @@ padding: 3px 12px;
 			</div>
 			<div class="col-md-8">
 		
-			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList" required ng-disabled="disableSalesPersonSelect">
+			<select type="text" name="salesPerson" class="form-control"  ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList | filter:shouldShow" required ng-disabled="disableSalesPersonSelect">
 			<option value="">Select Sales Person</option>
 			</select>
 			<span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">

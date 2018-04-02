@@ -1401,6 +1401,10 @@ templateUrl: 'myPopoverTemplate.html',
 title: 'Customer Logo'
 };
 
+$scope.shouldShow = function (user) {
+// put your authorization logic here
+return user.code !== 1 && user.value !== 'admin';
+}
 
 
 //=================================================================================================
