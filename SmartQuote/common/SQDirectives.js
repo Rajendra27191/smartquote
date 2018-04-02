@@ -9,7 +9,7 @@ function ($timeout) {
     scope:{
         info : "=info"
     },
-    template: "<div style='top:0px;position:fixed;z-index:1051;left:0;right:0;width:100%;height:100%;margin:auto;rgba(255,255,255,0.2);opacity:.4;' ng-show='spinner.isShown'><center><i style='margin: auto;margin-top:250px;' class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><p ng-bind='info.text'></p></center></div>",
+    template: "<div style='top:0px;position:fixed;z-index:1051;left:0;right:0;width:100%;height:100%;margin:auto;background:rgba(255,255,255,0.5);opacity:.4;' ng-show='spinner.isShown'><center><i style='margin: auto;margin-top:250px;' class='fa fa-spinner fa-pulse fa-3x fa-fw'></i><p ng-bind='info.text'></p></center></div>",
     controller: [
       '$scope',
       '$rootScope',
