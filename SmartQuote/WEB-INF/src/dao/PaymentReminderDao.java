@@ -312,12 +312,14 @@ public class PaymentReminderDao {
 
 	public boolean unloadReminderFile(int fileId, String fileName) {
 		boolean isUnload = false;
-		String query1 = "DELETE FROM file_load_status WHERE file_name = ?;";
+		String query1 = "DELETE FROM file_load_status WHERE file_name = ? and file_id=?;";
 		String query2 = "DELETE FROM file_log WHERE file_id=?; ";
-		String query3 = "UPDATE email_record SET file_unload_status=1 WHERE file_id=? AND file_name=?;";
+		String query4 = "UPDATE email_record SET file_unload_status=1 WHERE file_id=? AND file_name=?;";
+		String query3 = "DELETE FROM file_log_transactions WHERE file_id=?;";
 		try {
 			pstmt = conn.prepareStatement(query1);
 			pstmt.setString(1, fileName);
+			pstmt.setInt(2, fileId);
 			System.out.println(pstmt);
 			int i = pstmt.executeUpdate();
 			int j = 0;
@@ -325,6 +327,7 @@ public class PaymentReminderDao {
 			if (i > 0) {
 				pstmt = conn.prepareStatement(query2);
 				pstmt.setInt(1, fileId);
+				System.out.println(pstmt);
 				j = pstmt.executeUpdate();
 				System.out.println("J " + j);
 			}
@@ -332,9 +335,17 @@ public class PaymentReminderDao {
 			if (j > 0) {
 				pstmt = conn.prepareStatement(query3);
 				pstmt.setInt(1, fileId);
-				pstmt.setString(2, fileName);
+				System.out.println(pstmt);
 				x = pstmt.executeUpdate();
 				System.out.println("X " + x);
+			}
+			if (x > 0) {
+				pstmt = conn.prepareStatement(query4);
+				pstmt.setInt(1, fileId);
+				pstmt.setString(2, fileName);
+				System.out.println(pstmt);
+				pstmt.executeUpdate();
+//				System.out.println("X " + x);
 			}
 
 			isUnload = true;
