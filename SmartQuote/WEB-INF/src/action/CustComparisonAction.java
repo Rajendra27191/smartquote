@@ -327,7 +327,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			System.out.println("OFFER LIST ::" + objPdfMasterReportBean.getOfferList().toString());
 
 			ArrayList<PdfPageBean> proposalPageList1 = new ArrayList<PdfPageBean>();
-			for (int i = 1; i <= 7; i++) {
+			for (int i = 2; i <= 7; i++) {
 				PdfPageBean objPageBean = new PdfPageBean();
 				objPageBean.setPageTemplateSrc(imgDirPath + "/pdf_output_images/Binder1a-" + i + ".png");
 				proposalPageList1.add(objPageBean);
@@ -400,8 +400,9 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			JRPdfExporter exp = new JRPdfExporter();
 			List<JasperPrint> list = new ArrayList<JasperPrint>();
 
+			 list.add(jasperPrintHeader);
 			list.add(jasperPrintProposalPageList1);
-			// list.add(jasperPrintHeader);
+			
 			list.add(jasperPrintSalesRep);
 			list.add(jasperPrintProDetail);
 

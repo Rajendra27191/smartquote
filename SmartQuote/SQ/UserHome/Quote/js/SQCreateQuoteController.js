@@ -1218,6 +1218,10 @@ $scope.custLogoSrc=filepreview;
 };
 
 
+$scope.shouldShow = function (user) {
+// put your authorization logic here
+return user.code !== 1 && user.value !== 'admin';
+}
 
 //===================HOTKEYS====================  
 hotkeys.bindTo($scope)

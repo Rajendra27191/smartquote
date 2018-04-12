@@ -223,9 +223,15 @@ $scope.handleGetChartDataDoneResponse=function(data){
 	}else{
 			
 		}
-	$rootScope.hideSpinner();
 }
-	// $rootScope.initAuotoComplete();	
+console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
+if ($rootScope.initDashBoard) {
+	console.log("initAuotoComplete")
+	$rootScope.initAuotoComplete();	
+} else{
+	$rootScope.hideSpinner();
+};
+
 };
 var cleanupEventGetChartDataDone = $scope.$on("GetChartDataDone", function(event, message){
 	$scope.handleGetChartDataDoneResponse(message);      
@@ -308,6 +314,11 @@ $scope.init();
 //   $scope.myChartObject1.type="ColumnChart";
 //   $scope.myChartObject1.data=data;
 //   $scope.myChartObject1.options=options;
-  
+$scope.$on('$destroy', function(event, message) {	
+ cleanupEventGetChartDataDone();
+ cleanupEventGetProductDetailsNotDone();
+ // $rootScope.initDashBoard=false;
+
+});
 
 });

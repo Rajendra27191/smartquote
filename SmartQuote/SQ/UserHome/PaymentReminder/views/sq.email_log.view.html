@@ -31,7 +31,7 @@
 	<thead>
 		<tr>
 			<th rowspan="2" style="padding:25px;"><center>Batch Id</center></th>
-			<th rowspan="2" style="padding:25px;"><center>File Name</center></th>
+			<th rowspan="2" style="padding:25px;">File Name</th>
 			<th colspan="4"><center>Email Notification Details (Payment Reminder)</center></th>
 		</tr>
 		<tr>
@@ -44,7 +44,7 @@
 	<tbody>
 		<tr ng-repeat="emailLog in emailLogList | filter:search " >
 			<td><center>{{emailLog.batchId}}</center></td>	
-			<td><center>{{emailLog.fileName}}</center></td>	
+			<td>{{emailLog.fileName}}</td>	
 			<td id ="status" ng-click="getLogDetail(emailLog,'A')" ><center tooltip-placement="top" uib-tooltip="click to open all records">{{emailLog.total}}</center></td>	
 			<td id ="status" ng-click="getLogDetail(emailLog,'Y')" ><center tooltip-placement="top" uib-tooltip="click to open sent records">{{emailLog.sent}}</center></td>	
 			<td id ="status" ng-click="getLogDetail(emailLog,'N')" ><center tooltip-placement="top" uib-tooltip="click to open pending records">{{emailLog.pending}}</center></td>	
@@ -84,10 +84,10 @@
 		<div class="col-md-2">
 			<label>Send Status</label>: <span data-ng-bind="sendStatus"></span>
 		</div>
-		<div class="col-md-2">
+		<div class="col-md-4">
 			<label>File Name</label>: <span data-ng-bind="emailLogData.fileName"></span>
 		</div>
-		<div class="col-md-2 col-md-offset-6">
+		<div class="col-md-2 col-md-offset-4">
 			<!-- <center></center> -->
 			<button  class="btn btn-default" ng-click="saveAsExcelClicked(emailLogData)" tooltip-placement="top" uib-tooltip="click to save as excel" style="padding:5px 10px;float:right;margin: 0px 5px;">
 			<i class="fa fa-table fa-lg" aria-hidden="true" style="color:#5cb85c;"></i>

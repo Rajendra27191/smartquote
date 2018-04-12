@@ -1,7 +1,8 @@
 angular.module('sq.SmartQuoteDesktop')
 .controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','$http',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,$http){
 console.log('initialise SQUserHomeController controller');
-$rootScope.initAuotoComplete();
+// $rootScope.initAuotoComplete();
+console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
 $window.pageYOffset;
 
 //CODE STARTS===============================================================================================================
@@ -88,17 +89,20 @@ $scope.confirmChangeView=function(subMenuName){
   if(subMenuName==='Logout'){
   $rootScope.userSignout(); 
   }
+  $rootScope.initDashBoard=false;
 };
 
 
 $rootScope.subMenuClicked=function(subMenuName){
-  console.log(subMenuName);
-  console.log("isQuoteActivated >>" +$rootScope.isQuoteActivated)
+  // console.log(subMenuName);
+  // console.log("isQuoteActivated >>" +$rootScope.isQuoteActivated)
+  // console.log("$rootScope.initDashBoard "+$rootScope.initDashBoard)
   if ($rootScope.isQuoteActivated) {
   $scope.showPromptWindow(subMenuName);
   }else{
   $scope.confirmChangeView(subMenuName);
   }
+  // $rootScope.initDashBoard=false;
 };
 
 //CODE ENDS===============================================================================================================

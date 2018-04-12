@@ -519,8 +519,13 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		String queryStr = "", query1 = "", query2 = "", query3 = "";
 		try {
 			objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
+			System.out.println("1..."+objReport.getSkipOneOrReportInfoOrPageHeader().size());
 			if (objReport != null) {
-				Report objValidReport = objFileReader.validateCustomerDetails(objReport);
+//				Report objValidReport = objFileReader.validateCustomerDetails(objReport);
+				List<Report.Detail> listDetails = objFileReader.getDetailList(objReport);
+				System.out.println("2..." +listDetails.size());
+				listDetails = objFileReader.getCheckedDetailList(listDetails);
+				System.out.println("3..." +listDetails.size());
 				objDao = new PaymentReminderDao();
 				isFilePresent = objDao.checkIfFileExist(fileName);
 				if (isFilePresent) {
@@ -532,11 +537,12 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 					boolean isFileLogAdded = false, isFileTransactionAdded = false, isFileLoadStatusAdded = false;
 					int fileId = objDao.getFileIdFromFileLoadStatus(), rowCount = 0;
 
-					List<Object> pageList = objReport.getSkipOneOrReportInfoOrPageHeader();
-					for (int pageCount = 0; pageCount < pageList.size(); pageCount++) {
-						className = pageList.get(pageCount).getClass().getSimpleName();
+//					List<Object> pageList = objReport.getSkipOneOrReportInfoOrPageHeader();
+					for (int pageCount = 0; pageCount < listDetails.size(); pageCount++) {
+						className = listDetails.get(pageCount).getClass().getSimpleName();
+						System.out.println(className);
 						if (className.equals("Detail")) {
-							Detail objDetail = (Detail) pageList.get(pageCount);
+							Detail objDetail = (Detail) listDetails.get(pageCount);
 							if (objDetail.getCustomerWrapper().size() > 0) {
 								for (int j = 0; j < objDetail.getCustomerWrapper().size(); j++) {
 									CustomerWrapper objCustomerWrapper = objDetail.getCustomerWrapper().get(j);
@@ -561,7 +567,6 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 													objCustomerWrapper.getTransactionWrapper().get(0).getCustomerTransactions().get(0)
 															.getTransactions());
 										}
-
 									}
 									rowCount++;
 								}
@@ -569,7 +574,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 						}
 					}
 					//
-					PageHeader objPageHeader = (PageHeader) pageList.get(1);
+					PageHeader objPageHeader = (PageHeader) objReport.getSkipOneOrReportInfoOrPageHeader().get(1);
 					if (isFileTransactionAdded) {
 						startDate = objPageHeader.getStartDate();// sdf.format();
 						endDate = objPageHeader.getEndDate();// sdf.format();
