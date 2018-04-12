@@ -439,7 +439,45 @@ public class ProductDao {
 		}
 		return isFileUploaded;
 	}
+	
+	public boolean loadFileToStaging(String loadedFileSrc) {
+		boolean isFileUploaded = false;
+		String productQuery = "LOAD DATA LOCAL INFILE '"+loadedFileSrc+"' "
+				+ "INTO TABLE `product_master_staging` "
+				+ "FIELDS TERMINATED BY ',' "
+				+ "ENCLOSED BY '\"' "
+				+ "LINES TERMINATED BY '\n' "
+				+ "IGNORE 1 LINES "
+				+ "(item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,"
+				+ "price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,"
+				+ "supplier,priority,last_buy_date,avg_cost,tax_code);";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);	
+			@SuppressWarnings("unused")
+			int i = pstmt.executeUpdate();
+			isFileUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isFileUploaded;
+	}
 
+	public int validateStaging() {
+		int count = 0;
+		String productQuery = "SELECT count(*)'date_count' FROM product_master_staging where last_buy_date !='0000-00-00';";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			System.out.println(pstmt);
+			rs = pstmt.executeQuery();
+			if(rs.next())
+				count = rs.getInt("date_count");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 	public ArrayList<ProductBean> getFilterdProductFromStaging() {
 		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 		try {

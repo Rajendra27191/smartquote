@@ -54,7 +54,8 @@ padding: 0px;
 	<input type = 'file' class = 'form-control' ng-file-select = "onExcelSelect($files)"  id = 'fileTypeExcelHost' name="productFile" required>
 	<span class="invalid-control">
 	<small ng-show="isRequired" style="color: red;">*Please select file to upload.</small>
-	<small ng-show="isValid" style="color: red;">*Please select valid file (only .xlsx).</small>
+    <small ng-show="isValid  && upload.type!='products'" style="color: red;">*Please select valid file (only .xlsx).</small>
+	<small ng-show="isValid  && upload.type=='products'" style="color: red;">*Please select valid file (only .csv).</small>
 	</span>
 	<!-- ngf-pattern="'.xls,.csv,.xlsx'" accept=".xls,.csv,.xlsx" ngf-max-size="20MB" -->
 	</div>
@@ -90,7 +91,7 @@ padding: 0px;
 
 
 <!-- {{progressCount}}  -->
-
+<!-- 
 <div ng-if="showProgressBar" style="position:absolute;top:0;left:0;height:100%;width:100%;background-color:rgba(255,255,255,0.2);z-index:1100;">
 <center style='margin: auto; margin-top: 300px;'>
 <div  >
@@ -109,7 +110,7 @@ animation-delay="0">
 </div>
 </div>
 </center>
-</div>
+</div> -->
 
 <!-- {{upload.type}}  products newProductCode-->
 <br>
@@ -122,29 +123,35 @@ animation-delay="0">
  <table class="table table-bordered" id="prFileFormat">
     <thead>
       <tr>
-        <th>Item Code</th>
-        <th>Group</th> 
-        <th>Item Description</th> 
-        <th>Description (2)</th> 
-        <th>Description (3)</th> 
-        <th>Unit</th> 
-        <th>Price 0 (ex GST)</th> 
-        <th>Qty Break 1</th> 
-        <th>Price 1 (ex GST)</th> 
-        <th>Qty Break 2	</th> 
-        <th>Price 2 (ex GST)</th> 
-        <th>Qty Break 3</th> 
-        <th>Price 3 (ex GST)</th> 
-        <th>Qty Break 4	</th> 
-        <th>Price 4 (ex GST)</th> 
-        <th>Priority</th> 
-        <th>Last Buy Date</th> 
-        <th>Last Buy Price</th> 
-        <th>Tax Code</th> 
+        <th> Item Code </th>
+        <th> Group </th>
+        <th> Item Description </th>  
+        <th> Description (2) </th>
+        <th> Description (3) </th>
+        <th> Unit  </th>
+        <th> Status  </th>
+        <th> Condition </th>
+        <th> Price 0 (ex GST) </th> 
+        <th> Qty Break 1 </th>
+        <th> Price 1 (ex GST) </th> 
+        <th> Qty Break 2 </th>
+        <th> Price 2 (ex GST) </th> 
+        <th> Qty Break 3 </th>
+        <th> Price 3 (ex GST) </th> 
+        <th> Qty Break 4 </th>
+        <th> Price 4 (ex GST) </th> 
+        <th> Supplier  </th>
+        <th> Priority  </th>
+        <th> Last Buy Date </th>
+        <th> Last Buy Price  </th>
+        <th> Tax Code </th>
       </tr>
     </thead>
     <tbody>
       <tr ng-repeat="p in records track by $index">
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>

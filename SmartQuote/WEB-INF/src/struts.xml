@@ -287,6 +287,14 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="uploadProductByCsv" class="action.ProductAction"
+			method="uploadProductByCsv">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="uploadProductByXlsx" class="action.ProductAction"
 			method="uploadProductByXlsx">
