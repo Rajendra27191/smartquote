@@ -193,14 +193,15 @@ animation: flash linear 2s infinite;
 </div>
 <div class="col-md-8">
 <!-- {{customerQuote.competeQuote!='yes'}} -->
-<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
-<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
+<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
+<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" min="{{addProduct.avgcost.toString()}}"-->
 <span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
 || (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
-<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
+<!-- <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small> -->
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
 </span>
+<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="text-muted">Note: supplier price should be greater than cost.</small>
 </div>
 </div>
 <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
@@ -208,18 +209,19 @@ animation: flash linear 2s infinite;
 <label class="sub-label">Supplier Gp %</label>
 </div>
 <div class="col-md-8">
-<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
+<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
 </div>
 </div>
 <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
 <div class="col-md-4">
-<label class="sub-label">Gp Required %</label>
+<label class="sub-label">Gp Required % </label>
 </div>
 <div class="col-md-8">
-<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0" max="100"  ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<!--  min="0"  form.addProductIntoQuote.gpRequired.$error.min ||-->
 <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
 || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+<small ng-if=" form.addProductIntoQuote.gpRequired.$error.max">* max gpRequired should be 100.</small>
 </span>
 </div>
 </div>
@@ -235,7 +237,8 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+<span class="text-muted">
+<small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 
@@ -268,13 +271,14 @@ animation: flash linear 2s infinite;
 
 <div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
 <div class="col-md-4">
-<label class="sub-label">Gp Required %</label>
+<label class="sub-label">Gp Required % </label>
 </div>
 <div class="col-md-8">
-<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled=" !addProduct.quotePrice>0 && !addProduct.avgcost>0">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled=" !addProduct.quotePrice>0 && !addProduct.avgcost>0">
+<!-- min="0"  form.addProductIntoQuote.gpRequired.$error.min ||-->
 <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
 || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+<small ng-if=" form.addProductIntoQuote.gpRequired.$error.max">*max gpRequired should be 100.</small>
 </span>
 </div>
 </div>
@@ -289,7 +293,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 <div class="row row-control">
@@ -373,14 +377,15 @@ animation: flash linear 2s infinite;
 </div>
 <div class="col-md-8">
 <!-- {{customerQuote.competeQuote!='yes'}} -->
-<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" min="{{addProduct.avgcost.toString()}}" ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
-<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" -->
+<input type="number" id="currentSupplierPrice" class = 'form-control' name="currentSupplierPrice" ng-model="addProduct.currentSupplierPrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-change="currentSupplierPriceChanged(addProduct.currentSupplierPrice,addProduct.avgcost);" required>
+<!--  ng-disabled="customerQuote.competeQuote!='yes' && addProduct.gstFlag=='No'" min="{{addProduct.avgcost.toString()}}" -->
 <span ng-show="((form.addProductIntoQuote.currentSupplierPrice.$dirty && form.addProductIntoQuote.currentSupplierPrice.$invalid) 
 || (form.addProductIntoQuote.currentSupplierPrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.required">* please enter supplier price.</small>
-<small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small>
+<!-- <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small> -->
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
 </span>
+<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="text-muted">Note: supplier price should be greater than cost.</small>
 </div>
 </div>
 
@@ -389,19 +394,20 @@ animation: flash linear 2s infinite;
 <label class="sub-label">Supplier Gp %</label>
 </div>
 <div class="col-md-8">
-<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
+<input type="text" id="currentSupplierGP"  class='form-control' name="currentSupplierGP" ng-model="addProduct.currentSupplierGP" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0"  ng-disabled="true"> 
 </div>
 </div>
 
 <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='no'">
 <div class="col-md-4">
-<label class="sub-label">Gp Required %</label>
+<label class="sub-label">Gp Required % </label>
 </div>
 <div class="col-md-8">
-<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)" ng-disabled="true">
+<!-- min="0" form.addProductIntoQuote.gpRequired.$error.min || -->
 <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
 || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+<small ng-if=" form.addProductIntoQuote.gpRequired.$error.max">*max gpRequired should be 100.</small>
 </span>
 </div>
 </div>
@@ -418,7 +424,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 
@@ -467,13 +473,14 @@ animation: flash linear 2s infinite;
 
 <div class="row row-control" ng-hide="customerQuote.competeQuote.toLowerCase()=='no'">
 <div class="col-md-4">
-<label class="sub-label">Gp Required %</label>
+<label class="sub-label">Gp Required % </label>
 </div>
 <div class="col-md-8">
-<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)">
+<input type="number" string-to-number id="gpRequired"  class='form-control' name="gpRequired" ng-model="addProduct.gpRequired" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0" max="100" ng-change="GpRequiredChanged(addProduct.avgcost,addProduct.gpRequired)">
+<!-- min="0"  form.addProductIntoQuote.gpRequired.$error.min ||-->
 <span ng-show="((form.addProductIntoQuote.gpRequired.$dirty && form.addProductIntoQuote.gpRequired.$invalid) 
 || (form.addProductIntoQuote.gpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-<small ng-if="form.addProductIntoQuote.gpRequired.$error.min || form.addProductIntoQuote.gpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+<small ng-if=" form.addProductIntoQuote.gpRequired.$error.max">*max gpRequired should be 100.</small>
 </span>
 </div>
 </div>
@@ -489,7 +496,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">* price should be greater than or equal to cost.</small></span>
+<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 
@@ -650,10 +657,11 @@ animation: flash linear 2s infinite;
 <label class="sub-label">Alt Gp Required %</label>
 </div>
 <div class="col-md-8">
-<input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0"  min="0" max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote.toLowerCase()=='no'">
+<input type="number" string-to-number id="altGpRequired"  class='form-control' name="altGpRequired" ng-model="addProduct.altProd.gpRequired" ng-pattern="/^[-0-9]+(\.[0-9]{1,6})?$/" step="0"   max="100" ng-change="altGpRequiredChanged(addProduct.altProd.avgcost,addProduct.altProd.gpRequired)" ng-disabled="customerQuote.competeQuote.toLowerCase()=='no'">
+<!-- min="0" form.addProductIntoQuote.altGpRequired.$error.min ||-->
 <span ng-show="((form.addProductIntoQuote.altGpRequired.$dirty && form.addProductIntoQuote.altGpRequired.$invalid) 
 || (form.addProductIntoQuote.altGpRequired.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
-<small ng-if="form.addProductIntoQuote.altGpRequired.$error.min || form.addProductIntoQuote.altGpRequired.$error.max">*gpRequired should be in range 0-100.</small>
+<small ng-if=" form.addProductIntoQuote.altGpRequired.$error.max">*max gpRequired should be 100.</small>
 </span>
 </div>
 </div>
@@ -669,8 +677,8 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.required">* please enter alt price.</small>
 <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="invalid-control">
-<small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* alt price should be greater than or equal to alt cost.</small>
+<span class="text-muted">
+<small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">Note : Alt price should be greater than or equal to alt cost.</small>
 </span> 
 
 </div>

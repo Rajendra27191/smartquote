@@ -176,7 +176,7 @@ if ($files.length>0) {
        console.log("File",latestFile.size+" bytes");
        console.log("File",(latestFile.size / 1024)+" kb");
        console.log("")
-	      if ((latestFile.size / 1024) <=50) {//6144
+	      if ((latestFile.size / 1024) <=100) {//6144
 		  $scope.invalidFileSize=false;		      	
 	      logoFile=latestFile;
 	      }else{
