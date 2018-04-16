@@ -1181,7 +1181,8 @@ console.log($files);
 console.log($files.length);
 if ($files.length>0) {
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+     	var fileType = $files[i].name.split('.').pop().toLowerCase();  
+      if((fileType == 'jpg'|| fileType == 'jpeg' ||fileType == 'gif' || fileType == 'png')){
        console.log("valid file");
        latestFile = $files[i];
        $scope.file=latestFile

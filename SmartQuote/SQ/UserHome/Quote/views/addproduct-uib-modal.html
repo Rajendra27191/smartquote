@@ -201,7 +201,7 @@ animation: flash linear 2s infinite;
 <!-- <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small> -->
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
 </span>
-<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="text-muted">Note: supplier price should be greater than cost.</small>
+<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="invalid-control">Note: supplier price should be greater than cost.</small>
 </div>
 </div>
 <div class="row row-control" ng-if="customerQuote.competeQuote.toLowerCase()=='yes'">
@@ -237,7 +237,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="text-muted">
+<span class="invalid-control">
 <small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
@@ -293,7 +293,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 <div class="row row-control">
@@ -385,7 +385,7 @@ animation: flash linear 2s infinite;
 <!-- <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.min">* supplier price should be greater than cost.</small> -->
 <small ng-if="form.addProductIntoQuote.currentSupplierPrice.$error.pattern">* please enter valid supplier price.</small>
 </span>
-<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="text-muted">Note: supplier price should be greater than cost.</small>
+<small ng-if="addProduct.currentSupplierPrice<addProduct.avgcost && form.addProductIntoQuote.currentSupplierPrice.$dirty" class="invalid-control">Note: supplier price should be greater than cost.</small>
 </div>
 </div>
 
@@ -424,7 +424,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 
@@ -496,7 +496,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.required">* please enter price.</small>
 <small ng-if="form.addProductIntoQuote.quotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="text-muted"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
+<span class="invalid-control"><small ng-if="isSellingPriceInvalid && !form.addProductIntoQuote.quotePrice.$error.required && !form.addProductIntoQuote.quotePrice.$error.pattern">Note : Price should be greater than or equal to cost.</small></span>
 </div>
 </div>
 
@@ -677,7 +677,7 @@ animation: flash linear 2s infinite;
 <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.required">* please enter alt price.</small>
 <small ng-if="form.addProductIntoQuote.altProductQuotePrice.$error.pattern">* please enter valid price.</small>
 </span>
-<span class="text-muted">
+<span class="invalid-control">
 <small ng-if="isAltSellingPriceInvalid && !form.addProductIntoQuote.altProductQuotePrice.$error.required && !form.addProductIntoQuote.altProductQuotePrice.$error.pattern">Note : Alt price should be greater than or equal to alt cost.</small>
 </span> 
 
