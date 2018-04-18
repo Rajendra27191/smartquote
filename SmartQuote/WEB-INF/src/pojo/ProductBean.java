@@ -43,6 +43,7 @@ public class ProductBean {
 	// private double altDefaultPrice;
 	private double promoPrice;
 	private double lastBuyPrice;
+	private double convFactor;
 
 	private int priority;
 	private String lastBuyDate;
@@ -419,6 +420,14 @@ public class ProductBean {
 
 	public void setSupplier(String supplier) {
 		this.supplier = supplier;
+	}
+
+	public double getConvFactor() {
+		return convFactor;
+	}
+
+	public void setConvFactor(double convFactor) {
+		this.convFactor = convFactor;
 	}
 
 	
