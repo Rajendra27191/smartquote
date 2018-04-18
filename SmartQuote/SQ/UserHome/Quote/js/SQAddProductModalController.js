@@ -121,7 +121,7 @@
 	console.log($scope.form.addProductIntoQuote)	
 	console.log($scope.addProduct);	
 	if ($scope.form.addProductIntoQuote.$valid) {
-	if (parseFloat($scope.addProduct.quotePrice)>=parseFloat($scope.addProduct.avgcost)) {
+	// if (parseFloat($scope.addProduct.quotePrice)>=parseFloat($scope.addProduct.avgcost)) {
 	var dataFromModal=$scope.getDataFromModal(addNextProduct);
 	if(addNextProduct.toLowerCase()=="addnextproduct") {
 	if (quoteStatus=='create') {
@@ -140,12 +140,12 @@
 	}else if(addNextProduct.toLowerCase()=="saveclose"){
 	$uibModalInstance.close(dataFromModal);
 	}
-	}else{
-	console.log("Invalid product data");		
-	$('#quotePrice').focus();
-	$scope.isSellingPriceInvalid=true;	
-	// $scope.form.addProductIntoQuote.price0exGST.$invalid=true;
-	}
+	// }else{
+	// console.log("Invalid product data");		
+	// $('#quotePrice').focus();
+	// $scope.isSellingPriceInvalid=true;	
+	// // $scope.form.addProductIntoQuote.price0exGST.$invalid=true;
+	// }
 	}else{
 	$scope.form.addProductIntoQuote.submitted=true;
 	console.log();
@@ -224,10 +224,10 @@
 	console.log("sellingPriceChanged");
 	var price1=price;
 	var cost1=cost;
-	if (price1>=cost1){
-	$scope.addProduct.gpRequired=$scope.getPriceInPercentage(price1,cost1);
-	}else{
+	if (price1==0){
 	$scope.addProduct.gpRequired=0;
+	}else{
+	$scope.addProduct.gpRequired=$scope.getPriceInPercentage(price1,cost1);
 	}
 	};
 
@@ -688,10 +688,10 @@
 	// console.log("altSellingPriceChanged");
 	var price1=price;
 	var cost1=cost;
-	if (price1>=cost1){
-	$scope.addProduct.altProd.gpRequired=$scope.getPriceInPercentage(price1,cost1);
-	}else{
+	if (price1==0){
 	$scope.addProduct.altProd.gpRequired=0;
+	}else{
+	$scope.addProduct.altProd.gpRequired=$scope.getPriceInPercentage(price1,cost1);
 	}
 	};
 

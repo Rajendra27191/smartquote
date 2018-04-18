@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import pojo.KeyValuePairBean;
@@ -12,10 +13,13 @@ import pojo.ProductCodeUpdateBean;
 import pojo.ProductGroupBean;
 import connection.ConnectionFactory;
 
+
 public class ProductDao {
 	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement pstmt = null;
+	DecimalFormat df = new DecimalFormat("###.###");
+	
 
 	public ProductDao() {
 		conn = new ConnectionFactory().getConnection();
@@ -356,7 +360,14 @@ public class ProductDao {
 				pstmt.setDouble(12, productList.get(i).getPrice3exGST());
 				pstmt.setDouble(13, productList.get(i).getQtyBreak4());
 				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
-				pstmt.setDouble(15, productList.get(i).getLastBuyPrice());
+				double avgCost;
+				try {
+					avgCost= Double.parseDouble(df.format(productList.get(i).getLastBuyPrice() / productList.get(i).getConvFactor()));
+				} catch (Exception e) {
+					avgCost= productList.get(i).getLastBuyPrice();
+				}
+				pstmt.setDouble(15,avgCost);		
+				
 				pstmt.setString(16, productList.get(i).getTaxCode());
 				pstmt.setString(17, productList.get(i).getGroup());
 				String gstExempt = productList.get(i).getTaxCode();

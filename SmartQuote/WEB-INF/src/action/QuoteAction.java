@@ -176,7 +176,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				if(isProductCreated)
 					newProductCount++;
 				System.out.println("new product added ::::::::" + isProductCreated);
-				objDao1.commit();
+//				objDao1.commit();
 				objDao1.closeAll();
 				String projectPath = request.getSession().getServletContext().getRealPath("/");
 				CommonLoadAction.createProductFile(projectPath);
