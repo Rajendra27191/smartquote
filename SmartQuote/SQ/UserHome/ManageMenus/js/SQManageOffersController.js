@@ -137,8 +137,8 @@ $scope.onFileSelect = function($files){
 console.log("onFileSelect");
 if ($files.length>0) {
      for (var i = 0; i < $files.length; i++) {
-      //
-      if(($files[i].name.split('.').pop() == 'pdf'||$files[i].name.split('.').pop() == 'jpg'||$files[i].name.split('.').pop() == 'jpeg' ||$files[i].name.split('.').pop() == 'gif' || $files[i].name.split('.').pop() == 'png')){
+      var fileType = $files[i].name.split('.').pop().toLowerCase();  
+      if((fileType == 'pdf'||fileType == 'jpg'||fileType == 'jpeg' ||fileType == 'gif' || fileType == 'png')){
        console.log("valid file");
        latestFile = $files[i];
        $scope.file=latestFile
