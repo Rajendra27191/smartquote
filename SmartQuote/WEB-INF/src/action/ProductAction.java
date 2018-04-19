@@ -478,7 +478,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		String fileHeaderLine = br.readLine();
 		String[] headerArray = { "Item Code", "Group", "Item Description", "Description (2)", "Description (3)", "Unit", "Status",
 				"Condition", "Price 0 (ex GST)", "Qty Break 1", "Price 1 (ex GST)", "Qty Break 2", "Price 2 (ex GST)", "Qty Break 3",
-				"Price 3 (ex GST)", "Qty Break 4", "Price 4 (ex GST)", "Supplier", "Priority", "Last Buy Date", "Last Buy Price",
+				"Price 3 (ex GST)", "Qty Break 4", "Price 4 (ex GST)", "Supplier", "Priority", "Conv Factor","Last Buy Date", "Last Buy Price",
 				"Tax Code" };
 		String[] fileHeaderArray = fileHeaderLine.split(cvsSplitBy);
 
@@ -513,11 +513,13 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					objProductDao.truncateProductStaging("product_master_staging3");
 					objProductDao.truncateProductStaging("product_master_staging_final");
 
-					String query0 = "UPDATE product_master_staging set gst_flag='YES' where tax_code = 'E' ;";
-					String query1 = "DELETE from product_master_staging where item_status in('k','z') OR item_condition in('t','o','n');";
-					String query2 = "DELETE a.* FROM product_master a, product_master_staging b WHERE a.item_code = b.item_code;";
+					String query1 = "UPDATE product_master_staging set avg_cost = if(conv_factor!=0,last_buy_price/conv_factor,last_buy_price);";
+					String query2 = "UPDATE product_master_staging set gst_flag='YES' where tax_code = 'E' ;";
+					
+					String query3 = "DELETE from product_master_staging where item_status in('k','z') OR item_condition in('t','o','n');";
+					String query4 = "DELETE a.* FROM product_master a, product_master_staging b WHERE a.item_code = b.item_code;";
 
-					String query3 = "insert into product_master_staging_final "
+					String query5 = "insert into product_master_staging_final "
 							+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
 							+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
 							+ "a.qty_break3,a.price3exGST,a.qty_break4,a.price4exGST,a.avg_cost,a.tax_code,"
@@ -526,7 +528,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 							+ "(select item_code, min(priority) priority, count(*) from product_master_staging "
 							+ "group by item_code having count(*) = 1) b " + "where a.item_code = b.item_code and a.priority = b.priority;";
 
-					String query4 = "insert into product_master_staging2 "
+					String query6 = "insert into product_master_staging2 "
 							+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
 							+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
 							+ "a.qty_break3,a.price3exGST,a.qty_break4,a.price4exGST,a.avg_cost,a.tax_code,"
@@ -536,7 +538,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 							+ " group by item_code having count(*) > 1) b "
 							+ "where a.item_code = b.item_code and a.priority = b.priority;";
 
-					String query5 = "insert into product_master_staging_final "
+					String query7 = "insert into product_master_staging_final "
 							// + "select a.* from product_master_staging2 a,"
 							+ "select a.item_code,a.item_description,a.description2,a.description3,a.unit,"
 							+ "a.qty_break0,a.price0exGST,a.qty_break1,a.price1exGST,a.qty_break2,a.price2exGST,"
@@ -547,23 +549,23 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 							+ " group by item_code having count(*) = 1) b "
 							+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date";
 
-					String query6 = "insert into product_master_staging3 " + "select a.* from product_master_staging2 a, "
+					String query8 = "insert into product_master_staging3 " + "select a.* from product_master_staging2 a, "
 							+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging2 "
 							+ "group by item_code having count(*) > 1) b "
 							+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date;";
 
-					String query7 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+					String query9 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
 							+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging3 "
 							+ "group by item_code having count(*) > 1) b "
 							+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date "
 							+ "and a.item_code regexp a.supplier group by a.item_code;";
 
-					String query8 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+					String query10 = "insert into product_master_staging_final " + "select a.* from product_master_staging3 a, "
 							+ "(select item_code, max(last_buy_date) last_buy_date, count(*) from product_master_staging3 "
 							+ "group by item_code having count(*) = 1) b "
 							+ "where a.item_code = b.item_code and a.last_buy_date = b.last_buy_date;";
 
-					String query9 = "insert ignore into product_master_staging_final " + "select a.* from product_master_staging3 a, "
+					String query11 = "insert ignore into product_master_staging_final " + "select a.* from product_master_staging3 a, "
 							+ "(select item_code, min(avg_cost) avg_cost, max(last_buy_date) last_buy_date, count(*) "
 							+ "from product_master_staging3 " + "group by item_code having count(*) > 1) b "
 							+ "where a.item_code = b.item_code and a.avg_cost = b.avg_cost and a.last_buy_date = b.last_buy_date "
@@ -571,7 +573,6 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 							+ "and c.item_code regexp c.supplier and c.last_buy_date = b.last_buy_date and b.avg_cost = c.avg_cost) "
 							+ "group by item_code;";
 
-					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query0);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query1);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query2);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query3);
@@ -581,6 +582,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query7);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query8);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query9);
+					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query10);
+					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query11);
 				} else {
 					objEmptyResponse.setCode("error");
 					objEmptyResponse.setMessage(getText("product_file_invalid_date"));

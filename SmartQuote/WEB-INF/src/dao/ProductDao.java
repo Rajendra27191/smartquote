@@ -450,7 +450,7 @@ public class ProductDao {
 				+ "IGNORE 1 LINES "
 				+ "(item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,"
 				+ "price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,"
-				+ "supplier,priority,last_buy_date,avg_cost,tax_code);";
+				+ "supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code);";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);	
