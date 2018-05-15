@@ -10,7 +10,7 @@ public class PDFMasterReportBean {
 	
 	private String Contact;
 	private String email;
-	private int quoteId;
+	private String quoteId;
 	private String quoteDate;
 	private String proposalFor;
 	private String submittedBy;
@@ -28,11 +28,11 @@ public class PDFMasterReportBean {
 //	private ArrayList<CalculationBean> listCalculationBean=new ArrayList<CalculationBean>();
 	private ArrayList<PDFSubReportBean> arrayPdfSubReportBean = new ArrayList<PDFSubReportBean>();
 
-	public int getQuoteId() {
+	public String getQuoteId() {
 		return quoteId;
 	}
 
-	public void setQuoteId(int quoteId) {
+	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class QuoteBean {
-	private int quoteId;
+	private String quoteId;
 	private String custCode;
 	private String custName;
 	private String address;
@@ -118,11 +118,11 @@ public class QuoteBean {
 		this.pricesGstInclude = pricesGstInclude;
 	}
 
-	public int getQuoteId() {
+	public String getQuoteId() {
 		return quoteId;
 	}
 
-	public void setQuoteId(int quoteId) {
+	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
 
@@ -281,4 +281,7 @@ public class QuoteBean {
 	public void setCustLogo(String custLogo) {
 		this.custLogo = custLogo;
 	}
+
+	
+	
 }

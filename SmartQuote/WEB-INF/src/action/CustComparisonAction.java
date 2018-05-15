@@ -42,7 +42,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 	Map<String, Object> exportParameters;
 	ArrayList<String> list = new ArrayList<String>();
 	QuoteBean objQuoteBean;
-	int quoteId;
+	String quoteId;
 	HttpServletRequest request;
 	HttpServletResponse response;
 	private EmptyResponseBean objEmptyResponse = new EmptyResponseBean();
@@ -77,11 +77,11 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		this.arrayPDFSubReportBeanForPronto = arrayPDFSubReportBeanForPronto;
 	}
 
-	public int getQuoteId() {
+	public String getQuoteId() {
 		return quoteId;
 	}
 
-	public void setQuoteId(int quoteId) {
+	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
 
@@ -270,7 +270,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 			exportParameters = new HashMap<String, Object>();
 			String dirPath = request.getSession().getServletContext().getRealPath("/Reports/Proposal");
 			// System.out.println(dirPath);
-
+			System.out.println("QUOTE ID :"+quoteId);
 			CustComparisonDao objCustComparisonDao = new CustComparisonDao();
 			PDFMasterReportBean objPdfMasterReportBean = objCustComparisonDao.getQuoteInfo(quoteId);
 			ArrayList<PDFSubReportBean> productList = objPdfMasterReportBean.getArrayPdfSubReportBean();

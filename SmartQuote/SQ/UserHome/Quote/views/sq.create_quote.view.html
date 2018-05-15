@@ -204,7 +204,8 @@ padding: 3px 12px;
 			
 		</div>
 		<div class="col-md-8">
-		<input type = 'text' name="email" class = 'form-control' ng-model = 'customerQuote.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
+		<!-- /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/ -->
+		<input type = 'text' name="email" class = 'form-control' ng-model = 'customerQuote.email' ng-pattern="regex.email" ng-disabled="!isNewCustomer" ng-required="isNewCustomer">
 		<span ng-show="((form.addCustomerQuote.email.$dirty && form.addCustomerQuote.email.$invalid) || (form.addCustomerQuote.email.$invalid && form.addCustomerQuote.submitted))" class="invalid-control">
 			<small ng-show="form.addCustomerQuote.email.$error.required">*Please enter email id.</small>
 			<small ng-show="form.addCustomerQuote.email.$error.pattern">*Please enter valid email id.</small>

@@ -67,7 +67,7 @@
 					<div class="col-md-8">
 						<input type="text" class='form-control' name="userEmailId"
 							ng-model="manageUser.userEmailId"
-							ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/"
+							ng-pattern="regex.email"
 							ng-disabled="buttonstatus=='edit'" required> <span
 							ng-show="((form.userManageUser.userEmailId.$dirty && form.userManageUser.userEmailId.$invalid) || (form.userManageUser.userEmailId.$invalid && form.userManageUser.submitted))"
 							class="invalid-control"> <small
