@@ -195,7 +195,7 @@ td .form-control {
 			<td ng-if="duration.value=='30' || duration.value=='60' || duration.value=='90'"><center>{{::customer.march90Days}}</center></td>
 			<td>
 				<center>
-					<input type="text" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}" ng-pattern="emailRegex" ng-blur="changeEmailId(customer,customerForm.email.$invalid)">
+					<input type="text" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}" ng-pattern="regex.email" ng-blur="changeEmailId(customer,customerForm.email.$invalid)">
 					<!-- <span class="invalid-control" ng-show="customerForm.email.$error.required">req</span> -->
 					<span class="invalid-control" ng-show="customerForm.email.$error.pattern">invalid emailid</span>
 					
@@ -246,7 +246,7 @@ td .form-control {
 			<td><center>{{::customer.march90Days}}</center></td>
 			<td>
 				<center>
-					<input type="email" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}"  ng-blur="changeEmailId(customer,customerForm.email.$invalid)" ng-pattern="emailRegex">
+					<input type="email" class="form-control" name="email" ng-model="customer.email" required style="background: inherit;width:100%;" ng-required="customer.selected" ng-class="{red:customerForm.email.$invalid}"  ng-blur="changeEmailId(customer,customerForm.email.$invalid)" ng-pattern="regex.email">
 					<!-- ng-pattern="emailRegex" -->
 					<!-- <span class="invalid-control" ng-show="customerForm.email.$error.required">req</span> -->
 					<span class="invalid-control" ng-show="customerForm.email.$error.pattern">invalid email id</span>

@@ -48,7 +48,7 @@ public class CustComparisonDao {
 		}
 	}
 	
-	public ArrayList<PDFSubReportBean> getProductDetails(int quoteId) {
+	public ArrayList<PDFSubReportBean> getProductDetails(String quoteId) {
 		ArrayList<PDFSubReportBean> productList = new ArrayList<PDFSubReportBean>();
 		
 		PDFSubReportBean objPdfSubReportBean = null;
@@ -62,7 +62,7 @@ public class CustComparisonDao {
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
 				+ " qty_break4, price4exGST, tax_code,comment "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
-				+ " where quote_id=" + quoteId;
+				+ " where quote_id='" + quoteId+"'";
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();
@@ -102,7 +102,7 @@ public class CustComparisonDao {
 		return productList;
 	}
 
-	public PDFMasterReportBean getQuoteInfo(int quoteId) {
+	public PDFMasterReportBean getQuoteInfo(String quoteId) {
 		ArrayList<PDFSubReportBean> productList = new ArrayList<PDFSubReportBean>();
 		PDFMasterReportBean objPdfMasterReportBean=null;
 		DateFormat sdf =  new java.text.SimpleDateFormat("dd/MM/YYYY");
@@ -120,11 +120,12 @@ public class CustComparisonDao {
 				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 				+ "left outer join user_master usr on usr.user_id=cq.sales_person_id "
-				+ "WHERE quote_id=? "
+				+ "WHERE quote_id = '"+quoteId+"'"
 				+ "order by created_date desc;";
 		try {
 			pstmt = conn.prepareStatement(getQuoteDetail);
-			pstmt.setInt(1, quoteId);
+//			pstmt.setString(1, quoteId);
+			System.out.println(pstmt);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				objPdfMasterReportBean = new PDFMasterReportBean();
@@ -135,7 +136,7 @@ public class CustComparisonDao {
 				
 				
 				objPdfMasterReportBean.setEmail(rs.getString("email"));
-				objPdfMasterReportBean.setQuoteId(rs.getInt("quote_id"));
+				objPdfMasterReportBean.setQuoteId(rs.getString("quote_id"));
 				objPdfMasterReportBean.setGstInclusive(rs.getBoolean("prices_gst_include"));
 				objPdfMasterReportBean.setQuoteDate(sdf.format(rs.getDate("quoteDate")));
 				objPdfMasterReportBean.setProposalFor(WordUtils.capitalizeFully(rs.getString("proposalFor")));
@@ -143,11 +144,9 @@ public class CustComparisonDao {
 				objPdfMasterReportBean.setQuoteAttn(WordUtils.capitalizeFully(rs.getString("quoteAttn")));
 				objPdfMasterReportBean.setCustId(rs.getInt("customerId"));
 				
-				
 				//====
-				productList = getProductDetails(rs.getInt("quote_id"));
+				productList = getProductDetails(rs.getString("quote_id"));
      			objPdfMasterReportBean.setArrayPdfSubReportBean(productList);
-     			
 
 			}
 		} catch (Exception e) {

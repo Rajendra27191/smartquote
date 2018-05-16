@@ -18,7 +18,7 @@
 	</span>
 	<div class="inner-addon  right-addon">
 		
-    <input type="text" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" autocomplete="off" focus-me="true" required>
+    <input type="text" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="regex.email" autocomplete="off" focus-me="true" required>
 
     <span ng-show="((form.loginUser.emailid.$dirty && form.loginUser.emailid.$invalid) || (form.loginUser.emailid.$invalid && form.loginUser.submitted))" class="login-error">
     	<i ng-if="form.loginUser.emailid.$error.required" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
@@ -54,7 +54,7 @@
 	<small ng-bind="errormsg"></small>
 	</span>
     <div class="inner-addon  right-addon">
-    <input type="text" id="forgotEmail" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" autocomplete="off" focus-me="true" required>
+    <input type="text" id="forgotEmail" name="emailid" ng-model="user.userName" class="form-control" placeholder="User Email" ng-pattern="regex.email" autocomplete="off" focus-me="true" required>
      
      <span ng-show="((form.forgotPassword.emailid.$dirty && form.forgotPassword.emailid.$invalid) || (form.forgotPassword.emailid.$invalid && form.forgotPassword.submitted))" class="login-error">
     	<i ng-if="form.forgotPassword.emailid.$error.required" class="glyphicon glyphicon-exclamation-sign error-icon" tooltip-placement="top" uib-tooltip="Please enter email id." style="cursor:pointer;color: crimson;text-shadow: 1px 1px white;"></i>
