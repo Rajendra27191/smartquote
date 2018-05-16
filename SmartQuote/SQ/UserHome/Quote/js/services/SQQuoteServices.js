@@ -65,6 +65,7 @@ quote.CreateQuote = function (logoFile,objQuoteBean){
   fd.append('logoFile',logoFile);
   }
   fd.append('objQuoteBean',objQuoteBean);
+  console.log(fd)
   // // $http.post($rootScope.projectName+'/createQuote', fd, config)
    $http.post($rootScope.projectName+'/createQuote', fd,{
     withCredentials: true,

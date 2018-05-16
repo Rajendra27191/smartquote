@@ -107,12 +107,15 @@ public class CommonLoadAction extends ActionSupport {
 			}
 		}
 		String status = "INI";
-//		boolean isQuoteSaved = false;
+		boolean isQuoteSaved = false;
 		boolean istermSaved;
 		boolean isServiceSaved;
-		int quoteId = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
+		
+		String quoteId = objQuoteDao.getGenratedQuoteId();
+		objQuoteBean.setQuoteId(quoteId);
+		isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
 		System.out.println("SAVED Quote id : " + quoteId);
-		if (quoteId > 0) {
+		if (quoteId.length()>0) {
 			int quoteDetailId=0;
 			for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 			quoteDetailId = objQuoteDao.saveQuoteDetails(objQuoteBean.getProductList().get(i), quoteId);
@@ -124,6 +127,8 @@ public class CommonLoadAction extends ActionSupport {
 
 			isServiceSaved = objQuoteDao.saveServiceDetails(objQuoteBean.getServiceList(), quoteId);
 			System.out.println("SAVED service  : " + isServiceSaved);
+			
+			objQuoteDao.updateQuoteId();
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
 		}

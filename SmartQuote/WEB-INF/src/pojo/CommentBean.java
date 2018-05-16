@@ -1,18 +1,18 @@
 package pojo;
 
 public class CommentBean {
-	private int quoteId;
+	private String quoteId;
 	private int userID;
 	private String userName;
 	private String email;
 	private String comment;
 	private String date;
 
-	public int getQuoteId() {
+	public String getQuoteId() {
 		return quoteId;
 	}
 
-	public void setQuoteId(int quoteId) {
+	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
 

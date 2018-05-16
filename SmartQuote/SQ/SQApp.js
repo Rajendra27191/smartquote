@@ -10,7 +10,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    $rootScope.projectName="/";
 
      var currentURL=$window.location.href; 
-var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+//var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
      
 
    var isSmartProTest=currentURL.includes("smartprotest");
@@ -46,7 +46,10 @@ $rootScope.isSessionExpired=false;
 $rootScope.isUserSignIn=false;
 $rootScope.initDashBoard=true;
 // $rootScope.scrollpos=0;
-$rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
+$rootScope.regex={
+  'email':/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/
+};
+//$rootScope.emailRegex=/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
 
 // $state.transitionTo('home.start');
  $('#mySpinner').show();

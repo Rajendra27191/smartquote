@@ -188,7 +188,7 @@ width: 62.666667%;
 	<div class="row row-control">
 	<div class="col-md-4"><label class="sub-label">Email</label> <span class="asteric">*</span></div>
 	<div class="col-md-8">
-	<input type = 'text' name="email" class = 'form-control' ng-model = 'manageCustomer.email' ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" ng-disabled="buttonstatus=='edit'" required>
+	<input type = 'text' name="email" class = 'form-control' ng-model = 'manageCustomer.email' ng-pattern="regex.email" ng-disabled="buttonstatus=='edit'" required>
 	<span ng-show="((form.manageCustomer.email.$dirty && form.manageCustomer.email.$invalid) || (form.manageCustomer.email.$invalid && form.manageCustomer.submitted))" class="invalid-control">
 		<small ng-show="form.manageCustomer.email.$error.required">*Please enter email id.</small>
 		<small ng-show="form.manageCustomer.email.$error.pattern">*Please enter valid email id.</small>

@@ -33,7 +33,7 @@ public class ProductBean {
 	private String productGroupName;
 	private String gstFlag;
 	private double savings;
-	private int quoteId;
+	private String quoteId;
 	private int quoteDetailId;
 	private String isNewProduct;
 	private String isAlternative;
@@ -70,11 +70,11 @@ public class ProductBean {
 		this.lastBuyDate = lastBuyDate;
 	}
 
-	public int getQuoteId() {
+	public String getQuoteId() {
 		return quoteId;
 	}
 
-	public void setQuoteId(int quoteId) {
+	public void setQuoteId(String quoteId) {
 		this.quoteId = quoteId;
 	}
 
