@@ -86,20 +86,21 @@ public class SessionInterceptor implements Interceptor, ServletRequestAware {
 			System.out.println("status  = " + status);
 		}
 	
+//		if (!status) {
+//			CommonLoadAction cLoadAction = null;
+//			if (url.equals("/createQuote")) {
+//				System.out.println("Create Quote");
+//				cLoadAction = new CommonLoadAction();
+//				cLoadAction.createQuote(result);
+//			} else if (url.equals("/updateQuote")) {
+//				System.out.println("Update Quote");
+//				cLoadAction = new CommonLoadAction();
+//				cLoadAction.updateQuote(result);
+//			}
+//		}
 		if (!status) {
-			CommonLoadAction cLoadAction = null;
-			if (url.equals("/createQuote")) {
-				System.out.println("Create Quote");
-				cLoadAction = new CommonLoadAction();
-				cLoadAction.createQuote(result);
-			} else if (url.equals("/updateQuote")) {
-				System.out.println("Update Quote");
-				cLoadAction = new CommonLoadAction();
-				cLoadAction.updateQuote(result);
-			}
-		}
-		if (!status) {
-			if (url.equals("/login") || url.equals("/logout") || url.equals("/forgotPassword")) {
+			if (url.equals("/login") || url.equals("/logout") || url.equals("/forgotPassword")
+					 || url.equals("/createQuote") || url.equals("/updateQuote")) {
 				return invocation.invoke();
 			} else {
 				return "sessionTimeOut";
