@@ -62,7 +62,8 @@ public class CustComparisonDao {
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
 				+ " qty_break4, price4exGST, tax_code,comment "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
-				+ " where quote_id='" + quoteId+"'";
+				+ " where quote_id='" + quoteId+"'"
+				+ " order by quote_detail_id;";
 		try {
 			pstmt = conn.prepareStatement(getData);
 			rs = pstmt.executeQuery();

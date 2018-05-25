@@ -421,7 +421,9 @@ public class QuoteDao {
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
 				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment"
-				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code " + " where quote_id= ? ;";
+				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code " 
+				+ " where quote_id= ? "
+				+ " order by quote_detail_id;";
 		try {
 			pstmt = conn.prepareStatement(getData);
 			pstmt.setString(1, quoteId);
