@@ -119,8 +119,8 @@ color: #777;
 border: 2px solid #777;
 }
 .ini{
-color: #d9534f;
-border: 1px solid #d9534f;
+color: darkgray;
+border: 2px solid darkgray;
 }
 
 /* .fa-lg{ font-size: 1.4em;color: rgba(15, 70, 116, 0.84);} */
@@ -188,7 +188,7 @@ border: 1px solid #d9534f;
 					</td>
 					<td>
 						<div class="col-md-11 col-md-offset-1">
-						<span ng-class="{'won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
+						<span ng-class="{'ini': quote.status.toLowerCase()=='ini','won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
 						{{::quote.status}}
 						</span>
 						</div>

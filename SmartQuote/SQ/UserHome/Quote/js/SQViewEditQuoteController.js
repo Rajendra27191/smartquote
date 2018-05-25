@@ -803,7 +803,8 @@ url: $rootScope.projectName+"/getProductDetailsWithAlternatives?productCode="+pr
 }).success(function(data, status, header, config){
 console.log(data)
 if (data.code=="sessionTimeOut") {
-$scope.addProductFromModal("sessiontimeout");
+	$rootScope.$broadcast('QuoteSessionTimeOut', data);     
+// $scope.addProductFromModal("sessiontimeout");
 }else{
 $scope.assignAlternatives(data);
 }
