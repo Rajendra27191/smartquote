@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.ServletRequestAware;
 
 import pojo.CommentBean;
@@ -107,7 +108,17 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("userId : " + userId);
 		int supplierId = 0;// salesPersonId = 0;
 		int customerId = 0;
-
+		String status = "SAVED";
+		httpSession = ServletActionContext.getRequest().getSession();
+		if (userId.equals("null")) {
+			System.out.println("session is inactive.");
+			System.out.println(userId);
+			status = "INI";
+		}else{
+			System.out.println("session is active.");
+			System.out.println(userId);
+			status = "SAVED";
+		}
 		synchronized (httpSession) {
 			String quoteDetails = request.getParameter("objQuoteBean");
 			System.out.println("Quote Details: " + quoteDetails);
@@ -201,7 +212,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				altProductDao.commit();
 				altProductDao.closeAll();
 			}
-			String status = "SAVED";
+			
 			boolean isQuoteSaved = false;
 			boolean istermSaved = false;
 			boolean isServiceSaved = false;
@@ -211,7 +222,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 
 			quoteId = objQuoteDao.getGenratedQuoteId();
 			objQuoteBean.setQuoteId(quoteId);
-			isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean, userId, status);
+			isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean,String.valueOf(objQuoteBean.getUserId()), status);
 
 			System.out.print("quoteId  : " + quoteId);
 			if (isQuoteSaved) {
@@ -235,8 +246,13 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				objQuoteDao.closeAll();
 			}
 			if (quoteDetailId > 0 && isQuoteSaved) {
-				objQuoteCreateResponseBean.setCode("success");
-				objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
+				if (status.equalsIgnoreCase("ini")) {
+					return "sessionTimeOut";
+				} else {
+					objQuoteCreateResponseBean.setCode("success");
+					objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
+				}
+			
 				if (newProductCount > 0) {
 					objQuoteCreateResponseBean.setNewProductCreated(true);
 				}
@@ -383,6 +399,17 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		System.out.println("userId : " + userId);
+		String status = "UPDATED";
+		httpSession = ServletActionContext.getRequest().getSession();
+		if (userId.equals("null")) {
+			System.out.println("session is inactive.");
+			System.out.println(userId);
+			status = "INI";
+		}else{
+			System.out.println("session is active.");
+			System.out.println(userId);
+			status = "UPDATED";
+		}
 		String quoteDetails = request.getParameter("objQuoteBean");
 		QuoteDao objQuoteDao = new QuoteDao();
 		System.out.println("Quote Details: " + quoteDetails);
@@ -462,8 +489,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			altProductDao.commit();
 			altProductDao.closeAll();
 		}
-		objQuoteBean.setUserId(Integer.parseInt(userId));
-		String status = "UPDATED";
+//		objQuoteBean.setUserId(Integer.parseInt(userId));
+	
 		boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean, status);
 		// boolean isQuoteSaved = false;
 		boolean isTermsSaved = false;
@@ -503,8 +530,13 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			objQuoteDao.commit();
 			objQuoteDao.closeAll();
 			if (quoteDetailId > 0) {
-				objQuoteCreateResponseBean.setCode("success");
-				objQuoteCreateResponseBean.setMessage(getText("quote_updated"));
+				if (status.equalsIgnoreCase("ini")) {
+					return "sessionTimeOut";
+				} else {
+					objQuoteCreateResponseBean.setCode("success");
+					objQuoteCreateResponseBean.setMessage(getText("quote_updated"));
+				}
+				
 				if (newProductCount > 0) {
 					objQuoteCreateResponseBean.setNewProductCreated(true);
 				}
