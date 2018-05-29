@@ -513,6 +513,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					objProductDao.truncateProductStaging("product_master_staging3");
 					objProductDao.truncateProductStaging("product_master_staging_final");
 
+					String query0 = "UPDATE product_master_staging SET tax_code = TRIM(REPLACE(REPLACE(REPLACE(tax_code, '\n', ' '), '\r', ' '), '\t', ' '));";
 					String query1 = "UPDATE product_master_staging set avg_cost = if(conv_factor!=0,last_buy_price/conv_factor,last_buy_price);";
 					String query2 = "UPDATE product_master_staging set gst_flag='YES' where tax_code = 'E' ;";
 					
@@ -573,6 +574,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 							+ "and c.item_code regexp c.supplier and c.last_buy_date = b.last_buy_date and b.avg_cost = c.avg_cost) "
 							+ "group by item_code;";
 
+					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query0);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query1);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query2);
 					isAddedToStagingFinal = objProductDao.addToProductStagingFinal(query3);
