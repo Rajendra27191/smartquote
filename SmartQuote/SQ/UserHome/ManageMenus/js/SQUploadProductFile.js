@@ -4,6 +4,7 @@ console.log('initialise SQUploadProductFileController');
 var latestExcelFile;
 $scope.errorMessage=[];
 $scope.upload={};
+$scope.upload.type='products';
 $scope.records = [
         "",
         "",
@@ -11,11 +12,20 @@ $scope.records = [
         "",
         "",
     ]
+
 $scope.onExcelSelect = function($files)  {
 console.log("onExcelSelect");
   console.log($files);
+  var type="";
+  if ($scope.upload.type=='products') {
+    type = 'csv';
+  }else{
+    type = 'xlsx';
+  };
+  console.log(type)
      for (var i = 0; i < $files.length; i++) {
-      if(($files[i].name.split('.').pop() == 'xlsx')){
+      // if(($files[i].name.split('.').pop() == 'xlsx')){
+      if(($files[i].name.split('.').pop() == type)){
        console.log("valid file");
        latestExcelFile = $files[i];
       }
@@ -37,10 +47,11 @@ $scope.uploadProductsFile = function(){
   $scope.totalFileCount=0;
   $scope.currentFileCount=0;
   var productFile=latestExcelFile;
-  var uploadUrl=$rootScope.projectName+"/uploadProductByXlsx";
+  // var uploadUrl=$rootScope.projectName+"/uploadProductByXlsx";
+  var uploadUrl=$rootScope.projectName+"/uploadProductByCsv";
   var fd= new FormData();
   fd.append('productFile',productFile);
-  // $rootScope.showSpinner();
+  $rootScope.showSpinner();
   $timeout(function() {
   $scope.showProgressBar=true;
   },1000);
@@ -58,7 +69,7 @@ $scope.uploadProductsFile = function(){
         $rootScope.alertSuccess(data.message);
         document.getElementById('fileTypeExcelHost').value = '';
         latestExcelFile = {};
-        $scope.upload={};
+        // $scope.upload={};
         $scope.showProgressBar=false;
         $scope.progressCount=0;
         $scope.currentProgressCount=0;
@@ -71,13 +82,13 @@ $scope.uploadProductsFile = function(){
       console.log(data); 
        $rootScope.alertError(data.message);   
       latestExcelFile = {};
-      $scope.upload={};
+      // $scope.upload={};
       $scope.showProgressBar=false;
       $scope.progressCount=0;
       $scope.currentProgressCount=0; 
       document.getElementById('fileTypeExcelHost').value = '';      
     }
-    // $rootScope.hideSpinner();
+    $rootScope.hideSpinner();
     
 
   })
@@ -103,7 +114,7 @@ $scope.uploadProductsWithPromoPrice = function(){
       $rootScope.alertSuccess(data.message);
       document.getElementById('fileTypeExcelHost').value = '';
       latestExcelFile = {};
-      $scope.upload={};
+      // $scope.upload={};
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
     }else{
@@ -111,7 +122,7 @@ $scope.uploadProductsWithPromoPrice = function(){
       $rootScope.alertError(data.message);                             
       document.getElementById('fileTypeExcelHost').value = '';
       latestExcelFile = {};
-      $scope.upload={};
+      // $scope.upload={};
     }
     $rootScope.hideSpinner();
   })
@@ -137,7 +148,7 @@ var productFile=latestExcelFile;
       $rootScope.initAuotoComplete(true);
       document.getElementById('fileTypeExcelHost').value = '';
       latestExcelFile = {};
-      $scope.upload={};
+      // $scope.upload={};
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
     }else{
@@ -145,7 +156,7 @@ var productFile=latestExcelFile;
       $rootScope.alertError(data.message);                             
       document.getElementById('fileTypeExcelHost').value = '';
       latestExcelFile = {};
-      $scope.upload={};
+      // $scope.upload={};
     }
     $rootScope.hideSpinner();
   })
@@ -167,7 +178,7 @@ $scope.addExcelToServer = function(){
       }, 3000);
     }else {   
       console.log(latestExcelFile.size);
-      if ((latestExcelFile.size / 1024) < 15360) {//6144
+      if ((latestExcelFile.size / 1024) < 30720) {//6144 //15360
       console.log(latestExcelFile.size);
       console.log($scope.upload);
         if ($scope.upload!=''&&$scope.upload!=undefined&&$scope.upload!=null) {
@@ -190,7 +201,7 @@ $scope.addExcelToServer = function(){
           }
         }
       }else{
-          $rootScope.alertError("File size must ne less than 15MB"); 
+          $rootScope.alertError("File size must ne less than 30MB"); 
       }    
       
 
@@ -244,7 +255,7 @@ $scope.getStyle = function(){
   'font-weight': 'bold',
   }
   };
-$interval($scope.checkUploadProgress, 5000);
+// $interval($scope.checkUploadProgress, 5000);
 
 // $scope.count=0;
 // $scope.checkProgress=function(){
