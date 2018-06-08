@@ -225,15 +225,17 @@ public class CommonLoadAction extends ActionSupport {
 				e.printStackTrace();
 			}
 		}
+		ProductDao productDao = new ProductDao();
 		try {
 			FileWriter fw = new FileWriter(file);
-			ProductDao productDao = new ProductDao();
 			ArrayList<KeyValuePairBean> obj = productDao.getProductList("");
 			fw.write(new Gson().toJson(obj));
 			fw.close();
 			System.out.println("File created");
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally{
+			productDao.closeAll();
 		}
 	}
 	

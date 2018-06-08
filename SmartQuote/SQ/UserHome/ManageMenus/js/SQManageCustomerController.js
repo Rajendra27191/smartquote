@@ -251,6 +251,14 @@ $scope.updateCustomer = function(){
 }
 /*===============CREATE CUSTOMER==================*/
 $scope.jsonToSaveCustomer=function(){
+	var totalStaf;
+	if($scope.manageCustomer.totalStaff!="null")
+	{
+		totalStaf = $scope.manageCustomer.totalStaff;
+	}else{
+		totalStaf = 0;
+	}
+	
 	var customer={
 		"customerCode":$scope.manageCustomer.customerCode,
 		"customerName":$scope.manageCustomer.customerName,
@@ -263,13 +271,14 @@ $scope.jsonToSaveCustomer=function(){
 		"postalCode":$scope.manageCustomer.postalCode,
 		"fax":$scope.manageCustomer.fax,
 		"email":$scope.manageCustomer.email,
-		"totalStaff":$scope.manageCustomer.totalStaff,
+		"totalStaff":totalStaf,
 		"avgPurchase":$scope.manageCustomer.avgPurchase,
 		"industryType":$scope.manageCustomer.industryType
 	};
 	if ($scope.buttonstatus=='edit') {
 		customer.custId=$scope.manageCustomer.custId;
 	};
+// console.log(customer)	
 return JSON.stringify(customer);
 };
 $scope.saveCustomer=function(){
