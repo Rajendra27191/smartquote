@@ -84,7 +84,7 @@ $rootScope.userMenu=angular.copy($scope.userMenuList);
 
 $scope.resetForm=function(){
 // console.log("resetForm")
-// $scope.user={};
+$scope.user={};
 $scope.buttonstatus='add';
 $scope.form.userManageUserGroup.submitted=false;
 $scope.form.userManageUserGroup.$setPristine();
@@ -297,8 +297,10 @@ if(data){
   if(data.code.toUpperCase()=='SUCCESS'){  
 	$rootScope.alertSuccess("Successfully added user group");
 	$scope.isUserGroupSelected=false;
+	$scope.init();
 	$scope.resetView();
 	$scope.resetForm();
+	$rootScope.moveToTop();
 	 
 }else{
 	$rootScope.alertError(data.message);
@@ -324,6 +326,7 @@ if(data){
 	$rootScope.alertSuccess("Successfully updated user group");
 	$scope.resetView();
 	$scope.resetForm();
+	$rootScope.moveToTop();
 }else{
 	$rootScope.alertError(data.message);
 }
@@ -366,8 +369,10 @@ console.log(data)	;
 if(data){
   if(data.code.toUpperCase()=='SUCCESS'){   
 	$rootScope.alertSuccess("Successfully deleted user group");
+	$scope.init();
 	$scope.resetView();
 	$scope.resetForm();
+	$rootScope.moveToTop();
 	
 }else{
 	$rootScope.alertError(data.message);

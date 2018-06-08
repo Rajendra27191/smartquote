@@ -478,8 +478,8 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		String fileHeaderLine = br.readLine();
 		String[] headerArray = { "Item Code", "Group", "Item Description", "Description (2)", "Description (3)", "Unit", "Status",
 				"Condition", "Price 0 (ex GST)", "Qty Break 1", "Price 1 (ex GST)", "Qty Break 2", "Price 2 (ex GST)", "Qty Break 3",
-				"Price 3 (ex GST)", "Qty Break 4", "Price 4 (ex GST)", "Supplier", "Priority", "Conv Factor","Last Buy Date", "Last Buy Price",
-				"Tax Code" };
+				"Price 3 (ex GST)", "Qty Break 4", "Price 4 (ex GST)", "Supplier", "Priority", "Conv Factor", "Last Buy Date",
+				"Last Buy Price", "Tax Code" };
 		String[] fileHeaderArray = fileHeaderLine.split(cvsSplitBy);
 
 		if (Arrays.equals(headerArray, fileHeaderArray))
@@ -507,7 +507,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				objProductDao.truncateProductStaging("product_master_staging");
 				isAddedToStaging = objProductDao.loadFileToStaging(loadedFileSrc);
 				int dateCount = objProductDao.validateStaging();
-								
+
 				if (isAddedToStaging && dateCount > 0) {
 					objProductDao.truncateProductStaging("product_master_staging2");
 					objProductDao.truncateProductStaging("product_master_staging3");
@@ -516,7 +516,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 					String query0 = "UPDATE product_master_staging SET tax_code = TRIM(REPLACE(REPLACE(REPLACE(tax_code, '\n', ' '), '\r', ' '), '\t', ' '));";
 					String query1 = "UPDATE product_master_staging set avg_cost = if(conv_factor!=0,last_buy_price/conv_factor,last_buy_price);";
 					String query2 = "UPDATE product_master_staging set gst_flag='YES' where tax_code = 'E' ;";
-					
+
 					String query3 = "DELETE from product_master_staging where item_status in('k','z') OR item_condition in('t','o','n');";
 					String query4 = "DELETE a.* FROM product_master a, product_master_staging b WHERE a.item_code = b.item_code;";
 
@@ -651,7 +651,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 		GlsFileReader objFileReader = new test.FileReader();
-
+		ProductDao objProductDao = new ProductDao();
 		try {
 			System.out.println("Product File With Promo Price: " + productFile);
 			// String filename = "dataFile.xlsx";
@@ -661,12 +661,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			System.out.println("File Content: " + fileString);
 
 			ArrayList<ProductBean> productList = null;
-			ProductDao objProductDao = null;
+
 			productList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductBean>>() {
 			}.getType());
 
 			System.out.println("Total Products: " + productList.size());
-			objProductDao = new ProductDao();
+
 			boolean isFileUploaded = false;
 			isFileUploaded = objProductDao.uploadProductPromoPrice(productList);
 			if (isFileUploaded) {
@@ -676,6 +676,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				objEmptyResponse.setCode("error");
 				objEmptyResponse.setMessage(getText("promo_price_not_updated"));
 			}
+
 		} catch (FileNotFoundException e) {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("product_file_not_found"));
@@ -696,8 +697,10 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			objProductDao.closeAll();
+			System.out.println("Done");
 		}
-		System.out.println("Done");
 
 		return SUCCESS;
 	};
@@ -707,6 +710,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 		GlsFileReader objFileReader = new test.FileReader();
+		ProductDao objProductDao = new ProductDao();
 		try {
 			System.out.println("Product File With Promo Price: " + productFile);
 			// String filename = "dataFile.xlsx";
@@ -716,12 +720,12 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			JSONArray fileString = objFileReader.readFile(productFile + "");
 			System.out.println("File Content: " + fileString);
 			ArrayList<ProductCodeUpdateBean> productCodeList = null;
-			ProductDao objProductDao = null;
+
 			JSONObject jsonObject = fileString.getJSONObject(0);
 			if (jsonObject.has("newItemCode") && jsonObject.has("oldItemCode")) {
 				productCodeList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductCodeUpdateBean>>() {
 				}.getType());
-				objProductDao = new ProductDao();
+
 				boolean isFileUploaded = false;
 				isFileUploaded = objProductDao.updateProductCode(productCodeList);
 				if (isFileUploaded) {
@@ -758,8 +762,11 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			objProductDao.closeAll();
+			System.out.println("Done");
 		}
-		System.out.println("Done");
+
 		return SUCCESS;
 	}
 
