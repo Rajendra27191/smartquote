@@ -1,6 +1,6 @@
 <!-- SQ Test -->
 <!-- <Context path="/smartprotest" reloadable="true"> -->
-<!--  <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource" -->
+<!--  <Resource name="jdbc/sm" global="jdbc/sm" auth="Container" type="javax.sql.DataSource" -->
 <!-- 	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12" -->
 <!-- 	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true" -->
 <!--     removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver" -->
@@ -9,9 +9,11 @@
 
 <!--SQ Production  -->
 <Context path="/smartpro" reloadable="true">
- <Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource"
-	maxActive="100" maxIdle="30" maxWait="10000" username="janta" password="eclipse12"
-	validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" removeAbandoned="true"
-    removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
-	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/>
+<Resource name="jdbc/sm" auth="Container" type="javax.sql.DataSource" maxActive="100" maxIdle="30" maxWait="10000" 
+username="janta" password="eclipse12" validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" 
+removeAbandoned="true" removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
+url="jdbc:mysql://smrtquote.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquoteprod?autoReconnect=true"/>
 </Context> 
+<!-- 	url="jdbc:mysql://glsproj.c0hsgbbajbtv.ap-southeast-1.rds.amazonaws.com:3306/smartquotedev?autoReconnect=true"/> -->
+
+
