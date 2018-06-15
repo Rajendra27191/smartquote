@@ -266,7 +266,7 @@ width: 62.666667%;
     	<button ng-click="cancelAddCustomer()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
     	</div>
 		<div class="col-md-4" style="width: 31.333333%;">
-		<button id="create" ng-click="saveCustomer()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
+		<button id="create" ng-disabled="disableSave" ng-click="saveCustomer()" class="btn btn-block button-ok"><i class="fa fa-floppy-o" aria-hidden="true"></i> <span ng-if="buttonstatus=='add'">Save</span><span ng-if="buttonstatus=='edit'">Update</span></button>	
 		</div>
 	</div>
 

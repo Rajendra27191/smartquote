@@ -183,7 +183,7 @@ public class QuoteDao {
 			pstmt.setString(2, quoteBean.getCustCode());
 			pstmt.setString(3, quoteBean.getQuoteAttn());
 			if (quoteBean.getPricesGstInclude())
-				pstmt.setString(3, "Yes");
+				pstmt.setString(4, "Yes");
 			else
 				pstmt.setString(4, "No");
 			pstmt.setString(5, quoteBean.getNotes());
