@@ -12,6 +12,7 @@ $scope.isCollapsed = true;
 $scope.customerList=[];
 $scope.customerListView=[];
 $scope.iscustomerCodeSelected=false;
+$scope.disableSave=false;
 
 
 $scope.collapseDiv=function(){
@@ -298,16 +299,19 @@ if($scope.form.manageCustomer.$valid){
 		// SQManageMenuServices.CreateCustomer($scope.jsonToSaveCustomer());
 		console.log($scope.jsonToSaveCustomer());
 		$scope.createCustomer();
+		$scope.disableSave=true;
 	}	
 	}else if($scope.buttonstatus=='edit'){
 		$rootScope.showSpinner();
 		console.log($scope.jsonToSaveCustomer());
 		$scope.updateCustomer();
+		$scope.disableSave=true;
 		// SQManageMenuServices.UpdateCustomer($scope.jsonToSaveCustomer());
 	}
 	// console.log($scope.jsonToSaveCustomer());	
 }else{
 	$scope.form.manageCustomer.submitted=true;
+	$scope.disableSave=false;
 }
 };
 
@@ -342,6 +346,7 @@ if (data.code) {
 		$scope.resetForm();
 	}
 $rootScope.hideSpinner();
+$scope.disableSave=false;
 }
 }
 };
@@ -381,6 +386,7 @@ if (data.code) {
 		$rootScope.alertError(data.message);
 	}
 $rootScope.hideSpinner();
+$scope.disableSave=false;
 }
 }
 };
