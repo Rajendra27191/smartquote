@@ -79,6 +79,10 @@ angular.module('sq.SmartQuoteDesktop')
       controller:'SQViewEditQuoteController',
       templateUrl: 'SQ/UserHome/Quote/views/sq.view_edit_quote.view.html',
     })
+    .state('autosavequote', {
+      controller:'SQAutoSaveQuoteConroller',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.autosave_quote.view.html',
+    })
     .state('paymentreminder', {
       // url:'/smartquote',
       abstract: true,

@@ -10,7 +10,7 @@ var app= angular.module('sq.SmartQuoteDesktop',['ui.router','ui.bootstrap','ngSa
    $rootScope.projectName="/";
 
      var currentURL=$window.location.href; 
- //var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+ var currentURL="http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
      
 
    var isSmartProTest=currentURL.includes("smartprotest");
@@ -413,6 +413,53 @@ var cleanupEventSessionTimeOut = $scope.$on("SessionTimeOut", function(event, me
 });
 
 /*===============SESSION TIME OUT ENDS=====================*/
+/*===============Get Updated UserData=====================*/
+$scope.setArray=function(existingArray,newArray){
+  existingArray.length = 0;
+  existingArray.push.apply(existingArray, newArray);
+  // existingArray.splice(0,existingArray.length)
+  // existingArray=JSON.parse(JSON.stringify(newArray));
+};
+$scope.setUpdatedUserData=function(data){
+  console.log("setUpdatedUserData");
+  $scope.setArray($rootScope.userList,data.userList);
+  $scope.setArray($rootScope.customerList,data.customerList);
+  $scope.setArray($rootScope.supplierList,data.supplierList);
+  $scope.setArray($rootScope.serviceList,data.serviceList);
+  $scope.setArray($rootScope.termConditionList,data.termConditionList);
+  $scope.setArray($rootScope.offerList,data.offerList);
+};
+$rootScope.getUpdatedUserData=function(){
+ $rootScope.showSpinner();
+ SQHomeServices.getUpdatedUserData();
+};
+$scope.handleGetUpdatedUserDataDoneResponse=function(data){
+  if(data){
+    if(data.code){
+    if(data.code.toUpperCase()=='SUCCESS'){ 
+     $scope.setUpdatedUserData(data);
+    }
+    else if (data.code.toUpperCase()=='ERROR'){
+   
+    }
+    $rootScope.hideSpinner();
+  }
+}
+};
+
+var cleanupEventGetUpdatedUserDataDone = $scope.$on("GetUpdatedUserDataDone", function(event, message){
+  console.log("cleanupEventGetUpdatedUserDataDone");
+  console.log(message);
+  $scope.handleGetUpdatedUserDataDoneResponse(message);      
+});
+
+var cleanupEventGetUpdatedUserDataNotDone = $scope.$on("GetUpdatedUserDataNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
+
+/*===============Get Updated UserData=====================*/
 $rootScope.moveToTop=function(){
   console.log("moveToTop")
    $window.pageYOffset;  
@@ -488,18 +535,6 @@ $interval($scope.checkQuoteActivated, 1000);
 
 
 
-
-// $(window).scroll(function() {
-//   if ($(document).scrollTop() > 50) {
-//     $('nav').addClass('shrink');
-//   } else {
-//     $('nav').removeClass('shrink');
-//   }
-// });
-  // $(window).scroll(function (event) {
-  //   var scroll = $(window).scrollTop();
-  //   $rootScope.scrollpos=scroll;
-  // });
 ///-------------------------Confirmation Window-----------------
 
 $rootScope.getFormattedDate=function(date){

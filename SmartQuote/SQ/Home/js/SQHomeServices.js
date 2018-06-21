@@ -13,7 +13,8 @@ angular.module('sq.SmartQuoteDesktop')
         userLoginAPI:$resource($rootScope.projectName+'/login?email=:email&password=:password', {}, {userLoginMethod :{method: 'GET'},params:{email:'@email',password:'@password'}}),
         userLogoutAPI:$resource($rootScope.projectName+'/logout', {}, {userLogoutMethod :{method: 'POST'}}),
         userForgotPasswordAPI:$resource($rootScope.projectName+'/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),
-        checkSessionActiveAPI:$resource($rootScope.projectName+'/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}})
+        checkSessionActiveAPI:$resource($rootScope.projectName+'/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}}),
+        getUpdatedDataAPI:$resource($rootScope.projectName+'/getUpdatedData', {}, {getUpdatedDataMethod :{method: 'POST'}})
       };
     var home = {};
     // console.log($rootScope.projectName)
@@ -100,6 +101,21 @@ angular.module('sq.SmartQuoteDesktop')
           console.log(error);
           // $rootScope.alertServerError("Server error");
           $rootScope.SQNotify("Server Error", 'error')
+        });
+    };
+
+    home.getUpdatedUserData = function () {
+       HomeServices.getUpdatedDataAPI.getUpdatedDataMethod(function (success) {
+        // console.log("Login Success");
+        // console.log(success);
+        if (success.code=="sessionTimeOut") {
+        $rootScope.$broadcast('SessionTimeOut', success);   
+        }else{
+        $rootScope.$broadcast('GetUpdatedUserDataDone', success); 
+        }
+        }, function (error) {
+          // console.log(error);
+          $rootScope.$broadcast('GetUpdatedUserDataNotDone', error);
         });
     };
     

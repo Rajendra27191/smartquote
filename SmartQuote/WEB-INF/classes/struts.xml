@@ -48,6 +48,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getUpdatedData" class="action.LoginAction"
+			method="getUpdatedData">
+			<result name="success" type="json">
+				<param name="root">objLoginResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="getUserGroups" class="action.UserGroupAction"
 			method="getUserGroups">
@@ -345,6 +352,13 @@
 
 
 		<action name="createQuote" class="action.QuoteAction" method="createQuote">
+			<result name="success" type="json">
+				<param name="root">objQuoteCreateResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="generateProposal" class="action.QuoteAction" method="generateProposal">
 			<result name="success" type="json">
 				<param name="root">objQuoteCreateResponseBean</param>
 				<param name="ignoreHierarchy">false</param>

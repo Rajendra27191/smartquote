@@ -115,6 +115,30 @@ public class QuoteDao {
 		}
 		return supplierId;
 	}
+	
+	public KeyValuePairBean getSupplierIfExist(String customerCode) {
+		KeyValuePairBean objSupplier = new KeyValuePairBean();
+		String getUserGroups = "SELECT current_supplier_id,current_supplier_name FROM current_supplier "
+				+ "WHERE current_supplier_name = ?;";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			pstmt.setString(1, customerCode);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				objSupplier.setKey(rs.getInt("current_supplier_id"));
+				objSupplier.setCode(rs.getString("current_supplier_name"));
+				objSupplier.setValue(rs.getString("current_supplier_name"));
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return objSupplier;
+	}
 
 	@SuppressWarnings("static-access")
 	public int saveSalesPerson(String salesPerson) {

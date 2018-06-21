@@ -1,0 +1,442 @@
+<style type="text/css" media="screen">
+    .borderBox {
+        border: 1px solid #EEE8E8;
+        padding: 0px;
+        border-radius: 6px;
+    }
+
+    .borderTable {
+        border: 1px solid #EEE8E8;
+        ;
+        border-radius: 0px;
+    }
+
+    .main-label {
+        margin: 3% 0% 1% 0%;
+    }
+
+    .form-control[disabled],
+    .form-control[readonly],
+    fieldset[disabled] .form-control {
+        /* background-color: #f3f3f3; */
+        /* opacity: 1; */
+        background: rgba(243, 243, 243, 0.5);
+    }
+
+    textarea {
+        resize: none;
+    }
+
+    [class|=col-md-4] {
+        padding-right: 0px;
+    }
+
+    .col-panel {
+        padding: 0px;
+    }
+
+    fieldset {
+        border: 1px solid gray;
+        border-radius: 0px;
+        /*border-radius: 5px; */
+        padding: 15px;
+    }
+
+    legend {
+        display: block;
+        width: auto;
+        border-bottom: none;
+        margin-bottom: 0px;
+        font-size: 15px;
+    }
+
+    .table>thead>tr>th {
+        padding: 5px;
+    }
+
+    .para {
+        margin: 0px;
+    }
+
+    .label-default {
+        font-size: 14px;
+
+    }
+
+    .alt-product {
+        background: rgba(245, 9, 4, 0.03);
+    }
+
+    .price {
+        text-align: right;
+    }
+
+    .t_head {
+        text-align: left;
+        font-size: 12px;
+        color: #333;
+        font-weight: bold;
+        padding: 5px;
+        cursor: pointer;
+        ;
+    }
+
+    .t_data {
+        text-align: left;
+        font-size: 12px;
+        color: #333;
+        padding: 5px;
+    }
+
+    #productTable .col-md-12 {
+        padding: 0px;
+    }
+
+    .panel-heading {
+        padding: 5px 10px;
+        height: 30px;
+    }
+
+    .col-md-8 {
+        padding-left: 0px;
+    }
+
+    .input-group-btn .btn {
+        padding: 3px 12px;
+    }
+
+    .panel-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 15px;
+        color: #6f6767;
+    }
+
+    #offerPanel .panel-body {
+        padding: 10px;
+        min-height: 110px;
+        max-height: 110px;
+        overflow-y: scroll
+    }
+
+    .checkbox,
+    .radio {
+        margin-top: 0px;
+    }
+
+    .switch {
+        top: 0px;
+    }
+
+    .panel {
+        margin-bottom: 1%;
+    }
+
+    .col-md-8 .dropdown-menu {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+</style>
+
+<div class="container" style="padding-right: 25px;padding-left: 25px;">
+    <div class="row">
+        <div class="col-md-12">
+            <center>
+                <label class="main-label">Autosave Proposal</label>
+            </center>
+        </div>
+    </div>
+    <div class="row" ng-if="isProposalGenerated">
+        <div class="col-md-12" style="margin-bottom: 5px;">
+            <div class="col-md-10" style="padding:0px;"></div>
+            <div class="col-md-2" style="padding:0px;">
+                <span style="font-weight: 600;">
+                    <p class="sub-label">Proposal Id : {{proposal.id}}</p>
+                    <!-- <p class="sub-label">Created Date : {{proposal.date}}</p> -->
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form name="form.addCustomerQuote" novalidate>
+                <div id="customerInformation" class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
+                    <div class="panel-heading">
+                        <div class="col-md-11">
+                              <label class="sub-label" style="text-transform: uppercase;">Customer Information</label>
+                        </div>
+                        <!-- <div class="col-md-1">
+                            <span style="font-weight: 600;float:right;">
+                                <a href="#" ng-click="editCustomerInfoClicked()" tooltip-placement="top" uib-tooltip="Click to edit" style="text-decoration: none;">
+                                <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+                                </a>
+                            </span>
+                        </div> -->
+                    </div>
+                    <div class="panel-body" >
+                        <div class="row row-control">
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-4">
+                                    <label class="sub-label">Customer Code</label>
+                                    <span class="asteric">*</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type='text' name="customerCode" id="customerCode" class='form-control' ng-model='customerQuote.customerCode' focus-me="true" ng-disabled="isProposalGenerated" uib-typeahead='customerList as customerList.value for customerList in customerList | filter:$viewValue'
+                                        typeahead-on-select="customerCodeChanged(customerQuote.customerCode);" autocomplete="off"
+                                        placeholder="Select Customer" ng-change="customerCodeChanged(customerQuote.customerCode)"
+                                        required>
+                                    <span ng-show="((form.addCustomerQuote.customerCode.$dirty && form.addCustomerQuote.customerCode.$invalid) || (form.addCustomerQuote.customerCode.$invalid && form.addCustomerQuote.submitted))"
+                                        class="invalid-control">
+                                        <small>*Please enter customer code.</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-4">
+                                    <label class="sub-label">Customer Name</label>
+                                    <span class="asteric">*</span>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type='text' name="customerName" class='form-control' ng-model='customerQuote.customerName' ng-disabled="!isNewCustomer || isProposalGenerated" ng-required="isNewCustomer">
+                                    <span ng-show="((form.addCustomerQuote.customerName.$dirty && form.addCustomerQuote.customerName.$invalid) || (form.addCustomerQuote.customerName.$invalid && form.addCustomerQuote.submitted))"
+                                        class="invalid-control">
+                                        <small>*Please enter customer name.</small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row row-control">
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-4">
+                                    <label class="sub-label">Address</label>
+                                </div>
+                                <div class="col-md-8">
+                                    <textarea name="address" class="form-control" style="padding: 11px 5px;" rows="2" ng-model='customerQuote.address' ng-disabled="!isNewCustomer ||isProposalGenerated"></textarea>
+                                    <span ng-show="((form.addCustomerQuote.address.$dirty && form.addCustomerQuote.address.$invalid) || (form.addCustomerQuote.address.$invalid && form.addCustomerQuote.submitted))"
+                                        class="invalid-control">
+                                        <small>*Please enter customer address.</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-12 row-control" style="padding:0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Phone No</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type='text' name="phoneNo" class='form-control' ng-model='customerQuote.phone' ng-pattern="/^[0-9]{5,12}$/" ng-disabled="!isNewCustomer || isProposalGenerated">
+                                        <span ng-show="((form.addCustomerQuote.phoneNo.$dirty && form.addCustomerQuote.phoneNo.$invalid) || (form.addCustomerQuote.phoneNo.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-show="form.addCustomerQuote.phoneNo.$error.pattern">*Please enter valid phone no.</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12" style="padding:0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Email</label>
+                                        <span class="asteric">*</span>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                        <!-- /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/ -->
+                                        <input type='text' name="email" class='form-control' ng-model='customerQuote.email' ng-pattern="regex.email" ng-disabled="!isNewCustomer ||isProposalGenerated" ng-required="isNewCustomer">
+                                        <span ng-show="((form.addCustomerQuote.email.$dirty && form.addCustomerQuote.email.$invalid) || (form.addCustomerQuote.email.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-show="form.addCustomerQuote.email.$error.required">*Please enter email id.</small>
+                                            <small ng-show="form.addCustomerQuote.email.$error.pattern">*Please enter valid email id.</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="row row-control">
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Fax</label>
+                                        <span class="asteric"></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type='text' name="faxNo" class='form-control' ng-model='customerQuote.fax' ng-disabled="!isNewCustomer || isProposalGenerated">
+                                        <span ng-show="((form.addCustomerQuote.faxNo.$dirty && form.addCustomerQuote.faxNo.$invalid) || (form.addCustomerQuote.faxNo.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small>*Please enter fax no.</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Current Supplier Name</label>
+                                        <span class="asteric"></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <!-- {{customerQuote.currentSupplierName}} -->
+                                        <input type='text' id="currentSupplierName" name="currentSupplierName" class='form-control' ng-model='customerQuote.currentSupplierName'
+                                            uib-typeahead='currentSupplierList as currentSupplierList.value for currentSupplierList in currentSupplierList | filter:$viewValue'
+                                            typeahead-on-select="currentSupplierNameChanged();checkIfSupplierExist()" ng-required="isCurrentSupplierNameRequired" ng-change="currentSupplierNameChanged();" ng-blur="checkIfSupplierExist()" autocomplete="off" typeahead-min-length="0" ng-disabled="isProposalGenerated">
+                                        <!--     -->
+                                        <span ng-show="((form.addCustomerQuote.currentSupplierName.$dirty && form.addCustomerQuote.currentSupplierName.$invalid) || (form.addCustomerQuote.currentSupplierName.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-if="form.addCustomerQuote.currentSupplierName.$error.required">*Please enter supplier name.</small>
+                                            <small ng-if="form.addCustomerQuote.currentSupplierName.$invalid && !form.addCustomerQuote.currentSupplierName.$error.required">*Supplier already exist please select from list.</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Sales Person</label>
+                                        <span class="asteric"></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select type="text" name="salesPerson" class="form-control" ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList | filter:shouldShow" ng-disabled="disableSalesPersonSelect || isProposalGenerated" required>
+                                            <option value="">Select Sales Person</option>
+                                        </select>
+                                        <span ng-show="((form.addCustomerQuote.salesPerson.$dirty && form.addCustomerQuote.salesPerson.$invalid) || (form.addCustomerQuote.salesPerson.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-if="form.addCustomerQuote.salesPerson.$error.required">*Please select sales person.</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- ng-if="isNewCustomer" -->
+                                <!-- {{filepreview}} -->
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Upload Cust Logo</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-12" style="padding:0px;">
+                                            <script type="text/ng-template" id="myPopoverTemplate.html">
+                                            <div class="form-group" style="width:200px;">
+                                            <center>	
+                                            <img ng-src="{{filepreview}}" ng-if="!isFileNull" class="img-responsive" alt-SRC src="Images/no-image.png" />
+                                            <img ng-src="Images/no-image.png" ng-if="isFileNull" class="img-responsive"/>	
+                                            </center>
+                                            </div>	
+                                            </script>
+
+                                            <div class="input-group" ng-if="isNewCustomer">
+                                                <input type='file' class='form-control' fileinput="file" ng-file-select="onFileSelect($files)" id='fileTypeLogo' name="customerLogo" filepreview="filepreview"
+                                                ng-disabled="isProposalGenerated">
+                                                <span class="input-group-addon btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="'mouseenter'">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                            <span class="btn btn-default" id="sizing-addon2" uib-popover-template="dynamicPopover.templateUrl" popover-trigger="'mouseenter'"
+                                                ng-if="!isNewCustomer" style="padding: 3px 12px;">Preview Logo</span>
+                                        </div>
+                                        <div class="col-md-12" style="padding:0px;">
+                                            <span class="invalid-control">
+                                                <small ng-show="invalidFileSize" style="color: red;">*File size must ne less than 100KB.</small>
+                                                <small ng-show="isInvalid" style="color: red;">*Please select valid file (only .png,.jpg,.jpeg,.gif).</small>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Prices GST Incl</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="checkbox" name="priceGstInclude" ng-model="customerQuote.pricesGstInclude" ng-change="calculateAllInformation();" style="height: 15px; width: 15px;" ng-disabled="isProposalGenerated">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="padding:0px;">
+                                <div class="col-md-12 row-control" style="padding: 0px;" ng-if="isNewCustomer">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Monthly Avg Pur </label>
+                                        <span class="asteric">*</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type='number' string-to-number name="monthlyAvgPurchase" class='form-control' ng-model='customerQuote.monthlyAvgPurchase' ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" 
+                                        ng-disabled="isProposalGenerated" required>
+                                        <span ng-show="((form.addCustomerQuote.monthlyAvgPurchase.$dirty && form.addCustomerQuote.monthlyAvgPurchase.$invalid) || (form.addCustomerQuote.monthlyAvgPurchase.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-show="form.addCustomerQuote.monthlyAvgPurchase.$invalid">*Monthly average purchase invalid.</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Compete Proposal</label>
+                                        <span class="asteric"></span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required ng-disabled="isProposalGenerated">
+                                            <option value="">Select compete</option>
+                                        </select>
+                                        <span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small>*Please select compete proposal.</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Proposal Attn</label>
+                                        <span class="asteric">*</span>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type='text' id="quoteAttn" name="quoteAttn" class='form-control' ng-model='customerQuote.attn' ng-disabled="isProposalGenerated" required>
+                                        <span ng-show="((form.addCustomerQuote.quoteAttn.$dirty && form.addCustomerQuote.quoteAttn.$invalid) || (form.addCustomerQuote.quoteAttn.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small>*Please enter proposal attn.</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Date</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="input-group" id="createdDate" ng-disabled="isProposalGenerated">
+                                            <input type="text" name="createdDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
+                                                ng-model="customerQuote.createdDate" ng-change="quoteDateChanged(customerQuote.createdDate)"
+                                                is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
+                                                alt-input-formats="altInputFormats" readonly="true" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="open1()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                      
+                         <div class="row row-control">
+                            <div class="col-md-2 col-md-offset-8">
+                                <button class="btn btn-default btn-block" ng-disabled="isProposalGenerated" ng-click="resetCustomerInfo()" style="padding: 3px 12px;">
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Reset
+                                </button>
+                            </div>
+                            <div class="col-md-2">
+                                <button id="create" ng-disabled="isProposalGenerated" ng-click="generateProposal()" class="btn btn-primary btn-block" style="padding: 3px 12px;">
+                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Generate</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--  <div class="row row-control">
+                            <div class="col-md-2 col-md-offset-10">
+                                <a href="#" ng-click="collapseDiv()" style="text-decoration: none;">
+                                View more... <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div uib-collapse="isCollapsed">
+                       
+                        </div> -->

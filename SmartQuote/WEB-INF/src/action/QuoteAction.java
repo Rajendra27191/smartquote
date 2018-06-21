@@ -107,7 +107,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		CustomerDao objCustomerDao = new CustomerDao();
 		ProductDao objProductDao = new ProductDao();
 		AlternateProductDao altProductDao = new AlternateProductDao();
-		
+
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		System.out.println("userId : " + userId);
@@ -115,14 +115,13 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		int customerId = 0;
 		String status = "SAVED";
 		httpSession = ServletActionContext.getRequest().getSession();
-	
-		try
-		{
+
+		try {
 			if (userId.equals("null")) {
 				System.out.println("session is inactive.");
 				System.out.println(userId);
 				status = "INI";
-			}else{
+			} else {
 				System.out.println("session is active.");
 				System.out.println(userId);
 				status = "SAVED";
@@ -131,7 +130,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				String quoteDetails = request.getParameter("objQuoteBean");
 				System.out.println("Quote Details: " + quoteDetails);
 				// System.out.println("Logo file ::: " + logoFile);
-				
+
 				objQuoteCreateResponseBean = new QuoteCreateResponseBean();
 				QuoteBean objQuoteBean = new QuoteBean();
 				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -147,7 +146,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					objBean.setFax(objQuoteBean.getFaxNo());
 					objBean.setEmail(objQuoteBean.getEmail());
 					objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
-					
+
 					customerId = objCustomerDao.saveCustomer(objBean);
 					System.out.println("isCustomerCreated : " + customerId);
 					if (customerId > 0) {
@@ -170,11 +169,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						objQuoteBean.setCurrentSupplierId(supplierId);
 					}
 				}
-				
+
 				// ----------------
 				boolean isProductCreated;
 				int newProductCount = 0;
-				
+
 				for (int i = 0; i < objQuoteBean.getProductList().size(); i++) {
 					if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
 							&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
@@ -188,10 +187,10 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						CommonLoadAction.createProductFile(projectPath);
 					}
 				}
-				
+
 				if (objQuoteBean.isSaveWithAlternative()) {
 					System.out.println("ALTERNATIVES");
-					
+
 					String mainId, alternativeId;
 					// double altDefaultPrice=0;
 					boolean isAlternateSaved = false;
@@ -202,9 +201,9 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					}
 					System.out.println("isAlternateSaved : " + isAlternateSaved);
 					altProductDao.commit();
-					
+
 				}
-				
+
 				boolean isQuoteSaved = false;
 				boolean istermSaved = false;
 				boolean isServiceSaved = false;
@@ -214,7 +213,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 
 				quoteId = objQuoteDao.getGenratedQuoteId();
 				objQuoteBean.setQuoteId(quoteId);
-				isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean,String.valueOf(objQuoteBean.getUserId()), status);
+				isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
 
 				System.out.print("quoteId  : " + quoteId);
 				if (isQuoteSaved) {
@@ -235,7 +234,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					objQuoteDao.updateQuoteId();
 
 					objQuoteDao.commit();
-					
+
 				}
 				if (quoteDetailId > 0 && isQuoteSaved) {
 					if (status.equalsIgnoreCase("ini")) {
@@ -244,7 +243,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						objQuoteCreateResponseBean.setCode("success");
 						objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
 					}
-				
+
 					if (newProductCount > 0) {
 						objQuoteCreateResponseBean.setNewProductCreated(true);
 					}
@@ -396,26 +395,26 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		CustomerDao objCustomerDao = new CustomerDao();
 		ProductDao objProductDao = new ProductDao();
 		AlternateProductDao altProductDao = new AlternateProductDao();
-				
+
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		System.out.println("userId : " + userId);
 		String status = "UPDATED";
 		httpSession = ServletActionContext.getRequest().getSession();
-		
-		try{
-			
+
+		try {
+
 			if (userId.equals("null")) {
 				System.out.println("session is inactive.");
 				System.out.println(userId);
 				status = "INI";
-			}else{
+			} else {
 				System.out.println("session is active.");
 				System.out.println(userId);
 				status = "UPDATED";
 			}
 			String quoteDetails = request.getParameter("objQuoteBean");
-			
+
 			System.out.println("Quote Details: " + quoteDetails);
 			// objEmptyResponse = new EmptyResponseBean();
 			objQuoteCreateResponseBean = new QuoteCreateResponseBean();
@@ -425,7 +424,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			int customerId = 0;
 			int supplierId = 0; // salesPersonId = 0;
 			System.out.println("Modefied date before format ::" + objQuoteBean.getModifiedDate());
-			// objQuoteBean = new Gson().fromJson(quoteDetails, QuoteBean.class);
+			// objQuoteBean = new Gson().fromJson(quoteDetails,
+			// QuoteBean.class);
 			System.out.println("New Cust: " + objQuoteBean.getIsNewCustomer().toLowerCase());
 			if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
 				CustomerBean objBean = new CustomerBean();
@@ -436,11 +436,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				objBean.setFax(objQuoteBean.getFaxNo());
 				objBean.setEmail(objQuoteBean.getEmail());
 				objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
-				
+
 				customerId = objCustomerDao.saveCustomer(objBean);
 				System.out.println("isCustomerCreated: " + customerId);
 				objCustomerDao.commit();
-				
+
 			}
 			System.out.println("CurrentSupplierId" + objQuoteBean.getCurrentSupplierId());
 			if (objQuoteBean.getCurrentSupplierId() == 0) {
@@ -465,13 +465,13 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
 						&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
 					boolean isProductCreated = false;
-					
+
 					isProductCreated = objProductDao.saveProduct((objQuoteBean.getProductList().get(i)));
 					if (isProductCreated)
 						newProductCount++;
 					System.out.println("new product added ::::::::" + isProductCreated);
 					objProductDao.commit();
-					
+
 					String projectPath = request.getSession().getServletContext().getRealPath("/");
 					CommonLoadAction.createProductFile(projectPath);
 				}
@@ -480,7 +480,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			// objQuoteDao.deleteQuote(objQuoteBean.getQuoteId());
 			if (objQuoteBean.isSaveWithAlternative()) {
 				System.out.println("ALTERNATIVES FROM EDIT QUOTE");
-				
+
 				String mainId, alternativeId;
 				// double altDefaultPrice=0;
 				boolean isAlternateSaved = false;
@@ -491,10 +491,10 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				}
 				System.out.println("isAlternateSaved : " + isAlternateSaved);
 				altProductDao.commit();
-				
+
 			}
-//			objQuoteBean.setUserId(Integer.parseInt(userId));
-		
+			// objQuoteBean.setUserId(Integer.parseInt(userId));
+
 			boolean isQuoteUpdated = objQuoteDao.updateQuote(objQuoteBean, status);
 			// boolean isQuoteSaved = false;
 			boolean isTermsSaved = false;
@@ -531,7 +531,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				isOfferSaved = objQuoteDao.saveOfferDetails(objQuoteBean.getOfferList(), objQuoteBean.getQuoteId());
 				System.out.println("Offer Updated Successfully...!" + isOfferSaved);
 				objQuoteDao.commit();
-			
+
 				if (quoteDetailId > 0) {
 					if (status.equalsIgnoreCase("ini")) {
 						return "sessionTimeOut";
@@ -539,7 +539,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						objQuoteCreateResponseBean.setCode("success");
 						objQuoteCreateResponseBean.setMessage(getText("quote_updated"));
 					}
-					
+
 					if (newProductCount > 0) {
 						objQuoteCreateResponseBean.setNewProductCreated(true);
 					}
@@ -556,7 +556,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					objQuoteCreateResponseBean.setMessage(getText("common_error"));
 				}
 			}
-		}finally{
+		} finally {
 			objCustomerDao.closeAll();
 			objProductDao.closeAll();
 			altProductDao.closeAll();
@@ -615,6 +615,105 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		return SUCCESS;
 
+	}
+
+	public String generateProposal() {
+		objQuoteCreateResponseBean = new QuoteCreateResponseBean();
+		objQuoteCreateResponseBean.setCode("error");
+		objQuoteCreateResponseBean.setMessage(getText("common_error"));
+		httpSession = request.getSession(true);
+		int supplierId = 0;
+		int customerId = 0;
+		QuoteDao objQuoteDao = new QuoteDao();
+		CustomerDao objCustomerDao = new CustomerDao();
+		try {
+			synchronized (httpSession) {
+				boolean isCustomerExist =false;
+				KeyValuePairBean objSupplier;
+				String status = "INI";
+				QuoteBean objQuoteBean = new QuoteBean();
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+				String customerInfo = request.getParameter("customerInfo");
+				System.out.println("Customer Details: " + customerInfo);
+				System.out.println("Logo file ::: " + logoFile);
+				objQuoteBean = gson.fromJson(customerInfo, QuoteBean.class);
+				// ----------------
+				System.out.println("New Customer : " + objQuoteBean.getIsNewCustomer().toLowerCase());
+				if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
+				    isCustomerExist = objCustomerDao.isCustomerExist(objQuoteBean.getCustCode());
+					if (isCustomerExist) {
+
+					} else {
+						CustomerBean objBean = new CustomerBean();
+						objBean.setCustomerCode(objQuoteBean.getCustCode());
+						objBean.setCustomerName(objQuoteBean.getCustName());
+						objBean.setAddress1(objQuoteBean.getAddress());
+						objBean.setPhone(objQuoteBean.getPhone());
+						objBean.setFax(objQuoteBean.getFaxNo());
+						objBean.setEmail(objQuoteBean.getEmail());
+						objBean.setAvgPurchase(objQuoteBean.getMonthlyAvgPurchase());
+						customerId = objCustomerDao.saveCustomer(objBean);
+						System.out.println("isCustomerCreated : " + customerId);
+						if (customerId > 0) {
+							if (logoFile != null) {
+								String filename = "CustId_" + customerId + ".png";
+								System.out.println(">>" + filename + ">>" + logoFile);
+								boolean isLogoSaved = objCustomerAction.createLogo(filename, logoFile);
+								System.out.println("LOGO saved ::: " + isLogoSaved + " " + filename);
+							}
+						}
+						objCustomerDao.commit();
+					}
+				}
+				// ----------------
+				if (objQuoteBean.getCurrentSupplierId() == 0) {
+					System.out.println("SaveCurrentSupplier :>>");
+					System.out.println(objQuoteBean.getCurrentSupplierId());
+					System.out.println(objQuoteBean.getCurrentSupplierName().isEmpty());
+					if (!objQuoteBean.getCurrentSupplierName().isEmpty()) {
+						objSupplier = objQuoteDao.getSupplierIfExist(objQuoteBean.getCurrentSupplierName());
+						if(objSupplier.getValue().equals(null)){
+							supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
+							objQuoteBean.setCurrentSupplierId(supplierId);	
+						}else{
+							objQuoteCreateResponseBean.setNewSupplierCreated(true);
+							objQuoteCreateResponseBean.setGenratedSupplierId(objSupplier.getKey());
+						}					
+					}
+				}
+				boolean isQuoteSaved = false;
+				String quoteId = "";
+				quoteId = objQuoteDao.getGenratedQuoteId();
+				objQuoteBean.setQuoteId(quoteId);
+				isQuoteSaved = objQuoteDao.saveQuote(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
+				System.out.print("quoteId  : " + quoteId);
+				objQuoteDao.updateQuoteId();
+				objQuoteDao.commit();
+				if (isCustomerExist) {
+					objQuoteCreateResponseBean.setCode("error");
+					objQuoteCreateResponseBean.setMessage("Customer with this code is already exist");
+				}
+				if (isQuoteSaved) {
+					objQuoteCreateResponseBean.setCode("success");
+					objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
+					objQuoteCreateResponseBean.setGenratedProposalId(quoteId);
+				}
+				if (customerId > 0) {
+					objQuoteCreateResponseBean.setNewCustomerCreated(true);
+					objQuoteCreateResponseBean.setGenratedCustomerId(customerId);
+				}
+				if (supplierId > 0) {
+					objQuoteCreateResponseBean.setNewSupplierCreated(true);
+					objQuoteCreateResponseBean.setGenratedSupplierId(supplierId);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			objCustomerDao.closeAll();
+			objQuoteDao.closeAll();
+		}
+		return SUCCESS;
 	}
 
 	public QuoteCreateResponseBean getObjQuoteCreateResponseBean() {

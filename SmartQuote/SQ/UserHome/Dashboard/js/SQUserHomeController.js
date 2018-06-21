@@ -82,6 +82,10 @@ $scope.confirmChangeView=function(subMenuName){
   // $state.transitionTo('vieweditquote');    
   $state.go('vieweditquote', {}, {reload: true});   
   } 
+  if(subMenuName.toLowerCase()==='autosave'){
+    // $state.transitionTo('vieweditquote');    
+    $state.go('autosavequote', {}, {reload: true});   
+  } 
   if(subMenuName.toLowerCase()==='payment reminder'){
   // $state.transitionTo('vieweditquote');    
   $state.go('paymentreminder.start', {}, {reload: true});   

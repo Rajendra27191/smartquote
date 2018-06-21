@@ -146,6 +146,37 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 		}
 		return SUCCESS;
 	}
+	public String getUpdatedData() {
+		if (ServletActionContext.getRequest().getSession() != null) {
+			HttpSession httpSession;
+			httpSession = request.getSession(true);
+			httpSession = ServletActionContext.getRequest().getSession();
+			if (httpSession.getAttribute("userId")!=null) {
+				UserGroupDao objUserGroupDao = new UserGroupDao();
+				objLoginResponse.setUserList(objUserGroupDao.getUserList());
+				objUserGroupDao.closeAll();
+				CustomerDao objCustomerDao = new CustomerDao();
+				objLoginResponse.setCustomerList(objCustomerDao.getCustomerList());
+				objCustomerDao.closeAll();
+				QuoteDao objQuoteDao = new QuoteDao();
+				objLoginResponse.setSupplierList(objQuoteDao.getCurrentSupplierList());
+				objQuoteDao.closeAll();
+				TermServicesDao objTermServicesDao= new TermServicesDao();
+				objLoginResponse.setServiceList(objTermServicesDao.getAllServices());
+				objLoginResponse.setTermConditionList(objTermServicesDao.getAllTermsConditions());
+				objTermServicesDao.closeAll();
+				OfferDao objOfferDao =new OfferDao();
+				objLoginResponse.setOfferList(objOfferDao.getOfferList(getText("offer_template_folder_path"),getText("offer_template_url"),getText("alt_offer_template_url")));
+				objOfferDao.closeAll();
+				objLoginResponse.setCode("success");
+				objLoginResponse.setMessage("get user data successfully");
+			}else{
+				objLoginResponse.setCode("error");
+				objLoginResponse.setMessage("session is inactive.");
+			}
+		}
+		return SUCCESS;
+	}
 
 	@Override
 	public void setServletRequest(HttpServletRequest request) {

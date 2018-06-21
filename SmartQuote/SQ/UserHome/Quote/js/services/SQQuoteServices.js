@@ -86,6 +86,31 @@ quote.CreateQuote = function (logoFile,objQuoteBean){
   });
 };
 
+quote.GenerateProposal = function (logoFile,customerInfo){
+  console.log("GenerateProposalForCustomer")
+  console.log(logoFile);
+  console.log(customerInfo);
+  var fd= new FormData();
+  if(logoFile!=null){
+  fd.append('logoFile',logoFile);
+  }
+  fd.append('customerInfo',customerInfo);
+  console.log(fd)
+  // // $http.post($rootScope.projectName+'/createQuote', fd, config)
+   $http.post($rootScope.projectName+'/generateProposal', fd,{
+    withCredentials: true,
+    headers: {'Content-Type': undefined },
+    transformRequest: angular.identity
+  })
+  .success(function (data, status, headers, config) {
+    console.log(data);
+    $rootScope.$broadcast('GenerateProposalDone', data); 
+  })
+  .error(function (data, status, header, config) {
+    console.log(data);
+    $rootScope.$broadcast('GenerateProposalNotDone', data);
+  });
+};
 // ==========================VIEW/EDIT QUOTE ================================
 quote.changeQuoteStatus = function (objQuoteBean){
   console.log("changeQuoteStatus");

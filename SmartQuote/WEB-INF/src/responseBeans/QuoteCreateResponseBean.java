@@ -8,6 +8,8 @@ private	boolean isNewCustomerCreated=false;
 private	int genratedCustomerId=0;
 private	boolean isNewSupplierCreated=false;
 private	int genratedSupplierId=0;
+private	String genratedProposalId="";
+
 public boolean isNewCustomerCreated() {
 	return isNewCustomerCreated;
 }
@@ -37,6 +39,12 @@ public boolean isNewProductCreated() {
 }
 public void setNewProductCreated(boolean isNewProductCreated) {
 	this.isNewProductCreated = isNewProductCreated;
+}
+public String getGenratedProposalId() {
+	return genratedProposalId;
+}
+public void setGenratedProposalId(String genratedProposalId) {
+	this.genratedProposalId = genratedProposalId;
 }
 
 	
