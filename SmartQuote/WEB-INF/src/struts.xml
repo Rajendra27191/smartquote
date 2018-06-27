@@ -48,7 +48,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		<action name="getUpdatedData" class="action.LoginAction"
+			method="getUpdatedData">
+			<result name="success" type="json">
+				<param name="root">objLoginResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="getUserGroups" class="action.UserGroupAction"
 			method="getUserGroups">
 			<result name="success" type="json">

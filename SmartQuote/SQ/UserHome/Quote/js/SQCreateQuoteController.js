@@ -202,6 +202,7 @@ if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 $scope.productGroupList=data.result;
 $rootScope.isQuoteActivated=true;
+$rootScope.getUpdatedUserData();
 // $scope.initAuotoComplete();
 // $rootScope.globalProductGroupList=data.result;
 // SQManageMenuServices.GetUserList();
@@ -210,7 +211,7 @@ $rootScope.hideSpinner();
 $rootScope.alertError(data.message);
 }
 }
-$rootScope.hideSpinner();
+// $rootScope.hideSpinner();
 }
 };
 
@@ -229,7 +230,9 @@ $rootScope.hideSpinner();
 function setUserAsSalesPerson () {
 	angular.forEach($rootScope.userList, function(element, key){
 	if (element.key==$rootScope.userData.userId && element.value==$rootScope.userData.userName) {
+	if(element.key !== 1 && element.value !== 'admin'){
 	$scope.customerQuote.salesPerson=element;
+	}
 	}
 	});
 }
@@ -237,26 +240,20 @@ $scope.initCreateQuote=function(status){
 console.log("initCreateQuote");
 if (status.toLowerCase()=='init1') {
 console.log("init1");
-// $scope.initAuotoComplete();// for product search 
 $scope.getProductGroup();//get product group list for add product
 $scope.currentSupplierList=angular.copy($rootScope.supplierList);	
 $scope.termConditionArray=angular.copy($rootScope.termConditionList);
-// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
 $scope.serviceArray=angular.copy($rootScope.serviceList);
-// $scope.serviceList1=angular.copy($rootScope.serviceList);
 $scope.offerArray=angular.copy($rootScope.offerList);
-// $scope.offerList1=angular.copy($rootScope.offerList);
 setUserAsSalesPerson();//
 $scope.initDate();
 } else{
 console.log("init2");
+$rootScope.getUpdatedUserData();
 $scope.currentSupplierList=angular.copy($rootScope.supplierList);
 $scope.termConditionArray=angular.copy($rootScope.termConditionList);
-// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
 $scope.serviceArray=angular.copy($rootScope.serviceList);
-// $scope.serviceList1=angular.copy($rootScope.serviceList);
 $scope.offerArray=angular.copy($rootScope.offerList);
-// $scope.offerList1=angular.copy($rootScope.offerList);
 setUserAsSalesPerson();//
 $scope.initDate();
 };
