@@ -14,7 +14,7 @@ angular.module('sq.SmartQuoteDesktop')
         userLogoutAPI:$resource($rootScope.projectName+'/logout', {}, {userLogoutMethod :{method: 'POST'}}),
         userForgotPasswordAPI:$resource($rootScope.projectName+'/forgotPassword?email=:email', {}, {userForgotPasswordMethod :{method: 'GET'},params:{email:'@email'}}),
         checkSessionActiveAPI:$resource($rootScope.projectName+'/checkSessionActive', {}, {checkSessionActiveMethod :{method: 'POST'}}),
-        getUpdatedDataAPI:$resource($rootScope.projectName+'/getUpdatedData', {}, {getUpdatedDataMethod :{method: 'POST'}})
+        getUpdatedDataAPI:$resource($rootScope.projectName+'/getUpdatedData', {}, {getUpdatedDataMethod :{method: 'POST'}}),
       };
     var home = {};
     // console.log($rootScope.projectName)
@@ -103,7 +103,6 @@ angular.module('sq.SmartQuoteDesktop')
           $rootScope.SQNotify("Server Error", 'error')
         });
     };
-
     home.getUpdatedUserData = function () {
        HomeServices.getUpdatedDataAPI.getUpdatedDataMethod(function (success) {
         // console.log("Login Success");
@@ -118,7 +117,7 @@ angular.module('sq.SmartQuoteDesktop')
           $rootScope.$broadcast('GetUpdatedUserDataNotDone', error);
         });
     };
-    
+
     return home;
   }
 ]);

@@ -54,6 +54,7 @@ $rootScope.regex={
 // $state.transitionTo('home.start');
  $('#mySpinner').show();
  SQHomeServices.apiCallToCheckUserSession();
+ // SQHomeServices.getUpdatedUserData();
 /*================ Check user is in sesssion========================*/
  $scope.setLocalStorageData=function(data){
 //     console.log("setLocalStorageData")
@@ -85,6 +86,7 @@ $rootScope.regex={
     }else{
        $rootScope.isUserSignIn=false;
     }
+
  };
  
  $scope.isPaymentReminderAccess=function(menuName){
@@ -127,6 +129,7 @@ $rootScope.$on("sesssion", function(event, data){
           }
           // console.log($rootScope.isUserSignIn)
           if ($rootScope.isUserSignIn) {
+          SQHomeServices.getUpdatedUserData();
           $state.transitionTo('userhome.start');
           }else{
             $state.transitionTo('home.start'); 
@@ -517,7 +520,6 @@ $(window).bind("beforeunload",function(event) {
 $scope.checkQuoteActivated();
 $interval($scope.checkQuoteActivated, 1000);
 // $(window).unbind('beforeunload');
-
   // if ($rootScope.isQuoteActivated) {
   //   $scope.$on('onBeforeUnload', function (e, confirmation) {
   //         confirmation.message = "All data willl be lost.";
@@ -532,9 +534,52 @@ $interval($scope.checkQuoteActivated, 1000);
   //         // e.preventDefault();
   //   })
   // }
+/*===============Get Updated UserData=====================*/
+$scope.setArray=function(existingArray,newArray){
+  existingArray.length = 0;
+  existingArray.push.apply(existingArray, newArray);
+  // existingArray.splice(0,existingArray.length)
+  // existingArray=JSON.parse(JSON.stringify(newArray));
+};
+$scope.setUpdatedUserData=function(data){
+  console.log("setUpdatedUserData");
+  $scope.setArray($rootScope.userNavMenu,data.userMenuList);
+  $scope.setArray($rootScope.userList,data.userList);
+  $scope.setArray($rootScope.customerList,data.customerList);
+  $scope.setArray($rootScope.supplierList,data.supplierList);
+  $scope.setArray($rootScope.serviceList,data.serviceList);
+  $scope.setArray($rootScope.termConditionList,data.termConditionList);
+  $scope.setArray($rootScope.offerList,data.offerList);
+};
+$rootScope.getUpdatedUserData=function(){
+ $rootScope.showSpinner();
+ SQHomeServices.getUpdatedUserData();
+};
+$scope.handleGetUpdatedUserDataDoneResponse=function(data){
+  if(data){
+    if(data.code){
+    if(data.code.toUpperCase()=='SUCCESS'){ 
+     $scope.setUpdatedUserData(data);
+    }
+    else if (data.code.toUpperCase()=='ERROR'){
+   
+    }
+    $rootScope.hideSpinner();
+  }
+}
+};
 
+var cleanupEventGetUpdatedUserDataDone = $scope.$on("GetUpdatedUserDataDone", function(event, message){
+  console.log("cleanupEventGetUpdatedUserDataDone");
+  console.log(message);
+  $scope.handleGetUpdatedUserDataDoneResponse(message);      
+});
 
-
+var cleanupEventGetUpdatedUserDataNotDone = $scope.$on("GetUpdatedUserDataNotDone", function(event, message){
+  $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+/*===============Get Updated UserData=====================*/
 ///-------------------------Confirmation Window-----------------
 
 $rootScope.getFormattedDate=function(date){
