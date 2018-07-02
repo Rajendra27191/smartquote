@@ -93,7 +93,7 @@
     }
 
     .panel-heading {
-        padding: 5px 10px;
+        padding: 3px 10px;
         height: 30px;
     }
 
@@ -151,7 +151,7 @@
             <div class="col-md-10" style="padding:0px;"></div>
             <div class="col-md-2" style="padding:0px;">
                 <span style="font-weight: 600;">
-                    <p class="sub-label">Proposal Id : {{proposal.id}}</p>
+                    <p class="sub-label">Proposal Id : {{customerQuote.quoteId}}</p>
                     <!-- <p class="sub-label">Created Date : {{proposal.date}}</p> -->
                 </span>
             </div>
@@ -411,7 +411,7 @@
                                 </div>
                             </div>
                         </div>                      
-                         <div class="row row-control">
+                         <!-- <div class="row row-control" ng-hide="isProposalGenerated">
                             <div class="col-md-2 col-md-offset-8">
                                 <button class="btn btn-default btn-block" ng-disabled="isProposalGenerated" ng-click="resetCustomerInfo()" style="padding: 3px 12px;">
                                     <i class="fa fa-refresh" aria-hidden="true"></i> Reset
@@ -422,14 +422,321 @@
                                     <i class="fa fa-floppy-o" aria-hidden="true"></i> Generate</span>
                                 </button>
                             </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="panel panel-default" style="border-radius:0px;">
+                    <div class="panel-heading">
+                    <div class="row">
+                    <div class="col-md-4">
+                        <label class="sub-label" style="text-transform: uppercase;">Added Products : <span ng-if="customerQuote.productList">{{addedProductCount}}</span></label>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2">
+                        <button class="btn btn-default btn-block" 
+                        style="color:#113654;font-weight: bold;cursor: pointer;padding:0px;" 
+                        ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products. [ctrl+shift+a]" >
+                        <i class="glyphicon glyphicon-plus"></i> Add Product
+                        </button>
+                    </div>
+                    </div>
+                    </div>
+                    <div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
+                    <div class="col-md-12">
+                        <div class="col-md-12" >
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12" style="padding: 0px;">
+                        <div class="col-md-2 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Code">Product Code</div>
+                        <div class="col-md-4 t_head" style="width:25%;" tooltip-placement="top" uib-tooltip="Product Name">Product Name</div>
+                        <div class="col-md-1 t_head" style="width:10%;" >UOM</div>
+                        <div class="col-md-1 t_head" style="text-align: right;width:10%;">Cost</div>
+                        <div class="col-md-1 t_head" style="text-align: right;width:10%;">Qty</div>
+                        <div class="col-md-1 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Current Price">Current Price</div>
+                        <div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Current Price Total">Current Price Total</div>
+                        </div>	
+                        </div>	
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12" style="">
+                        <div class="col-md-1 t_head" style="text-align: right;width:11%;" tooltip-placement="top" uib-tooltip="Supplier GP">Supplier GP(%)</div>
+                        <div class="col-md-2 t_head" style="text-align: right;width:10%;" tooltip-placement="top" uib-tooltip="Jaybel Price">Jaybel Price</div>
+                        <div class="col-md-2 t_head" style="text-align: right;width:15%;" tooltip-placement="top" uib-tooltip="Jaybel Price Total">Jaybel Price Total</div>
+                        <div class="col-md-1 t_head" style="text-align: right;width:11%" tooltip-placement="top" uib-tooltip="Jaybel GP">Jaybel GP(%)</div>
+                        <div class="col-md-2 t_head" style="width:15%;" tooltip-placement="top" uib-tooltip="Savings">Savings (%)</div>
+                        <div class="col-md-1 t_head" style="width:11%;" tooltip-placement="top" uib-tooltip="GST Exempt Y/N">GST Ex Y/N</div>
+                        <div class="col-md-1 t_head" style="text-align:center;width:10%;">Comment</div>
+                        <div class="col-md-2 t_head" style="text-align:center;width:17%;">Action</div>
+                        </div>	
+                        </div>	
                         </div>
                     </div>
+                    <div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList" ng-class="{'alt-product':product.isAlternate}">
+                        <div class="col-md-12" style="padding: 0px;">
+                            <hr style="margin: 0px;">
+                        </div>
+                        <div class="col-md-12" >
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12">
+                        <div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.itemCode"></span></div>
+                        <div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.itemDescription"></div>
+                        <div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.unit"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.avgcost"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.itemQty"></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></div>
+                        </div>	
+                        </div>	
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12">
+                        <div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.quotePrice)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="product.total.toFixed(2)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.gpRequired)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.savings)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align:center;width:11%;"><span data-ng-bind="product.gstFlag"></span></div>
+                        <div class="col-md-1 t_data" style="text-align:center;width:10%;">
+                        <span ng-if="product.lineComment!=null&&product.lineComment!=''" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:#31708f;"></i> </span>	
+                        </div>
+                        <div class="col-md-2 t_data" style="text-align:center;width:17%;">
+                        <span style="cursor: pointer;margin: 0px 2px;" ng-click="showAddProductModal('edit',product,$index);" tooltip-placement="top" uib-tooltip="Click To Edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
+                        <span style="cursor: pointer;margin: 0px 2px;" ng-click="deleteProductFromQuote($index)" tooltip-placement="top" uib-tooltip="Click To Delete"><i class="fa fa-trash-o fa-lg" aria-hidden="true" style="color:#31708f;"></i></span>
+                        </div>
+                        </div>	
+                        </div>	
+                        </div>
+                        <div class="col-md-12" ng-if="product.altProd.itemCode">
+                            <hr style="margin: 0px;">
+                        </div>
+                        <div class="col-md-12" ng-if="product.altProd.itemCode" style="background: rgba(245, 9, 4, 0.03);padding: 0px;">
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12">
+                        <div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.altProd.itemCode"></span></div>
+                        <div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.altProd.itemDescription"></div>
+                        <div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.altProd.unit"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.avgcost"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.itemQty"></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierPrice)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:10%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}}</span></div>
+                
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierTotal)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}} </span></div>
+                        </div>	
+                        </div>	
+                        <div class="col-md-6" style="padding: 0px;">
+                        <div class="col-md-12">
+                        <div class="col-md-1 t_data" style="text-align: right;width:11%;" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"><span data-ng-bind="getPrice(product.altProd.currentSupplierGP)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:11%;" ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'"><span>{{getPrice(0)}}</span></div>
+                
+                        <div class="col-md-2 t_data" style="text-align: right;width:10%;"><span data-ng-bind="getPrice(product.altProd.quotePrice)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="product.altProd.total.toFixed(2)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align: right;width:11%;"><span data-ng-bind="getPrice(product.altProd.gpRequired)"></span></div>
+                        <div class="col-md-2 t_data" style="text-align: right;width:15%;"><span data-ng-bind="getPrice(product.altProd.savings)"></span></div>
+                        <div class="col-md-1 t_data" style="text-align:center;width:11%;"><span data-ng-bind="product.altProd.gstFlag"></span></div>
+                        <div class="col-md-1 t_data" style="width:10%;"></div>
+                        <div class="col-md-2 t_data" style="width:17%;">
+                        </div>
+                        </div>	
+                        </div>	
+                        </div>
+                
+                    </div>
+                    </div>
+                </div>
+                <div class="row row-control">
+                    <div class="col-md-1">
+                    <label class="sub-label">Notes</label>
+                    </div>
+                    <div class="col-md-11">
+                    <textarea name="notes" rows="1" class="form-control" ng-model="customerQuote.notes"></textarea>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 1%;margin-top: 2%;">
+                    <div class="col-md-12" style="margin-bottom: 1%;">
+                    <label class="sub-label">STANDARD TOTAL :</label>
+                    </div>
+                    <div class="col-md-12" style="padding-right: 0px;">
+                    <div class="col-md-3" style="padding:0px;">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Current Supplier Information</label></legend>
+                            <!-- <span data-ng-bind="supplierInformation"></span> -->
+                            <p class="para"><label>Subtotal </label>: {{getPrice(supplierInformation.subtotal)}}</p>
+                            <p class="para"><label>GST Total </label>: {{getPrice(supplierInformation.gstTotal)}}</p>
+                            <p class="para"><label>Total </label>: {{getPrice(supplierInformation.total)}} </p>
+                            
+                        </fieldset>
+                    </div>	
+                    <div class="col-md-3">
+                        <fieldset style="border: 1px solid #cccccc;padding: 17px 15px;">
+                            <legend><label class="label label-default" style="color: #fff;">GP Information</label></legend>
+                            <p class="para"><label>Avg of GP Required </label>: {{getPrice(gpInformation.avgGpRequired)}}</p>
+                            <p class="para"><label>Avg of Cur Supplier GP </label>: {{getPrice(gpInformation.avgCurrentSupplierGp)}}</p>		
+                            <br>	
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" style="padding:0px;">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Total Information</label></legend>
+                            <p class="para"><label>Subtotal  </label>: {{getPrice(totalInformation.subtotal)}}</p>
+                            <p class="para"><label>GST Total </label>: {{getPrice(totalInformation.gstTotal)}}</p>		
+                            <p class="para"><label>Total </label>: {{getPrice(totalInformation.total)}}</p>		
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" ng-show="totalInformation.total<=supplierInformation.total">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+                            <p class="para"><label>Overall Saving ($) </label>: 
+                             {{(getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)}}</span>
+                            </p>		
+                            <p class="para"><label>Overall Saving (%)  </label>: 
+                            <span ng-if="!((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{(((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)}}</span> 
+                            <span ng-if="((((supplierInformation.total.toFixed(2)-totalInformation.total.toFixed(2))/supplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{getPrice(0)}}</span>
+                            </p>
+                            <p class="para"><label>Total Annual Saving ($) </label>: 
+                            {{((getPrice(supplierInformation.total)-getPrice(totalInformation.total)).toFixed(2)*12).toFixed(2)}}
+                            </p>		
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" ng-show="totalInformation.total>supplierInformation.total">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+                            <p class="para"><label>Overall Saving ($) </label>: 
+                            <span> {{getPrice(0)}}</span>  
+                            </p>		
+                            <p class="para"><label>Overall Saving (%)  </label>: 
+                            <span> {{getPrice(0)}}</span>
+                            </p>
+                            <p class="para"><label>Total Annual Saving ($) </label>: 
+                            <span>{{getPrice(0)}}</span>
+                            </p>		
+                        </fieldset>
+                    </div> 
+                    </div>	
+                </div>
+                <div class="row row-control" style="margin-bottom: 3%;" ng-if="isAlternateAdded">
+                    <div class="col-md-12" style="margin-bottom: 1%;">
+                        <label class="sub-label">ALTERNATIVE PRODUCTS TOTAL :</label>
+                    </div>
+                    <div class="col-md-12" style="padding-right: 0px;">
+                    <div class="col-md-3" style="padding:0px;">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Current Supplier Information</label></legend>
+                            <p class="para"><label>Subtotal </label>: {{getPrice(altSupplierInformation.subtotal)}}</p>
+                            <p class="para"><label>GST Total </label>: {{getPrice(altSupplierInformation.gstTotal)}}</p>
+                            <p class="para"><label>Total </label>: {{getPrice(altSupplierInformation.total)}} </p>
+                            
+                        </fieldset>
+                    </div>	
+                    <div class="col-md-3">
+                        <fieldset style="border: 1px solid #cccccc;padding: 17px 15px;">
+                            <legend><label class="label label-default" style="color: #fff;">GP Information</label></legend>
+                            <p class="para"><label>Avg of GP Required </label>: {{getPrice(altGpInformation.avgGpRequired)}}</p>
+                            <p class="para" ng-hide="getPrice(altGpInformation.avgCurrentSupplierGp)=='NaN'"><label>Avg of Cur Supplier GP </label>: {{getPrice(altGpInformation.avgCurrentSupplierGp)}}</p>		
+                            <p class="para" ng-if="getPrice(altGpInformation.avgCurrentSupplierGp)=='NaN'"><label>Avg of Cur Supplier GP </label>:{{getPrice(0)}}</p>		
+                            <br>	
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" style="padding:0px;">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Total Information</label></legend>
+                            <!-- {{altTotalInformation}} -->
+                            <p class="para"><label>Subtotal  </label>: {{getPrice(altTotalInformation.subtotal)}}</p>
+                            <p class="para"><label>GST Total </label>: {{getPrice(altTotalInformation.gstTotal)}}</p>		
+                            <p class="para"><label>Total </label>: {{getPrice(altTotalInformation.total)}}</p>		
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" ng-show="altTotalInformation.total<=altSupplierInformation.total">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+                            <p class="para"><label>Overall Saving ($) </label>: 
+                             {{(getPrice(altSupplierInformation.total)-getPrice(altTotalInformation.total)).toFixed(2)}}</span>
+                            </p>		
+                            <p class="para"><label>Overall Saving (%)  </label>: 
+                            <span ng-if="!((((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{(((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)}}</span> 
+                            <span ng-if="((((altSupplierInformation.total.toFixed(2)-altTotalInformation.total.toFixed(2))/altSupplierInformation.total.toFixed(2))*100).toFixed(2)=='NaN')">{{getPrice(0)}}</span>
+                            </p>
+                            <p class="para"><label>Total Annual Saving ($) </label>: 
+                            {{((getPrice(altSupplierInformation.total)-getPrice(altTotalInformation.total)).toFixed(2)*12).toFixed(2)}}
+                            </p>		
+                        </fieldset>
+                    </div>
+                    <div class="col-md-3" ng-show="altTotalInformation.total>altSupplierInformation.total">
+                        <fieldset style="border: 1px solid #cccccc;">
+                            <legend><label class="label label-default" style="color: #fff;">Savings in buying from Jaybel</label></legend>
+                            <p class="para"><label>Overall Saving ($) </label>: 
+                            <span> {{getPrice(0)}}</span>  
+                            </p>		
+                            <p class="para"><label>Overall Saving (%)  </label>: 
+                            <span> {{getPrice(0)}}</span>
+                            </p>
+                            <p class="para"><label>Total Annual Saving ($) </label>: 
+                            <span>{{getPrice(0)}}</span>
+                            </p>		
+                        </fieldset>
+                    </div> 
+                    </div>	
+                </div>
+                <div class="row" style="margin-top: 1%;" id="offerPanel">
+                    <div class="col-md-12">
+                    <div class="col-md-4" style="padding: 0px;padding-right: 5px;">
+                    <div class="panel panel-default" style="border-radius:0px;">
+                    <div class="panel-heading"><label class="sub-label">Terms & Conditions</label></div>
+                    <div class="panel-body">
+                    <div class="checkbox" ng-repeat="term in termConditionArray">
+                        <label >
+                        <input type="checkbox" name="term" ng-model="termConditionArray[$index].code" ng-init="termConditionArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView">
+                        <input type="checkbox" name="term" ng-model="termConditionArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+                        {{term.value}}
+                        </label>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                    <div class="col-md-5" style="padding: 0px;">
+                    <div class="panel panel-default" style="border-radius:0px 0px 4px 0px;">
+                    <div class="panel-heading"><label class="sub-label">Offers</label></div>
+                    <div class="panel-body">
+                    <div class="checkbox" ng-repeat="offer in offerArray">
+                    <label>	
+                    <input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
+                    <input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
+                    <a target="blank" ng-href="{{offer.offerTemplate}}" style="text-decoration: none;">
+                    {{offer.offerName}}
+                    </a>   
+                    </label>
+                    </div>	
+                    </div>
+                    </div>
+                    </div>                
+                    </div>
+                
+                </div>
+                <div class="row" style="margin-top: 1%;">
+                    <div class="col-md-12" style="padding: 0px;">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2" style="padding: 0px;padding-left:10px;" >
+                    <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
+                    <label class="sub-label">Save With Alternative</label>
+                    <switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
+                    </div>
+                    </div>
+                    <div class="col-md-4" style="padding: 0px;">
+                    <div class="col-md-6">
+                    <button id="create" ng-click="saveGeneratedProposal()" class="btn btn-block button-ok" style=""><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
+                    <!-- <button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button> -->
+                    </div>	
+                    <div class="col-md-6">
+                    <button id='cancel' ng-click="" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
+                    </div>		
+                    </div>
+                
+                    </div> 
+                
                 </div>
             </form>
         </div>
     </div>
+    
 </div>
-
+<div ng-include="'SQ/UserHome/Quote/views/addproduct-uib-modal.html'"></div>
 <!--  <div class="row row-control">
                             <div class="col-md-2 col-md-offset-10">
                                 <a href="#" ng-click="collapseDiv()" style="text-decoration: none;">

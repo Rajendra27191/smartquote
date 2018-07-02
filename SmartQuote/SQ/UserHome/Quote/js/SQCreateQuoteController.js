@@ -236,28 +236,38 @@ function setUserAsSalesPerson () {
 	}
 	});
 }
+$scope.$on("setUpdatedUserDataDone", function (event, message) {
+	console.log("setUpdatedUserDataDone")
+	if (message.toLowerCase() == "success") {
+		$scope.currentSupplierList = angular.copy($rootScope.supplierList);
+		$scope.termConditionArray = angular.copy($rootScope.termConditionList);
+		$scope.serviceArray = angular.copy($rootScope.serviceList);
+		$scope.offerArray = angular.copy($rootScope.offerList);
+		setUserAsSalesPerson();//
+		$scope.initDate();
+	}
+});
 $scope.initCreateQuote=function(status){
 console.log("initCreateQuote");
 if (status.toLowerCase()=='init1') {
 console.log("init1");
 $scope.getProductGroup();//get product group list for add product
-$scope.currentSupplierList=angular.copy($rootScope.supplierList);	
-$scope.termConditionArray=angular.copy($rootScope.termConditionList);
-$scope.serviceArray=angular.copy($rootScope.serviceList);
-$scope.offerArray=angular.copy($rootScope.offerList);
-setUserAsSalesPerson();//
-$scope.initDate();
+// $scope.currentSupplierList=angular.copy($rootScope.supplierList);	
+// $scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// $scope.serviceArray=angular.copy($rootScope.serviceList);
+// $scope.offerArray=angular.copy($rootScope.offerList);
+// setUserAsSalesPerson();//
+// $scope.initDate();
 } else{
 console.log("init2");
 $rootScope.getUpdatedUserData();
-$scope.currentSupplierList=angular.copy($rootScope.supplierList);
-$scope.termConditionArray=angular.copy($rootScope.termConditionList);
-$scope.serviceArray=angular.copy($rootScope.serviceList);
-$scope.offerArray=angular.copy($rootScope.offerList);
-setUserAsSalesPerson();//
-$scope.initDate();
+// $scope.currentSupplierList=angular.copy($rootScope.supplierList);
+// $scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// $scope.serviceArray=angular.copy($rootScope.serviceList);
+// $scope.offerArray=angular.copy($rootScope.offerList);
+// setUserAsSalesPerson();//
+// $scope.initDate();
 };
-
 // $rootScope.hideSpinner();	
 };
 $scope.initCreateQuote('init1');

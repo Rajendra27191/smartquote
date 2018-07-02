@@ -430,5 +430,23 @@ public class ProductBean {
 		this.convFactor = convFactor;
 	}
 
+	@Override
+	public String toString() {
+		return "ProductBean [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", description2=" + description2
+				+ ", description3=" + description3 + ", unit=" + unit + ", qtyBreak0=" + qtyBreak0 + ", price0exGST=" + price0exGST
+				+ ", qtyBreak1=" + qtyBreak1 + ", price1exGST=" + price1exGST + ", qtyBreak2=" + qtyBreak2 + ", price2exGST=" + price2exGST
+				+ ", qtyBreak3=" + qtyBreak3 + ", price3exGST=" + price3exGST + ", qtyBreak4=" + qtyBreak4 + ", price4exGST=" + price4exGST
+				+ ", avgcost=" + avgcost + ", taxCode=" + taxCode + ", created_by=" + created_by + ", itemQty=" + itemQty + ", total="
+				+ total + ", quotePrice=" + quotePrice + ", currentSupplierPrice=" + currentSupplierPrice + ", currentSupplierGP="
+				+ currentSupplierGP + ", currentSupplierTotal=" + currentSupplierTotal + ", gpRequired=" + gpRequired
+				+ ", productGroupCode=" + productGroupCode + ", group=" + group + ", productGroupName=" + productGroupName + ", gstFlag="
+				+ gstFlag + ", savings=" + savings + ", quoteId=" + quoteId + ", quoteDetailId=" + quoteDetailId + ", isNewProduct="
+				+ isNewProduct + ", isAlternative=" + isAlternative + ", altForQuoteDetailId=" + altForQuoteDetailId
+				+ ", alternativeProductList=" + alternativeProductList + ", altProd=" + altProd + ", promoPrice=" + promoPrice
+				+ ", lastBuyPrice=" + lastBuyPrice + ", convFactor=" + convFactor + ", priority=" + priority + ", lastBuyDate="
+				+ lastBuyDate + ", status=" + status + ", condition=" + condition + ", supplier=" + supplier + ", lineComment="
+				+ lineComment + "]";
+	}
+
 	
 }

@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.config(['$stateProvider', function($stateProvider) { 
+.config(['$stateProvider', function($stateProvider,SQQuoteServices) { 
    // console.log("initialise OZAppRoute");
    $stateProvider
    .state('home', {
@@ -82,6 +82,15 @@ angular.module('sq.SmartQuoteDesktop')
     .state('autosavequote', {
       controller:'SQAutoSaveQuoteConroller',
       templateUrl: 'SQ/UserHome/Quote/views/sq.autosave_quote.view.html',
+    })
+    .state('restorequote', {
+      controller:'SQAutoSaveQuoteConroller',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.restore_quote.view.html',
+      // resolve:{
+      //   IsUserInSession:function(SQQuoteServices){
+      //     return SQQuoteServices.IsUserLoggedin.checkUserSession().$promise;
+      //   }
+      // }
     })
     .state('paymentreminder', {
       // url:'/smartquote',

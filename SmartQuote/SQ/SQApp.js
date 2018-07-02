@@ -431,6 +431,7 @@ $scope.setUpdatedUserData=function(data){
   $scope.setArray($rootScope.serviceList,data.serviceList);
   $scope.setArray($rootScope.termConditionList,data.termConditionList);
   $scope.setArray($rootScope.offerList,data.offerList);
+  $rootScope.$broadcast('setUpdatedUserDataDone', 'success'); 
 };
 $rootScope.getUpdatedUserData=function(){
  $rootScope.showSpinner();
@@ -534,52 +535,52 @@ $interval($scope.checkQuoteActivated, 1000);
   //         // e.preventDefault();
   //   })
   // }
-/*===============Get Updated UserData=====================*/
-$scope.setArray=function(existingArray,newArray){
-  existingArray.length = 0;
-  existingArray.push.apply(existingArray, newArray);
-  // existingArray.splice(0,existingArray.length)
-  // existingArray=JSON.parse(JSON.stringify(newArray));
-};
-$scope.setUpdatedUserData=function(data){
-  console.log("setUpdatedUserData");
-  $scope.setArray($rootScope.userNavMenu,data.userMenuList);
-  $scope.setArray($rootScope.userList,data.userList);
-  $scope.setArray($rootScope.customerList,data.customerList);
-  $scope.setArray($rootScope.supplierList,data.supplierList);
-  $scope.setArray($rootScope.serviceList,data.serviceList);
-  $scope.setArray($rootScope.termConditionList,data.termConditionList);
-  $scope.setArray($rootScope.offerList,data.offerList);
-};
-$rootScope.getUpdatedUserData=function(){
- $rootScope.showSpinner();
- SQHomeServices.getUpdatedUserData();
-};
-$scope.handleGetUpdatedUserDataDoneResponse=function(data){
-  if(data){
-    if(data.code){
-    if(data.code.toUpperCase()=='SUCCESS'){ 
-     $scope.setUpdatedUserData(data);
-    }
-    else if (data.code.toUpperCase()=='ERROR'){
+// /*===============Get Updated UserData=====================*/
+// $scope.setArray=function(existingArray,newArray){
+//   existingArray.length = 0;
+//   existingArray.push.apply(existingArray, newArray);
+//   // existingArray.splice(0,existingArray.length)
+//   // existingArray=JSON.parse(JSON.stringify(newArray));
+// };
+// $scope.setUpdatedUserData=function(data){
+//   console.log("setUpdatedUserData");
+//   $scope.setArray($rootScope.userNavMenu,data.userMenuList);
+//   $scope.setArray($rootScope.userList,data.userList);
+//   $scope.setArray($rootScope.customerList,data.customerList);
+//   $scope.setArray($rootScope.supplierList,data.supplierList);
+//   $scope.setArray($rootScope.serviceList,data.serviceList);
+//   $scope.setArray($rootScope.termConditionList,data.termConditionList);
+//   $scope.setArray($rootScope.offerList,data.offerList);
+// };
+// $rootScope.getUpdatedUserData=function(){
+//  $rootScope.showSpinner();
+//  SQHomeServices.getUpdatedUserData();
+// };
+// $scope.handleGetUpdatedUserDataDoneResponse=function(data){
+//   if(data){
+//     if(data.code){
+//     if(data.code.toUpperCase()=='SUCCESS'){ 
+//      $scope.setUpdatedUserData(data);
+//     }
+//     else if (data.code.toUpperCase()=='ERROR'){
    
-    }
-    $rootScope.hideSpinner();
-  }
-}
-};
+//     }
+//     $rootScope.hideSpinner();
+//   }
+// }
+// };
 
-var cleanupEventGetUpdatedUserDataDone = $scope.$on("GetUpdatedUserDataDone", function(event, message){
-  console.log("cleanupEventGetUpdatedUserDataDone");
-  console.log(message);
-  $scope.handleGetUpdatedUserDataDoneResponse(message);      
-});
+// var cleanupEventGetUpdatedUserDataDone = $scope.$on("GetUpdatedUserDataDone", function(event, message){
+//   console.log("cleanupEventGetUpdatedUserDataDone");
+//   console.log(message);
+//   $scope.handleGetUpdatedUserDataDoneResponse(message);      
+// });
 
-var cleanupEventGetUpdatedUserDataNotDone = $scope.$on("GetUpdatedUserDataNotDone", function(event, message){
-  $rootScope.alertServerError("Server error");
-  $rootScope.hideSpinner();
-});
-/*===============Get Updated UserData=====================*/
+// var cleanupEventGetUpdatedUserDataNotDone = $scope.$on("GetUpdatedUserDataNotDone", function(event, message){
+//   $rootScope.alertServerError("Server error");
+//   $rootScope.hideSpinner();
+// });
+// /*===============Get Updated UserData=====================*/
 ///-------------------------Confirmation Window-----------------
 
 $rootScope.getFormattedDate=function(date){

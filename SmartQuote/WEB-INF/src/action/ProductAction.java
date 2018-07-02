@@ -239,6 +239,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public String updateProductDetails() {
 		// System.out.println("updateProductDetails init :::"+df.format(dateobj));
 		String productDetails = request.getParameter("productDetails");
+		System.out.println("productDetails :"+productDetails);
 		ProductBean objBean = new ProductBean();
 		objBean = new Gson().fromJson(productDetails, ProductBean.class);
 		boolean isProductUpdated = false;
