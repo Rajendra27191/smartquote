@@ -1,0 +1,202 @@
+<style type="text/css" media="screen">
+    .borderBox {
+        border: 1px solid #EEE8E8;
+        padding: 12px;
+        border-radius: 6px;
+    }
+    
+    .borderTable {
+        border: 1px solid #EEE8E8;;
+        border-radius: 0px;
+    }
+    
+    .main-label {
+        margin: 3% 0% 1% 0%;
+    }
+    
+    .form-control[disabled],.form-control[readonly],fieldset[disabled] .form-control
+        { /* background-color: #f3f3f3; */
+        /* opacity: 1; */
+        background: rgba(243, 243, 243, 0.5);
+    }
+    
+    textarea {
+        resize: none;
+    }
+    
+    [class|=col-md-4] {
+        padding-right: 0px;
+    }
+    
+    .col-panel {
+        padding: 0px;
+    }
+    
+    fieldset {
+        border: 1px solid gray;
+        /* background: #ddd; */
+        border-radius: 5px;
+        padding: 15px;
+    }
+    
+    legend {
+        display: block;
+        width: auto;
+        border-bottom: none;
+        margin-bottom: 0px;
+        font-size: 15px;
+    }
+    
+    .table>thead>tr>th {
+        padding: 5px;
+        /*text-align: center;*/
+    }
+    
+    .para {
+        margin: 0px;
+        /* color:rgba(119, 117, 117, 0.8); */
+    }
+    
+    legend>label {
+        color: #113654;
+    }
+    
+    .commentBox {
+        background: gray;
+        position: relative;
+        background: #FFF;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        width: 250px;
+        height: 150px
+    }
+    
+    .commentBox:before {
+        content: "";
+        position: absolute;
+        top: 60px;
+        left: -30px;
+        z-index: 1;
+        border: solid 15px transparent;
+        border-right-color: #FFF;
+    }
+    
+    table.dataTable tbody th,table.dataTable tbody td {
+        padding: 8px 3px;
+    }
+    
+    .viewQuote {
+        margin-right: 5%;
+        margin-left: 5%;
+    }
+    tr td {
+      cursor: pointer
+    }
+    
+    tr.selected td {
+    border-top: 1px solid #ddd;
+    background: #ececec!important;
+    }
+    .won{
+    color: #5cb85c;
+    border: 2px solid #5cb85c;
+    }
+    .lost{
+    color: #d9534f;
+    border: 2px solid #d9534f;
+    }
+    .saved{
+    color: #0275d8;
+    border: 2px solid #0275d8;
+    }
+    .updated{
+    color: #f0ad4e;
+    border: 2px solid #f0ad4e;
+    }
+    .closed{
+    color: #777;
+    border: 2px solid #777;
+    }
+    .ini{
+    color: darkgray;
+    border: 2px solid darkgray;
+    }
+    
+    /* .fa-lg{ font-size: 1.4em;color: rgba(15, 70, 116, 0.84);} */
+    </style>
+    <div class="viewQuote">
+        <div class="row">
+            <div class="col-md-12">
+                <center>
+                    <label class="main-label">Restore Proposal</label>
+                </center>
+            </div>
+        </div>
+        <!-- <div class="row">
+                <div class="col-md-12">
+                        <small class="invalid-control">Note : </small>
+                </div>
+        </div> -->
+        <!-- {{showRestoreQuoteView}} -->
+        <!-- {{quoteListView}} -->
+        <div id="quoteTable" style="font-size: 12px;" ng-if="quoteListView && !showRestoreQuoteView">
+            <table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table row-border hover table-responsive">
+                <thead class="table-header">
+                    <tr>
+                        <th style="width: 7%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
+                        <th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
+                        <th style="width: 10%;">Cust Name &nbsp;</th>
+                        <th style="width: 13%;">Email &nbsp;</th>
+                        <th style="width: 10%;">Sales Person &nbsp;</th>
+                        <th style="width: 10%;">Supplier &nbsp;</th>
+                        <th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
+                        <th style="width: 10%;text-align:center;">Status &nbsp;</th>
+                        <th style="width: 11%;text-align:center;">Action &nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="quote in quoteListView">
+                        <td style="text-align:center;">
+                            {{::quote.quoteId}}
+                        </td>				
+                        <td style="text-align:center;">
+                            {{:: getFormattedDate(quote.createdDate)}}
+                        </td>
+                        <td >
+                            {{::quote.custName}}
+                        </td>
+                        <td>
+                            {{::quote.email}}
+                        </td>
+                        <td>
+                            {{::quote.salesPerson}}
+                            <span ng-if="quote.salesPerson==''"> --- </span>
+                        </td>
+                        <td>
+                            {{::quote.currentSupplierName}}
+                            <span ng-if="quote.currentSupplierName==''||quote.currentSupplierName==null">--- </span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span ng-if="quote.modifiedDate!=null" > 
+                            {{::getFormattedDate(quote.modifiedDate)}}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="col-md-11 col-md-offset-1">
+                            <span ng-class="{'ini': quote.status.toLowerCase()=='ini','won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
+                            {{::quote.status}}
+                            </span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <button  class="btn btn-default" ng-click="viewRestoreProposal(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Restore
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div ng-if="showRestoreQuoteView" ng-include="'SQ/UserHome/Quote/views/sq.autosave_quote.view.html'"></div>

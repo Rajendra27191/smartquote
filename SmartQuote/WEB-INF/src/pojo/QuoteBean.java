@@ -36,6 +36,9 @@ public class QuoteBean {
 	private ArrayList<KeyValuePairBean> serviceList;
 	private ArrayList<OfferBean> offerList;
 	private boolean saveWithAlternative;
+	private String isNewProductAdded;
+	
+	
 	private ArrayList<AlternateProductBean> alternativeArray;
 
 	public String getStatus() {
@@ -261,25 +264,34 @@ public class QuoteBean {
 	public void setOfferList(ArrayList<OfferBean> offerList) {
 		this.offerList = offerList;
 	}
-	@Override
-	public String toString() {
-		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
-				+ email + ", faxNo=" + faxNo + ", phone=" + phone + ", quoteAttn=" + quoteAttn + ", isNewCustomer=" + isNewCustomer
-				+ ", monthlyAvgPurchase=" + monthlyAvgPurchase + ", notes=" + notes + ", pricesGstInclude=" + pricesGstInclude
-				+ ", productList=" + productList + ", currentSupplierName=" + currentSupplierName + ", competeQuote=" + competeQuote
-				+ ", salesPerson=" + salesPerson + ", currentSupplierId=" + currentSupplierId + ", salesPersonId=" + salesPersonId
-				+ ", userId=" + userId + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate + ", status=" + status
-				+ ", commentList=" + commentList + ", termConditionList=" + termConditionList + ", serviceList=" + serviceList
-				+ ", offerList=" + offerList + ", saveWithAlternative=" + saveWithAlternative + ", alternativeArray=" + alternativeArray
-				+ "]";
-	}
-
+	
 	public String getCustLogo() {
 		return custLogo;
 	}
 
 	public void setCustLogo(String custLogo) {
 		this.custLogo = custLogo;
+	}
+
+	public String getIsNewProductAdded() {
+		return isNewProductAdded;
+	}
+
+	public void setIsNewProductAdded(String isNewProductAdded) {
+		this.isNewProductAdded = isNewProductAdded;
+	}
+
+	@Override
+	public String toString() {
+		return "QuoteBean [quoteId=" + quoteId + ", custCode=" + custCode + ", custName=" + custName + ", address=" + address + ", email="
+				+ email + ", faxNo=" + faxNo + ", phone=" + phone + ", custLogo=" + custLogo + ", quoteAttn=" + quoteAttn
+				+ ", isNewCustomer=" + isNewCustomer + ", monthlyAvgPurchase=" + monthlyAvgPurchase + ", notes=" + notes
+				+ ", pricesGstInclude=" + pricesGstInclude + ", productList=" + productList + ", currentSupplierName="
+				+ currentSupplierName + ", competeQuote=" + competeQuote + ", salesPerson=" + salesPerson + ", currentSupplierId="
+				+ currentSupplierId + ", salesPersonId=" + salesPersonId + ", userId=" + userId + ", createdDate=" + createdDate
+				+ ", modifiedDate=" + modifiedDate + ", status=" + status + ", commentList=" + commentList + ", termConditionList="
+				+ termConditionList + ", serviceList=" + serviceList + ", offerList=" + offerList + ", saveWithAlternative="
+				+ saveWithAlternative + ", isNewProductAdded=" + isNewProductAdded + ", alternativeArray=" + alternativeArray + "]";
 	}
 
 	

@@ -139,7 +139,7 @@
 </style>
 
 <div class="container" style="padding-right: 25px;padding-left: 25px;">
-    <div class="row">
+    <div class="row" ng-if="!showRestoreQuoteView">
         <div class="col-md-12">
             <center>
                 <label class="main-label">Autosave Proposal</label>
@@ -157,7 +157,7 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" >
         <div class="col-md-12">
             <form name="form.addCustomerQuote" novalidate>
                 <div id="customerInformation" class="panel panel-default" style="border-radius:4px 4px 0px 0px;">
@@ -291,6 +291,7 @@
                                         <span class="asteric"></span>
                                     </div>
                                     <div class="col-md-8">
+                                        <!-- {{customerQuote.salesPerson}} -->
                                         <select type="text" name="salesPerson" class="form-control" ng-model="customerQuote.salesPerson" ng-options="salesPerson as salesPerson.value  for salesPerson in userList | filter:shouldShow" ng-disabled="disableSalesPersonSelect || isProposalGenerated" required>
                                             <option value="">Select Sales Person</option>
                                         </select>
@@ -411,18 +412,6 @@
                                 </div>
                             </div>
                         </div>                      
-                         <!-- <div class="row row-control" ng-hide="isProposalGenerated">
-                            <div class="col-md-2 col-md-offset-8">
-                                <button class="btn btn-default btn-block" ng-disabled="isProposalGenerated" ng-click="resetCustomerInfo()" style="padding: 3px 12px;">
-                                    <i class="fa fa-refresh" aria-hidden="true"></i> Reset
-                                </button>
-                            </div>
-                            <div class="col-md-2">
-                                <button id="create" ng-disabled="isProposalGenerated" ng-click="generateProposal()" class="btn btn-primary btn-block" style="padding: 3px 12px;">
-                                    <i class="fa fa-floppy-o" aria-hidden="true"></i> Generate</span>
-                                </button>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="panel panel-default" style="border-radius:0px;">
@@ -433,7 +422,7 @@
                     </div>
                     <div class="col-md-6"></div>
                     <div class="col-md-2">
-                        <button class="btn btn-default btn-block" 
+                        <button id="addProductBtn" class="btn btn-default btn-block" 
                         style="color:#113654;font-weight: bold;cursor: pointer;padding:0px;" 
                         ng-click="showAddProductModal('add')" tooltip-placement="top" uib-tooltip="Click to add products. [ctrl+shift+a]" >
                         <i class="glyphicon glyphicon-plus"></i> Add Product
@@ -713,10 +702,10 @@
                     <div class="col-md-12" style="padding: 0px;">
                     <div class="col-md-6"></div>
                     <div class="col-md-2" style="padding: 0px;padding-left:10px;" >
-                    <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
+                    <!-- <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
                     <label class="sub-label">Save With Alternative</label>
                     <switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
-                    </div>
+                    </div> -->
                     </div>
                     <div class="col-md-4" style="padding: 0px;">
                     <div class="col-md-6">
@@ -724,7 +713,7 @@
                     <!-- <button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button> -->
                     </div>	
                     <div class="col-md-6">
-                    <button id='cancel' ng-click="" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
+                    <button id='cancel' ng-click="cancelGeneratedProposal()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
                     </div>		
                     </div>
                 

@@ -16,7 +16,8 @@ angular.module('sq.SmartQuoteDesktop')
         getProductDetailsAPI: $resource($rootScope.projectName + '/getProductDetails?productCode=:productCode', {}, { getProductDetailsMethod: { method: 'GET' }, params: { productCode: '@productCode' } }),
 
         // getSalesPersonList:$resource('/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
-        getGeneratedQuoteViewAPI: $resource($rootScope.projectName + '/getGeneratedQuoteView', {}, { getGeneratedQuoteViewMethod: { method: 'POST' } }),
+        getGeneratedQuoteListAPI: $resource($rootScope.projectName + '/getGeneratedQuoteList', {}, { getGeneratedQuoteListMethod: { method: 'POST' } }),
+        getGeneratedQuoteViewAPI: $resource($rootScope.projectName + '/getGeneratedQuoteView?quoteId=:quoteId', {}, { getGeneratedQuoteViewMethod: { method: 'GET' }, params: { quoteId: '@quoteId' }  }),
       };
       var quote = {};
       var data;
@@ -298,10 +299,22 @@ angular.module('sq.SmartQuoteDesktop')
             $rootScope.$broadcast('SaveGeneratedProposalNotDone', data);
           });
       };
-      quote.GetGeneratedQuoteView = function () {
+      quote.GetGeneratedQuoteList = function () {
         // console.log("GetQuoteView")
-        QuoteServices.getGeneratedQuoteViewAPI.getGeneratedQuoteViewMethod(function (success) {
-          console.log(success);
+        QuoteServices.getGeneratedQuoteListAPI.getGeneratedQuoteListMethod(function (success) {
+          if (success.code == "sessionTimeOut") {
+            $rootScope.$broadcast('SessionTimeOut', success);
+          } else {
+            $rootScope.$broadcast('GetGeneratedQuoteListDone', success);
+          }
+        }, function (error) {
+          console.log(error);
+          $rootScope.$broadcast('GetGeneratedQuoteListNotDone', error);
+        });
+      };
+      quote.GetGeneratedQuoteView = function (quoteId) {
+        // console.log("GetQuoteView")
+        QuoteServices.getGeneratedQuoteViewAPI.getGeneratedQuoteViewMethod({ "quoteId": quoteId },function (success) {
           if (success.code == "sessionTimeOut") {
             $rootScope.$broadcast('SessionTimeOut', success);
           } else {
@@ -324,7 +337,7 @@ angular.module('sq.SmartQuoteDesktop')
       return quote;
     }])
 
-    
+
 
   // quote.GetStandardCalculations = function (){
   // console.log("GetStandardCalculations")

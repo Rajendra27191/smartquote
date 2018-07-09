@@ -415,6 +415,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getGeneratedQuoteList" class="action.QuoteAction" method="getGeneratedQuoteList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="getGeneratedQuoteView" class="action.QuoteAction" method="getGeneratedQuoteView">
 			<result name="success" type="json">
 				<param name="root">quoteResponseBean</param>
@@ -570,7 +576,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
 		<action name="pdfDemo" class="action.CustComparisonAction"
 			method="pdfDemo">
 			<result name="success" type="json">
@@ -578,7 +583,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
 		<action name="createOffer" class="action.OfferAction" method="createOffer">
 			<result name="success" type="json">
 				<param name="root">objDetailResponseBean</param>
@@ -726,5 +730,12 @@
 				<param name="format">XLS</param>
 			</result>
 		</action> 
+		<action name="refreshProductFile" class="action.ProductAction"
+			method="refreshProductFile">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

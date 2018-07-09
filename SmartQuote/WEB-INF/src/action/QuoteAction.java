@@ -31,6 +31,7 @@ import dao.AlternateProductDao;
 import dao.CustomerDao;
 import dao.ProductDao;
 import dao.QuoteDao;
+import dao.QuoteTempDao;
 
 @SuppressWarnings("serial")
 public class QuoteAction extends ActionSupport implements ServletRequestAware {
@@ -627,10 +628,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		int supplierId = 0;
 		int customerId = 0;
 		QuoteDao objQuoteDao = new QuoteDao();
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		CustomerDao objCustomerDao = new CustomerDao();
 		try {
 			synchronized (httpSession) {
-				boolean isCustomerExist =false;
+				boolean isCustomerExist = false;
 				KeyValuePairBean objSupplier;
 				String status = "INI";
 				QuoteBean objQuoteBean = new QuoteBean();
@@ -642,9 +644,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				// ----------------
 				System.out.println("New Customer : " + objQuoteBean.getIsNewCustomer().toLowerCase());
 				if (objQuoteBean.getIsNewCustomer().toLowerCase().equals("yes") || objQuoteBean.getIsNewCustomer().toLowerCase() == "yes") {
-				    isCustomerExist = objCustomerDao.isCustomerExist(objQuoteBean.getCustCode());
+					isCustomerExist = objCustomerDao.isCustomerExist(objQuoteBean.getCustCode());
 					if (isCustomerExist) {
-
 					} else {
 						CustomerBean objBean = new CustomerBean();
 						objBean.setCustomerCode(objQuoteBean.getCustCode());
@@ -670,27 +671,30 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				// ----------------
 				if (objQuoteBean.getCurrentSupplierId() == 0) {
 					System.out.println("SaveCurrentSupplier :>>");
-					System.out.println(objQuoteBean.getCurrentSupplierId());
-					System.out.println(objQuoteBean.getCurrentSupplierName().isEmpty());
+					// System.out.println(objQuoteBean.getCurrentSupplierId());
+					// System.out.println(objQuoteBean.getCurrentSupplierName().isEmpty());
 					if (!objQuoteBean.getCurrentSupplierName().isEmpty()) {
 						objSupplier = objQuoteDao.getSupplierIfExist(objQuoteBean.getCurrentSupplierName());
-						if(objSupplier.getValue().equals(null)){
+						System.out.println(objSupplier.toString());
+						if (objSupplier.getValue() == null) {
 							supplierId = objQuoteDao.saveCurrentSupplier(objQuoteBean.getCurrentSupplierName());
-							objQuoteBean.setCurrentSupplierId(supplierId);	
-						}else{
+							objQuoteBean.setCurrentSupplierId(supplierId);
+						} else {
 							objQuoteCreateResponseBean.setNewSupplierCreated(true);
 							objQuoteCreateResponseBean.setGenratedSupplierId(objSupplier.getKey());
-						}					
+						}
 					}
 				}
 				boolean isQuoteSaved = false;
 				String quoteId = "";
 				quoteId = objQuoteDao.getGenratedQuoteId();
 				objQuoteBean.setQuoteId(quoteId);
-				isQuoteSaved = objQuoteDao.saveQuoteTemp(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
+				isQuoteSaved = objQuoteTempDao.saveQuoteTemp(objQuoteBean, String.valueOf(objQuoteBean.getUserId()), status);
 				System.out.print("quoteId  : " + quoteId);
 				objQuoteDao.updateQuoteId();
 				objQuoteDao.commit();
+				objQuoteTempDao.commit();
+
 				if (isCustomerExist) {
 					objQuoteCreateResponseBean.setCode("error");
 					objQuoteCreateResponseBean.setMessage("Customer with this code is already exist");
@@ -714,9 +718,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		} finally {
 			objCustomerDao.closeAll();
 			objQuoteDao.closeAll();
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
+
 	public String addProductToProposal() {
 		System.out.println("addProductToProposal");
 		objQuoteAddProductResponse = new QuoteAddProductResponseBean();
@@ -728,27 +734,23 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		String productDetails = request.getParameter("objProductBean");
 		System.out.println("productDetails: " + productDetails);
 		objProductBean = gson.fromJson(productDetails, ProductBean.class);
-		System.out.println(objProductBean.toString());
-		QuoteDao objQuoteDao = new QuoteDao();
+
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		ProductDao objProductDao = new ProductDao();
 		AlternateProductDao altProductDao = new AlternateProductDao();
 		try {
 			boolean isProductCreated;
 			int newProductCount = 0;
 			int quoteDetailId = 0;
-			if (objProductBean!=null) {
-				if (objProductBean.getIsNewProduct()!= null
-						&& objProductBean.getIsNewProduct().equalsIgnoreCase("true")) {
+			if (objProductBean != null) {
+				if (objProductBean.getIsNewProduct() != null && objProductBean.getIsNewProduct().equalsIgnoreCase("true")) {
 					isProductCreated = false;
 					isProductCreated = objProductDao.saveProduct(objProductBean);
-//					if (isProductCreated){
-//						String projectPath = request.getSession().getServletContext().getRealPath("/");
-//						CommonLoadAction.createProductFile(projectPath);	
-//					}
-					objProductDao.commit();
+					objQuoteAddProductResponse.setNewProductCreated(isProductCreated);
+					// objProductDao.commit();
 				}
 			}
-			if (objProductBean.getAltProd()!=null) {
+			if (objProductBean.getAltProd() != null) {
 				boolean isAlternateSaved = false;
 				String mainId, alternativeId;
 				mainId = objProductBean.getItemCode();
@@ -757,29 +759,30 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				System.out.println("isAlternateSaved : " + isAlternateSaved);
 				altProductDao.commit();
 			}
-			if(objProductBean.getQuoteId()!=null && objProductBean.getQuoteId()!= ""){
+			if (objProductBean.getQuoteId() != null && objProductBean.getQuoteId() != "") {
 				objProductBean.setQuoteDetailId(quoteDetailId);
-				quoteDetailId = objQuoteDao.saveQuoteDetailsTemp(objProductBean, objProductBean.getQuoteId());
+				quoteDetailId = objQuoteTempDao.saveQuoteDetailsTemp(objProductBean, objProductBean.getQuoteId());
 				objQuoteAddProductResponse.setQuoteDetailIdMain(quoteDetailId);
-				System.out.println("quoteDetailId>>"+quoteDetailId);
-				if (objProductBean.getAltProd()!=null) {
+				System.out.println("quoteDetailId>>" + quoteDetailId);
+				if (objProductBean.getAltProd() != null) {
 					objProductBean.getAltProd().setQuoteDetailId(quoteDetailId);
-					quoteDetailId = objQuoteDao.saveQuoteDetailsTemp(objProductBean.getAltProd(), objProductBean.getQuoteId());
+					quoteDetailId = objQuoteTempDao.saveQuoteDetailsTemp(objProductBean.getAltProd(), objProductBean.getQuoteId());
 					objQuoteAddProductResponse.setQuoteDeatilIdAlt(quoteDetailId);
 				}
-				objQuoteDao.commit();
+				objQuoteTempDao.commit();
 			}
 			objQuoteAddProductResponse.setCode("success");
 			objQuoteAddProductResponse.setMessage("add products successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			objProductDao.closeAll();
 			altProductDao.closeAll();
-			objQuoteDao.closeAll();
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
+
 	public String editProductIntoProposal() {
 		System.out.println("editProductIntoProposal");
 		objQuoteAddProductResponse = new QuoteAddProductResponseBean();
@@ -791,37 +794,54 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		String productDetails = request.getParameter("objProductBean");
 		System.out.println("productDetails: " + productDetails);
 		objProductBean = gson.fromJson(productDetails, ProductBean.class);
-		System.out.println(objProductBean.toString());
-		QuoteDao objQuoteDao = new QuoteDao();
-//		ProductDao objProductDao = new ProductDao();
-//		AlternateProductDao altProductDao = new AlternateProductDao();
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
+		ProductDao objProductDao = new ProductDao();
+		AlternateProductDao altProductDao = new AlternateProductDao();
 		try {
+			boolean isProductCreated;
 			int quoteDetailId = 0;
-			if(objProductBean.getQuoteId()!=null && objProductBean.getQuoteId()!= ""){
-				quoteDetailId = objQuoteDao.updateQuoteDetailsTemp(objProductBean, objProductBean.getQuoteId());
-//				objQuoteAddProductResponse.setQuoteDetailIdMain(quoteDetailId);
-				System.out.println("quoteDetailId>>"+quoteDetailId);
-				if (objProductBean.getAltProd()!=null) {
-					quoteDetailId = objQuoteDao.updateQuoteDetailsTemp(objProductBean.getAltProd(), objProductBean.getQuoteId());
-//					objQuoteAddProductResponse.setQuoteDeatilIdAlt(quoteDetailId);
+			if (objProductBean != null) {
+				if (objProductBean.getIsNewProduct() != null && objProductBean.getIsNewProduct().equalsIgnoreCase("true")) {
+					isProductCreated = false;
+					isProductCreated = objProductDao.saveProduct(objProductBean);
+					objProductDao.commit();
 				}
-				objQuoteDao.commit();
+			}
+			if (objProductBean.getAltProd() != null) {
+				boolean isAlternateSaved = false;
+				String mainId, alternativeId;
+				mainId = objProductBean.getItemCode();
+				alternativeId = objProductBean.getAltProd().getItemCode();
+				isAlternateSaved = altProductDao.saveAlternateProducts(mainId, alternativeId);
+				System.out.println("isAlternateSaved : " + isAlternateSaved);
+				altProductDao.commit();
+			}
+			if (objProductBean.getQuoteId() != null && objProductBean.getQuoteId() != "") {
+				int alternateFor = 0;
+				quoteDetailId = objQuoteTempDao.updateQuoteDetailsTemp(objProductBean, objProductBean.getQuoteId(), alternateFor);
+				System.out.println("quoteDetailId>>" + quoteDetailId);
+				if (objProductBean.getAltProd() != null) {
+					alternateFor = objProductBean.getQuoteDetailId();
+					quoteDetailId = objQuoteTempDao.updateQuoteDetailsTemp(objProductBean.getAltProd(), objProductBean.getQuoteId(),
+							alternateFor);
+				}
+				objQuoteTempDao.commit();
 			}
 			objQuoteAddProductResponse.setCode("success");
 			objQuoteAddProductResponse.setMessage("update products successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-//			objProductDao.closeAll();
-//			altProductDao.closeAll();
-			objQuoteDao.closeAll();
+		} finally {
+			objProductDao.closeAll();
+			altProductDao.closeAll();
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
-	
+
 	public String deleteProductFromProposal() {
 		System.out.println("deleteProductFromProposal");
-		objEmptyResponse = new EmptyResponseBean(); 
+		objEmptyResponse = new EmptyResponseBean();
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 		httpSession = request.getSession(true);
@@ -831,78 +851,91 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		System.out.println("productDetails: " + productDetails);
 		objProductBean = gson.fromJson(productDetails, ProductBean.class);
 		System.out.println(objProductBean.toString());
-		QuoteDao objQuoteDao = new QuoteDao();
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		try {
 			boolean isDeleted = false;
-			if(objProductBean.getQuoteId()!=null && objProductBean.getQuoteId()!= ""){
-				isDeleted = objQuoteDao.deleteFromQuoteDetailsTemp(objProductBean.getQuoteId(), objProductBean.getQuoteDetailId());
-				System.out.println("isDeleted >> "+isDeleted);
-				if (objProductBean.getAltProd()!=null) {
-					isDeleted = objQuoteDao.deleteFromQuoteDetailsTemp(objProductBean.getQuoteId(), objProductBean.getAltProd().getQuoteDetailId());
+			if (objProductBean.getQuoteId() != null && objProductBean.getQuoteId() != "") {
+				isDeleted = objQuoteTempDao.deleteFromQuoteDetailsTemp(objProductBean.getQuoteId(), objProductBean.getQuoteDetailId());
+				System.out.println("isDeleted >> " + isDeleted);
+				if (objProductBean.getAltProd() != null) {
+					isDeleted = objQuoteTempDao.deleteFromQuoteDetailsTemp(objProductBean.getQuoteId(), objProductBean.getAltProd()
+							.getQuoteDetailId());
 				}
-				objQuoteDao.commit();
+				objQuoteTempDao.commit();
 			}
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage("update products successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			objQuoteDao.closeAll();
+		} finally {
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
-	
+
 	public String saveGeneratedProposal() {
+		objQuoteCreateResponseBean = null;
 		objQuoteCreateResponseBean = new QuoteCreateResponseBean();
 		objQuoteCreateResponseBean.setCode("error");
 		objQuoteCreateResponseBean.setMessage(getText("common_error"));
 		httpSession = request.getSession(true);
-		QuoteDao objQuoteDao = new QuoteDao();
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		try {
 			String status = "SAVED";
 			QuoteBean objQuoteBean = new QuoteBean();
 			Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 			String quoteDetails = request.getParameter("objQuoteBean");
-			System.out.println("Quote Details: " + quoteDetails);
+			System.out.println("Quote Details :: " + quoteDetails);
 			objQuoteBean = gson.fromJson(quoteDetails, QuoteBean.class);
 			System.out.println(objQuoteBean.toString());
 			String query;
-			if(objQuoteBean.getNotes()!="" && objQuoteBean.getNotes()!=null){
-			query = "update create_quote_temp set notes='"+objQuoteBean.getNotes()+"',status ='"+status+"' "
-					+ "where quote_id='"+objQuoteBean.getQuoteId()+"';";	
-			objQuoteDao.addNoteToQuote(query);
-			}else{
-			query = "update create_quote_temp set status='"+status+"' where quote_id='"+objQuoteBean.getQuoteId()+"';";	
-			objQuoteDao.addNoteToQuote(query);	
+			if (objQuoteBean.getNotes() != "" && objQuoteBean.getNotes() != null) {
+				query = "update create_quote_temp set notes='" + objQuoteBean.getNotes() + "',status ='" + status + "' "
+						+ "where quote_id='" + objQuoteBean.getQuoteId() + "';";
+				objQuoteTempDao.addNoteToQuote(query);
+			} else {
+				query = "update create_quote_temp set status='" + status + "' where quote_id='" + objQuoteBean.getQuoteId() + "';";
+				objQuoteTempDao.addNoteToQuote(query);
 			}
-			if (objQuoteBean.getTermConditionList().size()>0) {
-				objQuoteDao.saveTermsAndConditionDetailsTemp(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
+			if (objQuoteBean.getTermConditionList().size() > 0) {
+				objQuoteTempDao.saveTermsAndConditionDetailsTemp(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
 			}
-			if (objQuoteBean.getOfferList().size()>0) {
-				objQuoteDao.saveOfferDetailsTemp(objQuoteBean.getOfferList(), objQuoteBean.getQuoteId());
+			if (objQuoteBean.getOfferList().size() > 0) {
+				objQuoteTempDao.saveOfferDetailsTemp(objQuoteBean.getOfferList(), objQuoteBean.getQuoteId());
 			}
 			boolean isDone;
-			isDone = objQuoteDao.saveQuoteToMaster(objQuoteBean.getQuoteId());
+			isDone = objQuoteTempDao.saveQuoteToMaster(objQuoteBean.getQuoteId());
 			if (isDone) {
-				objQuoteDao.deleteQuoteFromTemp(objQuoteBean.getQuoteId());
+				objQuoteTempDao.deleteQuoteFromTemp(objQuoteBean.getQuoteId());
 			}
-			objQuoteDao.commit();
+			objQuoteTempDao.commit();
+			System.out.println("isNewProductAdded "+objQuoteBean.getIsNewProductAdded());
+			if (objQuoteBean.getIsNewProductAdded().toLowerCase().equals("yes") ||objQuoteBean.getIsNewProductAdded().toLowerCase()=="yes") {
+				System.out.println("Creating New File >>>");
+				String projectPath = request.getSession().getServletContext().getRealPath("/");
+				CommonLoadAction.createProductFile(projectPath);
+				objQuoteCreateResponseBean.setNewProductCreated(true);
+			}
 			objQuoteCreateResponseBean.setCode("success");
-			objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
+			objQuoteCreateResponseBean.setMessage("quote successfull");
+//			objQuoteCreateResponseBean.setMessage(getText("quote_saved"));
+			System.out.println(objQuoteCreateResponseBean.toString());
+			System.out.println("Done...");
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			objQuoteDao.closeAll();
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
-	public String getGeneratedQuoteView() {
-		QuoteDao objQuoteDao = new QuoteDao();
+
+	public String getGeneratedQuoteList() {
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		httpSession = request.getSession(true);
 		String userId = String.valueOf(httpSession.getAttribute("userId"));
 		String userType = String.valueOf(httpSession.getAttribute("userType"));
 		quoteResponseBean = new QuoteResponseBean();
-		try {		
+		try {
 			String query = "";
 			if (userType.equalsIgnoreCase("admin")) {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
@@ -920,38 +953,46 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 						+ "left outer join user_master um on cq.sales_person_id = um.user_id " + " WHERE cq.sales_person_id =" + userId
 						+ " order by quote_id desc;";
 			}
-			quoteList = objQuoteDao.getTempQuoteList(query, getText("customer_logo_url"));
+			quoteList = objQuoteTempDao.getTempQuoteList(query, getText("customer_logo_url"));
 			System.out.println("Quote List : " + quoteList.size());
 			quoteResponseBean.setCode("success");
 			quoteResponseBean.setMessage("quote_list_loaded");
 			quoteResponseBean.setResult(quoteList);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			quoteResponseBean.setCode("common_error");
 			quoteResponseBean.setMessage("error_quote_list_loaded");
 			quoteResponseBean.setResult(quoteList);
-		}finally{
-			objQuoteDao.closeAll();
+		} finally {
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
-	public String restoreGeneratedProposal() {
-		objEmptyResponse = new EmptyResponseBean();
-		objEmptyResponse.setCode("error");
-		objEmptyResponse.setMessage(getText("common_error"));
+
+	public String getGeneratedQuoteView() {
+		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
 		httpSession = request.getSession(true);
-		QuoteDao objQuoteDao = new QuoteDao();
+		String quoteId = request.getParameter(("quoteId"));
+		quoteResponseBean = new QuoteResponseBean();
+		quoteResponseBean.setCode("error");
+		quoteResponseBean.setMessage(getText("common_error"));
 		try {
-			
+			QuoteBean objBean = objQuoteTempDao.getTempQuoteDetail(quoteId, getText("customer_logo_url"));
+			System.out.println(objBean.toString());
+			quoteResponseBean.setCode("success");
+			quoteResponseBean.setMessage("quote_info_loaded");
+			quoteResponseBean.setQuoteInfo(objBean);
 		} catch (Exception e) {
 			e.printStackTrace();
+			quoteResponseBean.setCode("common_error");
+			quoteResponseBean.setMessage("error_quote_info_loaded");
+			quoteResponseBean.setQuoteInfo(null);
 		} finally {
-			objQuoteDao.closeAll();
+			objQuoteTempDao.closeAll();
 		}
 		return SUCCESS;
 	}
-	
+
 	public QuoteCreateResponseBean getObjQuoteCreateResponseBean() {
 		return objQuoteCreateResponseBean;
 	}
@@ -967,5 +1008,5 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 	public void setObjQuoteAddProductResponse(QuoteAddProductResponseBean objQuoteAddProductResponse) {
 		this.objQuoteAddProductResponse = objQuoteAddProductResponse;
 	}
-	
+
 }

@@ -1,8 +1,8 @@
 angular.module('sq.SmartQuoteDesktop')
-.controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','$http',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,$http){
+.controller('SQUserHomeController',['$window','$scope','$rootScope','$log','$state','$timeout','SQHomeServices','$http','SQUserHomeServices',function($window,$scope,$rootScope,$log,$state,$timeout,SQHomeServices,$http,SQUserHomeServices){
 console.log('initialise SQUserHomeController controller');
 // $rootScope.initAuotoComplete();
-console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
+// console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
 $window.pageYOffset;
 
 //CODE STARTS===============================================================================================================
@@ -84,15 +84,17 @@ $scope.confirmChangeView=function(subMenuName){
   } 
   if(subMenuName.toLowerCase()==='autosave proposal'){
     $state.go('autosavequote', {}, {reload: true});   
-    $rootScope.isRestoreProposal=false;
+    $rootScope.showRestoreQuoteView = false;
   }
   if(subMenuName.toLowerCase()==='restore proposal'){    
     $state.go('restorequote', {}, {reload: true});   
-    $rootScope.isRestoreProposal=true;
   }  
   if(subMenuName.toLowerCase()==='payment reminder'){
   // $state.transitionTo('vieweditquote');    
   $state.go('paymentreminder.start', {}, {reload: true});   
+  }
+  if(subMenuName.toLowerCase()==='refresh products'){
+    $rootScope.refreshProductFileJson();
   }
   if(subMenuName==='Logout'){
   $rootScope.userSignout(); 
@@ -112,9 +114,8 @@ $rootScope.subMenuClicked=function(subMenuName){
   }
   // $rootScope.initDashBoard=false;
 };
-
 $scope.$on('$destroy', function(event, message) {
-	
+ 
  
 });
 

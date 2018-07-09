@@ -46,6 +46,12 @@ public String getGenratedProposalId() {
 public void setGenratedProposalId(String genratedProposalId) {
 	this.genratedProposalId = genratedProposalId;
 }
+@Override
+public String toString() {
+	return "QuoteCreateResponseBean [isNewProductCreated=" + isNewProductCreated + ", isNewCustomerCreated=" + isNewCustomerCreated
+			+ ", genratedCustomerId=" + genratedCustomerId + ", isNewSupplierCreated=" + isNewSupplierCreated + ", genratedSupplierId="
+			+ genratedSupplierId + ", genratedProposalId=" + genratedProposalId + "]";
+}
 
 	
 

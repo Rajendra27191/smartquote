@@ -5,6 +5,7 @@ import responseStructure.Response;
 public class QuoteAddProductResponseBean extends Response{
 	private int quoteDetailIdMain;
 	private int quoteDeatilIdAlt;
+	private boolean isNewProductCreated;
 	public int getQuoteDetailIdMain() {
 		return quoteDetailIdMain;
 	}
@@ -16,6 +17,12 @@ public class QuoteAddProductResponseBean extends Response{
 	}
 	public void setQuoteDeatilIdAlt(int quoteDeatilIdAlt) {
 		this.quoteDeatilIdAlt = quoteDeatilIdAlt;
+	}
+	public boolean isNewProductCreated() {
+		return isNewProductCreated;
+	}
+	public void setNewProductCreated(boolean isNewProductCreated) {
+		this.isNewProductCreated = isNewProductCreated;
 	}
 
 }

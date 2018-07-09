@@ -9,6 +9,7 @@ import responseStructure.Response;
 public class QuoteResponseBean extends Response{
 
 	private ArrayList<QuoteBean> result ;
+	private QuoteBean quoteInfo;
 
 	public ArrayList<QuoteBean> getResult() {
 		return result;
@@ -16,5 +17,13 @@ public class QuoteResponseBean extends Response{
 
 	public void setResult(ArrayList<QuoteBean> result) {
 		this.result = result;
+	}
+
+	public QuoteBean getQuoteInfo() {
+		return quoteInfo;
+	}
+
+	public void setQuoteInfo(QuoteBean quoteInfo) {
+		this.quoteInfo = quoteInfo;
 	}
 }

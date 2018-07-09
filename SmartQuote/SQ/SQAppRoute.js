@@ -84,13 +84,8 @@ angular.module('sq.SmartQuoteDesktop')
       templateUrl: 'SQ/UserHome/Quote/views/sq.autosave_quote.view.html',
     })
     .state('restorequote', {
-      controller:'SQAutoSaveQuoteConroller',
+      controller:'SQRestoreQuoteConroller',
       templateUrl: 'SQ/UserHome/Quote/views/sq.restore_quote.view.html',
-      // resolve:{
-      //   IsUserInSession:function(SQQuoteServices){
-      //     return SQQuoteServices.IsUserLoggedin.checkUserSession().$promise;
-      //   }
-      // }
     })
     .state('paymentreminder', {
       // url:'/smartquote',
