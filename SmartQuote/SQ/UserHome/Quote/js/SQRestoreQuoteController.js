@@ -194,6 +194,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.customerQuote = currentQuote;
                 $scope.customerQuote.customerCode = currentQuote.custCode;
                 $scope.customerQuote.customerName = currentQuote.custName;
+                $scope.customerQuote.fax = currentQuote.faxNo;
                 $scope.customerQuote.attn = currentQuote.quoteAttn;
                 var salesPerson = { 'code': currentQuote.salesPersonId.toString(), 'key': currentQuote.salesPersonId, 'value': currentQuote.salesPerson }
                 angular.forEach($scope.userList, function (user, index) {

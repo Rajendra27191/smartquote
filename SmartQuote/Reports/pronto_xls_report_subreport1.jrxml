@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pronto_xls_report_subreport1" language="groovy" pageWidth="950" pageHeight="752" columnWidth="950" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cdec12be-b6e8-4b9c-a1a4-406627f8e291">
-	<property name="ireport.zoom" value="1.0000000000000118"/>
-	<property name="ireport.x" value="328"/>
+	<property name="ireport.zoom" value="0.7513148009015868"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
 		<![CDATA[]]>
@@ -36,7 +36,7 @@
 	<field name="productUOM" class="java.lang.String">
 		<fieldDescription><![CDATA[productUOM]]></fieldDescription>
 	</field>
-	<columnHeader>
+	<title>
 		<band height="40">
 			<staticText>
 				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="0" y="0" width="178" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
@@ -166,9 +166,9 @@
 				<text><![CDATA[]]></text>
 			</staticText>
 		</band>
-	</columnHeader>
+	</title>
 	<detail>
-		<band height="25" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<textField>
 				<reportElement uuid="5dbd5de9-fdcf-45e6-b1e2-1f94ef015fc3" x="0" y="0" width="178" height="20"/>
 				<textElement>

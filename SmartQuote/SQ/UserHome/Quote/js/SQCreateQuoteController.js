@@ -31,6 +31,7 @@ $scope.isAlternateAdded=false;
 $scope.customerQuote.saveWithAlternative=false;
 
 
+
 if ($rootScope.userData) {
   if ($rootScope.userData.userType.toLowerCase()=="admin") {
     $scope.disableSalesPersonSelect=false;
@@ -307,11 +308,12 @@ $scope.getCustomerDetails(customerCode);
 $scope.assignCustomerDetails=function(data){
 var address='';
 address=data.address1;
-console.log("asssigning data to customer")
+console.log("asssigning data to customer");
+console.log(data)
 $scope.customerQuote.customerCode=data.customerCode;
 $scope.customerQuote.customerName=data.customerName;
 $scope.customerQuote.attn=data.contactPerson;
-$scope.customerQuote.address=data.address;
+$scope.customerQuote.address=data.address1;
 $scope.customerQuote.phone=data.phone;
 $scope.customerQuote.email=data.email;
 $scope.customerQuote.fax=data.fax;

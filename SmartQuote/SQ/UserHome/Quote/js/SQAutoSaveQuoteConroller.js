@@ -164,7 +164,8 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.customerQuote.customerCode = data.customerCode;
                 $scope.customerQuote.customerName = data.customerName;
                 $scope.customerQuote.attn = data.contactPerson;
-                $scope.customerQuote.address = data.address;
+                //$scope.customerQuote.address = data.address;
+                $scope.customerQuote.address=data.address1;
                 $scope.customerQuote.phone = data.phone;
                 $scope.customerQuote.email = data.email;
                 $scope.customerQuote.fax = data.fax;

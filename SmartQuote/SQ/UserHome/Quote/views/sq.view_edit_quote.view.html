@@ -286,7 +286,7 @@ border: 2px solid darkgray;
 								</div>
 								<div class="col-md-3">
 									<label>Created Date</label>: <span
-										data-ng-bind="customerQuote.createdDate"></span>
+										data-ng-bind="getFormattedDate(customerQuote.createdDate)"></span>
 								</div>
 								<div class="col-md-4">
 									<label>Customer Name</label>: <span
@@ -353,7 +353,7 @@ border: 2px solid darkgray;
 												</p>
 												<p
 													style="margin: 0 0 0px; text-align: right; color: #999; font-size: 13px;">
-													<span ng-bind="commentList.date"></span>
+													<span ng-bind="getFormattedDate(commentList.date)"></span>
 												</p>
 											</div>
 										</div>

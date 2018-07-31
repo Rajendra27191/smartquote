@@ -746,6 +746,7 @@ public class PaymentReminderDao {
 			int i = pstmt.executeUpdate();
 			if (i > 0)
 				isUpdated = true;
+			System.out.println("Rows affected : "+i);
 		} catch (Exception e) {
 			try {
 				conn.rollback();
