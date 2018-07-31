@@ -24,6 +24,7 @@ angular.module('sq.SmartQuoteDesktop')
             $scope.addProduct = {};
             $scope.customerQuote.saveWithAlternative = false;
             $scope.isNewProductCreatedByQuote = false;
+            $rootScope.addedProductCount = 0;
 
             //==============================================================================================
             //----------------- AUTOSAVE PROPOSAL -----------------
