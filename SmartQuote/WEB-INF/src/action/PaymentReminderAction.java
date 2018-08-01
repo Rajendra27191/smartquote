@@ -516,7 +516,7 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 		XMLReader objFileReader = new XMLReader();
 		PaymentReminderDao objDao = null;
 		Report objReport; // = new Report();
-		String queryStr = "", query1 = "", query2 = "", query3 = "";
+		String queryStr = "", query1 = "", query2 = "", query3 = "",query4="",query5="";
 		try {
 			objReport = objFileReader.convertXMLFileToReport(reminderFile + "");
 			System.out.println("1..."+objReport.getSkipOneOrReportInfoOrPageHeader().size());
@@ -582,10 +582,10 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 						isFileLoadStatusAdded = objDao.saveFileLoadStatus(fileId, fileName, rowCount, startDate, endDate);
 						queryStr = "DELETE FROM file_log_transactions WHERE trans_type='CU' OR ref LIKE 'C00%';";
 						objDao.executeQuery(queryStr);
-
-						query1 = "update file_log a, file_log_emails b set a.email = b.email " + "where a.customer_code = b.customer_code;";
-						query2 = "update customer_master a, file_log_emails b set a.email = b.email "
-								+ "where a.customer_code = b.customer_code;";
+						query1 = "UPDATE file_log a, file_log_emails b SET a.email = b.email "
+								+ "WHERE a.customer_code = b.customer_code AND file_id ="+fileId;
+//						query2 = "UPDATE customer_master a, file_log_emails b SET a.email = b.email "
+//								+ "WHERE a.customer_code = b.customer_code;";
 						query3 = "UPDATE file_log a INNER JOIN "
 								+ "(SELECT file_id, customer_code, ifnull(sum(outstanding_bal), 0) outstanding_bal, "
 								+ "ifnull(sum(postdated_amount), 0) postdated_amount, ifnull(sum(current_amount), 0) current_amount,"
@@ -597,9 +597,25 @@ public class PaymentReminderAction extends ActionSupport implements ServletReque
 								+ "a.60_amount = 60_days_amount, a.90_amount = 90_days_amount, "
 								+ "a.post_dated_amount = postdated_amount, "
 								+ "a.total_amount = (b.postdated_amount + b.current_amount + b.30_days_amount + b.60_days_amount + b.90_days_amount);";
+						
+						query4="UPDATE file_log a INNER JOIN "
+								+ "(SELECT fl.file_id,fl.customer_code FROM file_log fl "
+								+ "WHERE fl.customer_code NOT IN "
+								+ "(SELECT customer_code FROM file_log_transactions where file_id = "+fileId+") AND file_id="+fileId+") b "
+								+ "ON a.file_id = b.file_id AND a.customer_code = b.customer_code "
+								+ "SET a.current_amount = 0, a.30_amount = 0, "
+								+ "a.60_amount = 0, a.90_amount = 0,a.post_dated_amount = 0, a.total_amount = 0;";						
+						
+//						query5="UPDATE file_log fl INNER JOIN "
+//								+ "(SELECT customer_code,email from file_log_emails) fle "
+//								+ "ON fl.customer_code = fle.customer_code set fl.email = fle.email "
+//								+ "WHERE fl.file_id="+fileId+";";
+						
 						objDao.executeQuery(query1);
-						objDao.executeQuery(query2);
+//						objDao.executeQuery(query2);
 						objDao.executeQuery(query3);
+						objDao.executeQuery(query4);
+//						objDao.executeQuery(query5);
 					}
 
 					if (isFileLoadStatusAdded) {

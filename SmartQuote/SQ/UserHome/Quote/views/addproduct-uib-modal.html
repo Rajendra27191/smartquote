@@ -740,11 +740,11 @@ No alternatives added Please select "Search" radio.
 <p ng-bind="productInfo.itemDescription"></p>
 <p>
 <span ng-bind="productInfo.description2" ng-if="productInfo.description2!=null"></span>
-<span ng-if="productInfo.description2==null">-</span>
+<span ng-if="productInfo.description2==null || productInfo.description2==''">-</span>
 </p>
 <p>
 <span ng-bind="productInfo.description3" ng-if="productInfo.description3!=null"></span>
-<span ng-if="productInfo.description3==null">-</span>
+<span ng-if="productInfo.description3==null || productInfo.description3==''">-</span>
 </p>
 <p ng-bind="productInfo.unit"></p>
 <p ng-bind="productInfo.gstFlag"></p>
@@ -779,7 +779,7 @@ No alternatives added Please select "Search" radio.
 </div>
 <div class="col-md-2" style="padding:0px;position:relative;">
 <fieldset>
-<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings 1</label></legend>
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings </label></legend>
 <!-- <span style="font-weight: 700;font-size: 20px;position: absolute;margin: 30% 26%;color: #337ab7;text-align: center;">{{productSavings()}} %</span> -->
 
 <div id="bigCircle" ng-hide="productSavings()<=0">
@@ -822,7 +822,7 @@ animation-delay="0">
 </div>
 <div class="col-md-2" style="padding:0px;">
 <fieldset >
-<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings 2</label></legend>            
+<legend><label class="label label-default sub-label" style="color:#fff;">Product Savings </label></legend>            
 <!-- <p class="para"><center>No data available</center></p> -->
 <div id="bigCircle" ng-hide="productSavings()<=0">
 <div class="progress-wrapper">

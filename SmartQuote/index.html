@@ -1,6 +1,7 @@
-	<!DOCTYPE html>
-	<html lang="en" ng-app="sq.SmartQuoteDesktop">
-	<head>
+<!DOCTYPE html>
+<html lang="en" ng-app="sq.SmartQuoteDesktop">
+
+<head>
 	<title>Smart Proposal</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -26,47 +27,51 @@
 	<!-- SQ CSS-->
 	<link rel="stylesheet" type="text/css" href="assets/css/sq1.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/sq2.css">
-	</head>
-	<body ng-controller="SmartQuoteDesktopController"
-	ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}">
+</head>
+
+<body ng-controller="SmartQuoteDesktopController" ng-class="{'login-background':!isUserSignIn,'userhome-background':isUserSignIn}">
 	<!-- ==========================Start Top Navigation======================== -->
 	<div sq-spinner info="loadingInfo"></div>
-	<nav id="top" class="navbar navbar-inverse navbar-fixed-top ng-cloak"
-	role="navigation" ng-if="isUserSignIn">
-	<div class="container-fluid">
-	<div class="navbar-header">
-	<button type="button" class="navbar-toggle collapsed"
-	data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-	aria-controls="navbar">
-	<span class="sr-only">Toggle navigation</span> <span
-	class="icon-bar"></span> <span class="icon-bar"></span> <span
-	class="icon-bar"></span>
-	</button>
-	</div>
-	<div id="navbar" class="navbar-collapse collapse">
-	<!-- <ul class="nav navbar-nav" ng-if="isPaymentReminderAccess(menu.menuName);" ng-repeat="menu in userNavMenu"> -->
-	<ul class="nav navbar-nav" ng-repeat="menu in userNavMenu">
-	<li ng-if="!(menu.subMenuBeans.length>0)">
-	<a href="#"><span data-ng-bind="menu.menuName" ng-click="menuClicked(menu.menuName)"></span></a>
-	</li>
-	<li ng-if="menu.subMenuBeans.length>0 && menu.menuName!=='Profile'"	class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="menuClicked(menu.menuName)">
-	<span data-ng-bind="menu.menuName"></span> <i class="caret"></i>
-	</a>
-	<ul class="dropdown-menu">
-	<li ng-repeat="submenu in menu.subMenuBeans">
-	<a href="#"	ng-click="subMenuClicked(submenu.subMenuName)">
-	<span data-ng-bind="submenu.subMenuName"></span>
-	</a>
-	</li>
-	</ul>
-	</li>
-	<!-- <li class="dropdown" ng-if="$last"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+	<nav id="top" class="navbar navbar-inverse navbar-fixed-top ng-cloak" role="navigation" ng-if="isUserSignIn">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				 aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<!-- <ul class="nav navbar-nav" ng-if="isPaymentReminderAccess(menu.menuName);" ng-repeat="menu in userNavMenu"> -->
+				<ul class="nav navbar-nav" ng-repeat="menu in userNavMenu">
+					<li ng-if="!(menu.subMenuBeans.length>0)">
+						<a href="#">
+							<span data-ng-bind="menu.menuName" ng-click="menuClicked(menu.menuName)"></span>
+						</a>
+					</li>
+					<li ng-if="menu.subMenuBeans.length>0 && menu.menuName!=='Profile'" class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ng-click="menuClicked(menu.menuName)">
+							<span data-ng-bind="menu.menuName"></span>
+							<i class="caret"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="submenu in menu.subMenuBeans|filter:shouldShowSubmenu">
+								<a href="#" ng-click="subMenuClicked(submenu.subMenuName)">
+									<i class="fa fa-refresh" aria-hidden="true" ng-if="submenu.subMenuName=='Refresh Products'"></i>
+									<span data-ng-bind="submenu.subMenuName"></span>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<!-- | orderBy:'subMenuName' -->
+					<!-- <li class="dropdown" ng-if="$last"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
 	aria-expanded="false" ng-click="menuClicked('Payment Reminder')">Application <i class="caret"></i></a>
 	<ul class="dropdown-menu">
 	<li><a href="#"	ng-click="subMenuClicked('Payment Reminder')">Payment Reminder</a></li>
 	<li><a href="#"	ng-click="subMenuClicked('Email Log')">Email Log</a></li> -->
-	<!-- <li class="dropdown-submenu">
+					<!-- <li class="dropdown-submenu">
 	<a tabindex="-1" href="#">Hover me for more options</a>
 	<ul class="dropdown-menu">
 	<li><a tabindex="-1" href="#">Second level</a></li>
@@ -81,49 +86,48 @@
 	<li><a href="#">Second level</a></li>
 	</ul>
 	</li> -->
-	<!-- </ul>
+					<!-- </ul>
 	</li> -->
-	</ul>
-	<ul class="nav navbar-nav navbar-right"
-	ng-repeat="menu in userNavMenu">
-	<li ng-if="menu.subMenuBeans.length>0 && menu.menuName=='Profile'"
-	class="dropdown"><a href="#" class="dropdown-toggle"
-	data-toggle="dropdown" role="button" aria-haspopup="true"
-	aria-expanded="false" ng-click="menuClicked(menu.menuName)">
-	<!-- <span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a> -->
-	<!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
-	<span data-ng-bind="userData.userName" style="text-transform: capitalize;"></span> <i class="caret"></i>
-	</a>
-	<ul class="dropdown-menu">
-	<li ng-repeat="submenu in menu.subMenuBeans"><a href="#"
-	ng-click="subMenuClicked(submenu.subMenuName)"> <i
-	class="fa fa-sign-out" aria-hidden="true"
-	ng-if="submenu.subMenuName=='Logout'"></i> <span
-	data-ng-bind="submenu.subMenuName"></span></a></li>
-	</ul></li>
-	</ul>
-	</div>
-	<!--/.nav-collapse -->
-	</div>
-	<!--/.container-fluid -->
+				</ul>
+				<ul class="nav navbar-nav navbar-right" ng-repeat="menu in userNavMenu">
+					<li ng-if="menu.subMenuBeans.length>0 && menu.menuName=='Profile'" class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
+						 ng-click="menuClicked(menu.menuName)">
+							<!-- <span data-ng-bind="menu.menuName"></span> <i class="caret"></i></a> -->
+							<!-- <i class="fa fa-user-circle" aria-hidden="true"></i> -->
+							<span data-ng-bind="userData.userName" style="text-transform: capitalize;"></span>
+							<i class="caret"></i>
+						</a>
+						<ul class="dropdown-menu">
+							<li ng-repeat="submenu in menu.subMenuBeans">
+								<a href="#" ng-click="subMenuClicked(submenu.subMenuName)">
+									<i class="fa fa-sign-out" aria-hidden="true" ng-if="submenu.subMenuName=='Logout'"></i>
+									<span data-ng-bind="submenu.subMenuName"></span>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+		<!--/.container-fluid -->
 	</nav>
 
 	<!-- ==========================End Top Navigation======================== -->
-	<div id="mySpinner"
-	style='top:0px;position: fixed; z-index: 1031; left: 0; right: 0; width: 100%; height: 100%; margin: auto;background:rgba(255,255,255,0.5); opacity: .4;'>
-	<center>
-	<i style='margin: auto; margin-top: 250px;'
-	class='fa fa-spinner fa-pulse fa-3x fa-fw'></i>
-	<p>Loading</p>
-	<!-- <img src="assets/img/loading.gif" alt="Loading..." style="height: 75px;width: 75px;margin: 250px auto;"> -->
-	</center>
+	<div id="mySpinner" style='top:0px;position: fixed; z-index: 1031; left: 0; right: 0; width: 100%; height: 100%; margin: auto;background:rgba(255,255,255,0.5); opacity: .4;'>
+		<center>
+			<i style='margin: auto; margin-top: 250px;' class='fa fa-spinner fa-pulse fa-3x fa-fw'></i>
+			<p>Loading</p>
+			<!-- <img src="assets/img/loading.gif" alt="Loading..." style="height: 75px;width: 75px;margin: 250px auto;"> -->
+		</center>
 	</div>
 
 	<!--DIV UI STARTS-->
 	<div style="margin-bottom: 5%; margin-top: 1%; height: 100%;">
-	<!-- style="margin-bottom: 5%;margin-top: 1%;height:100%;overflow: auto;" style="min-height:100%;margin-top:55px;margin-bottom: 100px;" -->
+		<!-- style="margin-bottom: 5%;margin-top: 1%;height:100%;overflow: auto;" style="min-height:100%;margin-top:55px;margin-bottom: 100px;" -->
 
-	<div ui-view></div>
+		<div ui-view></div>
 	</div>
 	<!--DIV UI ENDS -->
 
@@ -131,13 +135,13 @@
 	<!-- Javascript files -->
 	<!-- // <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script> -->
 	<script type="text/javascript" src="assets/libs/js/jquery-2.0.3.min.js"></script>
-	
+
 	<script type="text/javascript" src="assets/libs/js/angular/angular.min.js"></script>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-datatables/0.5.6/angular-datatables.min.js"></script>
 	<script type="text/javascript" src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-		
+
 
 	<!-- Typeahead -->
 	<script data-require="typeahead.js@*" data-semver="0.10.0" src="assets/libs/typeahead/typeahead.bundle.js"></script>
@@ -160,7 +164,7 @@
 	<script type="text/javascript" src="assets/libs/js/angular-cookies/angular-cookies.min.js"></script>
 	<!-- Chart -->
 	<!-- minified for production -->
-	<script src="assets/libs/google-chart/ng-google-chart.min.js"></script> 
+	<script src="assets/libs/google-chart/ng-google-chart.min.js"></script>
 	<!-- UI Bootstrap -->
 	<script type="text/javascript" src="assets/libs/js/ui-bootstrap-tpls-2.3.2.min.js"></script>
 	<!-- Pagination -->
@@ -201,6 +205,8 @@
 	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQViewEditQuoteController.js"></script>
 	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQAddProductModalController.js"></script>
 	<script type="text/javascript" src="SQ/UserHome/Quote/js/services/SQQuoteServices.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQAutoSaveQuoteConroller.js"></script>
+	<script type="text/javascript" src="SQ/UserHome/Quote/js/SQRestoreQuoteController.js"></script>
 	<!-- SmartQuoteApp SQPaymentReminder Controllers -->
 	<script type="text/javascript" src="SQ/UserHome/PaymentReminder/js/SQPaymentReminderController.js"></script>
 	<script type="text/javascript" src="SQ/UserHome/PaymentReminder/js/SQPaymentReminderFactory.js"></script>
@@ -213,5 +219,6 @@
 
 
 
-	</body>
-	</html>
+</body>
+
+</html>

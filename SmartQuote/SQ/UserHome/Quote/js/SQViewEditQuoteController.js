@@ -497,7 +497,7 @@ $scope.viewDetailInformation=function(quote){
 	currentQuote.salesPerson=salesPerson;
 	$scope.customerQuote=currentQuote;
 	$scope.customerQuote.productList=$scope.getProductsListArray(currentQuote.productList);
-    // $scope.customerQuote.createdDate=dt;
+    $scope.customerQuote.fax=currentQuote.faxNo;
 
 	$scope.initEditQuote(quote);
 	$scope.filepreview=currentQuote.custLogo;

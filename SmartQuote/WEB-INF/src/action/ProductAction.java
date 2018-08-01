@@ -239,6 +239,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 	public String updateProductDetails() {
 		// System.out.println("updateProductDetails init :::"+df.format(dateobj));
 		String productDetails = request.getParameter("productDetails");
+		System.out.println("productDetails :"+productDetails);
 		ProductBean objBean = new ProductBean();
 		objBean = new Gson().fromJson(productDetails, ProductBean.class);
 		boolean isProductUpdated = false;
@@ -807,6 +808,17 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			objProductDetailResponseList.setMessage(getText("common_error"));
 			e.printStackTrace();
 		}
+		return SUCCESS;
+	}
+	
+	public String refreshProductFile() {
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+		String projectPath = request.getSession().getServletContext().getRealPath("/");
+		CommonLoadAction.createProductFile(projectPath);
+		objEmptyResponse.setCode("success");
+		objEmptyResponse.setMessage(getText("product_file_created"));
+		System.out.println("Done...");
 		return SUCCESS;
 	}
 

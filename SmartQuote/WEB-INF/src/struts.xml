@@ -48,7 +48,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
+		<action name="getUpdatedData" class="action.LoginAction"
+			method="getUpdatedData">
+			<result name="success" type="json">
+				<param name="root">objLoginResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 		<action name="getUserGroups" class="action.UserGroupAction"
 			method="getUserGroups">
 			<result name="success" type="json">
@@ -374,6 +380,53 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		
+		<action name="generateProposal" class="action.QuoteAction" method="generateProposal">
+			<result name="success" type="json">
+				<param name="root">objQuoteCreateResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="addProductToProposal" class="action.QuoteAction"
+			method="addProductToProposal">
+			<result name="success" type="json">
+				<param name="root">objQuoteAddProductResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="editProductIntoProposal" class="action.QuoteAction"
+			method="editProductIntoProposal">
+			<result name="success" type="json">
+				<param name="root">objQuoteAddProductResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteProductFromProposal" class="action.QuoteAction"
+			method="deleteProductFromProposal">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="saveGeneratedProposal" class="action.QuoteAction" method="saveGeneratedProposal">
+			<result name="success" type="json">
+				<param name="root">objQuoteCreateResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getGeneratedQuoteList" class="action.QuoteAction" method="getGeneratedQuoteList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="getGeneratedQuoteView" class="action.QuoteAction" method="getGeneratedQuoteView">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="custComparison" class="action.CustComparisonAction"
 			method="exportPDF">
@@ -523,7 +576,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
 		<action name="pdfDemo" class="action.CustComparisonAction"
 			method="pdfDemo">
 			<result name="success" type="json">
@@ -531,7 +583,6 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
-
 		<action name="createOffer" class="action.OfferAction" method="createOffer">
 			<result name="success" type="json">
 				<param name="root">objDetailResponseBean</param>
@@ -679,5 +730,12 @@
 				<param name="format">XLS</param>
 			</result>
 		</action> 
+		<action name="refreshProductFile" class="action.ProductAction"
+			method="refreshProductFile">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 	</package>
 </struts>

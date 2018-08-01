@@ -1,5 +1,5 @@
 angular.module('sq.SmartQuoteDesktop')
-.config(['$stateProvider', function($stateProvider) { 
+.config(['$stateProvider', function($stateProvider,SQQuoteServices) { 
    // console.log("initialise OZAppRoute");
    $stateProvider
    .state('home', {
@@ -71,13 +71,22 @@ angular.module('sq.SmartQuoteDesktop')
      	controller:'SQManageOffersController',
     	templateUrl: 'SQ/UserHome/ManageMenus/views/sq.manage_offers.view.html',
     })
-   .state('createquote', {
-      controller:'SQCreateQuoteController',
-      templateUrl: 'SQ/UserHome/Quote/views/sq.create_quote.view.html',
-    })
+  //  .state('createquote', {
+  //     controller:'SQCreateQuoteController',
+  //     templateUrl: 'SQ/UserHome/Quote/views/sq.create_quote.view.html',
+  //   })
    .state('vieweditquote', {
       controller:'SQViewEditQuoteController',
       templateUrl: 'SQ/UserHome/Quote/views/sq.view_edit_quote.view.html',
+    })
+    // .state('autosavequote', {
+    .state('createquote', {
+      controller:'SQAutoSaveQuoteConroller',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.autosave_quote.view.html',
+    })
+    .state('restorequote', {
+      controller:'SQRestoreQuoteConroller',
+      templateUrl: 'SQ/UserHome/Quote/views/sq.restore_quote.view.html',
     })
     .state('paymentreminder', {
       // url:'/smartquote',

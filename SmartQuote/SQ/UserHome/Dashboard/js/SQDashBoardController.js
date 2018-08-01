@@ -224,7 +224,7 @@ $scope.handleGetChartDataDoneResponse=function(data){
 			
 		}
 }
-console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
+// console.log("$rootScope.initDashBoard : " ,$rootScope.initDashBoard)
 if ($rootScope.initDashBoard) {
 	console.log("initAuotoComplete")
 	$rootScope.initAuotoComplete();	

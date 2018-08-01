@@ -31,6 +31,7 @@ $scope.isAlternateAdded=false;
 $scope.customerQuote.saveWithAlternative=false;
 
 
+
 if ($rootScope.userData) {
   if ($rootScope.userData.userType.toLowerCase()=="admin") {
     $scope.disableSalesPersonSelect=false;
@@ -202,6 +203,7 @@ if (data.code) {
 if(data.code.toUpperCase()=='SUCCESS'){
 $scope.productGroupList=data.result;
 $rootScope.isQuoteActivated=true;
+$rootScope.getUpdatedUserData();
 // $scope.initAuotoComplete();
 // $rootScope.globalProductGroupList=data.result;
 // SQManageMenuServices.GetUserList();
@@ -210,7 +212,7 @@ $rootScope.hideSpinner();
 $rootScope.alertError(data.message);
 }
 }
-$rootScope.hideSpinner();
+// $rootScope.hideSpinner();
 }
 };
 
@@ -229,38 +231,44 @@ $rootScope.hideSpinner();
 function setUserAsSalesPerson () {
 	angular.forEach($rootScope.userList, function(element, key){
 	if (element.key==$rootScope.userData.userId && element.value==$rootScope.userData.userName) {
+	if(element.key !== 1 && element.value !== 'admin'){
 	$scope.customerQuote.salesPerson=element;
+	}
 	}
 	});
 }
+$scope.$on("setUpdatedUserDataDone", function (event, message) {
+	console.log("setUpdatedUserDataDone")
+	if (message.toLowerCase() == "success") {
+		$scope.currentSupplierList = angular.copy($rootScope.supplierList);
+		$scope.termConditionArray = angular.copy($rootScope.termConditionList);
+		$scope.serviceArray = angular.copy($rootScope.serviceList);
+		$scope.offerArray = angular.copy($rootScope.offerList);
+		setUserAsSalesPerson();//
+		$scope.initDate();
+	}
+});
 $scope.initCreateQuote=function(status){
 console.log("initCreateQuote");
 if (status.toLowerCase()=='init1') {
 console.log("init1");
-// $scope.initAuotoComplete();// for product search 
 $scope.getProductGroup();//get product group list for add product
-$scope.currentSupplierList=angular.copy($rootScope.supplierList);	
-$scope.termConditionArray=angular.copy($rootScope.termConditionList);
-// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
-$scope.serviceArray=angular.copy($rootScope.serviceList);
-// $scope.serviceList1=angular.copy($rootScope.serviceList);
-$scope.offerArray=angular.copy($rootScope.offerList);
-// $scope.offerList1=angular.copy($rootScope.offerList);
-setUserAsSalesPerson();//
-$scope.initDate();
+// $scope.currentSupplierList=angular.copy($rootScope.supplierList);	
+// $scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// $scope.serviceArray=angular.copy($rootScope.serviceList);
+// $scope.offerArray=angular.copy($rootScope.offerList);
+// setUserAsSalesPerson();//
+// $scope.initDate();
 } else{
 console.log("init2");
-$scope.currentSupplierList=angular.copy($rootScope.supplierList);
-$scope.termConditionArray=angular.copy($rootScope.termConditionList);
-// $scope.termConditionList1=angular.copy($rootScope.termConditionList);
-$scope.serviceArray=angular.copy($rootScope.serviceList);
-// $scope.serviceList1=angular.copy($rootScope.serviceList);
-$scope.offerArray=angular.copy($rootScope.offerList);
-// $scope.offerList1=angular.copy($rootScope.offerList);
-setUserAsSalesPerson();//
-$scope.initDate();
+$rootScope.getUpdatedUserData();
+// $scope.currentSupplierList=angular.copy($rootScope.supplierList);
+// $scope.termConditionArray=angular.copy($rootScope.termConditionList);
+// $scope.serviceArray=angular.copy($rootScope.serviceList);
+// $scope.offerArray=angular.copy($rootScope.offerList);
+// setUserAsSalesPerson();//
+// $scope.initDate();
 };
-
 // $rootScope.hideSpinner();	
 };
 $scope.initCreateQuote('init1');
@@ -300,11 +308,12 @@ $scope.getCustomerDetails(customerCode);
 $scope.assignCustomerDetails=function(data){
 var address='';
 address=data.address1;
-console.log("asssigning data to customer")
+console.log("asssigning data to customer");
+console.log(data)
 $scope.customerQuote.customerCode=data.customerCode;
 $scope.customerQuote.customerName=data.customerName;
 $scope.customerQuote.attn=data.contactPerson;
-$scope.customerQuote.address=data.address;
+$scope.customerQuote.address=data.address1;
 $scope.customerQuote.phone=data.phone;
 $scope.customerQuote.email=data.email;
 $scope.customerQuote.fax=data.fax;

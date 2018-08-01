@@ -29,4 +29,9 @@ public class KeyValuePairBean {
 		this.code = code;
 	}
 
+	@Override
+	public String toString() {
+		return "KeyValuePairBean [key=" + key + ", value=" + value + ", code=" + code + "]";
+	}
+	
 }

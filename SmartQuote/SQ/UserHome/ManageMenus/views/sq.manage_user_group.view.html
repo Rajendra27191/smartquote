@@ -45,7 +45,7 @@ overflow-y: auto;
 	      <div class="col-md-11" style="padding:0px;">
 	      	<ul style="list-style: none;">
 			<li ng-repeat="submenu in menu.subMenuBeans">
-			<switch name="onOff" ng-model="submenu.status" on="Yes" off="No" ng-change="subMenuChecked(menu,submenu)" disabled="menu.menuName=='Profile' || menu.menuName=='Home'"></switch> <span data-ng-bind="submenu.subMenuName"></span> 
+			<switch name="onOff" ng-model="submenu.status" on="Yes" off="No" ng-change="subMenuChecked(menu,submenu)" disabled="submenu.subMenuName=='Logout'"></switch> <span data-ng-bind="submenu.subMenuName"></span> 
 		
 			</li>
 			</ul>
