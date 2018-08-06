@@ -880,6 +880,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		objQuoteCreateResponseBean.setMessage(getText("common_error"));
 		httpSession = request.getSession(true);
 		QuoteTempDao objQuoteTempDao = new QuoteTempDao();
+		QuoteDao objQuoteDao = new QuoteDao();
 		try {
 			String status = "SAVED";
 			QuoteBean objQuoteBean = new QuoteBean();
@@ -897,17 +898,18 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				query = "update create_quote_temp set status='" + status + "' where quote_id='" + objQuoteBean.getQuoteId() + "';";
 				objQuoteTempDao.addNoteToQuote(query);
 			}
-			if (objQuoteBean.getTermConditionList().size() > 0) {
-				objQuoteTempDao.saveTermsAndConditionDetailsTemp(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
-			}
-			if (objQuoteBean.getOfferList().size() > 0) {
-				objQuoteTempDao.saveOfferDetailsTemp(objQuoteBean.getOfferList(), objQuoteBean.getQuoteId());
-			}
 			boolean isDone;
 			isDone = objQuoteTempDao.saveQuoteToMaster(objQuoteBean.getQuoteId());
+			if (objQuoteBean.getTermConditionList().size() > 0) {
+				objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
+			}
+			if (objQuoteBean.getOfferList().size() > 0) {
+				objQuoteDao.saveOfferDetails(objQuoteBean.getOfferList(), objQuoteBean.getQuoteId());
+			}
 			if (isDone) {
 				objQuoteTempDao.deleteQuoteFromTemp(objQuoteBean.getQuoteId());
 			}
+			objQuoteDao.commit();
 			objQuoteTempDao.commit();
 			System.out.println("isNewProductAdded "+objQuoteBean.getIsNewProductAdded());
 			if (objQuoteBean.getIsNewProductAdded().toLowerCase().equals("yes") ||objQuoteBean.getIsNewProductAdded().toLowerCase()=="yes") {
@@ -925,6 +927,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			e.printStackTrace();
 		} finally {
 			objQuoteTempDao.closeAll();
+			objQuoteDao.closeAll();
 		}
 		return SUCCESS;
 	}

@@ -10,7 +10,7 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
     $rootScope.projectName = "/";
 
     var currentURL = $window.location.href;
-//    var currentURL = "http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+    var currentURL = "http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
 
 
     var isSmartProTest = currentURL.includes("smartprotest");
@@ -45,6 +45,7 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
     $rootScope.isSessionExpired = false;
     $rootScope.isUserSignIn = false;
     $rootScope.initDashBoard = true;
+    $rootScope.initAuotoCompleteDone = false;
     // $rootScope.scrollpos=0;
     $rootScope.regex = {
       'email': /^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/
@@ -169,10 +170,12 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
           cache: isCache,
           beforeSend: function (xhr) {
             $rootScope.showSpinner();
+            $rootScope.initAuotoCompleteDone = false;
           },
           filter: function (devices) {
             $rootScope.hideSpinner();
             $('#mySpinner').hide();
+            $rootScope.initAuotoCompleteDone = true;
             return $.map(devices, function (device) {
               return {
                 code: device.code,
@@ -195,8 +198,11 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
         highlight: true
       };
       //----------------------
+      // $timeout(function() {
       // $rootScope.hideSpinner();
       // $('#mySpinner').hide();
+      // }, 2000);
+      
     };
     /*===================================================*/
     $rootScope.userSignin = function () {
@@ -494,6 +500,9 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
     };
     $rootScope.alertServerError = function (message) {
       sweetAlert("Error", message, "error");
+    };
+    $rootScope.alertWarning = function (message) {
+      sweetAlert("Oops!", message, "warning");
     };
     $rootScope.alertSessionTimeOutOnQuote = function () {
       swal({

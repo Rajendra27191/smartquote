@@ -430,7 +430,7 @@ angular.module('sq.SmartQuoteDesktop')
                     'salesPerson': salesPerson,
                     'salesPersonId': salesPersonId,
                     'pricesGstInclude': $scope.customerQuote.pricesGstInclude,
-                    'notes': $scope.customerQuote.notes,
+                    // 'notes': $scope.customerQuote.notes,
                     'userId': $rootScope.userData.userId,
                 }
                 return angular.toJson(objQuoteBean);;
@@ -502,7 +502,7 @@ angular.module('sq.SmartQuoteDesktop')
                 }
             };
             var cleanupEventQuoteSessionTimeOut = $scope.$on("QuoteSessionTimeOut", function (event, message) {
-                $scope.resetCreateQuote();
+                // $scope.resetCreateQuote();
                 $rootScope.$broadcast('SessionTimeOut', message);
                 $rootScope.alertSessionTimeOutOnQuote();
             });
