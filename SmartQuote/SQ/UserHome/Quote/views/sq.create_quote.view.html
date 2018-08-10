@@ -704,7 +704,7 @@ padding: 3px 12px;
 <div class="row" style="margin-top: 1%;">
 	<div class="col-md-12" style="padding: 0px;">
 	
-	<div class="col-md-6"></div>
+	<div class="col-md-4"></div>
 	<!--  -->
 	<div class="col-md-2" style="padding: 0px;padding-left:10px;" >
 	<div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
@@ -712,12 +712,19 @@ padding: 3px 12px;
 	<switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
 	</div>
 	</div>
-	<div class="col-md-4" style="padding: 0px;">
-	<div class="col-md-6">
+	<div class="col-md-6" style="padding: 0px;">
+	<div class="col-md-4">
+	<!-- <button id="saveAndPrint" ng-click="createQuote()" class="btn btn-block button-ok" style="" ng-if="!showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	 -->
+	<button id="updateAndPrint" type="button" ng-click="updateAndPrintProposal()" class="btn btn-block btn-default"  tooltip-placement="top" uib-tooltip="Update & Print Proposal" style="margin-top: 5%;">
+	<i class="fa fa-print" aria-hidden="true"></i> Update & Print
+	</button>
+	<!-- <button id="updateAndPrint" ng-click="updateAndPrintProposal()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button> -->
+	</div>	
+	<div class="col-md-4">
 	<button id="create" ng-click="createQuote()" class="btn btn-block button-ok" style="" ng-if="!showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
 	<button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button>
 	</div>	
-	<div class="col-md-6">
+	<div class="col-md-4">
 	<button id='cancel' ng-click="cancelCreateQuote()" class="btn btn-block button-delete" style=""><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
 	</div>		
 	</div>

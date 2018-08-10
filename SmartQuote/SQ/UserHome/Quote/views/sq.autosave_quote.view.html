@@ -700,19 +700,24 @@
                 </div>
                 <div class="row" style="margin-top: 1%;">
                     <div class="col-md-12" style="padding: 0px;">
-                    <div class="col-md-6"></div>
+                    <div class="col-md-4"></div>
                     <div class="col-md-2" style="padding: 0px;padding-left:10px;" >
                     <!-- <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
                     <label class="sub-label">Save With Alternative</label>
                     <switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
                     </div> -->
                     </div>
-                    <div class="col-md-4" style="padding: 0px;">
-                    <div class="col-md-6">
+                    <div class="col-md-6" style="padding: 0px;">
+                    <div class="col-md-4">
+                    <button type="button" ng-click="saveAndPrintProposal()" class="btn btn-block btn-default"  tooltip-placement="top" uib-tooltip="Save & Print Proposal" style="margin-top: 5%;">
+                    <i class="fa fa-print" aria-hidden="true"></i> Save & Print
+                    </button>
+                    </div>    
+                    <div class="col-md-4">
                     <button id="create" ng-click="saveGeneratedProposal()" class="btn btn-block button-ok" style=""><i class="fa fa-floppy-o" aria-hidden="true"></i><span > Save</span></button>	
                     <!-- <button id="create" ng-click="updateQuote()" class="btn btn-block button-ok" style="" ng-if="showEditQuoteView"><i class="fa fa-floppy-o" aria-hidden="true"></i> Update</span></button> -->
                     </div>	
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                     <button id='cancel' ng-click="cancelGeneratedProposal()" class="btn btn-block button-delete"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>	
                     </div>		
                     </div>

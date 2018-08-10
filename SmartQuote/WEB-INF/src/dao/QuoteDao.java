@@ -781,6 +781,38 @@ public class QuoteDao {
 		}
 		return isStatusChanged;
 	}
+	
+	public boolean deleteQuote(String quoteId) {
+		boolean isDone = false;
+		String query1, query2, query3, query4;
+		query1 = "delete from quote_offer_master where quote_id = '" + quoteId + "'; ";
+		query2 = "delete from quote_term_condition_master where quote_id = '" + quoteId + "'; ";
+		query3 = "delete from create_quote_details where quote_id = '" + quoteId + "'; ";
+		query4 = "delete from create_quote where quote_id = '" + quoteId + "'; ";
+		try {
+			pstmt = conn.prepareStatement(query1);
+			pstmt.executeUpdate();
+			System.out.println("Delete 1 : " + pstmt);
+			pstmt = conn.prepareStatement(query2);
+			pstmt.executeUpdate();
+			System.out.println("Delete 2 : " + pstmt);
+			pstmt = conn.prepareStatement(query3);
+			pstmt.executeUpdate();
+			System.out.println("Delete 3 : " + pstmt);
+			pstmt = conn.prepareStatement(query4);
+			pstmt.executeUpdate();
+			System.out.println("Delete 4 : " + pstmt);
+			isDone = true;
+		} catch (SQLException e) {
+			try {
+			conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDone;
+	}
 
 	// ===================================
 //	@SuppressWarnings("static-access")

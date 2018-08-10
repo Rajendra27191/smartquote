@@ -355,6 +355,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.initCreateQuote('init2');
                 $rootScope.addedProductCount = 0;
                 $scope.isNewProductCreatedByQuote = false;
+                $scope.isSaveAndPrintInitiated = false;
             };
             // ======= GenrateQuote >>>>>>
             $scope.showGenerateConfirmationWindow = function () {
@@ -899,7 +900,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $rootScope.alertServerError("Server error");
                 $rootScope.hideSpinner();
             });
-
+          
             //=================== Save Generated Proposal ==================== 
             $scope.jsonToSaveProposal = function () {
                 var objQuoteBean = {};
@@ -936,6 +937,21 @@ angular.module('sq.SmartQuoteDesktop')
                     $scope.form.addCustomerQuote.submitted = true;
                 }
             };
+            //=================== Save & Print Generated Proposal ====================
+            $scope.isSaveAndPrintInitiated=false;
+            $scope.saveAsPDF=function(quoteId){
+            console.log("saveAsPDF >>");
+            var url =$rootScope.projectName+"/custComparison?quoteId="+quoteId;
+            console.log(url)
+            $window.open(url, '_blank');
+            // $window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+            };
+
+            $scope.saveAndPrintProposal=function(){
+                $scope.quoteId=$scope.customerQuote.quoteId;
+                $scope.isSaveAndPrintInitiated = true;
+                $scope.saveGeneratedProposal();
+            };
 
             //CREATE QUOTE RESPONSE >>>>>
             function checkSaveQuoteResponse(quoteResponse) {
@@ -956,8 +972,6 @@ angular.module('sq.SmartQuoteDesktop')
                     if (data.code) {
                         if (data.code.toUpperCase() == 'SUCCESS') {
                             saveQuoteResponse = data;
-                            checkSaveQuoteResponse(saveQuoteResponse);
-                            $scope.resetCreateQuote();
                             var previousWindowKeyDown = window.onkeydown;
                             swal({
                                 title: "Success",
@@ -967,7 +981,14 @@ angular.module('sq.SmartQuoteDesktop')
                                 showConfirmButton: false
                                 // closeOnConfirm: true,			
                             });
-                            if (!data.newProductCreated) {
+                            if($scope.isSaveAndPrintInitiated){
+                                $scope.saveAsPDF($scope.quoteId);
+                            };
+                            if (data.newProductCreated) {   
+                                checkSaveQuoteResponse(saveQuoteResponse);
+                                $scope.resetCreateQuote();
+                            }else{
+                                $scope.resetCreateQuote();                             
                                 $rootScope.hideSpinner();
                                 $timeout(function () {
                                     $scope.moveToCustomerInfo();
@@ -1019,6 +1040,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.moveToCustomerInfo();
 
             };
+         
             //===================HOTKEYS====================  
             hotkeys.bindTo($scope)
                 .add({

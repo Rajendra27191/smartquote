@@ -619,9 +619,9 @@ $scope.resetUpdateQuote=function(){
 	$scope.showEditQuoteView=false;
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
-
 	$scope.initDate();
-		$('#currentSupplierName').focus();
+	$scope.isSaveAndPrintInitiated
+	$('#currentSupplierName').focus();
 }
 $scope.cancelCreateQuote=function(){
 var previousWindowKeyDown = window.onkeydown;
@@ -1360,8 +1360,11 @@ if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// console.log(data)
   	 // $rootScope.alertSuccess("Successfully updated quote");
-  	updateQuoteResponse=data;
-	checkQuoteResponse(updateQuoteResponse)
+	updateQuoteResponse=data;
+	if($scope.isSaveAndPrintInitiated){
+		$scope.saveAsPDF($scope.quoteId);
+	};    
+	
   	 swal({
 	  title: "Success",
 	  text: "Successfully updated proposal...!",
@@ -1369,7 +1372,8 @@ if (data.code) {
 	  // animation: "slide-from-top",
 	},
 	function(){
-  	 // $scope.cancelCreateQuote();
+	   // $scope.cancelCreateQuote();
+	 checkQuoteResponse(updateQuoteResponse);	
   	 $scope.resetUpdateQuote();
   	 $scope.initViewEditQuote();
   	 // $scope.init();	
@@ -1407,6 +1411,78 @@ $scope.shouldShow = function (user) {
 return user.code !== 1 && user.value !== 'admin';
 }
 
+
+//=================== Update & Print Generated Proposal ====================
+$scope.isSaveAndPrintInitiated=false;
+$scope.saveAsPDF=function(quoteId){
+console.log("saveAsPDF >>");
+var url =$rootScope.projectName+"/custComparison?quoteId="+quoteId;
+console.log(url)
+$window.open(url, '_blank');
+// $window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+};
+
+$scope.updateAndPrintProposal=function(){
+	$scope.quoteId=$scope.customerQuote.quoteId;
+	$scope.isSaveAndPrintInitiated = true;
+	$scope.updateQuote();
+};
+//=================== Delete Proposal ====================
+	$scope.deleteQuote=function(quote){
+		$rootScope.showSpinner();
+		SQQuoteServices.DeleteQuote(quote.quoteId);
+	};
+	$scope.confirmedDeleteQuote=function(quote){
+		var previousWindowKeyDown = window.onkeydown;
+			swal({
+			title: 'Are you sure ?',
+			text: "You will not be able to recover this proposal \n"+quote.quoteId,
+			showCancelButton: true,
+			closeOnConfirm: true,
+			cancelButtonText:"Cancel",
+			confirmButtonText:"Confirm"
+			}, function (isConfirm) {
+			if (isConfirm) {
+				$scope.deleteQuote(quote);
+			}
+			});
+	};
+	$scope.deleteQuoteClicked=function(quote){
+		$scope.confirmedDeleteQuote(quote);
+	};
+
+	$scope.handleDeleteQuoteDoneResponse=function(data){
+	if(data){
+	if (data.code){
+	  if(data.code.toUpperCase()=='SUCCESS'){
+	   console.log(data);
+	   swal({
+		title: "Success",
+		text: "Successfully Deleted Proposal...!",
+		type: "success",
+		// animation: "slide-from-top",
+	  },
+	  function(){
+		//  $scope.resetUpdateQuote();
+		$scope.initViewEditQuote();
+	  });
+	  }else{
+	   $rootScope.alertError(data.message);
+	   $rootScope.hideSpinner();
+	  }
+	}
+	}
+	};
+	
+	var cleanupEventDeleteQuoteDone = $scope.$on("DeleteQuoteDone", function(event, message){
+	// console.log("AddCommentDone");
+	$scope.handleDeleteQuoteDoneResponse(message);      
+	});
+	
+	var cleanupEventDeleteQuoteNotDone = $scope.$on("DeleteQuoteNotDone", function(event, message){
+	$rootScope.alertServerError("Server error");
+	$rootScope.hideSpinner();
+	});
 
 //=================================================================================================
 
@@ -1469,9 +1545,6 @@ hotkeys.bindTo($scope)
   	}
   }
 });
-
-
-
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventAddCommentDone();
 	cleanupEventAddCommentNotDone();
@@ -1481,6 +1554,8 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventGetQuoteViewNotDone();
 	cleanupEventGetProductGroupListDone();
 	cleanupEventGetProductGroupListNotDone();
+	cleanupEventDeleteQuoteDone();
+	cleanupEventDeleteQuoteNotDone();
 	$rootScope.isQuoteActivated=false;
 });
 

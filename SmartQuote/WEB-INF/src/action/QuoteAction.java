@@ -995,6 +995,28 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		return SUCCESS;
 	}
+	
+	public String deleteQuote() {
+		QuoteDao objQuoteDao = new QuoteDao();
+		httpSession = request.getSession(true);
+		String quoteId = request.getParameter(("quoteId"));
+		objEmptyResponse = new EmptyResponseBean();
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+		try {
+			boolean isDeleted = objQuoteDao.deleteQuote(quoteId);
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("quote_deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("common_error"));
+		} finally {
+			objQuoteDao.closeAll();
+		}
+		return SUCCESS;
+	}
+	
 
 	public QuoteCreateResponseBean getObjQuoteCreateResponseBean() {
 		return objQuoteCreateResponseBean;

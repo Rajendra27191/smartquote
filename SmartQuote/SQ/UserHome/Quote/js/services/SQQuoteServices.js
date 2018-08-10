@@ -18,6 +18,7 @@ angular.module('sq.SmartQuoteDesktop')
         // getSalesPersonList:$resource('/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
         getGeneratedQuoteListAPI: $resource($rootScope.projectName + '/getGeneratedQuoteList', {}, { getGeneratedQuoteListMethod: { method: 'POST' } }),
         getGeneratedQuoteViewAPI: $resource($rootScope.projectName + '/getGeneratedQuoteView?quoteId=:quoteId', {}, { getGeneratedQuoteViewMethod: { method: 'GET' }, params: { quoteId: '@quoteId' }  }),
+        deleteQuoteAPI: $resource($rootScope.projectName + '/deleteQuote?quoteId=:quoteId', {}, { deleteQuoteMethod: { method: 'GET' }, params: { quoteId: '@quoteId' }  }),
       };
       var quote = {};
       var data;
@@ -323,6 +324,19 @@ angular.module('sq.SmartQuoteDesktop')
         }, function (error) {
           console.log(error);
           $rootScope.$broadcast('GetGeneratedQuoteViewNotDone', error);
+        });
+      };
+      quote.DeleteQuote = function (quoteId) {
+        console.log("DeleteQuote")
+        QuoteServices.deleteQuoteAPI.deleteQuoteMethod({ "quoteId": quoteId },function (success) {
+          if (success.code == "sessionTimeOut") {
+            $rootScope.$broadcast('SessionTimeOut', success);
+          } else {
+            $rootScope.$broadcast('DeleteQuoteDone', success);
+          }
+        }, function (error) {
+          console.log(error);
+          $rootScope.$broadcast('DeleteQuoteNotDone', error);
         });
       };
 

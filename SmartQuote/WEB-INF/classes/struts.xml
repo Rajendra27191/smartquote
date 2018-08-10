@@ -467,6 +467,12 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="deleteQuote" class="action.QuoteAction" method="deleteQuote">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="getTermsConditions" class="action.TermServicesAction"
 			method="getTermsConditions">
