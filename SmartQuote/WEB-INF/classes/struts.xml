@@ -133,6 +133,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getPaymentReminderFlagUser" class="action.UserGroupAction"
+			method="getPaymentReminderFlagUser">
+			<result name="success" type="json">
+				<param name="root">userDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="updateUserDetails" class="action.UserGroupAction"
 			method="updateUserDetails">

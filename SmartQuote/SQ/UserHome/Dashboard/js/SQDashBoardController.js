@@ -229,7 +229,7 @@ if ($rootScope.initDashBoard) {
 	console.log("initAuotoComplete")
 	$rootScope.initAuotoComplete();	
 } else{
-	$rootScope.hideSpinner();
+	// $rootScope.hideSpinner();
 };
 
 };

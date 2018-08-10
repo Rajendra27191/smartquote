@@ -37,6 +37,7 @@ public class QuoteBean {
 	private ArrayList<OfferBean> offerList;
 	private boolean saveWithAlternative;
 	private String isNewProductAdded;
+	private boolean isSaveAndPrint;
 	
 	
 	private ArrayList<AlternateProductBean> alternativeArray;
@@ -293,6 +294,16 @@ public class QuoteBean {
 				+ termConditionList + ", serviceList=" + serviceList + ", offerList=" + offerList + ", saveWithAlternative="
 				+ saveWithAlternative + ", isNewProductAdded=" + isNewProductAdded + ", alternativeArray=" + alternativeArray + "]";
 	}
+
+	public boolean isSaveAndPrint() {
+		return isSaveAndPrint;
+	}
+
+	public void setSaveAndPrint(boolean isSaveAndPrint) {
+		this.isSaveAndPrint = isSaveAndPrint;
+	}
+
+
 
 	
 	

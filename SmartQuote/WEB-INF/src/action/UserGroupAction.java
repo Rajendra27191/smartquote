@@ -228,25 +228,28 @@ public class UserGroupAction extends ActionSupport implements ServletRequestAwar
 			objUserDao.commit();
 			objUserDao.closeAll();
 			System.out.println("isUserAlreadyRegistered: " + isUserAlreadyRegistered);
+			
 			if (!isUserAlreadyRegistered) {
 				UserGroupDao objUserGroupDao = new UserGroupDao();
 				// isUserCreated = objUserGroupDao.saveUser(objUserBean);
 				int userID = objUserGroupDao.saveUser(objUserBean);
-				objUserGroupDao.commit();
-				objUserGroupDao.closeAll();
+			
 				String extension = FilenameUtils.getExtension(objUserBean.getTemplateUrl());
 				if (userID > 0) {
 					if (logoFile != null) {
 						String filename = "UserId_" + userID + ".png";
-						boolean isLogoSaved=false;
+						boolean isLogoSaved = false;
 						if (extension.equals("pdf")) {
 							String destDirPath = System.getProperty("user.dir") + getText("sales_rep_template_folder_path");
-							isLogoSaved= CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
-						}else{
-							isLogoSaved=CommonLoadAction.createTemplate(filename, logoFile, getText("sales_rep_template_folder_path"));	
+							isLogoSaved = CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
+						} else {
+							isLogoSaved = CommonLoadAction.createTemplate(filename, logoFile, getText("sales_rep_template_folder_path"));
 						}
 						System.out.println("LOGO saved ::: " + filename + " : " + isLogoSaved);
 						objDetailResponseBean.setGenratedUrl(getText("sales_rep_template_url") + filename);
+					}
+					if (objUserBean.getPaymentReminderEmailFlag().equalsIgnoreCase("yes")) {
+						objUserGroupDao.setOtherUserPREmailFlagOff(userID, objUserBean.getEmailId());
 					}
 					objDetailResponseBean.setCode("success");
 					objDetailResponseBean.setGenratedId(userID);
@@ -255,6 +258,8 @@ public class UserGroupAction extends ActionSupport implements ServletRequestAwar
 					objDetailResponseBean.setCode("error");
 					objDetailResponseBean.setMessage(getText("error_user_create"));
 				}
+				objUserGroupDao.commit();
+				objUserGroupDao.closeAll();
 			} else {
 				objDetailResponseBean.setCode("error");
 				objDetailResponseBean.setMessage(getText("error_user_exist"));
@@ -293,10 +298,13 @@ public class UserGroupAction extends ActionSupport implements ServletRequestAwar
 		boolean isUserUpdated = false;
 		UserGroupDao objUserGroupDao = new UserGroupDao();
 		isUserUpdated = objUserGroupDao.updateUser(objUserBean);
-		objUserGroupDao.commit();
-		objUserGroupDao.closeAll();
+		
 		String extension = FilenameUtils.getExtension(objUserBean.getTemplateUrl());
 		if (isUserUpdated) {
+			if (objUserBean.getPaymentReminderEmailFlag().equalsIgnoreCase("yes")) {
+				System.out.println("in update");
+				objUserGroupDao.setOtherUserPREmailFlagOff(objUserBean.getUserId(), objUserBean.getEmailId());
+			}
 			if (logoFile != null) {
 				String filename = "UserId_" + objUserBean.getUserId() + ".png";
 				File file = new File(filename);
@@ -304,16 +312,18 @@ public class UserGroupAction extends ActionSupport implements ServletRequestAwar
 				if (file.exists()) {
 					file.delete();
 				}
-				
+
 				if (extension.equals("pdf")) {
 					String destDirPath = System.getProperty("user.dir") + getText("sales_rep_template_folder_path");
-					isLogoSaved= CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
-//					System.out.println("1.LOGO saved ::: " + filename);	
-				}else{
+					isLogoSaved = CommonLoadAction.convertPdfToImage(logoFile + "", destDirPath, filename);
+					// System.out.println("1.LOGO saved ::: " + filename);
+				} else {
 					isLogoSaved = CommonLoadAction.createTemplate(filename, logoFile, getText("sales_rep_template_folder_path"));
-//					System.out.println("2.LOGO saved ::: " + filename);	
+					// System.out.println("2.LOGO saved ::: " + filename);
 				}
 			}
+			objUserGroupDao.commit();
+			objUserGroupDao.closeAll();
 			objEmptyResponse.setCode("success");
 			objEmptyResponse.setMessage(getText("user_updated"));
 		} else {
@@ -337,6 +347,20 @@ public class UserGroupAction extends ActionSupport implements ServletRequestAwar
 		} else {
 			objEmptyResponse.setCode("error");
 			objEmptyResponse.setMessage(getText("common_error"));
+		}
+		return SUCCESS;
+	}
+	
+	public String getPaymentReminderFlagUser() {
+		try {
+			UserGroupDao objUserDao = new UserGroupDao();
+			UserBean objUserBean = objUserDao.checkIfAnyUserHavePREmailFlagOn();
+			objUserDao.closeAll();
+			userDetailsResponse.setCode("success");
+			userDetailsResponse.setMessage(getText("details_loaded"));
+			userDetailsResponse.setObjUserBean(objUserBean);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return SUCCESS;
 	}

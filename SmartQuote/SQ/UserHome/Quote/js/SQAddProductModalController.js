@@ -437,6 +437,20 @@
 	}
 	});
 	}
+	if (product.qtyBreak0 || product.qtyBreak1 || product.qtyBreak2 || product.qtyBreak3 || product.qtyBreak4) {	
+	qty.push(product.qtyBreak0.toString());
+	qty.push(product.qtyBreak1.toString());
+	qty.push(product.qtyBreak2.toString());
+	qty.push(product.qtyBreak3.toString());
+	qty.push(product.qtyBreak4.toString());
+	// console.log(price);
+	angular.forEach(qty, function(value, key){
+	if (value==qty[key+1]) {
+	}else{
+	$scope.quantityArray.push(value);
+	}
+	});
+	}
 
 	}
 
