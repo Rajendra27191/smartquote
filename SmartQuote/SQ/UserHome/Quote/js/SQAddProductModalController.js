@@ -725,8 +725,10 @@
 	};
 
 	$scope.alternativeProductPriceArray=function(altProd){
-	var price=[]
+	var price=[];
+	var qty=[];
 	$scope.altPriceArray=[];
+	$scope.altQuantityArray=[];
 	if (altProd.price0exGST || altProd.price1exGST || altProd.price2exGST || altProd.price3exGST || altProd.price4exGST) {	
 	price.push(altProd.price0exGST.toString());
 	price.push(altProd.price1exGST.toString());
@@ -740,6 +742,19 @@
 	}
 	});
 	}
+	if (altProd.qtyBreak0 || altProd.qtyBreak1 || altProd.qtyBreak2 || altProd.qtyBreak3 || altProd.qtyBreak4) {	
+		qty.push(altProd.qtyBreak0.toString());
+		qty.push(altProd.qtyBreak1.toString());
+		qty.push(altProd.qtyBreak2.toString());
+		qty.push(altProd.qtyBreak3.toString());
+		qty.push(altProd.qtyBreak4.toString());
+		angular.forEach(qty, function(value, key){
+		if (value==qty[key+1]) {
+		}else{
+		$scope.altQuantityArray.push(value);
+		}
+		});
+		}
 	}
 	$scope.alternativeProductSelected=function(altProd){
 	console.log("alternativeProductSelected");

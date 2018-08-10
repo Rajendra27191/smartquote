@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="product_details" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isSummaryWithPageHeaderAndFooter="true" uuid="da5b2174-41f3-4a84-8d2a-aa5451c2072a">
-	<property name="ireport.zoom" value="1.6105100000000503"/>
-	<property name="ireport.x" value="661"/>
+	<property name="ireport.zoom" value="0.8264462809917612"/>
+	<property name="ireport.x" value="8"/>
 	<property name="ireport.y" value="0"/>
 	<style name="product_saving" mode="Opaque" forecolor="#000000" backcolor="#BCDB9B" fill="Solid" hAlign="Center" vAlign="Middle" fontSize="10" isItalic="false" isUnderline="false" isStrikeThrough="false">
 		<box>
@@ -333,7 +333,9 @@
 				<text><![CDATA[Jaybel Price ex.GST]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b1b83e1f-6877-4697-a538-b809052def16" mode="Opaque" x="741" y="5" width="50" height="65" forecolor="#FFFFFF" backcolor="#C00000"/>
+				<reportElement uuid="b1b83e1f-6877-4697-a538-b809052def16" mode="Opaque" x="741" y="5" width="50" height="65" forecolor="#FFFFFF" backcolor="#C00000">
+					<printWhenExpression><![CDATA[!$P{pdfMasterBean}.isGstInclusive()]]></printWhenExpression>
+				</reportElement>
 				<box leftPadding="1">
 					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
 					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
@@ -407,6 +409,22 @@
 					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Current Price Total incl.GST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1b83e1f-6877-4697-a538-b809052def16" mode="Opaque" x="741" y="5" width="50" height="65" forecolor="#FFFFFF" backcolor="#C00000">
+					<printWhenExpression><![CDATA[$P{pdfMasterBean}.isGstInclusive()]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1">
+					<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.5" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="AvantGarde Bk BT BOOK" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Jaybel Price Total incl.GST]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

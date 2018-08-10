@@ -139,7 +139,7 @@ border: 2px solid darkgray;
 		<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table row-border hover table-responsive">
 			<thead class="table-header">
 				<tr>
-					<th style="width: 5%;text-align:center;" ng-if="!disableSalesPersonSelect"></th>
+					<th style="width: 5%;text-align:center;" ></th>
 					<th style="width: 7%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
 					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
 					<th style="width: 10%;">Cust Name &nbsp;</th>
@@ -156,7 +156,7 @@ border: 2px solid darkgray;
 			<tbody>
 <!-- ng-click="select(quote,$event)" -->
 				<tr ng-repeat="quote in quoteListView" ng-class="{'selected': quote.selected}">
-					<td style="text-align:center;" ng-if="!disableSalesPersonSelect">
+					<td style="text-align:center;" >
 						<!-- {{$index+1}} -->
 						<input type="checkbox" name="quote" ng-model="quoteListView[$index].selected" ng-init="quoteListView[$index].selected=false;"  style="height: 15px; width: 15px;cursor:pointer;" >
 					</td>

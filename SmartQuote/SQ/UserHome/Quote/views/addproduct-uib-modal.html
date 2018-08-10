@@ -906,19 +906,31 @@ animation-delay="0">
 <div class="col-md-6" style="padding: 0px;">
 <div class="col-md-12" style="padding: 0px;">
 <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
+<span ng-if="priceArray.length==0">
+<label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>	
+<span ng-repeat="price in priceArray">
+<label>Price {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="price"></span> <br>
+</span>    
+<!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price1exGST"></span> <br>
 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price2exGST"></span> <br>
 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price3exGST"></span> <br>
-<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br> -->
 <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
 </div>
 <div class="col-md-6" style="padding:0px;">
-<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
+<span ng-if="quantityArray.length==0">
+<label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>
+<span ng-repeat="qty in quantityArray">
+<label>Qty {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="qty"></span> <br>	
+</span>    
+<!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak1"></span> <br>
 <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak2"></span> <br>
 <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak3"></span> <br>
-<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br> -->
 </div> 
 </div>   
 
@@ -964,19 +976,31 @@ animation-delay="0">
 <div class="col-md-6" style="padding: 0px;">
 <div class="col-md-12" style="padding: 0px;">
 <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
+<span ng-if="altPriceArray.length==0">
+<label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>	
+<span ng-repeat="price in altPriceArray">
+<label>Price {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="price"></span> <br>
+</span>       
+<!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price1exGST"></span> <br>
 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price2exGST"></span> <br>
 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price3exGST"></span> <br>
-<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br> -->
 <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.promoPrice"></span> <br>
 </div>
 <div class="col-md-6" style="padding:0px;">
-<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
+<span ng-if="altQuantityArray.length==0">
+<label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>
+<span ng-repeat="qty in altQuantityArray">
+<label>Qty {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="qty"></span> <br>	
+</span>    
+<!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak1"></span> <br>
 <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak2"></span> <br>
 <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak3"></span> <br>
-<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br> -->
 </div> 
 </div>   
 
