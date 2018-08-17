@@ -105,6 +105,7 @@ angular.module('sq.SmartQuoteDesktop')
             //--------------------------------------------------------------------------------------------
             $scope.cancelGeneratedProposal = function () {
                 $scope.showRestoreQuoteView = false;
+                $scope.isSaveAndPrintInitiated = false;
             };
             $scope.viewRestoreProposal = function (proposal) {
                 if (proposal) {
@@ -207,6 +208,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.customerQuote.productList = $scope.getProductsListArray(currentQuote.productList);
                 $scope.filepreview = currentQuote.custLogo;
                 $scope.customerQuote.createdDate = $scope.getDate(moment(currentQuote.createdDate).format());
+                $scope.customerQuote.closeDate = $scope.getDate(moment(currentQuote.closeDate).format());
                 // $scope.showProposal = true;
                 $scope.isProposalGenerated = true;
                 $scope.addedProductList = $scope.customerQuote.productList;
@@ -378,6 +380,7 @@ angular.module('sq.SmartQuoteDesktop')
             };
             // ======= Quote Calculations <<<<<
             $scope.assignAlternatives = function (data) {
+                console.log("assignAlternatives")
                 if (data) {
                     if (data.code) {
                         if (data.code.toUpperCase() == 'SUCCESS') {
@@ -414,18 +417,22 @@ angular.module('sq.SmartQuoteDesktop')
             $scope.productsDataset = [];
             var editProduct = {};
             $scope.showAddProductModal = function (status, product, index) {
-                // console.log(product);
+                console.log("showAddProductModal");
+                console.log($scope.form.addCustomerQuote.$valid);
+                
                 if ($scope.form.addCustomerQuote.$valid) {
                     $scope.productButtonStatus = status;
                     $scope.isAddProductModalShow = true;
                     // console.log($scope.productButtonStatus + " product >>>>")
                     if ($scope.productButtonStatus == 'add') {
+                        console.log("1.........")
                         if ($scope.isProposalGenerated) {
                             $scope.openMyModal();
                         } else {
                             $scope.generateProposal();
                         }
                     } else if ($scope.productButtonStatus == 'edit') {
+                        console.log("2.........")
                         $scope.editProduct = angular.copy(product);
                         $scope.editIndex = index;
                         $rootScope.showSpinner();
@@ -684,6 +691,21 @@ angular.module('sq.SmartQuoteDesktop')
                     $scope.form.addCustomerQuote.submitted = true;
                 }
             };
+             //=================== Save & Print Generated Proposal ====================
+            $scope.isSaveAndPrintInitiated=false;
+            $scope.saveAsPDF=function(quoteId){
+            console.log("saveAsPDF >>");
+            var url =$rootScope.projectName+"/custComparison?quoteId="+quoteId;
+            console.log(url)
+            $window.open(url, '_blank');
+            // $window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+            };
+
+            $scope.saveAndPrintProposal=function(){
+                $scope.quoteId=$scope.customerQuote.quoteId;
+                $scope.isSaveAndPrintInitiated = true;
+                $scope.saveGeneratedProposal();
+            };
 
             function checkSaveQuoteResponse(quoteResponse) {
                 console.log("checkQuoteResponse");
@@ -708,6 +730,9 @@ angular.module('sq.SmartQuoteDesktop')
                                 type: "success",
                               },
                               function(){
+                                if($scope.isSaveAndPrintInitiated){
+                                    $scope.saveAsPDF($scope.quoteId);
+                                };
                                 // $rootScope.hideSpinner();
                                 // $scope.resetQuote();
                                 $scope.cancelGeneratedProposal();

@@ -139,8 +139,8 @@ border: 2px solid darkgray;
 		<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table row-border hover table-responsive">
 			<thead class="table-header">
 				<tr>
-					<th style="width: 5%;text-align:center;" ng-if="!disableSalesPersonSelect"></th>
-					<th style="width: 7%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
+					<th style="width: 3%;text-align:center;" ng-if="!disableSalesPersonSelect"></th>
+					<th style="width: 5%;text-align:center;">Proposal Id&nbsp;&nbsp;</th>
 					<th style="width: 10%;text-align:center;">Created Date &nbsp;</th>
 					<th style="width: 10%;">Cust Name &nbsp;</th>
 					<!-- <th style="width: 10%;">Phone &nbsp;</th> -->
@@ -148,9 +148,10 @@ border: 2px solid darkgray;
 					<th style="width: 10%;">Sales Person &nbsp;</th>
 					<th style="width: 10%;">Supplier &nbsp;</th>
 					<!-- <th style="width: 5%;">Atten &nbsp;</th> -->
-					<th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
-					<th style="width: 10%;text-align:center;">Status &nbsp;</th>
-					<th style="width: 11%;text-align:center;">Action &nbsp;</th>
+					<th style="width: 9%;text-align:center;">Modified Date &nbsp;</th>
+					<th style="width: 8%;text-align:center;">Close Date &nbsp;</th>
+					<th style="width: 5%;text-align:center;">Status &nbsp;</th>
+					<th style="width: 13%;text-align:center;">Action &nbsp;</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -186,8 +187,13 @@ border: 2px solid darkgray;
 						{{::getFormattedDate(quote.modifiedDate)}}
 						</span>
 					</td>
+					<td style="text-align:center;">
+						<span ng-if="quote.closeDate!=null" > 
+						{{::getFormattedDate(quote.closeDate)}}
+						</span>
+					</td>
 					<td>
-						<div class="col-md-11 col-md-offset-1">
+						<div class="col-md-12">
 						<span ng-class="{'ini': quote.status.toLowerCase()=='ini','won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
 						{{::quote.status}}
 						</span>
@@ -215,21 +221,31 @@ border: 2px solid darkgray;
 						</div>
 						</div>	
 						</script>	
-						 <button uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'focus'" type="button" class="btn btn-outline-primary" style="padding:0px 5px;">Action</button> -->
-
-						<button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+						<button uib-popover-template="dynamicPopover.templateUrl"  popover-trigger="'focus'" type="button" class="btn btn-outline-primary" style="padding:0px 5px;">Action</button> -->
+						<!-- <button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment" style="padding:0px 5px;">
+						<i class="fa fa-commenting-o" aria-hidden="true"></i>
+						</button> -->
+						<!-- <button  class="btn btn-default" ng-click="viewDetailInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
+						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</button> -->
+						<button  class="btn btn-default" ng-click="getQuoteInformation(quote)" tooltip-placement="top" uib-tooltip="click to view/edit" style="padding:0px 5px;" ng-disabled="quote.status=='won'||quote.status=='lost'">
 						<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 						</button>
-						<button  class="btn btn-default" ng-click="showCommentModal(quote)" tooltip-placement="top" uib-tooltip="click to add comment" style="padding:0px 5px;">
+					
+						<button  class="btn btn-default" ng-click="getQuoteComments(quote)" tooltip-placement="top" uib-tooltip="click to add comment" style="padding:0px 5px;">
 						<i class="fa fa-commenting-o" aria-hidden="true"></i>
 						</button>
-						<button  class="btn btn-default" ng-click="saveAsPDF(quote)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
+						
+						<button  class="btn btn-default" ng-click="saveAsPDF(quote.quoteId)" tooltip-placement="top" uib-tooltip="Click to create pdf" style="padding:0px 5px;">
 						<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-						</button>		
+						</button>	
+
 						<button  class="btn btn-default" ng-click="exportToPronto(quote)" tooltip-placement="top" uib-tooltip="click to export to pronto contract.xls" style="padding:0px 5px;">
 						<i class="fa fa-table" aria-hidden="true"></i>
 						</button>
-						<button  class="btn btn-default" ng-click="deleteQuoteClicked(quote)" tooltip-placement="top" uib-tooltip="click to export to pronto contract.xls" style="padding:0px 5px;">
+
+						<button  class="btn btn-default" ng-click="deleteQuoteClicked(quote)" tooltip-placement="top" uib-tooltip="click to delete proposal" 
+						style="padding:0px 5px;" ng-if="isAdmin">
 						<i class="fa fa-trash" aria-hidden="true"></i>
 						</button>
 						

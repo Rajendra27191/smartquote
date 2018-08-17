@@ -867,4 +867,45 @@ public class ProductDao {
 		}
 		return insertCount;
 	}
+	
+	public boolean saveSpecialProduct(ProductBean objBean) {
+		boolean isProductCreated = false;
+		try {
+			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
+					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,"
+					+ " qty_break0,gst_flag, promo_price,special_flag) " + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?, ?,?)";
+			pstmt = conn.prepareStatement(createUserQuery);
+			pstmt.setString(1, objBean.getItemCode());
+			pstmt.setString(2, objBean.getItemDescription());
+			pstmt.setString(3, objBean.getDescription2());
+			pstmt.setString(4, objBean.getDescription3());
+			pstmt.setString(5, objBean.getUnit());
+			pstmt.setDouble(6, objBean.getPrice0exGST());
+			pstmt.setDouble(7, objBean.getQtyBreak1());
+			pstmt.setDouble(8, objBean.getPrice1exGST());
+			pstmt.setDouble(9, objBean.getQtyBreak2());
+			pstmt.setDouble(10, objBean.getPrice2exGST());
+			pstmt.setDouble(11, objBean.getQtyBreak3());
+			pstmt.setDouble(12, objBean.getPrice3exGST());
+			pstmt.setDouble(13, objBean.getQtyBreak4());
+			pstmt.setDouble(14, objBean.getPrice4exGST());
+			pstmt.setDouble(15, objBean.getAvgcost());
+			pstmt.setString(16, objBean.getTaxCode());
+			pstmt.setString(17, objBean.getProductGroupCode());
+			pstmt.setDouble(18, objBean.getQtyBreak0());
+			pstmt.setString(19, objBean.getGstFlag());
+			pstmt.setDouble(20, objBean.getPromoPrice());
+			if (objBean.isSpecial())
+				pstmt.setString(21, "YES");
+			else
+				pstmt.setString(21, "NO");
+			// System.out.println("GST FLAG"+objBean.getGstFlag());
+			pstmt.executeUpdate();
+			isProductCreated = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return isProductCreated;
+	}
 }

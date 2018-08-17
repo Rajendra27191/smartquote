@@ -381,6 +381,20 @@
 			</result>
 		</action>
 		
+		<action name="getQuoteProductList" class="action.QuoteAction" method="getQuoteProductList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="getQuoteCommentList" class="action.QuoteAction" method="getQuoteCommentList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 		<action name="generateProposal" class="action.QuoteAction" method="generateProposal">
 			<result name="success" type="json">
 				<param name="root">objQuoteCreateResponseBean</param>

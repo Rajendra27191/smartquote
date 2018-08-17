@@ -410,6 +410,27 @@
                                         </p>
                                     </div>
                                 </div>
+
+                                <div class="col-md-12 row-control" style="padding: 0px;">
+                                    <div class="col-md-4">
+                                        <label class="sub-label">Expected Close Date</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <p class="input-group" id="closeDate" ng-disabled="isProposalGenerated">
+                                            <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
+                                                ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.closeDate)"
+                                                is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="open2()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </p>
+                                        <span ng-show="dateInvalid" class="invalid-control">
+                                            <small>Invalid Date : close date should be greater than date</small>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>                      
                     </div>

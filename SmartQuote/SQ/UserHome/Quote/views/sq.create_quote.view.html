@@ -370,6 +370,26 @@ padding: 3px 12px;
 		    </p>
 			</div>
  			</div>
+			<div class="col-md-12 row-control" style="padding: 0px;">
+			<div class="col-md-4">
+			    <label class="sub-label">Expected Close Date</label>
+			</div>
+			<div class="col-md-8">
+			    <p class="input-group" id="closeDate" ng-disabled="isProposalGenerated">
+			        <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
+			            ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.closeDate)"
+			            is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+			        <span class="input-group-btn">
+			            <button type="button" class="btn btn-default" ng-click="open2()">
+			                <i class="glyphicon glyphicon-calendar"></i>
+			            </button>
+			        </span>
+			    </p>
+			    <span ng-show="dateInvalid" class="invalid-control">
+			        <small>Invalid Date : close date should be greater than date</small>
+			    </span>
+			</div>
+			</div>
  	</div>
  </div>
 
@@ -404,8 +424,9 @@ padding: 3px 12px;
 		<div class="col-md-12" >
 		<div class="col-md-6" style="padding: 0px;">
 		<div class="col-md-12" style="padding: 0px;">
-		<div class="col-md-2 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Code">Product Code</div>
-		<div class="col-md-4 t_head" style="width:25%;" tooltip-placement="top" uib-tooltip="Product Name">Product Name</div>
+		<div class="col-md-2 t_head" style="width:10%;">Line No</div>
+		<div class="col-md-2 t_head" style="width:15%;" tooltip-placement="top" uib-tooltip="Product Code">Product Code</div>
+		<div class="col-md-4 t_head" style="width:20%;" tooltip-placement="top" uib-tooltip="Product Name">Product Name</div>
 		<div class="col-md-1 t_head" style="width:10%;" >UOM</div>
 		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Cost</div>
 		<div class="col-md-1 t_head" style="text-align: right;width:10%;">Qty</div>
@@ -429,15 +450,20 @@ padding: 3px 12px;
 		</div>	
 		</div>
 	</div>
-	<div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList" ng-class="{'alt-product':product.isAlternate}">
+	<div class="col-md-12" ng-if="customerQuote.productList.length>0" ng-repeat="product in customerQuote.productList | orderBy:orderNo" ng-class="{'alt-product':product.isAlternate}">
 		<div class="col-md-12" style="padding: 0px;">
 			<hr style="margin: 0px;">
 		</div>
 		<div class="col-md-12" >
 		<div class="col-md-6" style="padding: 0px;">
 		<div class="col-md-12">
-		<div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.itemCode"></span></div>
-		<div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.itemDescription"></div>
+			<!--  -->
+		<div class="col-md-1 t_data" style="width:10%;">
+			<input type="text" name="order" style="width: 30px;" ng-model="product.newOrderNo" 
+			 ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.newOrderNo,$index+1,product.quoteDetailId)" >
+		</div>
+		<div class="col-md-1 t_data" style="width:15%;"><span data-ng-bind="product.itemCode"></span></div>
+		<div class="col-md-4 t_data" style="width:20%;"><span data-ng-bind="product.itemDescription"></div>
 		<div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.unit"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.avgcost"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.itemQty"></div>
@@ -469,8 +495,9 @@ padding: 3px 12px;
 		<div class="col-md-12" ng-if="product.altProd.itemCode" style="background: rgba(245, 9, 4, 0.03);padding: 0px;">
 		<div class="col-md-6" style="padding: 0px;">
 		<div class="col-md-12">
-		<div class="col-md-2 t_data" style="width:20%;"><span data-ng-bind="product.altProd.itemCode"></span></div>
-		<div class="col-md-4 t_data" style="width:25%;"><span data-ng-bind="product.altProd.itemDescription"></div>
+		<div class="col-md-1 t_data" style="width:10%;"></div>
+		<div class="col-md-1 t_data" style="width:15%;"><span data-ng-bind="product.altProd.itemCode"></span></div>
+		<div class="col-md-4 t_data" style="width:20%;"><span data-ng-bind="product.altProd.itemDescription"></div>
 		<div class="col-md-1 t_data" style="width:10%;"><span data-ng-bind="product.altProd.unit"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.avgcost"></span></div>
 		<div class="col-md-1 t_data" style="text-align: right;width:10%;"><span data-ng-bind="product.altProd.itemQty"></div>
