@@ -833,6 +833,7 @@ if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase
 $scope.addProduct.selectedAlternativeProduct=value;
 }
 });
+$scope.alternativeProductPriceArray($scope.addProduct.altProd);
 }
 if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
 $scope.select.type='search';
