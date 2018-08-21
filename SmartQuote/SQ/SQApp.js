@@ -198,10 +198,10 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
         highlight: true
       };
       //----------------------
-      $timeout(function() {
-      $rootScope.hideSpinner();
-      $('#mySpinner').hide();
-      }, 2000);
+//      $timeout(function() {
+//      $rootScope.hideSpinner();
+//      $('#mySpinner').hide();
+//      }, 2000);
       
     };
     /*===================================================*/
