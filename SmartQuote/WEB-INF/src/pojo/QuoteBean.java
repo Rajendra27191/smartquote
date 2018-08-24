@@ -37,7 +37,7 @@ public class QuoteBean {
 	private ArrayList<OfferBean> offerList;
 	private boolean saveWithAlternative;
 	private String isNewProductAdded;
-	
+
 	
 	private ArrayList<AlternateProductBean> alternativeArray;
 
@@ -294,6 +294,6 @@ public class QuoteBean {
 				+ saveWithAlternative + ", isNewProductAdded=" + isNewProductAdded + ", alternativeArray=" + alternativeArray + "]";
 	}
 
-	
+
 	
 }

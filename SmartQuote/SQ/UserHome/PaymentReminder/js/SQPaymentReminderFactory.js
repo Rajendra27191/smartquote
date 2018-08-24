@@ -14,6 +14,8 @@ angular.module('sq.SmartQuoteDesktop')
       getCustomerDetailAPI:$resource($rootScope.projectName+'/getCustomerDetailFromFile?fileName=:name&fileId=:id&duration=:duration', {}, {getCustomerDetailMethod :{method: 'GET'},params:{name:'@name',id:'@id',duration:'@duration'}}),
       getEmailFormatAPI:$resource($rootScope.projectName+'/getEmailFormat', {}, {getEmailFormatMethod :{method: 'GET'}}),
 
+      getPaymentReminderFlagUserAPI:$resource($rootScope.projectName+'/getPaymentReminderFlagUser', {}, {getPaymentReminderFlagUserMethod :{method: 'GET'}}),
+      
       getEmailLogListAPI:$resource($rootScope.projectName+'/getEmailLogList', {}, {getEmailLogListMethod :{method: 'POST'}}),
       changeEmailIdAPI:$resource($rootScope.projectName+'/updateCustomerEmailId?custCode=:custCode&fileId=:fileId&email=:email', {}, {changeEmailIdMethod :{method: 'GET'},params:{custCode:'@custCode',fileId:'@fileId',email:'@email'}}),
       getEmailLogDetailAPI:$resource($rootScope.projectName+'/getEmailLogDetail?batchId=:batchId&status=:status', {}, {getEmailLogDetailMethod :{method: 'GET'},params:{batchId:'@batchId',status:'@status'}}),
@@ -99,6 +101,20 @@ if (success.code=="sessionTimeOut") {
 },function(error){
 // console.log(error);
 $rootScope.$broadcast('GetEmailFormatTemplateNotDone', error);
+});
+};
+
+objFactory.GetPaymentReminderFlagUser = function (name,id){
+// console.log("GetQuoteView")
+ReminderFactory.getPaymentReminderFlagUserAPI.getPaymentReminderFlagUserMethod(function(success){
+// console.log(success);
+if (success.code=="sessionTimeOut") {
+  $rootScope.$broadcast('SessionTimeOut', success);   
+}else{
+  $rootScope.$broadcast('GetPaymentReminderFlagUserDone', success); 
+}
+},function(error){
+  $rootScope.$broadcast('GetPaymentReminderFlagUserNotDone', error);
 });
 };
 
