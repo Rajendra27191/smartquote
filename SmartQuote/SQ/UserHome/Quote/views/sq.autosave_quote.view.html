@@ -416,7 +416,7 @@
                                         <label class="sub-label">Expected Close Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <p class="input-group" id="closeDate" ng-disabled="isProposalGenerated">
+                                        <p class="input-group" id="closeDate" name="closeDate" ng-disabled="isProposalGenerated">
                                             <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
                                                 ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.closeDate)"
                                                 is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
@@ -426,8 +426,12 @@
                                                 </button>
                                             </span>
                                         </p>
-                                        <span ng-show="dateInvalid" class="invalid-control">
-                                            <small>Invalid Date : close date should be greater than date</small>
+                                        <span ng-show="((form.addCustomerQuote.closeDate.$dirty && form.addCustomerQuote.closeDate.$invalid) || (form.addCustomerQuote.closeDate.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-show="form.addCustomerQuote.closeDate.$error.required">*invalid expected close date.</small>
+                                        </span>
+                                        <span  class="invalid-control">
+                                            <small ng-show="dateInvalid">Invalid Date : close date should be greater than date</small>
                                         </span>
                                     </div>
                                 </div>
@@ -451,7 +455,91 @@
                     </div>
                     </div>
                     </div>
-                    <div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
+                    <div id="productTable" class="panel-body table-responsive" style="padding: 0px;font-size: 12px;">   
+<table class="table">
+<thead>
+<tr>
+<!-- <th style="width: 3%;">Line No</th> -->
+<th style="width: 10%;">Product Code</th>
+<th style="width: 20%;">Product Name</th>
+<th style="">UOM</th>
+<th style="text-align: center;">UD</th>
+<th style="text-align: right;">Cost</th>
+<th style="">Qty</th>
+<th style="text-align: right;">Current Price</th>
+<th style="text-align: right;">Total</th>
+<th style="text-align: right;">Supplier GP(%)</th>
+<th style="text-align: right;">Jaybel Price</th>
+<th style="text-align: right;">Jaybel Price Total</th>
+<th style="text-align: right;">Jaybel GP(%)</th>
+<th style="text-align: right;">Savings (%)</th>
+<th  style="text-align: center;">GST Ex Y/N</th>
+<th style="">Comm</th>
+<th style="width:7%;">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr ng-if="customerQuote.productList.length>0" ng-repeat-start="product in customerQuote.productList | orderBy:orderNo">
+<!-- <td>
+<input type="text" name="order" style="width: 30px;" ng-model="product.newOrderNo" 
+ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.newOrderNo,$index+1,product.quoteDetailId)" >
+</td> -->
+<td><span data-ng-bind="product.itemCode"></span></td>
+<td><span data-ng-bind="product.itemDescription"></span></td>
+<td><span data-ng-bind="product.unit"></span></td>
+<td> <center>-</center></td>
+<td><span data-ng-bind="product.avgcost"></span></td>
+<td><span data-ng-bind="product.itemQty"></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.quotePrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="product.total.toFixed(2)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.gpRequired)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.savings)"></span></td>
+<td style="text-align: center;"><span data-ng-bind="product.gstFlag"></span></div>
+<td>
+<span ng-if="product.lineComment!=null&&product.lineComment!=''" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:#31708f;"></i> </span>    
+</td>
+<td>
+
+<button class="btn btn-default" style="padding:0px 5px;" ng-click="showAddProductModal('edit',product,$index);" tooltip-placement="top" uib-tooltip="Click To Edit"><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:#31708f;"></i></button>
+<button class="btn btn-default" style="padding:0px 5px;" ng-click="deleteProductFromQuote($index)" tooltip-placement="top" uib-tooltip="Click To Delete"><i class="fa fa-trash-o" aria-hidden="true" style="color:#31708f;"></i></button>
+</td>
+</tr>
+
+<tr ng-if="product.altProd.itemCode" ng-repeat-end style="background: rgba(245, 9, 4, 0.03);"> 
+<!-- <td></td> -->
+<td><span data-ng-bind="product.altProd.itemCode"></span></td>
+<td><span data-ng-bind="product.altProd.itemDescription"></td>
+<td><span data-ng-bind="product.altProd.unit"></span></td>
+<td style="text-align: center;"><span data-ng-bind="product.altProd.unitDiviser"></td>
+<td><span data-ng-bind="product.altProd.avgcost"></span></td>
+<td><span data-ng-bind="product.altProd.itemQty"></td>
+<td style="text-align: right;">
+<span data-ng-bind="getPrice(product.altProd.currentSupplierPrice)" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"></span>
+<span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}}</span>
+</td>
+<td style="text-align: right;">
+<span data-ng-bind="getPrice(product.altProd.currentSupplierTotal)" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"></span>
+<span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}} </span>
+</td>
+<td style="text-align: right;">
+<span ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'" data-ng-bind="getPrice(product.altProd.currentSupplierGP)"></span>
+<span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}}</span>
+</td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.quotePrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="product.altProd.total.toFixed(2)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.gpRequired)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.savings)"></span></td>
+<td style="text-align: center;"><span data-ng-bind="product.altProd.gstFlag"></span></td>
+<td></td>
+<td></td>
+</tr>   
+</tbody>
+</table>
+</div>
+                    <!-- <div id="productTable" class="panel-body" style="padding: 0px;font-size: 12px;">	
                     <div class="col-md-12">
                         <div class="col-md-12" >
                         <div class="col-md-6" style="padding: 0px;">
@@ -549,7 +637,7 @@
                         </div>
                 
                     </div>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="row row-control">
                     <div class="col-md-1">

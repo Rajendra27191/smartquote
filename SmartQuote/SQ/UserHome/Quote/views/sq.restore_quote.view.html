@@ -150,9 +150,10 @@
                         <th style="width: 13%;">Email &nbsp;</th>
                         <th style="width: 10%;">Sales Person &nbsp;</th>
                         <th style="width: 10%;">Supplier &nbsp;</th>
-                        <th style="width: 10%;text-align:center;">Modified Date &nbsp;</th>
+                        <th style="width: 8%;text-align:center;">Modified Date &nbsp;</th>
+                        <th style="width: 8%;text-align:center;">Close Date &nbsp;</th>
                         <th style="width: 10%;text-align:center;">Status &nbsp;</th>
-                        <th style="width: 11%;text-align:center;">Action &nbsp;</th>
+                        <th style="width: 5%;text-align:center;">Action &nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -180,6 +181,11 @@
                         <td style="text-align:center;">
                             <span ng-if="quote.modifiedDate!=null" > 
                             {{::getFormattedDate(quote.modifiedDate)}}
+                            </span>
+                        </td>
+                         <td style="text-align:center;">
+                            <span ng-if="quote.closeDate!=null" > 
+                            {{::getFormattedDate(quote.closeDate)}}
                             </span>
                         </td>
                         <td>

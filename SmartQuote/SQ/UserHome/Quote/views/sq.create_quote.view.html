@@ -103,6 +103,7 @@ padding: 3px 12px;
 .panel {
      margin-bottom: 1%; 
 }
+#productTable table>tbody>tr>td{padding:5px;}
 </style>
 <div class="container" style="padding-right: 25px;padding-left: 25px;">
  <!-- <shortcut></shortcut> -->
@@ -423,21 +424,21 @@ padding: 3px 12px;
 <table class="table">
 <thead>
 <tr>
-<th style="">Line No</th>
-<th style="">Product Code</th>
-<th style="">Product Name</th>
+<th style="width: 3%;">Line No</th>
+<th style="width: 10%;">Product Code</th>
+<th style="width: 20%;">Product Name</th>
 <th style="">UOM</th>
-<th style="">UD</th>
-<th style="">Cost</th>
-<th style="">Qty</th>
-<th style="">Current Price</th>
-<th style="">Total</th>
-<th style="">Supplier GP(%)</th>
-<th style="">Jaybel Price</th>
-<th style="">Jaybel Price Total</th>
-<th style="">Jaybel GP(%)</th>
-<th style="">Savings (%)</th>
-<th style="">GST Ex Y/N</th>
+<th style="text-align: center;">UD</th>
+<th style="text-align: right;">Cost</th>
+<th style="text-align: center;">Qty</th>
+<th style="text-align: right;">Current Price</th>
+<th style="text-align: right;">Total</th>
+<th style="text-align: right;">Supplier GP(%)</th>
+<th style="text-align: right;">Jaybel Price</th>
+<th style="text-align: right;">Jaybel Price Total</th>
+<th style="text-align: right;">Jaybel GP(%)</th>
+<th style="text-align: right;">Savings (%)</th>
+<th style="text-align: center;">GST Ex Y/N</th>
 <th style="">Comm</th>
 <th style="width:7%;">Action</th>
 </tr>
@@ -453,15 +454,15 @@ ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.new
 <td><span data-ng-bind="product.unit"></span></td>
 <td> <center>-</center></td>
 <td><span data-ng-bind="product.avgcost"></span></td>
-<td><span data-ng-bind="product.itemQty"></td>
-<td><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></td>
-<td><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></td>
-<td><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></td>
-<td><span data-ng-bind="getPrice(product.quotePrice)"></span></td>
-<td><span data-ng-bind="product.total.toFixed(2)"></span></td>
-<td><span data-ng-bind="getPrice(product.gpRequired)"></span></td>
-<td><span data-ng-bind="getPrice(product.savings)"></span></td>
-<td><span data-ng-bind="product.gstFlag"></span></div>
+<td style="text-align: center;"><span data-ng-bind="product.itemQty"></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierTotal)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierGP)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.quotePrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="product.total.toFixed(2)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.gpRequired)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.savings)"></span></td>
+<td  style="text-align: center;"><span data-ng-bind="product.gstFlag"></span></div>
 <td>
 <span ng-if="product.lineComment!=null&&product.lineComment!=''" style="cursor: pointer;margin: 0px 2px;" popover-placement="top" uib-popover="{{product.lineComment}}"  popover-trigger="'mouseenter'"> <i class="fa fa-comment-o fa-lg" aria-hidden="true" style="color:#31708f;"></i> </span>	
 </td>
@@ -477,26 +478,26 @@ ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.new
 <td><span data-ng-bind="product.altProd.itemCode"></span></td>
 <td><span data-ng-bind="product.altProd.itemDescription"></td>
 <td><span data-ng-bind="product.altProd.unit"></span></td>
-<td><span data-ng-bind="product.altProd.unitDiviser"></td>
+<td style="text-align: center;"><span data-ng-bind="product.altProd.unitDiviser"></td>
 <td><span data-ng-bind="product.altProd.avgcost"></span></td>
-<td><span data-ng-bind="product.altProd.itemQty"></td>
-<td>
+<td style="text-align: center;"><span data-ng-bind="product.altProd.itemQty"></td>
+<td style="text-align: right;">
 <span data-ng-bind="getPrice(product.altProd.currentSupplierPrice)" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"></span>
 <span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}}</span>
 </td>
-<td >
+<td style="text-align: right;">
 <span data-ng-bind="getPrice(product.altProd.currentSupplierTotal)" ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'"></span>
 <span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}} </span>
 </td>
-<td>
+<td style="text-align: right;">
 <span ng-if="getPrice(product.altProd.currentSupplierTotal)!='NaN'" data-ng-bind="getPrice(product.altProd.currentSupplierGP)"></span>
 <span ng-if="getPrice(product.altProd.currentSupplierTotal)=='NaN'">{{getPrice(0)}}</span>
 </td>
-<td><span data-ng-bind="getPrice(product.altProd.quotePrice)"></span></td>
-<td><span data-ng-bind="product.altProd.total.toFixed(2)"></span></td>
-<td><span data-ng-bind="getPrice(product.altProd.gpRequired)"></span></td>
-<td><span data-ng-bind="getPrice(product.altProd.savings)"></span></td>
-<td><span data-ng-bind="product.altProd.gstFlag"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.quotePrice)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="product.altProd.total.toFixed(2)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.gpRequired)"></span></td>
+<td style="text-align: right;"><span data-ng-bind="getPrice(product.altProd.savings)"></span></td>
+<td style="text-align: center;"><span data-ng-bind="product.altProd.gstFlag"></span></td>
 <td></td>
 <td></td>
 </tr>	

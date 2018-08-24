@@ -799,6 +799,14 @@
 	// }
 	// };
 //==========EDIT===========================
+$scope.isAltUnitDiviserClicked=function(){
+	console.log($scope.addProduct.altProd.isAltUnitDiviser);
+	if ($scope.addProduct.altProd.isAltUnitDiviser) {
+		// $scope.addProduct.altProd.unitDiviser=1;
+	} else{
+		$scope.addProduct.altProd.unitDiviser=1;
+	};
+}
 $scope.checkEditAlt=function(){
 console.log("checkEditAlt...")
 if ($scope.addProduct.alternativeProductList) {
@@ -822,11 +830,9 @@ $scope.addProduct.altProd.isAltUnitDiviser = false;
 if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
 $scope.select.type='search';
 };
-
-
-
-
 };
+
+
 $scope.initEdit=function(){
 	console.log("initEdit...")
 	console.log("dataToModal")

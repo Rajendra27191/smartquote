@@ -742,7 +742,7 @@ public class ProductDao {
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, "
 				+ " created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'NO') gst_flag, "
-				+ " promo_price as promoPrice "
+				+ " promo_price as promoPrice,special_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " order by 1, 2 limit " + fromLimit + "," + toLimit + "";
 		try {
@@ -772,6 +772,11 @@ public class ProductDao {
 				objBean.setProductGroupName(rs.getString("product_group_name"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
 				objBean.setPromoPrice(rs.getDouble("promoPrice"));
+				boolean isSpecial=false;
+				if (rs.getString("special_flag").equalsIgnoreCase("yes")) {
+					isSpecial=true;
+				}
+				objBean.setSpecial(isSpecial);
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {
@@ -792,7 +797,7 @@ public class ProductDao {
 				+ " ifnull(qty_break3, '0.0') qty_break3, ifnull(price3exGST, '0.0') price3exGST, "
 				+ " ifnull(qty_break4, '0.0') qty_break4, ifnull(price4exGST, '0.0') price4exGST, "
 				+ " ifnull(avg_cost, '0.0') avg_cost, ifnull(tax_code, '') tax_code, created_by , product_group_name, pm.product_group_code,ifnull(gst_flag, 'NO') gst_flag, "
-				+ " ifnull(promo_price, '0.0') promo_price"
+				+ " ifnull(promo_price, '0.0') promo_price,special_flag "
 				+ " FROM product_master pm left join product_group pg on pm.product_group_code = pg.product_group_code "
 				+ " WHERE item_code like ? OR item_description like ?" + " order by 1, 2 ";
 		try {
@@ -824,6 +829,11 @@ public class ProductDao {
 				objBean.setProductGroupName(rs.getString("product_group_name"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
 				objBean.setPromoPrice(rs.getDouble("promo_price"));
+				boolean isSpecial=false;
+				if (rs.getString("special_flag").equalsIgnoreCase("yes")) {
+					isSpecial=true;
+				}
+				objBean.setSpecial(isSpecial);
 				objProductBeans.add(objBean);
 			}
 		} catch (Exception e) {

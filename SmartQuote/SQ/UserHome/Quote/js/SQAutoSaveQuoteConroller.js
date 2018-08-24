@@ -87,7 +87,7 @@ angular.module('sq.SmartQuoteDesktop')
                     minDate:$scope.customerQuote.createdDate,
                 };
                 var currentDate=$scope.today();
-                $scope.customerQuote.closeDate = new Date(currentDate.getFullYear(),currentDate.getMonth()+1,currentDate.getDate());
+                // $scope.customerQuote.closeDate = new Date(currentDate.getFullYear(),currentDate.getMonth()+1,currentDate.getDate());
                 // $scope.setMinCloseDate();
             };
 

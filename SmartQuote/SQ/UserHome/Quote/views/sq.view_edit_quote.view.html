@@ -186,11 +186,17 @@ border: 2px solid darkgray;
 						<span ng-if="quote.modifiedDate!=null" > 
 						{{::getFormattedDate(quote.modifiedDate)}}
 						</span>
+						<!-- <span ng-if="quote.modifiedDate==null" > 
+						{{::getFormattedDate("00/00/0000")}}
+						</span> -->
 					</td>
 					<td style="text-align:center;">
 						<span ng-if="quote.closeDate!=null" > 
 						{{::getFormattedDate(quote.closeDate)}}
 						</span>
+						<!-- <span ng-if="quote.closeDate==null" > 
+						{{::getFormattedDate("00/00/0000")}}
+						</span> -->
 					</td>
 					<td>
 						<div class="col-md-12">

@@ -157,7 +157,7 @@ angular.module('sq.SmartQuoteDesktop')
       quote.GetTermsAndServiceList = function (quoteId) {
         console.log(quoteId)
         QuoteServices.getTermsAndServiceList.getTermsAndServiceListMethod({ "quoteId": quoteId }, function (success) {
-          console.log(success);
+          // console.log(success);
           if (success.code == "sessionTimeOut") {
             $rootScope.$broadcast('SessionTimeOut', success);
           } else {

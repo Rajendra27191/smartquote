@@ -1,3 +1,34 @@
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//   "date-au-pre": function ( date ) {
+//     console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+//     return moment(date, 'dddd, MMMM Do, YYYY');
+//   },
+
+//   "date-au-asc": function ( a, b ) {
+//     return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+//   },
+
+//   "date-au-desc": function ( a, b ) {
+//     return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+//   }
+// } );
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "date-au-pre": function ( a ) {
+        if (a == null || a == "") {
+            return 0;
+        }
+        var ukDatea = a.split('/');
+        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+    },
+ 
+    "date-au-asc": function ( a, b ) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+ 
+    "date-au-desc": function ( a, b ) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+} );
 var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngResource', 'ngAnimate', 'angularLocalStorage', 'uiSwitch', 'datatables', 'cfp.hotkeys', 'angular-svg-round-progressbar', 'angularUtils.directives.dirPagination', 'siyfion.sfTypeahead', 'angularFileUpload', 'googlechart', 'angular.filter'])
   .config(function ($logProvider) {
     // console.log(".config")
@@ -561,7 +592,7 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
 
     $rootScope.getFormattedDate = function (date) {
       var dt = new Date(date);
-      var fDate = moment(dt).format("DD-MM-YYYY");
+      var fDate = moment(dt).format("DD/MM/YYYY");
       return fDate;
     };
     $scope.$on('$destroy', function (event, message) {
