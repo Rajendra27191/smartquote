@@ -29,6 +29,7 @@ public class QuoteBean {
 
 	private Date createdDate;
 	private Date modifiedDate;
+	private Date closeDate;
 
 	private String status;
 	private ArrayList<CommentBean> commentList;
@@ -295,5 +296,14 @@ public class QuoteBean {
 	}
 
 
+	public Date getCloseDate() {
+		return closeDate;
+	}
+
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
+	}
+
+	
 	
 }

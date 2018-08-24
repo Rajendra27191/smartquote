@@ -96,7 +96,8 @@
 	// prodObj.altProd.altForQuoteDetailId=0;
 	// prodObj.altProd.altForQuoteDetailId=0;
 	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
-	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
+	var price= 	prodObj.altProd.quotePrice/prodObj.altProd.unitDiviser;
+	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,price);
 	}else{
 	prodObj.altProd.savings=0;
 	}
@@ -514,20 +515,24 @@
 	};
 	//================Alternative Product================================
 	$scope.altProductSavings=function(){
-	var savings ;
-	var altSupplierPrice=$scope.addProduct.currentSupplierPrice;
-	var altQuotePrice=$scope.addProduct.altProd.quotePrice;
+	var savings,altQuotePrice,altDiviser,price;
+	altSupplierPrice=$scope.addProduct.currentSupplierPrice;
+	altQuotePrice=$scope.addProduct.altProd.quotePrice;
+	altDiviser = $scope.addProduct.altProd.unitDiviser;
 	if (altSupplierPrice>0&&altQuotePrice>0) {
+	// console.log(altSupplierPrice,altQuotePrice,altDiviser);
+	price = altQuotePrice/altDiviser;
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
 	}else{
-	savings=$scope.getPriceInPercentage(altSupplierPrice,altQuotePrice);		
+	savings=$scope.getPriceInPercentage(altSupplierPrice,price);		
 	};	
 	}else{
 	savings=0;
 	}
 	return savings;
 	};
+
 
 	$scope.isAltProductValid=function(prod){
 	var valid =false;
@@ -593,6 +598,8 @@
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	$scope.addProduct.altProd.quotePrice='';
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
+
 	if (product.promoPrice) {
 	$scope.addProduct.altProd.quotePrice=product.promoPrice;
 	$scope.altSellingPriceChanged($scope.addProduct.altProd.quotePrice,$scope.addProduct.altProd.avgcost);
@@ -675,6 +682,7 @@
 	console.log("iffff")
 	$scope.addProduct.altProd={};
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
 	console.log($scope.addProduct.itemQty)
 	}else{
 	console.log("elseeee")
@@ -774,6 +782,7 @@
 	$scope.addProduct.altProd.quotePrice=null;	
 	}
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	}	
@@ -819,6 +828,14 @@
 	// }
 	// };
 //==========EDIT===========================
+$scope.isAltUnitDiviserClicked=function(){
+	console.log($scope.addProduct.altProd.isAltUnitDiviser);
+	if ($scope.addProduct.altProd.isAltUnitDiviser) {
+		// $scope.addProduct.altProd.unitDiviser=1;
+	} else{
+		$scope.addProduct.altProd.unitDiviser=1;
+	};
+}
 $scope.checkEditAlt=function(){
 console.log("checkEditAlt...")
 if ($scope.addProduct.alternativeProductList) {
@@ -834,12 +851,18 @@ $scope.addProduct.selectedAlternativeProduct=value;
 }
 });
 $scope.alternativeProductPriceArray($scope.addProduct.altProd);
+if($scope.addProduct.altProd.unitDiviser > 1){
+$scope.addProduct.altProd.isAltUnitDiviser = true;
+}else{
+$scope.addProduct.altProd.isAltUnitDiviser = false;
+};
 }
 if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
 $scope.select.type='search';
 };
-
 };
+
+
 $scope.initEdit=function(){
 	console.log("initEdit...")
 	console.log("dataToModal")

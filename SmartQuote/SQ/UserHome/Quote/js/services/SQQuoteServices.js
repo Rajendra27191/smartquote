@@ -11,6 +11,9 @@ angular.module('sq.SmartQuoteDesktop')
         getCurrentSupplierList: $resource($rootScope.projectName + '/getCurrentSupplierList', {}, { getCurrentSupplierListMethod: { method: 'POST' } }),
         getSalesPersonList: $resource($rootScope.projectName + '/getSalesPersonList', {}, { getSalesPersonListMethod: { method: 'POST' } }),
         getQuoteView: $resource($rootScope.projectName + '/getQuoteView', {}, { getQuoteViewMethod: { method: 'POST' } }),
+        getQuoteProductListAPI: $resource($rootScope.projectName + '/getQuoteProductList?quoteId=:quoteId', {}, { getQuoteProductListMethod: { method: 'GET' }, params: { quoteId: '@quoteId' } }),
+        getQuoteCommentListAPI: $resource($rootScope.projectName + '/getQuoteCommentList?quoteId=:quoteId', {}, { getQuoteCommentListMethod: { method: 'GET' }, params: { quoteId: '@quoteId' } }),
+        
         getTermsAndServiceList: $resource($rootScope.projectName + '/getTermsAndServiceList?quoteId=:quoteId', {}, { getTermsAndServiceListMethod: { method: 'GET' }, params: { quoteId: '@quoteId' } }),
         getProductDetailsWithAlternativesAPI: $resource($rootScope.projectName + '/getProductDetailsWithAlternatives?productCode=:productCode', {}, { getProductDetailsWithAlternativesMethod: { method: 'GET' }, params: { productCode: '@productCode' } }),
         getProductDetailsAPI: $resource($rootScope.projectName + '/getProductDetails?productCode=:productCode', {}, { getProductDetailsMethod: { method: 'GET' }, params: { productCode: '@productCode' } }),
@@ -18,6 +21,7 @@ angular.module('sq.SmartQuoteDesktop')
         // getSalesPersonList:$resource('/deleteAlternateProduct?mainProductId=:mainProductId&altProductId=:altProductId', {}, {deleteAlternateProductMethod :{method: 'GET'},params:{mainProductId:'@mainProductId',altProductId:'@altProductId'}}),
         getGeneratedQuoteListAPI: $resource($rootScope.projectName + '/getGeneratedQuoteList', {}, { getGeneratedQuoteListMethod: { method: 'POST' } }),
         getGeneratedQuoteViewAPI: $resource($rootScope.projectName + '/getGeneratedQuoteView?quoteId=:quoteId', {}, { getGeneratedQuoteViewMethod: { method: 'GET' }, params: { quoteId: '@quoteId' }  }),
+        deleteQuoteAPI: $resource($rootScope.projectName + '/deleteQuote?quoteId=:quoteId', {}, { deleteQuoteMethod: { method: 'GET' }, params: { quoteId: '@quoteId' }  }),
       };
       var quote = {};
       var data;
@@ -122,10 +126,38 @@ angular.module('sq.SmartQuoteDesktop')
         });
       };
 
+      quote.GetQuoteProductList = function (quoteId) {
+        // console.log("GetQuoteView")
+        QuoteServices.getQuoteProductListAPI.getQuoteProductListMethod({ "quoteId": quoteId },function (success) {
+          if (success.code == "sessionTimeOut") {
+            $rootScope.$broadcast('SessionTimeOut', success);
+          } else {
+            $rootScope.$broadcast('GetQuoteProductListDone', success);
+          }
+        }, function (error) {
+          console.log(error);
+          $rootScope.$broadcast('GetQuoteProductListNotDone', error);
+        });
+      };
+      
+      quote.GetQuoteCommentList = function (quoteId) {
+        // console.log("GetQuoteView")
+        QuoteServices.getQuoteCommentListAPI.getQuoteCommentListMethod({ "quoteId": quoteId },function (success) {
+          if (success.code == "sessionTimeOut") {
+            $rootScope.$broadcast('SessionTimeOut', success);
+          } else {
+            $rootScope.$broadcast('GetQuoteCommentListDone', success);
+          }
+        }, function (error) {
+          console.log(error);
+          $rootScope.$broadcast('GetQuoteCommentListNotDone', error);
+        });
+      };
+
       quote.GetTermsAndServiceList = function (quoteId) {
         console.log(quoteId)
         QuoteServices.getTermsAndServiceList.getTermsAndServiceListMethod({ "quoteId": quoteId }, function (success) {
-          console.log(success);
+          // console.log(success);
           if (success.code == "sessionTimeOut") {
             $rootScope.$broadcast('SessionTimeOut', success);
           } else {
@@ -323,6 +355,19 @@ angular.module('sq.SmartQuoteDesktop')
         }, function (error) {
           console.log(error);
           $rootScope.$broadcast('GetGeneratedQuoteViewNotDone', error);
+        });
+      };
+      quote.DeleteQuote = function (quoteId) {
+        console.log("DeleteQuote")
+        QuoteServices.deleteQuoteAPI.deleteQuoteMethod({ "quoteId": quoteId },function (success) {
+          if (success.code == "sessionTimeOut") {
+            $rootScope.$broadcast('SessionTimeOut', success);
+          } else {
+            $rootScope.$broadcast('DeleteQuoteDone', success);
+          }
+        }, function (error) {
+          console.log(error);
+          $rootScope.$broadcast('DeleteQuoteNotDone', error);
         });
       };
 

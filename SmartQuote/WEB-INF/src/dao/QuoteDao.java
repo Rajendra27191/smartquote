@@ -239,8 +239,8 @@ public class QuoteDao {
 		System.out.println(objProductBean);
 		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment) "
-				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment,unit_diviser) "
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt = conn.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, quoteId);
@@ -256,6 +256,11 @@ public class QuoteDao {
 			pstmt.setString(11, objProductBean.getIsAlternative());
 			pstmt.setInt(12, objProductBean.getQuoteDetailId());
 			pstmt.setString(13, objProductBean.getLineComment());
+			if(objProductBean.getUnitDiviser()>0){
+				pstmt.setInt(14,objProductBean.getUnitDiviser());
+			}else{
+				pstmt.setInt(14,1);
+			}
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
@@ -306,9 +311,10 @@ public class QuoteDao {
 				objQuoteBean.setSalesPersonId(rs.getInt("sales_person_id"));
 				objQuoteBean.setSalesPerson(rs.getString("sales_person_name"));
 				objQuoteBean.setStatus(rs.getString("status"));
-				productList = getProductDetails(rs.getString("quote_id"));
-				objQuoteBean.setProductList(productList);
-				objQuoteBean.setCommentList(getCommentList(rs.getString("quote_id")));
+				objQuoteBean.setCloseDate(rs.getDate("close_date"));
+//				productList = getProductDetails(rs.getString("quote_id"));
+//				objQuoteBean.setProductList(productList);
+//				objQuoteBean.setCommentList(getCommentList(rs.getString("quote_id")));
 				if (rs.getString("cust_id") == null) {
 				} else {
 					String src = customerLogoSrc + "CustId_" + rs.getInt("cust_id") + ".png";
@@ -442,7 +448,7 @@ public class QuoteDao {
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment"
+				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment,unit_diviser "
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code " + " where quote_id= ? "
 				+ " order by quote_detail_id;";
 		try {
@@ -450,8 +456,10 @@ public class QuoteDao {
 			pstmt.setString(1, quoteId);
 			rs1 = pstmt.executeQuery();
 			// System.out.println("Quote Details : " + pstmt);
+			int count = 0;
 			while (rs1.next()) {
 				objProductBean = new ProductBean();
+//				objProductBean.setOrderNo(++count);
 				objProductBean.setQuoteDetailId(rs1.getInt("quote_detail_id"));
 				objProductBean.setQuoteId(rs1.getString("quote_id"));
 				objProductBean.setItemCode(rs1.getString("product_id"));
@@ -483,6 +491,7 @@ public class QuoteDao {
 				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
 				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
 				objProductBean.setLineComment(rs1.getString("comment"));
+				objProductBean.setUnitDiviser(rs1.getInt("unit_diviser"));
 				productList.add(objProductBean);
 			}
 		} catch (Exception e) {
@@ -566,11 +575,12 @@ public class QuoteDao {
 	public boolean updateQuote(QuoteBean quoteBean, String status) {
 		boolean isQuoteUpdated = false;
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-		String currentTime = sdf.format(quoteBean.getModifiedDate());
-		System.out.println("QuoteModifiedDate : " + currentTime);
+		String modifiedDate = sdf.format(quoteBean.getModifiedDate());
+		String closeDate = sdf.format(quoteBean.getCloseDate());
+		System.out.println("QuoteModifiedDate : " + modifiedDate);
 		String saveData = "UPDATE create_quote set custcode = ?, quote_attn = ?, prices_gst_include = ?, "
 				+ " notes = ?, user_id = ?, current_supplier_id = ?, compete_quote = ?, "
-				+ " sales_person_id = ?, status = ?,modified_date = ? WHERE quote_id = ?";
+				+ " sales_person_id = ?, status = ?,modified_date = ?,close_date = ?  WHERE quote_id = ?";
 		try {
 			pstmt = conn.prepareStatement(saveData);
 
@@ -586,8 +596,9 @@ public class QuoteDao {
 			pstmt.setString(7, quoteBean.getCompeteQuote());
 			pstmt.setInt(8, quoteBean.getSalesPersonId());
 			pstmt.setString(9, status);
-			pstmt.setString(10, currentTime);
-			pstmt.setString(11, quoteBean.getQuoteId());
+			pstmt.setString(10, modifiedDate);
+			pstmt.setString(11, closeDate);
+			pstmt.setString(12, quoteBean.getQuoteId());
 			System.out.println("Update Quote: " + pstmt.toString());
 			pstmt.executeUpdate();
 			isQuoteUpdated = true;
@@ -781,7 +792,41 @@ public class QuoteDao {
 		}
 		return isStatusChanged;
 	}
-
+	
+	public boolean deleteQuote(String quoteId) {
+		boolean isDone = false;
+		String query1, query2, query3, query4;
+		query1 = "delete from quote_offer_master where quote_id = '" + quoteId + "'; ";
+		query2 = "delete from quote_term_condition_master where quote_id = '" + quoteId + "'; ";
+		query3 = "delete from create_quote_details where quote_id = '" + quoteId + "'; ";
+		query4 = "delete from create_quote where quote_id = '" + quoteId + "'; ";
+		try {
+			pstmt = conn.prepareStatement(query1);
+			pstmt.executeUpdate();
+			System.out.println("Delete 1 : " + pstmt);
+			pstmt = conn.prepareStatement(query2);
+			pstmt.executeUpdate();
+			System.out.println("Delete 2 : " + pstmt);
+			pstmt = conn.prepareStatement(query3);
+			pstmt.executeUpdate();
+			System.out.println("Delete 3 : " + pstmt);
+			pstmt = conn.prepareStatement(query4);
+			pstmt.executeUpdate();
+			System.out.println("Delete 4 : " + pstmt);
+			isDone = true;
+		} catch (SQLException e) {
+			try {
+			conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDone;
+	}
+	
+	
+	
 	// ===================================
 //	@SuppressWarnings("static-access")
 //	public boolean saveQuoteTemp(QuoteBean quoteBean, String userId, String status) {
