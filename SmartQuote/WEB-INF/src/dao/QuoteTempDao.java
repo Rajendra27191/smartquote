@@ -266,20 +266,19 @@ public class QuoteTempDao {
 	public boolean saveQuoteToMaster(String quoteId) {
 		boolean isDone = false;
 		String query1, query2, query3, query4;
-		query1 = "insert into quote_offer_master select a.* from quote_offer_temp a where a.quote_id = '" + quoteId + "'; ";
-		query2 = "insert into quote_term_condition_master select a.* from quote_term_condition_temp a where a.quote_id = '" + quoteId
-				+ "'; ";
-		query3 = "insert into create_quote_details select a.* from create_quote_details_temp a where a.quote_id = '" + quoteId + "'; ";
-		query4 = "insert into create_quote select a.* from create_quote_temp a where a.quote_id = '" + quoteId + "'; ";
+		query1 = "insert into create_quote_details select a.* from create_quote_details_temp a where a.quote_id = '" + quoteId + "'; ";
+		query2 = "insert into create_quote select a.* from create_quote_temp a where a.quote_id = '" + quoteId + "'; ";
+//		query3 = "insert into quote_offer_master select a.* from quote_offer_temp a where a.quote_id = '" + quoteId + "'; ";
+//		query4 = "insert into quote_term_condition_master select a.* from quote_term_condition_temp a where a.quote_id = '" + quoteId+ "'; ";
 		try {
 			pstmt = conn.prepareStatement(query1);
 			pstmt.executeUpdate();
 			pstmt = conn.prepareStatement(query2);
 			pstmt.executeUpdate();
-			pstmt = conn.prepareStatement(query3);
-			pstmt.executeUpdate();
-			pstmt = conn.prepareStatement(query4);
-			pstmt.executeUpdate();
+//			pstmt = conn.prepareStatement(query3);
+//			pstmt.executeUpdate();
+//			pstmt = conn.prepareStatement(query4);
+//			pstmt.executeUpdate();
 			isDone = true;
 		} catch (SQLException e) {
 			try {
@@ -295,19 +294,19 @@ public class QuoteTempDao {
 	public boolean deleteQuoteFromTemp(String quoteId) {
 		boolean isDone = false;
 		String query1, query2, query3, query4;
-		query1 = "delete from quote_offer_temp where quote_id = '" + quoteId + "'; ";
-		query2 = "delete from quote_term_condition_temp where quote_id = '" + quoteId + "'; ";
-		query3 = "delete from create_quote_details_temp where quote_id = '" + quoteId + "'; ";
-		query4 = "delete from create_quote_temp where quote_id = '" + quoteId + "'; ";
+//		query1 = "delete from quote_offer_temp where quote_id = '" + quoteId + "'; ";
+//		query2 = "delete from quote_term_condition_temp where quote_id = '" + quoteId + "'; ";
+		query1 = "delete from create_quote_details_temp where quote_id = '" + quoteId + "'; ";
+		query2 = "delete from create_quote_temp where quote_id = '" + quoteId + "'; ";
 		try {
 			pstmt = conn.prepareStatement(query1);
 			pstmt.executeUpdate();
 			pstmt = conn.prepareStatement(query2);
 			pstmt.executeUpdate();
-			pstmt = conn.prepareStatement(query3);
-			pstmt.executeUpdate();
-			pstmt = conn.prepareStatement(query4);
-			pstmt.executeUpdate();
+//			pstmt = conn.prepareStatement(query3);
+//			pstmt.executeUpdate();
+//			pstmt = conn.prepareStatement(query4);
+//			pstmt.executeUpdate();
 			isDone = true;
 		} catch (SQLException e) {
 			try {

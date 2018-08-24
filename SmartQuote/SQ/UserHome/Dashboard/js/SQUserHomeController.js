@@ -39,6 +39,16 @@ $scope.showPromptWindow=function(subMenuName){
   });
 };
 
+$scope.confirmNavigationOnInitAutocomplete=function(view){
+  console.log("confirmNavigationOnInitAutocomplete >> " + view )
+  if ($rootScope.initAuotoCompleteDone) {
+   $state.go(view, {}, {reload: true});   
+  } else{
+   $rootScope.alertWarning("You have to wait until product file downloads."); 
+  };
+}
+ 
+
 
 $scope.confirmChangeView=function(subMenuName){
   if(subMenuName.toLowerCase()==='home'){
@@ -73,7 +83,7 @@ $scope.confirmChangeView=function(subMenuName){
   $state.go('managealternateproduct', {}, {reload: true});  
   }
   if(subMenuName.toLowerCase()==='create/edit offers'){
-	  $state.go('manageoffers', {}, {reload: true});  
+    $state.go('manageoffers', {}, {reload: true});  
   }
   if(subMenuName.toLowerCase()==='create proposal'){
   $state.go('createquote', {}, {reload: true});    
