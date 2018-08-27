@@ -953,7 +953,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				query = "update create_quote_temp set status='" + status + "' where quote_id='" + objQuoteBean.getQuoteId() + "';";
 				objQuoteTempDao.addNoteToQuote(query);
 			}
-			boolean isDone;
+			boolean isDone = false;
+			if (!objQuoteBean.isSaveWithAlternative()) {
+				System.out.println("Save without alternatives");	
+				objQuoteTempDao.deleteAlternativesFromTemp(objQuoteBean.getQuoteId());
+			}
 			isDone = objQuoteTempDao.saveQuoteToMaster(objQuoteBean.getQuoteId());
 			if (objQuoteBean.getTermConditionList().size() > 0) {
 				objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());

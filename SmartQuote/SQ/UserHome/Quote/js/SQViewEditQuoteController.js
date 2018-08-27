@@ -237,14 +237,14 @@ $scope.dtOptions= DTOptionsBuilder.newOptions()
     } else{
      $scope.dtColumnDefs = [	
     	DTColumnDefBuilder.newColumnDef(0),
-        DTColumnDefBuilder.newColumnDef(1).withOption("type", "date-au"),
-        DTColumnDefBuilder.newColumnDef(2),
+        DTColumnDefBuilder.newColumnDef(1),
+        DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-au"),
         DTColumnDefBuilder.newColumnDef(3),
         DTColumnDefBuilder.newColumnDef(4),
         DTColumnDefBuilder.newColumnDef(5),
         DTColumnDefBuilder.newColumnDef(6),
-        DTColumnDefBuilder.newColumnDef(7).withOption("type", "date-au"),
-        DTColumnDefBuilder.newColumnDef(8),
+        DTColumnDefBuilder.newColumnDef(7),
+        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-au"),
         DTColumnDefBuilder.newColumnDef(9),	
         ];
     };

@@ -274,6 +274,26 @@ public class QuoteTempDao {
 		}
 		return isDone;
 	}
+	
+	public boolean deleteAlternativesFromTemp(String quoteId) {
+		boolean isDone = false;
+		String query1;
+		query1 = "DELETE FROM create_quote_details_temp "
+			   + "where quote_id='" + quoteId + "' AND is_alternate='yes' ;";
+		try {
+			pstmt = conn.prepareStatement(query1);
+			pstmt.executeUpdate();
+			isDone = true;
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDone;
+	}
 
 	public boolean saveQuoteToMaster(String quoteId) {
 		boolean isDone = false;

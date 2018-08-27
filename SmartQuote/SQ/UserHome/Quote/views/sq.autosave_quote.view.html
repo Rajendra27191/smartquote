@@ -397,13 +397,13 @@
                                         <label class="sub-label">Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <p class="input-group" id="createdDate" ng-disabled="isProposalGenerated">
+                                        <p class="input-group" id="createdDate" >
                                             <input type="text" name="createdDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
                                                 ng-model="customerQuote.createdDate" ng-change="quoteDateChanged(customerQuote.createdDate)"
                                                 is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close"
                                                 alt-input-formats="altInputFormats" readonly="true" />
                                             <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="open1()">
+                                                <button type="button" class="btn btn-default" ng-click="open1()" ng-disabled="isProposalGenerated">
                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                 </button>
                                             </span>
@@ -416,12 +416,12 @@
                                         <label class="sub-label">Expected Close Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <p class="input-group" id="closeDate" name="closeDate" ng-disabled="isProposalGenerated">
+                                        <p class="input-group" id="closeDate" name="closeDate">
                                             <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
                                                 ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.closeDate)"
                                                 is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
                                             <span class="input-group-btn">
-                                                <button type="button" class="btn btn-default" ng-click="open2()">
+                                                <button type="button" class="btn btn-default" ng-click="open2()" ng-disabled="isProposalGenerated">
                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                 </button>
                                             </span>
@@ -811,10 +811,10 @@ ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.new
                     <div class="col-md-12" style="padding: 0px;">
                     <div class="col-md-4"></div>
                     <div class="col-md-2" style="padding: 0px;padding-left:10px;" >
-                    <!-- <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
+                    <div class="col-md-12" style="padding: 0px;"  ng-if="isAlternateAdded">
                     <label class="sub-label">Save With Alternative</label>
                     <switch name="onOff" ng-model="customerQuote.saveWithAlternative" on="Yes" off="No" tooltip-placement="top" uib-tooltip="Save With Alternatives"></switch>
-                    </div> -->
+                    </div>
                     </div>
                     <div class="col-md-6" style="padding: 0px;">
                     <div class="col-md-4">

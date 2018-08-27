@@ -671,6 +671,7 @@ angular.module('sq.SmartQuoteDesktop')
                     'offerList': $scope.offerArray,
                     'userId': $rootScope.userData.userId,
                     'isNewProductAdded': isNewProductAdded,
+                    'saveWithAlternative':$scope.customerQuote.saveWithAlternative,
                 }
                 return objQuoteBean;
             }

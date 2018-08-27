@@ -787,7 +787,9 @@ ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.new
 	<label>	
 	<input type="checkbox" name="term" ng-model="offerArray[$index].code" ng-init="offerArray[$index].code=false;"  style="height: 15px; width: 15px;" ng-if="!showEditQuoteView"> 
 	<input type="checkbox" name="term" ng-model="offerArray[$index].code" style="height: 15px; width: 15px;" ng-if="showEditQuoteView"> 
-	{{offer.offerName}}
+	<a target="blank" ng-href="{{offer.offerTemplate}}" style="text-decoration: none;">
+        {{offer.offerName}}
+    </a>   
 	</label>
 	</div>	
 	</div>
