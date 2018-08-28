@@ -220,22 +220,7 @@ $scope.openMyModal = function (product) {
 $scope.arrangeDataTable=function(){
 $scope.dtOptions= DTOptionsBuilder.newOptions()
     .withOption('order', [0, 'desc']);
-    if ($scope.isAdmin) {
-    $scope.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-au"),
-        DTColumnDefBuilder.newColumnDef(3),
-        DTColumnDefBuilder.newColumnDef(4),
-        DTColumnDefBuilder.newColumnDef(5),
-        DTColumnDefBuilder.newColumnDef(6),
-        DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-au"),
-        DTColumnDefBuilder.newColumnDef(9),
-        DTColumnDefBuilder.newColumnDef(10),
-    ];
-    } else{
-     $scope.dtColumnDefs = [	
+    $scope.dtColumnDefs = [	
     	DTColumnDefBuilder.newColumnDef(0),
         DTColumnDefBuilder.newColumnDef(1),
         DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-au"),
@@ -244,10 +229,10 @@ $scope.dtOptions= DTOptionsBuilder.newOptions()
         DTColumnDefBuilder.newColumnDef(5),
         DTColumnDefBuilder.newColumnDef(6),
         DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-au"),
+        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-close"),
         DTColumnDefBuilder.newColumnDef(9),	
-        ];
-    };
+        DTColumnDefBuilder.newColumnDef(10),	
+    ];
 };
 //===== initViewEditQuote() >>>>>
 $scope.initViewEditQuote=function(){
@@ -728,7 +713,7 @@ $scope.resetUpdateQuote=function(){
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
 	$scope.initDate();
-	$scope.isSaveAndPrintInitiated
+	$scope.isSaveAndPrintInitiated=false;
 	$('#currentSupplierName').focus();
 }
 $scope.cancelCreateQuote=function(){
@@ -1439,11 +1424,14 @@ $log.debug("updateQuote call");
 console.log($scope.form.addCustomerQuote);
 console.log($scope.customerQuote);
 if ($scope.form.addCustomerQuote.$valid) {
-	if ($scope.customerQuote.salesPerson.value == null) {
+
+	if ($scope.customerQuote.salesPerson.value == null || $scope.dateInvalid) {
 		$rootScope.moveToTop();
+		if ($scope.customerQuote.salesPerson.value == null) {
 		$scope.form.addCustomerQuote.salesPerson.$invalid = true;
 		$scope.form.addCustomerQuote.submitted=true;
 		$scope.form.addCustomerQuote.salesPerson.$error.required=true;
+		} 
 	} else{
 		if ($scope.customerQuote.productList.length>0) {
 		isSalesPersonExist=false;
@@ -1756,3 +1744,50 @@ $scope.$on('$destroy', function(event, message) {
 });
 
 });
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+ "date-au-pre": function ( a ) {
+    if (a == null || a == '') {
+      return 0;
+    }
+    var date = a.split('/');
+    return Date.parse(date[1] + '/' + date[0] + '/' + date[2])
+  }
+});
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+  "date-close-pre": function ( date ) {
+    // console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+    return moment(date, 'dddd, MMMM Do, YYYY');
+  },
+ } );
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//     "date-au-pre": function ( a ) {
+//         if (a == null || a == "") {
+//             return 0;
+//         }
+//         var ukDatea = a.split('/');
+//         return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+//     },
+ 
+//     "date-au-asc": function ( a, b ) {
+//         return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+//     },
+ 
+//     "date-au-desc": function ( a, b ) {
+//         return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+//     }
+// } );
+
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//   "date-au-pre": function ( date ) {
+//     console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+//     return moment(date, 'dddd, MMMM Do, YYYY');
+//   },
+
+//   "date-au-asc": function ( a, b ) {
+//     return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+//   },
+
+//   "date-au-desc": function ( a, b ) {
+//     return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+//   }
+// } );

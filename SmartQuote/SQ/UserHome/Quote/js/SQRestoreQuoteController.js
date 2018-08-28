@@ -2,7 +2,7 @@ angular.module('sq.SmartQuoteDesktop')
     .controller('SQRestoreQuoteConroller',
         function ($controller, $uibModal, $scope, $rootScope, $window, $anchorScroll, $log, $state, $timeout, SQManageMenuServices, hotkeys, $http, SQQuoteServices, CalculationFactory, ArrayOperationFactory, DTOptionsBuilder, DTColumnDefBuilder) {
             console.log('initialise SQRestoreQuoteConroller');
-
+            $scope.restoreView = true;
             //===================================================================
             //------------------- Restore Proposal List Code---------------------
             //===================================================================
@@ -24,7 +24,7 @@ angular.module('sq.SmartQuoteDesktop')
                 DTColumnDefBuilder.newColumnDef(5),
                 DTColumnDefBuilder.newColumnDef(6),
                 DTColumnDefBuilder.newColumnDef(7),
-                DTColumnDefBuilder.newColumnDef(8),
+                DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-close"),,
                 DTColumnDefBuilder.newColumnDef(9), 
             
                 ];
