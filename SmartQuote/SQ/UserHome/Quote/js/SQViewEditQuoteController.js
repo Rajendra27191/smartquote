@@ -83,10 +83,12 @@ if ($scope.customerQuote.closeDate===null|| $scope.customerQuote.closeDate ==="n
 };
 
 $scope.validateDate=function(dateFrom,dateTo){
-// console.log("validateDate")
+console.log("validateDate", dateTo>dateFrom)
+// console.log(dateFrom)
+// console.log(dateTo)
 if(dateFrom&&dateTo){
-var date1=moment(dateFrom).format('YYYY-MM-DD');
-var date2=moment(dateTo).format('YYYY-MM-DD');
+var date1=moment(dateFrom).format('DD-MM-YYYY');
+var date2=moment(dateTo).format('DD-MM-YYYY');
 if (date2>date1) {
 $scope.dateInvalid=false;
 }else{
@@ -1648,7 +1650,7 @@ $scope.moveProduct = function(product){
 $scope.changeProductOrder = function(newOrderNo,oldOrderNo,quoteDetailId){
 var newIndex,oldIndex;
 oldIndex = oldOrderNo-1;newIndex= newOrderNo-1; 
-if (newIndex<$scope.customerQuote.productList.length) {
+if (newIndex<$scope.customerQuote.productList.length && newIndex >=0) {
 	array_move($scope.customerQuote.productList,oldIndex,newIndex); 
 	for (var i = 0; i < $scope.customerQuote.productList.length; i++) {
 	$scope.customerQuote.productList[i].orderNo = i+1;

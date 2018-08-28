@@ -364,7 +364,7 @@ padding: 3px 12px;
 	          </span>
 		    </p>
 		    <p class="input-group" id="modefiedDate" ng-if="showEditQuoteView">
-	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="quoteDateChanged(customerQuote.modefiedDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="validateDate(customerQuote.modefiedDate,customerQuote.closeDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
 	          <span class="input-group-btn">
 	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
 	          </span>
@@ -378,7 +378,7 @@ padding: 3px 12px;
 			<div class="col-md-8">
 			    <p class="input-group" id="closeDate" ng-disabled="isProposalGenerated">
 			        <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
-			            ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.closeDate)"
+			            ng-model="customerQuote.closeDate" ng-change="validateDate(customerQuote.modefiedDate,customerQuote.closeDate)"
 			            is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
 			        <span class="input-group-btn">
 			            <button type="button" class="btn btn-default" ng-click="open2()">
