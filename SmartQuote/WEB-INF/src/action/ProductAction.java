@@ -153,7 +153,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objDao.closeAll();
 		if (!isProductExist) {
 			ProductDao objDao1 = new ProductDao();
-			isProductCreated = objDao1.saveProduct(objBean);
+//			isProductCreated = objDao1.saveProduct(objBean);
+			objBean.setSpecial(true);
+			isProductCreated = objDao1.saveSpecialProduct(objBean);
 			// objDao1.commit();
 			objDao1.closeAll();
 			if (isProductCreated) {
