@@ -171,7 +171,7 @@ public class ProductDao {
 	public ProductBean getProductDetailsWithAlternatives(String productCode) {
 		ProductBean objBean = new ProductBean();
 		String getProductDetails = "SELECT item_code, item_description, description2, "
-				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+				+ " description3, unit,qty_break0, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
 				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice " + " FROM product_master WHERE item_code = ?";
 
@@ -186,6 +186,7 @@ public class ProductDao {
 				objBean.setDescription2(rs.getString("description2"));
 				objBean.setDescription3(rs.getString("description3"));
 				objBean.setUnit(rs.getString("unit"));
+				objBean.setQtyBreak0(rs.getDouble("qty_break0"));
 				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
 				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
 				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
@@ -226,10 +227,10 @@ public class ProductDao {
 		// ArrayList<AlternateProductBean>();
 		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 		String getAlternatives = "SELECT a.alternative_product_id 'alt_product_id', "
-				// + "a.alternative_default_price 'alt_default_price', "
 				+ "p.item_description 'alt_item_desc',p.description2 'alt_item_desc2',p.description3 'alt_item_desc3',"
 				+ "p.avg_cost 'alt_avg_cost',p.unit 'alt_unit',p.price0exGST 'alt_price0exGST',"
 				+ "p.price1exGST 'alt_price1exGST',p.price2exGST 'alt_price2exGST',p.price3exGST 'alt_price3exGST',"
+				+ "p.qty_break0 'alt_qty_break0', p.qty_break1 'alt_qty_break1', p.qty_break2 'alt_qty_break2', p.qty_break3 'alt_qty_break3', p.qty_break4 'alt_qty_break4',"
 				+ "p.price4exGST 'alt_price4exGST'," + "ifnull(p.gst_flag, 'NO') 'alt_gst_flag', p.promo_price as promoPrice "
 				+ "FROM alternative_product_master a, product_master p "
 				+ "WHERE a.main_product_id = ? AND p.item_code=a.alternative_product_id;";
@@ -254,6 +255,11 @@ public class ProductDao {
 				objProductBean.setPrice2exGST(rs.getDouble("alt_price2exGST"));
 				objProductBean.setPrice3exGST(rs.getDouble("alt_price3exGST"));
 				objProductBean.setPrice4exGST(rs.getDouble("alt_price4exGST"));
+				objProductBean.setQtyBreak0(rs.getDouble("alt_qty_break0"));
+				objProductBean.setQtyBreak1(rs.getDouble("alt_qty_break1"));
+				objProductBean.setQtyBreak2(rs.getDouble("alt_qty_break2"));
+				objProductBean.setQtyBreak3(rs.getDouble("alt_qty_break3"));
+				objProductBean.setQtyBreak4(rs.getDouble("alt_qty_break4"));
 				objProductBean.setGstFlag(rs.getString("alt_gst_flag"));
 				objProductBean.setPromoPrice(rs.getDouble("promoPrice"));
 

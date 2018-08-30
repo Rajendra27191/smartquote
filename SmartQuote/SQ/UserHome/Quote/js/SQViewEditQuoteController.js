@@ -220,18 +220,18 @@ $scope.openMyModal = function (product) {
 //===== ADD PRODUCT UIB MODAL <<<<<
 //===== INIT DATA TABLE >>>>>
 $scope.arrangeDataTable=function(){
-$scope.dtOptions= DTOptionsBuilder.newOptions()
-    .withOption('order', [0, 'desc']);
+$scope.dtOptions= DTOptionsBuilder.newOptions();
+    // .withOption('order', [0, 'desc']);
     $scope.dtColumnDefs = [	
     	DTColumnDefBuilder.newColumnDef(0),
         DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-au"),
+        DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-euro"),
         DTColumnDefBuilder.newColumnDef(3),
         DTColumnDefBuilder.newColumnDef(4),
         DTColumnDefBuilder.newColumnDef(5),
         DTColumnDefBuilder.newColumnDef(6),
         DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-close"),
+        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-euro"),
         DTColumnDefBuilder.newColumnDef(9),	
         DTColumnDefBuilder.newColumnDef(10),	
     ];
@@ -1746,15 +1746,46 @@ $scope.$on('$destroy', function(event, message) {
 });
 
 });
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "date-euro-pre": function (a) {
+                return moment(a, 'DD-MM-YYYY');
+            },
+
+            "date-euro-asc": function (a, b) {
+               
+                if (a.isBefore(b))
+                    return -1;
+                else if (b.isBefore(a))
+                    return 1;
+                else
+                    return 0;
+            },
+
+            "date-euro-desc": function (a, b) {
+
+                if (a.isBefore(b))
+                    return 1;
+                else if (b.isBefore(a))
+                    return -1;
+                else
+                    return 0;
+            }
+        });
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
- "date-au-pre": function ( a ) {
-    if (a == null || a == '') {
-      return 0;
-    }
-    var date = a.split('/');
-    return Date.parse(date[1] + '/' + date[0] + '/' + date[2])
-  }
-});
+"date-uk-pre": function ( a ) {
+    var ukDatea = a.split('/');
+    return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+},
+
+"date-uk-asc": function ( a, b ) {
+    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+},
+
+"date-uk-desc": function ( a, b ) {
+    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+}
+} );
+
 jQuery.extend( jQuery.fn.dataTableExt.oSort, {
   "date-close-pre": function ( date ) {
     // console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));

@@ -778,15 +778,15 @@ animation: flash linear 2s infinite;
 </div>
 <div class="col-md-5" style="padding:0px;">
 <fieldset>
-<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
+<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information 1</label></legend>
 <div class="row">
 <div class="col-md-1"></div>
 <div class="col-md-5">
 <span ng-if="priceArray.length==0">
 <label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>	
-<span ng-repeat="price in priceArray track by $index">
-<label>Price {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="price"></span> <br>
+<span ng-repeat="price in priceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
 </span>
 
 <!-- 
@@ -802,8 +802,8 @@ animation: flash linear 2s infinite;
 <span ng-if="quantityArray.length==0">
 <label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>
-<span ng-repeat="qty in quantityArray track by $index">
-<label>Qty {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="qty"></span> <br>	
+<span ng-repeat="qty in quantityArray1">
+<label>{{qty.code}}: </label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
 </span>
 <!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak1"></span> <br>
@@ -922,8 +922,8 @@ animation-delay="0">
 <span ng-if="priceArray.length==0">
 <label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>	
-<span ng-repeat="price in priceArray track by $index">
-<label>Price {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="price"></span> <br>
+<span ng-repeat="price in priceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
 </span>    
 <!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price1exGST"></span> <br>
@@ -936,8 +936,8 @@ animation-delay="0">
 <span ng-if="quantityArray.length==0">
 <label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>
-<span ng-repeat="qty in quantityArray track by $index">
-<label>Qty {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="qty"></span> <br>	
+<span ng-repeat="qty in quantityArray1">
+<label>{{qty.code}} :</label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
 </span>    
 <!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak1"></span> <br>
@@ -992,8 +992,8 @@ animation-delay="0">
 <span ng-if="altPriceArray.length==0">
 <label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>	
-<span ng-repeat="price in altPriceArray track by $index">
-<label>Price {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="price"></span> <br>
+<span ng-repeat="price in altPriceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
 </span>       
 <!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price1exGST"></span> <br>
@@ -1006,8 +1006,8 @@ animation-delay="0">
 <span ng-if="altQuantityArray.length==0">
 <label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
 </span>
-<span ng-repeat="qty in altQuantityArray track by $index">
-<label>Qty {{$index}}: </label> &nbsp;&nbsp;<span ng-bind="qty"></span> <br>	
+<span ng-repeat="qty in altQuantityArray1">
+<label>{{qty.code}}: </label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
 </span>    
 <!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak1"></span> <br>
