@@ -74,8 +74,8 @@ $scope.closeDateOptions = {
                 minDate:$scope.customerQuote.modefiedDate,
 };
 if ($scope.customerQuote.closeDate===null|| $scope.customerQuote.closeDate ==="null" || $scope.customerQuote.closeDate ==="") {
-	var currentDate = $scope.today();
-	$scope.customerQuote.closeDate =  new Date(currentDate.getFullYear(),currentDate.getMonth()+1,currentDate.getDate());;
+	// var currentDate = $scope.today();
+	// $scope.customerQuote.closeDate =  new Date(currentDate.getFullYear(),currentDate.getMonth()+1,currentDate.getDate());;
 } else{
 	$scope.customerQuote.closeDate=new Date($scope.customerQuote.closeDate);
 };
@@ -87,25 +87,25 @@ console.log("validateDate", dateTo>dateFrom)
 // console.log(dateFrom)
 // console.log(dateTo)
 if(dateFrom&&dateTo){
-var date1=moment(dateFrom).format('DD-MM-YYYY');
-var date2=moment(dateTo).format('DD-MM-YYYY');
-if (date2>date1) {
+if (dateTo>dateFrom) {
 $scope.dateInvalid=false;
 }else{
 $scope.dateInvalid=true;
 }
 }
 };
-
-$scope.quoteDateChanged = function (date) {
+$scope.setMinCloseDate = function() {
+    $scope.closeDateOptions.minDate = $scope.customerQuote.modefiedDate;
+};
+$scope.quoteDateChanged = function (dateFrom,dateTo) {
 $scope.setMinCloseDate();
-$scope.validateDate($scope.customerQuote.createdDate,$scope.customerQuote.closeDate);
+$scope.validateDate(dateFrom,dateTo);
 };
 
-$scope.closeDateChanged = function (date) {
-$scope.validateDate($scope.customerQuote.createdDate,$scope.customerQuote.closeDate);
+$scope.closeDateChanged = function (dateFrom,dateTo) {
+$scope.validateDate(dateFrom,dateTo);
 };
-$scope.quoteDateChanged=function(quoteDate){};
+
 // $rootScope.getFormattedDate=function(date){
 // var dt = new Date(date);
 // var fDate= moment(dt).format("DD-MM-YYYY");
@@ -223,17 +223,9 @@ $scope.arrangeDataTable=function(){
 $scope.dtOptions= DTOptionsBuilder.newOptions();
     // .withOption('order', [0, 'desc']);
     $scope.dtColumnDefs = [	
-    	DTColumnDefBuilder.newColumnDef(0),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2).withOption("type", "date-euro"),
-        DTColumnDefBuilder.newColumnDef(3),
-        DTColumnDefBuilder.newColumnDef(4),
-        DTColumnDefBuilder.newColumnDef(5),
-        DTColumnDefBuilder.newColumnDef(6),
-        DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8).withOption("type", "date-euro"),
-        DTColumnDefBuilder.newColumnDef(9),	
-        DTColumnDefBuilder.newColumnDef(10),	
+    	DTColumnDefBuilder.newColumnDef([2]).withOption('type', 'date-euro'),	
+    	DTColumnDefBuilder.newColumnDef([7]).withOption('type', 'date-euro'),	
+    	DTColumnDefBuilder.newColumnDef([8]).withOption('type', 'date-euro'),	
     ];
 };
 //===== initViewEditQuote() >>>>>
@@ -1746,52 +1738,13 @@ $scope.$on('$destroy', function(event, message) {
 });
 
 });
-jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-            "date-euro-pre": function (a) {
-                return moment(a, 'DD-MM-YYYY');
-            },
 
-            "date-euro-asc": function (a, b) {
-               
-                if (a.isBefore(b))
-                    return -1;
-                else if (b.isBefore(a))
-                    return 1;
-                else
-                    return 0;
-            },
-
-            "date-euro-desc": function (a, b) {
-
-                if (a.isBefore(b))
-                    return 1;
-                else if (b.isBefore(a))
-                    return -1;
-                else
-                    return 0;
-            }
-        });
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-"date-uk-pre": function ( a ) {
-    var ukDatea = a.split('/');
-    return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
-},
-
-"date-uk-asc": function ( a, b ) {
-    return ((a < b) ? -1 : ((a > b) ? 1 : 0));
-},
-
-"date-uk-desc": function ( a, b ) {
-    return ((a < b) ? 1 : ((a > b) ? -1 : 0));
-}
-} );
-
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-  "date-close-pre": function ( date ) {
-    // console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
-    return moment(date, 'dddd, MMMM Do, YYYY');
-  },
- } );
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//   "date-close-pre": function ( date ) {
+//     // console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+//     return moment(date, 'dddd, MMMM Do, YYYY');
+//   },
+//  } );
 // jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 //     "date-au-pre": function ( a ) {
 //         if (a == null || a == "") {
@@ -1823,4 +1776,19 @@ jQuery.extend( jQuery.fn.dataTableExt.oSort, {
 //   "date-au-desc": function ( a, b ) {
 //     return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
 //   }
+// } );
+
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+// "date-uk-pre": function ( a ) {
+//     var ukDatea = a.split('/');
+//     return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+// },
+
+// "date-uk-asc": function ( a, b ) {
+//     return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+// },
+
+// "date-uk-desc": function ( a, b ) {
+//     return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+// }
 // } );

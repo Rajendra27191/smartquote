@@ -332,7 +332,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			if (userType.equalsIgnoreCase("admin")) {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,close_date " 
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,DATE(close_date) close_date " 
 						+ "from create_quote cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
@@ -340,7 +340,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			} else {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,close_date " 
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,DATE(close_date) close_date " 
 						+ "from create_quote cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "

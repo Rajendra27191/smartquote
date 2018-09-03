@@ -409,25 +409,25 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.isSaveAndPrintInitiated = false;
             };
             // ======= GenrateQuote >>>>>>
-            $scope.showGenerateConfirmationWindow = function () {
-                var previousWindowKeyDown = window.onkeydown;
-                swal({
-                    title: 'Are you sure?',
-                    text: "After generating proposal.User would not be able to edit Customer Information",
-                    showCancelButton: true,
-                    closeOnConfirm: true,
-                    cancelButtonText: "Cancel",
-                    confirmButtonText: "Confirm"
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        //$scope.resetCurrentSupplier();
-                        $rootScope.hideSpinner();
-                        SQQuoteServices.GenerateProposal(logoFile, $scope.jsonToGenerateQuote());
-                    } else {
-                        $scope.customerQuote.competeQuote = 'Yes';
-                    }
-                });
-            };
+            // $scope.showGenerateConfirmationWindow = function () {
+            //     var previousWindowKeyDown = window.onkeydown;
+            //     swal({
+            //         title: 'Are you sure?',
+            //         text: "After generating proposal.User would not be able to edit Customer Information",
+            //         showCancelButton: true,
+            //         closeOnConfirm: true,
+            //         cancelButtonText: "Cancel",
+            //         confirmButtonText: "Confirm"
+            //     }, function (isConfirm) {
+            //         if (isConfirm) {
+            //             //$scope.resetCurrentSupplier();
+            //             $rootScope.hideSpinner();
+            //             SQQuoteServices.GenerateProposal(logoFile, $scope.jsonToGenerateQuote());
+            //         } else {
+            //             $scope.customerQuote.competeQuote = 'Yes';
+            //         }
+            //     });
+            // };
 
             $scope.jsonToGenerateQuote = function () {
                 var objQuoteBean = {};
@@ -498,21 +498,8 @@ angular.module('sq.SmartQuoteDesktop')
             };
 
             $scope.generateProposal = function () {
-                console.log($scope.form);
-                console.log($scope.customerQuote)
-                if ($scope.form.addCustomerQuote.$valid) {
-                    if (!$scope.dateInvalid) {
-                    console.log("valid customer info");
-                    // $scope.showGenerateConfirmationWindow();
                     $rootScope.showSpinner();
                     SQQuoteServices.GenerateProposal(logoFile, $scope.jsonToGenerateQuote());
-                    }else{
-                        console.log("invaild date")
-                    };
-                } else {
-                    console.log("invalid customer info");
-                    $scope.form.addCustomerQuote.submitted = true;
-                }
             };
             //CREATE QUOTE RESPONSE >>>>>
             function checkQuoteResponse(quoteResponse) {
@@ -733,7 +720,21 @@ angular.module('sq.SmartQuoteDesktop')
                         if ($scope.isProposalGenerated) {
                             $scope.openMyModal();
                         } else {
+                            console.log($scope.form);
+                            console.log($scope.customerQuote)
+                            if ($scope.form.addCustomerQuote.$valid) {
+                            if (!$scope.dateInvalid) {
+                            console.log("valid customer info");
                             $scope.showConfirmationWindowOnGenerateProposal();
+                            // $scope.showGenerateConfirmationWindow();
+                            }else{
+                            console.log("invaild date")
+                            };
+                            } else {
+                            console.log("invalid customer info");
+                            $scope.form.addCustomerQuote.submitted = true;
+                            }
+
                         }
                     } else if ($scope.productButtonStatus == 'edit') {
                         $scope.editProduct = angular.copy(product);

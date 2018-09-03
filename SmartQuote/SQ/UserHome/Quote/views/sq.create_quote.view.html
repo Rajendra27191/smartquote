@@ -364,7 +364,7 @@ padding: 3px 12px;
 	          </span>
 		    </p>
 		    <p class="input-group" id="modefiedDate" ng-if="showEditQuoteView">
-	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="validateDate(customerQuote.modefiedDate,customerQuote.closeDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
+	          <input type="text" name="modefiedDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.modefiedDate" ng-change="quoteDateChanged(customerQuote.modefiedDate,customerQuote.closeDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
 	          <span class="input-group-btn">
 	            <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
 	          </span>
@@ -376,9 +376,9 @@ padding: 3px 12px;
 			    <label class="sub-label">Expected Close Date</label>
 			</div>
 			<div class="col-md-8">
-			    <p class="input-group" id="closeDate" ng-disabled="isProposalGenerated">
+			    <p class="input-group" id="closeDate" name="closeDate">
 			        <input type="text" name="closeDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}"
-			            ng-model="customerQuote.closeDate" ng-change="validateDate(customerQuote.modefiedDate,customerQuote.closeDate)"
+			            ng-model="customerQuote.closeDate" ng-change="closeDateChanged(customerQuote.modefiedDate,customerQuote.closeDate)"
 			            is-open="popup2.opened" datepicker-options="closeDateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
 			        <span class="input-group-btn">
 			            <button type="button" class="btn btn-default" ng-click="open2()">
@@ -386,6 +386,10 @@ padding: 3px 12px;
 			            </button>
 			        </span>
 			    </p>
+			    <span ng-show="((form.addCustomerQuote.closeDate.$dirty && form.addCustomerQuote.closeDate.$invalid) || (form.addCustomerQuote.closeDate.$invalid && form.addCustomerQuote.submitted))"
+                                            class="invalid-control">
+                                            <small ng-show="form.addCustomerQuote.closeDate.$error.required">*invalid expected close date.</small>
+                                        </span>
 			    <span ng-show="dateInvalid" class="invalid-control">
 			        <small>Invalid Date : close date should be greater than date</small>
 			    </span>

@@ -165,8 +165,8 @@ border: 2px solid darkgray;
 						{{::quote.quoteId}}
 					</td>				
 					<td style="text-align:center;">
-						{{:: getFormattedDate(quote.createdDate)}}
-						<!-- {{:: quote.createdDate}} -->
+						<!-- {{ getFormattedDate(quote.createdDate)}} -->
+						{{quote.createdDate | date: 'dd-MM-yyyy'}}
 					</td>
 					
 					<td >
@@ -185,7 +185,8 @@ border: 2px solid darkgray;
 					</td>
 					<td style="text-align:center;">
 						<span ng-if="quote.modifiedDate!=null" > 
-						{{::getFormattedDate(quote.modifiedDate)}}
+						<!-- {{getFormattedDate(quote.modifiedDate)}} -->
+						{{quote.modifiedDate | date: 'dd-MM-yyyy'}}
 						</span>
 						<!-- <span ng-if="quote.modifiedDate==null" > 
 						{{::getFormattedDate("00/00/0000")}}
@@ -193,7 +194,8 @@ border: 2px solid darkgray;
 					</td>
 					<td style="text-align:center;">
 						<span ng-if="quote.closeDate!=null" > 
-						{{::getFormattedDate(quote.closeDate)}}
+						{{quote.closeDate | date: 'dd-MM-yyyy'}}	
+						<!-- {{getFormattedDate(quote.closeDate)}} -->
 						</span>
 						<!-- <span ng-if="quote.closeDate==null" > 
 						{{::getFormattedDate("00/00/0000")}}

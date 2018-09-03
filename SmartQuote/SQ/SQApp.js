@@ -1,3 +1,30 @@
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "date-euro-pre": function (a) {
+                return moment(a, 'DD-MM-YYYY HH:mm');
+            },
+
+            "date-euro-asc": function (a, b) {
+               
+                if (a.isBefore(b))
+                    return -1;
+                else if (b.isBefore(a))
+                    return 1;
+                else
+                    return 0;
+            },
+
+            "date-euro-desc": function (a, b) {
+
+                if (a.isBefore(b))
+                    return 1;
+                else if (b.isBefore(a))
+                    return -1;
+                else
+                    return 0;
+            }
+});
+
+
 var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', 'ngSanitize', 'ngResource', 'ngAnimate', 'angularLocalStorage', 'uiSwitch', 'datatables', 'cfp.hotkeys', 'angular-svg-round-progressbar', 'angularUtils.directives.dirPagination', 'siyfion.sfTypeahead', 'angularFileUpload', 'googlechart', 'angular.filter'])
   .config(function ($logProvider) {
     // console.log(".config")
@@ -561,7 +588,7 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
 
     $rootScope.getFormattedDate = function (date) {
       var dt = new Date(date);
-      var fDate = moment(dt).format("DD/MM/YYYY");
+      var fDate = moment(dt).format("DD-MM-YYYY");
       return fDate;
     };
     $scope.$on('$destroy', function (event, message) {

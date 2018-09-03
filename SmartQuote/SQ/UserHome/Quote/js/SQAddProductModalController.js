@@ -69,6 +69,10 @@
 	$('#quotePrice').change();
 	}
 
+	$scope.altQuotePriceFocused=function(){
+	$('#altProductQuotePrice').change();
+	}
+
 	$scope.standardProductQuantityChanged=function(qty){
 	// $('#quotePrice').change();
 	if ($scope.addProduct.altProd!=undefined) {

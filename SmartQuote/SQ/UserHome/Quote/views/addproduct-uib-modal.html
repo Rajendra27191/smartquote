@@ -670,7 +670,7 @@ animation: flash linear 2s infinite;
 <label class="sub-label">Alt Jaybel Price</label> <span class="asteric">*</span>
 </div>
 <div class="col-md-8">
-<input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact">   
+<input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact" ng-focus="altQuotePriceFocused()">   
 
 <span ng-show="((form.addProductIntoQuote.altProductQuotePrice.$dirty && form.addProductIntoQuote.altProductQuotePrice.$invalid) 
 || (form.addProductIntoQuote.altProductQuotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">

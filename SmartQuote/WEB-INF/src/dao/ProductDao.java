@@ -133,7 +133,7 @@ public class ProductDao {
 	public ProductBean getProductDetails(String productCode) {
 		ProductBean objBean = null;
 		String getUserGroups = "SELECT item_code, item_description, description2, "
-				+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
+				+ " description3, unit, price0exGST, qty_break0, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 				+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,"
 				+ " ifnull(gst_flag, 'NO') gst_flag, promo_price as promoPrice " + " FROM product_master WHERE item_code = ?";
 		try {
@@ -147,6 +147,7 @@ public class ProductDao {
 				objBean.setDescription2(rs.getString("description2"));
 				objBean.setDescription3(rs.getString("description3"));
 				objBean.setUnit(rs.getString("unit"));
+				objBean.setQtyBreak0(rs.getDouble("qty_break0"));
 				objBean.setPrice0exGST(rs.getDouble("price0exGST"));
 				objBean.setQtyBreak1(rs.getDouble("qty_break1"));
 				objBean.setPrice1exGST(rs.getDouble("price1exGST"));
@@ -443,7 +444,7 @@ public class ProductDao {
 		String productQuery = "INSERT INTO product_master "
 				+ "SELECT item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
 				+ "qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, qty_break4, price4exGST, "
-				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000' " + "FROM product_master_staging_final;";
+				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000','NO' " + "FROM product_master_staging_final;";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);
