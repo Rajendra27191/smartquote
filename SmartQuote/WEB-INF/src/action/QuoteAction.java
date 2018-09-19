@@ -526,7 +526,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					if (isProductCreated)
 						newProductCount++;
 					System.out.println("new product added ::::::::" + isProductCreated);
-					objProductDao.commit();
+//					objProductDao.commit();
 
 					String projectPath = request.getSession().getServletContext().getRealPath("/");
 					CommonLoadAction.createProductFile(projectPath);
@@ -859,7 +859,7 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					isProductCreated = false;
 					objProductBean.setSpecial(true);
 					isProductCreated = objProductDao.saveSpecialProduct(objProductBean);
-					objProductDao.commit();
+//					objProductDao.commit();
 				}
 			}
 			if (objProductBean.getAltProd() != null) {

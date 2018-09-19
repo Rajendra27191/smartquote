@@ -87,7 +87,9 @@
 	if (prodObj.isLinkedExact&& prodObj.altProd){
 	if (prodObj.altProd.itemCode){
 	if (product.currentSupplierPrice!=''||product.currentSupplierPrice>0) {
-	prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice;
+	var altUnitDiviser = prodObj.altProd.unitDiviser;			
+	prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice * altUnitDiviser;
+	// var altAvgCost = prodObj.altProd.avgcost / altUnitDiviser;	
 	prodObj.altProd.currentSupplierGP=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.avgcost);
 	prodObj.altProd.currentSupplierTotal=prodObj.altProd.currentSupplierPrice*prodObj.altProd.itemQty;
 	}else{
@@ -100,8 +102,8 @@
 	// prodObj.altProd.altForQuoteDetailId=0;
 	// prodObj.altProd.altForQuoteDetailId=0;
 	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
-	var price= 	prodObj.altProd.quotePrice/prodObj.altProd.unitDiviser;
-	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,price);
+	// var price= 	prodObj.altProd.quotePrice / altUnitDiviser;
+	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
 	}else{
 	prodObj.altProd.savings=0;
 	}
@@ -542,16 +544,16 @@
 	//================Alternative Product================================
 	$scope.altProductSavings=function(){
 	var savings,altQuotePrice,altDiviser,price;
-	altSupplierPrice=$scope.addProduct.currentSupplierPrice;
-	altQuotePrice=$scope.addProduct.altProd.quotePrice;
 	altDiviser = $scope.addProduct.altProd.unitDiviser;
+	altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
+	altQuotePrice=$scope.addProduct.altProd.quotePrice;
 	if (altSupplierPrice>0&&altQuotePrice>0) {
 	// console.log(altSupplierPrice,altQuotePrice,altDiviser);
-	price = altQuotePrice/altDiviser;
+	// price = altQuotePrice/altDiviser;
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
 	}else{
-	savings=$scope.getPriceInPercentage(altSupplierPrice,price);		
+	savings=$scope.getPriceInPercentage(altSupplierPrice,altQuotePrice);		
 	};	
 	}else{
 	savings=0;
@@ -904,6 +906,7 @@ $scope.addProduct.altProd.isAltUnitDiviser = false;
 if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
 $scope.select.type='search';
 };
+console.log($scope.addProduct.altProd)
 };
 
 

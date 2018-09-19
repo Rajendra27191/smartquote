@@ -451,7 +451,7 @@ padding: 3px 12px;
 <tr ng-if="customerQuote.productList.length>0" ng-repeat-start="product in customerQuote.productList | orderBy:orderNo">
 <td>
 <input type="text" name="order" style="width: 30px;" ng-model="product.newOrderNo" 
-ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.newOrderNo,$index+1,product.quoteDetailId)" >
+ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrderConfirmed(product.newOrderNo,$index+1,product.quoteDetailId)" >
 </td>
 <td><span data-ng-bind="product.itemCode"></span></td>
 <td><span data-ng-bind="product.itemDescription"></span></td>

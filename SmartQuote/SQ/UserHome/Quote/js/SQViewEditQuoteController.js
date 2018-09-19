@@ -1091,16 +1091,18 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 			};	
 			if (product.isLinkedExact) {	
 			if(product.altProd!=null){
+			var altUnitDiviser = product.altProd.unitDiviser
 			// newProduct.isLinkedExact=product.isLinkedExact
 			if (product.altProd.currentSupplierPrice>0 && product.altProd.quotePrice>0) {//product.altProd.currentSupplierPrice>product.altProd.quotePrice
 			if (product.altProd.currentSupplierPrice==product.altProd.quotePrice) {
 			product.altProd.savings=0;		
 			}else{
-			var price = product.altProd.quotePrice / product.altProd.unitDiviser;	
-			product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,price);	
+			// var price = product.altProd.quotePrice / product.altProd.unitDiviser;	
+			product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.quotePrice);	
 			}
 			};
 			if (product.altProd.currentSupplierPrice>0) {
+			// var altAvgCost = product.altProd.avgcost / product.altProd.unitDiviser;	
 			product.altProd.currentSupplierGP=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.avgcost);	
 			}else{
 			product.altProd.currentSupplierGP=0;	
@@ -1643,16 +1645,34 @@ $scope.changeProductOrder = function(newOrderNo,oldOrderNo,quoteDetailId){
 var newIndex,oldIndex;
 oldIndex = oldOrderNo-1;newIndex= newOrderNo-1; 
 if (newIndex<$scope.customerQuote.productList.length && newIndex >=0) {
-	array_move($scope.customerQuote.productList,oldIndex,newIndex); 
-	for (var i = 0; i < $scope.customerQuote.productList.length; i++) {
-	$scope.customerQuote.productList[i].orderNo = i+1;
-	$scope.customerQuote.productList[i].newOrderNo = $scope.customerQuote.productList[i].orderNo;
-	};
-}else{
-	console.log("invalid index");
-	console.log(newOrderNo,oldOrderNo);
-	$scope.customerQuote.productList[oldIndex].newOrderNo=oldOrderNo;
+array_move($scope.customerQuote.productList,oldIndex,newIndex); 
+for (var i = 0; i < $scope.customerQuote.productList.length; i++) {
+$scope.customerQuote.productList[i].orderNo = i+1;
+$scope.customerQuote.productList[i].newOrderNo = $scope.customerQuote.productList[i].orderNo;
 };
+}else{
+console.log("invalid index");
+console.log(newOrderNo,oldOrderNo);
+$scope.customerQuote.productList[oldIndex].newOrderNo=oldOrderNo;
+};
+}
+$scope.changeProductOrderConfirmed = function(newOrderNo,oldOrderNo,quoteDetailId){
+var previousWindowKeyDown = window.onkeydown;
+swal({
+title: 'Are you sure ?',
+text: "Are you sure you want to change line "+oldOrderNo+" to line "+newOrderNo,
+showCancelButton: true,
+closeOnConfirm: true,
+cancelButtonText:"No",
+confirmButtonText:"Yes"
+}, function (isConfirm) {
+if (isConfirm) {
+	$scope.changeProductOrder(newOrderNo,oldOrderNo,quoteDetailId);
+}else{
+	var oldIndex = oldOrderNo-1;
+	$scope.customerQuote.productList[oldIndex].newOrderNo=oldOrderNo;
+}
+});
 };
 
 //=================================================================================================

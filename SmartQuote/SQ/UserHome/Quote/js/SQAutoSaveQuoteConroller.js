@@ -777,18 +777,20 @@ angular.module('sq.SmartQuoteDesktop')
                 }
                 if (product.isLinkedExact) {
                     if (product.altProd != null) {
+                        var altUnitDiviser = product.altProd.unitDiviser;
                         if (product.altProd.currentSupplierPrice > 0 && product.altProd.quotePrice > 0) {//product.altProd.currentSupplierPrice>product.altProd.quotePrice
                             if (product.altProd.currentSupplierPrice == product.altProd.quotePrice) {
                                 product.altProd.savings = 0;
                             } else {
-                                var price = product.altProd.quotePrice / product.altProd.unitDiviser;   
-                                product.altProd.savings = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, price);
+                                // var price = product.altProd.quotePrice / product.altProd.unitDiviser;   
+                                product.altProd.savings = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, product.altProd.quotePrice);
                             }
                         } else {
                             product.savings = 0;
                         }
                         if (product.altProd.currentSupplierPrice > 0) {
-                            product.altProd.currentSupplierGP = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, product.altProd.avgcost);
+                            // var avgCostDiviser = product.altProd.avgcost / product.altProd.unitDiviser;  
+                            product.altProd.currentSupplierGP = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.avgcost );
                         } else {
                             product.altProd.currentSupplierGP = 0;
                             product.altProd.currentSupplierPrice = 0;
@@ -824,7 +826,7 @@ angular.module('sq.SmartQuoteDesktop')
                     if (product.isLinkedExact) {
                         newProduct.altProd = product.altProd;
                     }
-                    console.log(newProduct)
+                    // console.log(newProduct)
                     product = angular.copy(newProduct);
                 } else {
                     // console.log("existing product>>>>>");
@@ -833,12 +835,13 @@ angular.module('sq.SmartQuoteDesktop')
                     }
                 }
                 product.quoteId = $scope.customerQuote.quoteId;
+                console.log(product)
                 return product;
             }
             var productToPush, productToSend;
             $rootScope.addProductToQuote = function (dataFromModal) {
                 // console.log("addProductToQuote create...");
-                console.log($scope.checkProduct(dataFromModal));
+                // console.log($scope.checkProduct(dataFromModal));
                 productToPush = $scope.checkProduct(dataFromModal);
                 productToSend = angular.copy(productToPush);
                 if ($scope.productButtonStatus == 'add') {
@@ -1040,9 +1043,6 @@ angular.module('sq.SmartQuoteDesktop')
                                 showConfirmButton: false
                                 // closeOnConfirm: true,			
                             });
-                            if($scope.isSaveAndPrintInitiated){
-                                $scope.saveAsPDF($scope.quoteId);
-                            };
                             if (data.newProductCreated) {   
                                 checkSaveQuoteResponse(saveQuoteResponse);
                                 $scope.resetCreateQuote();
@@ -1052,6 +1052,9 @@ angular.module('sq.SmartQuoteDesktop')
                                 $timeout(function () {
                                     $scope.moveToCustomerInfo();
                                 }, 2000);
+                            };
+                            if($scope.isSaveAndPrintInitiated){
+                                $scope.saveAsPDF($scope.quoteId);
                             };
                             // $rootScope.hideSpinner();
                         } else {

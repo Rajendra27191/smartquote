@@ -478,16 +478,19 @@ angular.module('sq.SmartQuoteDesktop')
                 }
                 if (product.isLinkedExact) {
                     if (product.altProd != null) {
+                        
                         if (product.altProd.currentSupplierPrice > 0 && product.altProd.quotePrice > 0) {//product.altProd.currentSupplierPrice>product.altProd.quotePrice
                             if (product.altProd.currentSupplierPrice == product.altProd.quotePrice) {
                                 product.altProd.savings = 0;
                             } else {
-                                product.altProd.savings = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, product.altProd.quotePrice);
+                                // var price = product.altProd.quotePrice / product.altProd.unitDiviser;   
+                                product.altProd.savings = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, product.altProd.quotePrice );
                             }
                         } else {
                             product.savings = 0;
                         }
                         if (product.altProd.currentSupplierPrice > 0) {
+                            // var altAvgCost =product.altProd.avgcost / product.altProd.unitDiviser;  
                             product.altProd.currentSupplierGP = $scope.getPriceInPercentage(product.altProd.currentSupplierPrice, product.altProd.avgcost);
                         } else {
                             product.altProd.currentSupplierGP = 0;
