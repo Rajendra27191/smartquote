@@ -1043,6 +1043,9 @@ angular.module('sq.SmartQuoteDesktop')
                                 showConfirmButton: false
                                 // closeOnConfirm: true,			
                             });
+                            if($scope.isSaveAndPrintInitiated){
+                                $scope.saveAsPDF($scope.quoteId);
+                            };
                             if (data.newProductCreated) {   
                                 checkSaveQuoteResponse(saveQuoteResponse);
                                 $scope.resetCreateQuote();
@@ -1053,9 +1056,7 @@ angular.module('sq.SmartQuoteDesktop')
                                     $scope.moveToCustomerInfo();
                                 }, 2000);
                             };
-                            if($scope.isSaveAndPrintInitiated){
-                                $scope.saveAsPDF($scope.quoteId);
-                            };
+                            
                             // $rootScope.hideSpinner();
                         } else {
                             $rootScope.alertError(data.message);
