@@ -5,7 +5,7 @@
     <reloadable>true</reloadable>
     <redirectLogger>false</redirectLogger>
     <updateXml>true</updateXml>
-    <warLocation>/home/radhika/WAR/SmartProWAR/smartpro.war</warLocation>
+    <warLocation>/home/radhika/WAR/SmartProWAR/smartprotest.war</warLocation>
     <extraInfo></extraInfo>
     <webPath></webPath>
 </tomcatProjectProperties>

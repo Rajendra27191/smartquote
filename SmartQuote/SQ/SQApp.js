@@ -37,7 +37,7 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
     $rootScope.projectName = "/";
 
     var currentURL = $window.location.href;
-//   var currentURL = "http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
+   var currentURL = "http://localhost:6003/smartprotest/";  // -- Comment while deploying on PROD & QA
 
 
     var isSmartProTest = currentURL.includes("smartprotest");
@@ -154,7 +154,8 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
           $scope.setLocalStorageData($rootScope.smartpro);
         }
         if ($rootScope.isUserSignIn) {
-          SQHomeServices.getUpdatedUserData();
+          // SQHomeServices.getUpdatedUserData();
+          $rootScope.$broadcast('GetUpdatedUserDataDone', data); 
           $state.transitionTo('userhome.start');
         } else {
           $state.transitionTo('home.start');
@@ -177,60 +178,119 @@ var app = angular.module('sq.SmartQuoteDesktop', ['ui.router', 'ui.bootstrap', '
 
     // console.log("$rootScope.initDashBoard :" ,$rootScope.initDashBoard)
     /*===================================================*/
-    $rootScope.initAuotoComplete = function (callWithTimeStamp) {
-      console.log("$rootScope.initAuotoComplete...");
-      var objURL = "";
-      var timestamp = new Date().getTime();
-      var fileURL = $rootScope.projectName + "/products.json"
-      var isCache = false;
-      if (callWithTimeStamp) {
-        fileURL = $rootScope.projectName + "/products.json?" + timestamp,
-          isCache = false;
-      }
-      console.log("fileURL : " + fileURL)
-      products = new Bloodhound({
-        datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
-        queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {
-          // url: $rootScope.projectName+"/products.json?"+timestamp,
-          url: fileURL,
-          cache: isCache,
-          beforeSend: function (xhr) {
-            $rootScope.showSpinner();
-            $rootScope.initAuotoCompleteDone = false;
-          },
-          filter: function (devices) {
-            $rootScope.hideSpinner();
-            $('#mySpinner').hide();
-            $rootScope.initAuotoCompleteDone = true;
-            return $.map(devices, function (device) {
-              return {
-                code: device.code,
-                value: device.value
-              };
-            });
-          }
-        },
-      });
-      products.clearPrefetchCache();
-      products.initialize();
-      $rootScope.productsDataset = {
-        displayKey: 'value',
-        limit: 200,
-        // async: false,
-        source: products.ttAdapter(),
-      };
-      $rootScope.exampleOptions = {
-        displayKey: 'title',
-        highlight: true
-      };
-      //----------------------
-//      $timeout(function() {
-//      $rootScope.hideSpinner();
-//      $('#mySpinner').hide();
-//      }, 2000);
+//     $rootScope.initAuotoComplete = function (callWithTimeStamp) {
+//       console.log("$rootScope.initAuotoComplete...");
+//       var objURL = "";
+//       var timestamp = new Date().getTime();
+//       var fileURL = $rootScope.projectName + "/products.json"
+//       var isCache = false;
+//       if (callWithTimeStamp) {
+//         fileURL = $rootScope.projectName + "/products.json?" + timestamp,
+//           isCache = false;
+//       }
+//       fileURL = "http://18.210.214.162/smartprotest/products.json"
+//       console.log("fileURL : " + fileURL)
+//       products = new Bloodhound({
+//         datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+//         queryTokenizer: Bloodhound.tokenizers.whitespace,
+//         prefetch: {
+//           // url: $rootScope.projectName+"/products.json?"+timestamp,
+//           url: fileURL,
+//           cache: isCache,
+//           beforeSend: function (xhr) {
+//             $rootScope.showSpinner();
+//             $rootScope.initAuotoCompleteDone = false;
+//           },
+//           filter: function (devices) {
+//             $rootScope.hideSpinner();
+//             $('#mySpinner').hide();
+//             $rootScope.initAuotoCompleteDone = true;
+//             return $.map(devices, function (device) {
+//               return {
+//                 code: device.code,
+//                 value: device.value
+//               };
+//             });
+//           }
+//         },
+//       });
+//       products.clearPrefetchCache();
+//       products.initialize();
+//       $rootScope.productsDataset = {
+//         displayKey: 'value',
+//         limit: 200,
+//         // async: false,
+//         source: products.ttAdapter(),
+//       };
+//       $rootScope.exampleOptions = {
+//         displayKey: 'title',
+//         highlight: true
+//       };
+//       //----------------------
+// //      $timeout(function() {
+// //      $rootScope.hideSpinner();
+// //      $('#mySpinner').hide();
+// //      }, 2000);
       
+//     };
+$scope.setAuotoCompleteResponse = function(argument) {
+// body...
+var products = new Bloodhound({
+datumTokenizer: function (d) { return Bloodhound.tokenizers.whitespace(d.value).concat(Bloodhound.tokenizers.nonword(d.value)); },
+queryTokenizer: Bloodhound.tokenizers.whitespace,
+local : $scope.data,
+});
+products.initialize();   
+$rootScope.productsDataset = {
+displayKey: 'value',
+limit: 200,
+// async: false,
+source: products.ttAdapter(),
+templates: {
+pending: function (query) {
+return '<div>Loading...</div>';
+}
+}
+};
+$rootScope.exampleOptions = {
+displayKey: 'title',
+highlight: true
+};
+$rootScope.$broadcast('SetAutoCompleteResponseDone', "success");
+//    $timeout(function() {
+// }, 1000);
+}
+
+    $rootScope.initAuotoComplete = function (callWithTimeStamp) {
+    console.log("$rootScope.initAuotoComplete...");
+    var objURL = "";
+    var timestamp = new Date().getTime();
+    var fileURL = $rootScope.projectName + "/products.json"
+    var isCache = false;
+    if (callWithTimeStamp) {
+      fileURL = $rootScope.projectName + "/products.json?" + timestamp,
+        isCache = false;
+    }
+    console.log(new Date());  
+    console.log(fileURL)
+    $http.get(fileURL)
+    .then(function successCallback(res,status,xhr) {
+    console.log(new Date()); 
+    console.log(res);
+    $scope.data = res.data;
+    $scope.setAuotoCompleteResponse();
+    }, function errorCallback(response) {
+    console.log(response);   
+    });
     };
+
+    var cleanupEventAutoCompleteResponseDone = $scope.$on("SetAutoCompleteResponseDone", function (event, message) {
+    console.log("SetAutoCompleteResponseDone")
+    $rootScope.hideSpinner();
+    $('#mySpinner').hide();
+    console.log(new Date());
+    });
+
     /*===================================================*/
     $rootScope.userSignin = function () {
       if ($scope.form.loginUser.$valid) {

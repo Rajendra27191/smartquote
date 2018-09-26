@@ -93,8 +93,8 @@ angular.module('sq.SmartQuoteDesktop')
     };
 
     home.apiCallToCheckUserSession=function(){
-       // HomeServices.getUserGroupAPI.getUserGroupInfoMethod(function (success) {
-       HomeServices.checkSessionActiveAPI.checkSessionActiveMethod(function (success) {
+       // HomeServices.checkSessionActiveAPI.checkSessionActiveMethod(function (success) {
+        HomeServices.getUpdatedDataAPI.getUpdatedDataMethod(function (success) {
         // console.log(success);
         $rootScope.$broadcast('sesssion', success);   
         }, function (error) {
@@ -103,6 +103,7 @@ angular.module('sq.SmartQuoteDesktop')
           $rootScope.SQNotify("Server Error", 'error')
         });
     };
+
     home.getUpdatedUserData = function () {
        HomeServices.getUpdatedDataAPI.getUpdatedDataMethod(function (success) {
         // console.log("Login Success");

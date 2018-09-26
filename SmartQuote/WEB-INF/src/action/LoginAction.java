@@ -164,7 +164,7 @@ public class LoginAction extends ActionSupport implements ServletRequestAware {
 				objLoginResponse.setSupplierList(objQuoteDao.getCurrentSupplierList());
 				objQuoteDao.closeAll();
 				TermServicesDao objTermServicesDao = new TermServicesDao();
-				objLoginResponse.setServiceList(objTermServicesDao.getAllServices());
+//				objLoginResponse.setServiceList(objTermServicesDao.getAllServices());
 				objLoginResponse.setTermConditionList(objTermServicesDao.getAllTermsConditions());
 				objTermServicesDao.closeAll();
 				OfferDao objOfferDao = new OfferDao();
