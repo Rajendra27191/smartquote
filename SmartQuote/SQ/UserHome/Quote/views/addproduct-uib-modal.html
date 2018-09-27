@@ -312,18 +312,37 @@ animation: flash linear 2s infinite;
 <div class="row row-control">
 <div class="col-md-4" >
 </div>
-<div class="col-md-1" style="padding:0px;width: 5%;">
-<input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()">
+<div class="col-md-8" >
+	<div class="col-md-12" style="padding-left:0px;">
+	<div class="col-md-4" style="padding-left:0px;">
+	<label class="sub-label">
+	<input type="checkbox" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()">
+	Alternative
+	</label>     
+	</div>
+	<div class="col-md-4" >
+	<label class="sub-label">
+	<input type="checkbox" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
+	Comment
+	</label>  
+	</div>
+	</div>
+	<div class="col-md-12" style="padding-left:0px;">
+   	<div class="col-md-4" style="padding-left:0px;">
+	<label class="sub-label">
+	<input type="checkbox" name="isUnitDiviser" ng-model="addProduct.isUnitDiviser" style="height: 15px;width: 15px;" ng-change="isUnitDiviserClicked()">
+	Unit Divisor
+	</label>
+	</div>
+	<div class="col-md-3">
+	<input type="number" class = 'form-control' name="unitDiviser" ng-model="addProduct.unitDiviser" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.isUnitDiviser" min="1" ng-if="addProduct.isUnitDiviser" 
+	ng-change="unitDiviserChanged()">
+	</div>
+	</div>
 </div>
-<div class="col-md-2" style="padding:0px;">
-<label class="sub-label">Alternative</label>     
-</div>
-<div class="col-md-1" style="padding:0px;width: 3%;">
-<input type="checkbox" class="form-control" name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
-</div>
-<div class="col-md-2" style="padding:0px;">
-<label class="sub-label">Comment</label>     
-</div>
+
+
+
 </div>
 </div>
 </div> 
@@ -514,14 +533,43 @@ animation: flash linear 2s infinite;
 </div>
 
 <div class="row row-control">
-<div class="col-md-3" style="width: 31%;">
+<div class="col-md-4" style="width: 31%;">
 </div>
-<div class="col-md-1" style="width: 3%;">
+<div class="col-md-8">
+<div class="col-md-4">
+	<label class="sub-label">
+	<input type="checkbox" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;" ng-init="addProduct.gstFlag=='NO'">
+	GST Exempt
+	</label>
+</div>
+<div class="col-md-4">
+	<label class="sub-label">
+	<input type="checkbox"  name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()" >
+	Alternative
+	</label>     
+</div>
+<div class="col-md-4">
+	<label class="sub-label">
+	<input type="checkbox"  name="lineComment" ng-model="addProduct.addComment" style="height: 15px;width: 15px;" ng-change="checkedLineComments()">
+	Comment
+	</label>    
+</div>
+<div class="col-md-4">
+	<label class="sub-label">
+	<input type="checkbox" name="isUnitDiviser" ng-model="addProduct.isUnitDiviser" style="height: 15px;width: 15px;" ng-change="isUnitDiviserClicked()">
+	Unit Divisor
+	</label>
+</div>
+<div class="col-md-3">
+<input type="number" class = 'form-control' name="unitDiviser" ng-model="addProduct.unitDiviser" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.isUnitDiviser" min="1" ng-if="addProduct.isUnitDiviser" ng-change="unitDiviserChanged()">
+</div>
+
+
+<!-- <div class="col-md-1" style="width: 3%;">
 <input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;" ng-init="addProduct.gstFlag=='NO'">
 </div>
 <div class="col-md-2" style="padding:0px;">
 <label class="sub-label">&nbsp;GST Exempt</label>
-<!-- GST Exempt -->
 </div>
 <div class="col-md-1" style="padding:0px;width: 3%;">
 <input type="checkbox" class="form-control" name="altProduct" ng-model="addProduct.isLinkedExact" style="height: 15px;width: 15px;" ng-change="checkedAlternate()" >
@@ -534,8 +582,9 @@ animation: flash linear 2s infinite;
 </div>
 <div class="col-md-2" style="padding:0px;">
 <label class="sub-label">Comment</label>     
+</div> -->
+
 </div>
-<!-- <div class="col-md-2"></div> -->
 </div>
 
 
@@ -699,11 +748,11 @@ animation: flash linear 2s infinite;
 </div>
 <div class="row row-control">
 <div class="col-md-4">
-<label class="sub-label">Alt Unit Diviser</label>
+<label class="sub-label">Alt Unit Divisor</label> 
 </div>
 <div class="col-md-8">
 <div class="col-md-1" style="padding-left:0px;">
-<input type="checkbox" class="form-control" name="isAltUnitDiviser" ng-model="addProduct.altProd.isAltUnitDiviser" style="height: 15px;width: 15px;" ng-change="isAltUnitDiviserClicked()">
+<input type="checkbox" class="form-control" name="isAltUnitDiviser" ng-model="addProduct.altProd.isAltUnitDiviser" style="height: 15px;width: 15px;" ng-change="isAltUnitDiviserClicked()" ng-disabled="addProduct.isUnitDiviser" >
 </div>
 <div class="col-md-2" style="padding-left:0px;">
 <input type="number" class = 'form-control' name="altUnitDiviser" ng-model="addProduct.altProd.unitDiviser" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.altProd.isAltUnitDiviser" min="1" ng-if="addProduct.altProd.isAltUnitDiviser" ng-change="changeAlternateSavings()">
