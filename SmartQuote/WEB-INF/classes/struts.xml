@@ -133,6 +133,13 @@
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>
+		<action name="getPaymentReminderFlagUser" class="action.UserGroupAction"
+			method="getPaymentReminderFlagUser">
+			<result name="success" type="json">
+				<param name="root">userDetailsResponse</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
 
 		<action name="updateUserDetails" class="action.UserGroupAction"
 			method="updateUserDetails">
@@ -381,6 +388,20 @@
 			</result>
 		</action>
 		
+		<action name="getQuoteProductList" class="action.QuoteAction" method="getQuoteProductList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
+		<action name="getQuoteCommentList" class="action.QuoteAction" method="getQuoteCommentList">
+			<result name="success" type="json">
+				<param name="root">quoteResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		
 		<action name="generateProposal" class="action.QuoteAction" method="generateProposal">
 			<result name="success" type="json">
 				<param name="root">objQuoteCreateResponseBean</param>
@@ -464,6 +485,12 @@
 		<action name="updateQuote" class="action.QuoteAction" method="updateQuote">
 			<result name="success" type="json">
 				<param name="root">objQuoteCreateResponseBean</param>
+				<param name="ignoreHierarchy">false</param>
+			</result>
+		</action>
+		<action name="deleteQuote" class="action.QuoteAction" method="deleteQuote">
+			<result name="success" type="json">
+				<param name="root">objEmptyResponse</param>
 				<param name="ignoreHierarchy">false</param>
 			</result>
 		</action>

@@ -60,7 +60,7 @@ public class CustComparisonDao {
 				+ " ifnull(gst_flag, 'no') gst_flag,"
 				+ " ifnull(is_alternate, 'no') is_alternate, ifnull(alternate_for, 0) alternate_for,"
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST, tax_code,comment "
+				+ " qty_break4, price4exGST, tax_code,comment,special_flag"
 				+ " from create_quote_details qd join product_master pm on qd.product_id = pm.item_code "
 				+ " where quote_id='" + quoteId+"'"
 				+ " order by quote_detail_id;";
@@ -95,6 +95,11 @@ public class CustComparisonDao {
 				objPdfSubReportBean.setIsAlternative(rs.getString("is_alternate"));
 				objPdfSubReportBean.setGstExempt(rs.getString("gst_flag"));
 				objPdfSubReportBean.setLineComment(rs.getString("comment"));
+				String isSpecial="N";
+				if(rs.getString("special_flag").equalsIgnoreCase("yes")){
+					isSpecial="Y";
+				}
+				objPdfSubReportBean.setIsSpecialCode(isSpecial);
 				productList.add(objPdfSubReportBean);
 			}
 		} catch (Exception e) {

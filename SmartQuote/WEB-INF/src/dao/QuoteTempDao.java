@@ -57,10 +57,11 @@ public class QuoteTempDao {
 		int quoteId = 0;
 		boolean isInserted = false;
 		java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-		String currentTime = sdf.format(quoteBean.getCreatedDate());
-		System.out.println("QuoteCtreatedDate: " + currentTime);
+		String createdDate = sdf.format(quoteBean.getCreatedDate());
+		String closeDate = sdf.format(quoteBean.getCloseDate());
+		System.out.println("QuoteCtreatedDate: " + createdDate);
 		String saveData = " insert into create_quote_temp " + "(quote_id,custcode,quote_attn,prices_gst_include,notes,created_date,"
-				+ "user_id,current_supplier_id,compete_quote,sales_person_id,status) " + " values(?,?,?,?,?,?,?,?,?,?,?)";
+				+ "user_id,current_supplier_id,compete_quote,sales_person_id,status,close_date) " + " values(?,?,?,?,?,?,?,?,?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(saveData);
 
@@ -72,12 +73,13 @@ public class QuoteTempDao {
 			else
 				pstmt.setString(4, "No");
 			pstmt.setString(5, quoteBean.getNotes());
-			pstmt.setString(6, currentTime);
+			pstmt.setString(6, createdDate);
 			pstmt.setString(7, userId);
 			pstmt.setInt(8, quoteBean.getCurrentSupplierId());
 			pstmt.setString(9, quoteBean.getCompeteQuote());
 			pstmt.setInt(10, quoteBean.getSalesPersonId());
 			pstmt.setString(11, status);
+			pstmt.setString(12, closeDate);
 			pstmt.executeUpdate();
 			isInserted = true;
 		} catch (Exception e) {
@@ -97,8 +99,8 @@ public class QuoteTempDao {
 		System.out.println(objProductBean.toString());
 		int quoteDetailId = 0;
 		String saveData = " insert into create_quote_details_temp ( quote_id,product_id,product_qty,total,quote_price,current_supplier_price,"
-				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment) "
-				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?);";
+				+ " current_supplier_gp,current_supplier_total,gp_required ,savings,is_alternate,alternate_for,comment,unit_diviser) "
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
 		try {
 			pstmt = conn.prepareStatement(saveData, pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, quoteId);
@@ -115,6 +117,11 @@ public class QuoteTempDao {
 			System.out.println(objProductBean.getQuoteDetailId());
 			pstmt.setInt(12, objProductBean.getQuoteDetailId());
 			pstmt.setString(13, objProductBean.getLineComment());
+			if(objProductBean.getUnitDiviser()>0){
+				pstmt.setInt(14,objProductBean.getUnitDiviser());
+			}else{
+				pstmt.setInt(14,1);
+			}
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
@@ -141,7 +148,7 @@ public class QuoteTempDao {
 		String updateQuoteDetails="update create_quote_details_temp set "
 				+ "product_id=?,product_qty=?,total=?,quote_price=?,current_supplier_price=?,"
 				+ "current_supplier_gp=?,current_supplier_total=?,gp_required=?,savings=?,is_alternate=?,"
-				+ "alternate_for=?,comment=? where quote_detail_id=? AND quote_id=?;";
+				+ "alternate_for=?,comment=?,unit_diviser=? where quote_detail_id=? AND quote_id=?;";
 		try {
 			pstmt = conn.prepareStatement(updateQuoteDetails);
 
@@ -160,7 +167,12 @@ public class QuoteTempDao {
 			pstmt.setString(12, objProductBean.getLineComment());
 			
 			pstmt.setInt(13, objProductBean.getQuoteDetailId());
-			pstmt.setString(14, quoteId);
+			if(objProductBean.getUnitDiviser()>0){
+				pstmt.setInt(14,objProductBean.getUnitDiviser());
+			}else{
+				pstmt.setInt(14,1);
+			}
+			pstmt.setString(15, quoteId);
 			
 			result = pstmt.executeUpdate();
 			
@@ -262,6 +274,26 @@ public class QuoteTempDao {
 		}
 		return isDone;
 	}
+	
+	public boolean deleteAlternativesFromTemp(String quoteId) {
+		boolean isDone = false;
+		String query1;
+		query1 = "DELETE FROM create_quote_details_temp "
+			   + "where quote_id='" + quoteId + "' AND is_alternate='yes' ;";
+		try {
+			pstmt = conn.prepareStatement(query1);
+			pstmt.executeUpdate();
+			isDone = true;
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDone;
+	}
 
 	public boolean saveQuoteToMaster(String quoteId) {
 		boolean isDone = false;
@@ -351,6 +383,7 @@ public class QuoteTempDao {
 				objQuoteBean.setSalesPersonId(rs.getInt("sales_person_id"));
 				objQuoteBean.setSalesPerson(rs.getString("sales_person_name"));
 				objQuoteBean.setStatus(rs.getString("status"));
+				objQuoteBean.setCloseDate(rs.getDate("close_date"));
 				if (rs.getString("cust_id") == null) {
 				} else {
 					String src = customerLogoSrc + "CustId_" + rs.getInt("cust_id") + ".png";
@@ -372,7 +405,7 @@ public class QuoteTempDao {
 				+ " gp_required,current_supplier_price,current_supplier_gp,current_supplier_total,savings,"
 				+ " ifnull(gst_flag, 'No') gst_flag, "
 				+ " unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, price3exGST, "
-				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment"
+				+ " qty_break4, price4exGST,promo_price, tax_code,is_alternate,alternate_for, comment,unit_diviser "
 				+ " from create_quote_details_temp qd join product_master pm on qd.product_id = pm.item_code " + " where quote_id= ? "
 				+ " order by quote_detail_id;";
 		try {
@@ -413,6 +446,7 @@ public class QuoteTempDao {
 				objProductBean.setIsAlternative(rs1.getString("is_alternate"));
 				objProductBean.setAltForQuoteDetailId(rs1.getInt("alternate_for"));
 				objProductBean.setLineComment(rs1.getString("comment"));
+				objProductBean.setUnitDiviser(rs1.getInt("unit_diviser"));
 				productList.add(objProductBean);
 			}
 		} catch (Exception e) {
@@ -425,7 +459,7 @@ public class QuoteTempDao {
 		String getData = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,"
 				+ "prices_gst_include,notes,cq.user_id,DATE(created_date) created_date,"
 				+ "DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status "
+				+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,close_date "
 				+ "from create_quote_temp cq "
 				+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 				+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
@@ -458,6 +492,7 @@ public class QuoteTempDao {
 				objQuoteBean.setSalesPersonId(rs.getInt("sales_person_id"));
 				objQuoteBean.setSalesPerson(rs.getString("sales_person_name"));
 				objQuoteBean.setStatus(rs.getString("status"));
+				objQuoteBean.setCloseDate(rs.getDate("close_date"));
 				if (rs.getString("cust_id") == null) {
 				} else {
 					String src = customerLogoSrc + "CustId_" + rs.getInt("cust_id") + ".png";

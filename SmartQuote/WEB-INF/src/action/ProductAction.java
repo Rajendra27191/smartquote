@@ -153,7 +153,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objDao.closeAll();
 		if (!isProductExist) {
 			ProductDao objDao1 = new ProductDao();
-			isProductCreated = objDao1.saveProduct(objBean);
+//			isProductCreated = objDao1.saveProduct(objBean);
+			objBean.setSpecial(true);
+			isProductCreated = objDao1.saveSpecialProduct(objBean);
 			// objDao1.commit();
 			objDao1.closeAll();
 			if (isProductCreated) {
@@ -497,8 +499,10 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		ProductDao objProductDao = new ProductDao();
 		String projectPath = request.getSession().getServletContext().getRealPath("/");
 		boolean isAddedToStaging = false, isAddedToStagingFinal = false, isFileUploaded = false, isFileValid = false;
-		File fileToCreate = new File(projectPath + "CSVFile/" + "ProductFile.csv");
-
+//		File fileToCreate = new File(projectPath + "CSVFile/" + "ProductFile.csv");
+		File fileToCreate = new File(getText("product_csv_file_path")+ "ProductFile.csv");
+		System.out.println("File Absolute Path :: "+fileToCreate.getAbsolutePath());
+		
 		try {
 			System.out.println("Product File: " + productFile);
 			FileUtils.copyFile(productFile, fileToCreate);

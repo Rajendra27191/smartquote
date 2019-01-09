@@ -15,6 +15,8 @@ public class UserBean {
 	private String language;
 	private String templateUrl;
 	private String paymentReminderAccess;
+	private String paymentReminderEmailFlag;
+	private boolean isSaveConfirm;
 
 	public String getTemplateUrl() {
 		return templateUrl;
@@ -112,11 +114,30 @@ public class UserBean {
 		this.paymentReminderAccess = paymentReminderAccess;
 	}
 
+	public String getPaymentReminderEmailFlag() {
+		return paymentReminderEmailFlag;
+	}
+
+	public void setPaymentReminderEmailFlag(String paymentReminderEmailFlag) {
+		this.paymentReminderEmailFlag = paymentReminderEmailFlag;
+	}
+
 	@Override
 	public String toString() {
-		return "UserBean [userId=" + userId + ", userGroupId=" + userGroupId + ", userName=" + userName + ", emailId=" + emailId + ", password="
-				+ password + ", userType=" + userType + ", contact=" + contact + ", validFrom=" + validFrom + ", validTo=" + validTo + ", language="
-				+ language + "]";
+		return "UserBean [userId=" + userId + ", userGroupId=" + userGroupId + ", userName=" + userName + ", emailId=" + emailId
+				+ ", password=" + password + ", userType=" + userType + ", contact=" + contact + ", validFrom=" + validFrom + ", validTo="
+				+ validTo + ", language=" + language + ", templateUrl=" + templateUrl + ", paymentReminderAccess=" + paymentReminderAccess
+				+ ", paymentReminderEmailFlag=" + paymentReminderEmailFlag + "]";
 	}
+
+	public boolean isSaveConfirm() {
+		return isSaveConfirm;
+	}
+
+	public void setSaveConfirm(boolean isSaveConfirm) {
+		this.isSaveConfirm = isSaveConfirm;
+	}
+
+
 
 }

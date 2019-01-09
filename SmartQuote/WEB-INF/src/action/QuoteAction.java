@@ -182,7 +182,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 					if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
 							&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
 						isProductCreated = false;
-						isProductCreated = objProductDao.saveProduct((objQuoteBean.getProductList().get(i)));
+						objQuoteBean.getProductList().get(i).setSpecial(true);
+						isProductCreated = objProductDao.saveSpecialProduct((objQuoteBean.getProductList().get(i)));
 						if (isProductCreated)
 							newProductCount++;
 						System.out.println("new product added ::::::::" + isProductCreated);
@@ -331,14 +332,16 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			if (userType.equalsIgnoreCase("admin")) {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status " + "from create_quote cq "
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,DATE(close_date) close_date " 
+						+ "from create_quote cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 						+ "left outer join user_master um on cq.sales_person_id = um.user_id " + "order by quote_id desc;";
 			} else {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status " + "from create_quote cq "
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,DATE(close_date) close_date " 
+						+ "from create_quote cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 						+ "left outer join user_master um on cq.sales_person_id = um.user_id " + " WHERE cq.sales_person_id =" + userId
@@ -358,6 +361,56 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			quoteResponseBean.setCode("common_error");
 			quoteResponseBean.setMessage("error_quote_list_loaded");
 			quoteResponseBean.setResult(quoteList);
+		}
+		return SUCCESS;
+	}
+	
+	public String getQuoteProductList() {
+		QuoteDao objQuoteDao = new QuoteDao();
+		httpSession = request.getSession(true);
+		String quoteId = request.getParameter(("quoteId"));
+		quoteResponseBean = new QuoteResponseBean();
+		quoteResponseBean.setCode("error");
+		quoteResponseBean.setMessage(getText("common_error"));
+		try {
+			QuoteBean objBean = new QuoteBean();
+			objBean.setProductList(objQuoteDao.getProductDetails(quoteId)); 
+			System.out.println(objBean.toString());
+			quoteResponseBean.setCode("success");
+			quoteResponseBean.setMessage("quote_products_loaded");
+			quoteResponseBean.setQuoteInfo(objBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			quoteResponseBean.setCode("common_error");
+			quoteResponseBean.setMessage("error_quote_products_loaded");
+			quoteResponseBean.setQuoteInfo(null);
+		} finally {
+			objQuoteDao.closeAll();
+		}
+		return SUCCESS;
+	}
+	
+	public String getQuoteCommentList() {
+		QuoteDao objQuoteDao = new QuoteDao();
+		httpSession = request.getSession(true);
+		String quoteId = request.getParameter(("quoteId"));
+		quoteResponseBean = new QuoteResponseBean();
+		quoteResponseBean.setCode("error");
+		quoteResponseBean.setMessage(getText("common_error"));
+		try {
+			QuoteBean objBean = new QuoteBean();
+			objBean.setCommentList(objQuoteDao.getCommentList(quoteId)); 
+			System.out.println(objBean.toString());
+			quoteResponseBean.setCode("success");
+			quoteResponseBean.setMessage("quote_comments_loaded");
+			quoteResponseBean.setQuoteInfo(objBean);
+		} catch (Exception e) {
+			e.printStackTrace();
+			quoteResponseBean.setCode("common_error");
+			quoteResponseBean.setMessage("error_quote_comments_loaded");
+			quoteResponseBean.setQuoteInfo(null);
+		} finally {
+			objQuoteDao.closeAll();
 		}
 		return SUCCESS;
 	}
@@ -468,12 +521,12 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				if (objQuoteBean.getProductList().get(i).getIsNewProduct() != null
 						&& objQuoteBean.getProductList().get(i).getIsNewProduct().equalsIgnoreCase("true")) {
 					boolean isProductCreated = false;
-
-					isProductCreated = objProductDao.saveProduct((objQuoteBean.getProductList().get(i)));
+					objQuoteBean.getProductList().get(i).setSpecial(true);
+					isProductCreated = objProductDao.saveSpecialProduct((objQuoteBean.getProductList().get(i)));
 					if (isProductCreated)
 						newProductCount++;
 					System.out.println("new product added ::::::::" + isProductCreated);
-					objProductDao.commit();
+//					objProductDao.commit();
 
 					String projectPath = request.getSession().getServletContext().getRealPath("/");
 					CommonLoadAction.createProductFile(projectPath);
@@ -745,7 +798,8 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			if (objProductBean != null) {
 				if (objProductBean.getIsNewProduct() != null && objProductBean.getIsNewProduct().equalsIgnoreCase("true")) {
 					isProductCreated = false;
-					isProductCreated = objProductDao.saveProduct(objProductBean);
+					objProductBean.setSpecial(true);
+					isProductCreated = objProductDao.saveSpecialProduct(objProductBean);
 					objQuoteAddProductResponse.setNewProductCreated(isProductCreated);
 					// objProductDao.commit();
 				}
@@ -803,8 +857,9 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			if (objProductBean != null) {
 				if (objProductBean.getIsNewProduct() != null && objProductBean.getIsNewProduct().equalsIgnoreCase("true")) {
 					isProductCreated = false;
-					isProductCreated = objProductDao.saveProduct(objProductBean);
-					objProductDao.commit();
+					objProductBean.setSpecial(true);
+					isProductCreated = objProductDao.saveSpecialProduct(objProductBean);
+//					objProductDao.commit();
 				}
 			}
 			if (objProductBean.getAltProd() != null) {
@@ -898,7 +953,11 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 				query = "update create_quote_temp set status='" + status + "' where quote_id='" + objQuoteBean.getQuoteId() + "';";
 				objQuoteTempDao.addNoteToQuote(query);
 			}
-			boolean isDone;
+			boolean isDone = false;
+			if (!objQuoteBean.isSaveWithAlternative()) {
+				System.out.println("Save without alternatives");	
+				objQuoteTempDao.deleteAlternativesFromTemp(objQuoteBean.getQuoteId());
+			}
 			isDone = objQuoteTempDao.saveQuoteToMaster(objQuoteBean.getQuoteId());
 			if (objQuoteBean.getTermConditionList().size() > 0) {
 				objQuoteDao.saveTermsAndConditionDetails(objQuoteBean.getTermConditionList(), objQuoteBean.getQuoteId());
@@ -943,14 +1002,16 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 			if (userType.equalsIgnoreCase("admin")) {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status " + "from create_quote_temp cq "
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,close_date " 
+						+ "from create_quote_temp cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 						+ "left outer join user_master um on cq.sales_person_id = um.user_id " + "order by quote_id desc;";
 			} else {
 				query = "select quote_id,custcode,cust_id,customer_name,add1,phone,cm.email,fax_no,quote_attn,prices_gst_include,notes, "
 						+ "cq.user_id,DATE(created_date) created_date,DATE(modified_date) modified_date,cq.current_supplier_id,current_supplier_name,"
-						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status " + "from create_quote_temp cq "
+						+ "compete_quote,cq.sales_person_id,um.user_name as sales_person_name,status,close_date "
+						+ "from create_quote_temp cq "
 						+ "left outer join customer_master cm on cq.custcode=cm.customer_code "
 						+ "left outer join current_supplier cs on cq.current_supplier_id=cs.current_supplier_id "
 						+ "left outer join user_master um on cq.sales_person_id = um.user_id " + " WHERE cq.sales_person_id =" + userId
@@ -995,6 +1056,28 @@ public class QuoteAction extends ActionSupport implements ServletRequestAware {
 		}
 		return SUCCESS;
 	}
+	
+	public String deleteQuote() {
+		QuoteDao objQuoteDao = new QuoteDao();
+		httpSession = request.getSession(true);
+		String quoteId = request.getParameter(("quoteId"));
+		objEmptyResponse = new EmptyResponseBean();
+		objEmptyResponse.setCode("error");
+		objEmptyResponse.setMessage(getText("common_error"));
+		try {
+			boolean isDeleted = objQuoteDao.deleteQuote(quoteId);
+			objEmptyResponse.setCode("success");
+			objEmptyResponse.setMessage(getText("quote_deleted"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			objEmptyResponse.setCode("error");
+			objEmptyResponse.setMessage(getText("common_error"));
+		} finally {
+			objQuoteDao.closeAll();
+		}
+		return SUCCESS;
+	}
+	
 
 	public QuoteCreateResponseBean getObjQuoteCreateResponseBean() {
 		return objQuoteCreateResponseBean;

@@ -29,6 +29,7 @@ public class QuoteBean {
 
 	private Date createdDate;
 	private Date modifiedDate;
+	private Date closeDate;
 
 	private String status;
 	private ArrayList<CommentBean> commentList;
@@ -37,7 +38,7 @@ public class QuoteBean {
 	private ArrayList<OfferBean> offerList;
 	private boolean saveWithAlternative;
 	private String isNewProductAdded;
-	
+
 	
 	private ArrayList<AlternateProductBean> alternativeArray;
 
@@ -292,6 +293,15 @@ public class QuoteBean {
 				+ ", modifiedDate=" + modifiedDate + ", status=" + status + ", commentList=" + commentList + ", termConditionList="
 				+ termConditionList + ", serviceList=" + serviceList + ", offerList=" + offerList + ", saveWithAlternative="
 				+ saveWithAlternative + ", isNewProductAdded=" + isNewProductAdded + ", alternativeArray=" + alternativeArray + "]";
+	}
+
+
+	public Date getCloseDate() {
+		return closeDate;
+	}
+
+	public void setCloseDate(Date closeDate) {
+		this.closeDate = closeDate;
 	}
 
 	

@@ -106,8 +106,7 @@ public class UserGroupDao {
 					if (rs1.getString("sub_menu_name") != null) {
 						objSubMenuBean = new SubMenuBean();
 						objSubMenuBean.setSubMenuId(rs1.getInt("sub_menu_id"));
-						objSubMenuBean.setSubMenuName(rs1
-								.getString("sub_menu_name"));
+						objSubMenuBean.setSubMenuName(rs1.getString("sub_menu_name"));
 						objSubMenuList.add(objSubMenuBean);
 					}
 				}
@@ -129,8 +128,7 @@ public class UserGroupDao {
 		int userGroupId = 0;
 		try {
 			String userGroupQuery = "INSERT IGNORE INTO user_group (user_group_name) VALUES(?)";
-			PreparedStatement pstmt = conn.prepareStatement(userGroupQuery,
-					PreparedStatement.RETURN_GENERATED_KEYS);
+			PreparedStatement pstmt = conn.prepareStatement(userGroupQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, userGroupName);
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
@@ -156,14 +154,11 @@ public class UserGroupDao {
 			int count = 0;
 
 			for (int i = 0; i < menuList.size(); i++) {
-				if (menuList.get(i).getSubMenuBeans() != null
-						&& menuList.get(i).getSubMenuBeans().size() > 0) {
-					for (int j = 0; j < menuList.get(i).getSubMenuBeans()
-							.size(); j++) {
+				if (menuList.get(i).getSubMenuBeans() != null && menuList.get(i).getSubMenuBeans().size() > 0) {
+					for (int j = 0; j < menuList.get(i).getSubMenuBeans().size(); j++) {
 						pstmt.setInt(1, userGroupId);
 						pstmt.setInt(2, menuList.get(i).getMenuId());
-						pstmt.setInt(3, menuList.get(i).getSubMenuBeans()
-								.get(j).getSubMenuId());
+						pstmt.setInt(3, menuList.get(i).getSubMenuBeans().get(j).getSubMenuId());
 						pstmt.addBatch();
 					}
 				} else {
@@ -213,13 +208,10 @@ public class UserGroupDao {
 		MenuBean objMenuBean = null;
 		ArrayList<SubMenuBean> objSubMenuList = null;
 		SubMenuBean objSubMenuBean;
-		String getMenus = "SELECT b.menu_name, b.menu_id "
-				+ " FROM menu_master b, user_group_access a "
+		String getMenus = "SELECT b.menu_name, b.menu_id " + " FROM menu_master b, user_group_access a "
 				+ " WHERE a.menu_id = b.menu_id and user_group_id = ? group by 2";
-		String getSubMenus = "SELECT c.sub_menu_id, c.sub_menu_name "
-				+ " FROM user_group_access a, sub_menu_master c "
-				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?"
-				+ " order by 1";
+		String getSubMenus = "SELECT c.sub_menu_id, c.sub_menu_name " + " FROM user_group_access a, sub_menu_master c "
+				+ " WHERE a.sub_menu_id = c.sub_menu_id and a.menu_id = ? and  user_group_id = ?" + " order by 1";
 		try {
 			pstmt = conn.prepareStatement(getMenus);
 			pstmt.setInt(1, userGroupId);
@@ -238,8 +230,7 @@ public class UserGroupDao {
 					if (rs1.getString("sub_menu_name") != null) {
 						objSubMenuBean = new SubMenuBean();
 						objSubMenuBean.setSubMenuId(rs1.getInt("sub_menu_id"));
-						objSubMenuBean.setSubMenuName(rs1
-								.getString("sub_menu_name"));
+						objSubMenuBean.setSubMenuName(rs1.getString("sub_menu_name"));
 						objSubMenuList.add(objSubMenuBean);
 					}
 				}
@@ -315,6 +306,46 @@ public class UserGroupDao {
 		return isRegisterdUser;
 	}
 
+	public UserBean checkIfAnyUserHavePREmailFlagOn() {
+		UserBean userBean = null;
+		String getUserGroups = "SELECT user_name,email FROM user_master WHERE payment_reminder_email_flag = 'yes'";
+		try {
+			pstmt = conn.prepareStatement(getUserGroups);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				userBean = new UserBean();
+				userBean.setUserName(rs.getString("user_name"));
+				userBean.setEmailId(rs.getString("email"));
+			}
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return userBean;
+	}
+	public boolean setOtherUserPREmailFlagOff(int userId,String email) {
+		boolean isDone=false;
+		String updateUsers = "UPDATE user_master SET payment_reminder_email_flag='NO' "
+				+ "WHERE user_id <> "+userId+" AND email <> '"+email+"';";
+		try {
+			pstmt = conn.prepareStatement(updateUsers);
+			pstmt.executeUpdate();
+			isDone=true;
+		} catch (Exception e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return isDone;
+	}
+
 	public ArrayList<KeyValuePairBean> getUserList() {
 		ArrayList<KeyValuePairBean> pairBeans = new ArrayList<KeyValuePairBean>();
 		KeyValuePairBean objKeyValuePairBean = null;
@@ -343,14 +374,14 @@ public class UserGroupDao {
 
 	@SuppressWarnings("static-access")
 	public int saveUser(UserBean objUserBean) {
-//		boolean isUserCreated = false;
-		int userID=0;
+		// boolean isUserCreated = false;
+		int userID = 0;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO user_master (user_group_id, user_name, email, password, "
-					+ " contact, valid_from, valid_to, payment_reminder_access) "
+					+ " contact, valid_from, valid_to,payment_reminder_email_flag) " 
 					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement pstmt = null;
-			pstmt=conn.prepareStatement(createUserQuery,pstmt.RETURN_GENERATED_KEYS);
+			pstmt = conn.prepareStatement(createUserQuery, pstmt.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, objUserBean.getUserGroupId());
 			pstmt.setString(2, objUserBean.getUserName());
 			pstmt.setString(3, objUserBean.getEmailId());
@@ -358,13 +389,13 @@ public class UserGroupDao {
 			pstmt.setString(5, objUserBean.getContact());
 			pstmt.setDate(6, objUserBean.getValidFrom());
 			pstmt.setDate(7, objUserBean.getValidTo());
-			pstmt.setString(8, objUserBean.getPaymentReminderAccess());
+			pstmt.setString(8, objUserBean.getPaymentReminderEmailFlag());
 			System.out.println("Create User Query: " + pstmt.toString());
 			pstmt.executeUpdate();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next())
-			userID = rs.getInt(1);
-//			isUserCreated = true;
+				userID = rs.getInt(1);
+			// isUserCreated = true;
 		} catch (Exception e) {
 			try {
 				conn.rollback();
@@ -373,15 +404,14 @@ public class UserGroupDao {
 			}
 			e.printStackTrace();
 		}
-//		return isUserCreated;
+		// return isUserCreated;
 		return userID;
 	}
 
-	public UserBean getUserDetails(int userId,String templateSrc) {
+	public UserBean getUserDetails(int userId, String templateSrc) {
 		UserBean objBean = null;
 		String getUserGroups = "SELECT user_id, user_group_id, user_name, email, password, contact, "
-				+ " valid_from, valid_to, payment_reminder_access "
-				+ " FROM user_master WHERE user_id = ?";
+				+ " valid_from, valid_to, payment_reminder_email_flag " + " FROM user_master WHERE user_id = ?";
 		try {
 			pstmt = conn.prepareStatement(getUserGroups);
 			pstmt.setInt(1, userId);
@@ -396,8 +426,9 @@ public class UserGroupDao {
 				objBean.setContact(rs.getString("contact"));
 				objBean.setValidFrom(rs.getDate("valid_from"));
 				objBean.setValidTo(rs.getDate("valid_to"));
-				objBean.setPaymentReminderAccess(rs.getString("payment_reminder_access"));
-				String templateUrl=templateSrc+"UserId_"+rs.getInt("user_id")+".png";;
+				objBean.setPaymentReminderEmailFlag(rs.getString("payment_reminder_email_flag"));
+				String templateUrl = templateSrc + "UserId_" + rs.getInt("user_id") + ".png";
+				;
 				objBean.setTemplateUrl(templateUrl);
 			}
 		} catch (Exception e) {
@@ -415,7 +446,7 @@ public class UserGroupDao {
 		boolean isUserUpdated = false;
 		try {
 			String updateCustQuery = "UPDATE user_master SET user_group_id = ?, user_name = ?, email = ?, password= ?, "
-					+ " contact = ?, valid_from = ?, valid_to = ?, payment_reminder_access = ? "
+					+ " contact = ?, valid_from = ?, valid_to = ?, payment_reminder_email_flag = ?" 
 					+ " WHERE user_id = ?";
 			PreparedStatement pstmt = conn.prepareStatement(updateCustQuery);
 			pstmt.setInt(1, objUserBean.getUserGroupId());
@@ -425,7 +456,7 @@ public class UserGroupDao {
 			pstmt.setString(5, objUserBean.getContact());
 			pstmt.setDate(6, objUserBean.getValidFrom());
 			pstmt.setDate(7, objUserBean.getValidTo());
-			pstmt.setString(8, objUserBean.getPaymentReminderAccess());
+			pstmt.setString(8, objUserBean.getPaymentReminderEmailFlag());
 			pstmt.setInt(9, objUserBean.getUserId());
 			System.out.println("Query: " + pstmt.toString());
 			pstmt.executeUpdate();

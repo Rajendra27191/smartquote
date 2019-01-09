@@ -128,7 +128,7 @@ animation: flash linear 2s infinite;
 <div class="col-md-8">
 <div class="input-group">
 <span class="input-group-addon" id="sizing-addon2" style="padding: 0px 6px;"><i class="glyphicon glyphicon-search"></i></span>
-<input ng-disabled="productButtonStatus=='edit'" id="searchProduct" placeholder="Search product here..." name="itemCode" ng-model = 'search.selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(search.selectedProduct)" style="padding: 6px 6px;" autofocus >
+<input ng-disabled="productButtonStatus=='edit'" id="searchProduct" placeholder="Special product" name="itemCode" ng-model = 'search.selectedProduct' class=' typeahead' type="text" sf-typeahead options="exampleOptions" datasets="productsDataset" ng-change="productCodeChanged(search.selectedProduct)" style="padding: 6px 6px;" autofocus >
 </div>
 </div>
 </div>
@@ -520,7 +520,7 @@ animation: flash linear 2s infinite;
 <input type="checkbox" class="form-control" name="gstFlag" ng-model="addProduct.gstFlag" ng-true-value="'YES'" ng-false-value="'NO'" style="height: 15px;width: 15px;" ng-init="addProduct.gstFlag=='NO'">
 </div>
 <div class="col-md-2" style="padding:0px;">
-<label class="sub-label">GST Ex.</label>
+<label class="sub-label">&nbsp;GST Exempt</label>
 <!-- GST Exempt -->
 </div>
 <div class="col-md-1" style="padding:0px;width: 3%;">
@@ -670,7 +670,7 @@ animation: flash linear 2s infinite;
 <label class="sub-label">Alt Jaybel Price</label> <span class="asteric">*</span>
 </div>
 <div class="col-md-8">
-<input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact">   
+<input type="text" id="altProductQuotePrice"  class='form-control' name="altProductQuotePrice" ng-model="addProduct.altProd.quotePrice" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" uib-typeahead = 'price for price in altPriceArray | filter:$viewValue' typeahead-on-select="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" typeahead-min-length="0"  ng-change="validateAltSellingPrice();altSellingPriceChanged(addProduct.altProd.quotePrice,addProduct.altProd.avgcost);" autocomplete="off" ng-required="addProduct.isLinkedExact" ng-focus="altQuotePriceFocused()">   
 
 <span ng-show="((form.addProductIntoQuote.altProductQuotePrice.$dirty && form.addProductIntoQuote.altProductQuotePrice.$invalid) 
 || (form.addProductIntoQuote.altProductQuotePrice.$invalid && form.addProductIntoQuote.submitted))" class="invalid-control">
@@ -697,6 +697,20 @@ animation: flash linear 2s infinite;
 </span>  
 </div>
 </div>
+<div class="row row-control">
+<div class="col-md-4">
+<label class="sub-label">Alt Unit Diviser</label>
+</div>
+<div class="col-md-8">
+<div class="col-md-1" style="padding-left:0px;">
+<input type="checkbox" class="form-control" name="isAltUnitDiviser" ng-model="addProduct.altProd.isAltUnitDiviser" style="height: 15px;width: 15px;" ng-change="isAltUnitDiviserClicked()">
+</div>
+<div class="col-md-2" style="padding-left:0px;">
+<input type="number" class = 'form-control' name="altUnitDiviser" ng-model="addProduct.altProd.unitDiviser" ng-pattern="/^[0-9]+(\.[0-9]{1,6})?$/" step="0" ng-required="addProduct.altProd.isAltUnitDiviser" min="1" ng-if="addProduct.altProd.isAltUnitDiviser" ng-change="changeAlternateSavings()">
+</div>
+
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -706,8 +720,7 @@ animation: flash linear 2s infinite;
 <div class="col-md-6">
 <div class="alert-warning" role="alert" style="padding: 15px;">
 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-<span class="sr-only">Warning:</span>
-No alternatives added Please select "Search" radio.
+<span class="sr-only">Warning:</span>No alternatives added Please select "Search" radio.
 </div>
 </div>
 <div class="col-md-3"></div> 
@@ -727,15 +740,25 @@ No alternatives added Please select "Search" radio.
 <legend><label class="label label-default sub-label" style="color:#fff;">Product Information</label></legend>
 <div class="row" id="productDesc">
 <!-- <div class="col-md-12"> -->
-<div class="col-md-4">
-<label>Product Code :</label><br>
-<label>Product Name :</label><br>
-<label>Description2 :</label><br>
-<label>Description3 :</label><br>
-<label>Unit : </label><br>
-<label>GST Y/N : </label><br>
+<div class="col-md-12">
+<p style="margin:0px;"><label>Product Code :</label> <span ng-bind="productInfo.itemCode"></span></p>	
+<p style="margin:0px;"><label>Product Name :</label> <span ng-bind="productInfo.itemDescription"></span></p>	
+<p style="margin:0px;"><label>Description2 :</label> 
+<span ng-bind="productInfo.description2" ng-if="productInfo.description2!=null"></span>
+<span ng-if="productInfo.description2==null || productInfo.description2==''">-</span></p>	
+<p style="margin:0px;"><label>Description3 :</label> 
+<span ng-bind="productInfo.description3" ng-if="productInfo.description3!=null"></span>
+<span ng-if="productInfo.description3==null || productInfo.description3==''">-</span>
+</p>	
+<p style="margin:0px;"><label>Unit : </label> 
+<span ng-bind="productInfo.unit"></span>
+</p>	
+<p style="margin:0px;"><label>GST Y/N : </label> 
+<span ng-bind="productInfo.gstFlag"></span>
+</p>	
 </div>
-<div class="col-md-8">
+
+<!-- <div class="col-md-8">
 <p ng-bind="productInfo.itemCode"></p>
 <p ng-bind="productInfo.itemDescription"></p>
 <p>
@@ -748,30 +771,45 @@ No alternatives added Please select "Search" radio.
 </p>
 <p ng-bind="productInfo.unit"></p>
 <p ng-bind="productInfo.gstFlag"></p>
-</div>
+</div> -->
 <!-- </div> -->
 </div>
 </fieldset>
 </div>
 <div class="col-md-5" style="padding:0px;">
 <fieldset>
-<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information</label></legend>
+<legend><label class="label label-default sub-label" style="color:#fff;">Pricing Information 1</label></legend>
 <div class="row">
 <div class="col-md-1"></div>
 <div class="col-md-5">
+<span ng-if="priceArray.length==0">
+<label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>	
+<span ng-repeat="price in priceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
+</span>
+
+<!-- 
 <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price1exGST"></span> <br>
 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price2exGST"></span> <br>
 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price3exGST"></span> <br>
-<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price4exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.price4exGST"></span> <br> -->
+
 <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
 </div>
 <div class="col-md-5">
-<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
+<span ng-if="quantityArray.length==0">
+<label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>
+<span ng-repeat="qty in quantityArray1">
+<label>{{qty.code}}: </label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
+</span>
+<!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak1"></span> <br>
 <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak2"></span> <br>
 <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak3"></span> <br>
-<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak4"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="productInfo.qtyBreak4"></span> <br> -->
 </div> 
 <div class="col-md-1"></div>
 </div>
@@ -881,19 +919,31 @@ animation-delay="0">
 <div class="col-md-6" style="padding: 0px;">
 <div class="col-md-12" style="padding: 0px;">
 <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
+<span ng-if="priceArray.length==0">
+<label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>	
+<span ng-repeat="price in priceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
+</span>    
+<!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price1exGST"></span> <br>
 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price2exGST"></span> <br>
 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price3exGST"></span> <br>
-<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.price4exGST"></span> <br> -->
 <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.promoPrice"></span> <br>
 </div>
 <div class="col-md-6" style="padding:0px;">
-<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
+<span ng-if="quantityArray.length==0">
+<label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>
+<span ng-repeat="qty in quantityArray1">
+<label>{{qty.code}} :</label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
+</span>    
+<!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak1"></span> <br>
 <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak2"></span> <br>
 <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak3"></span> <br>
-<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.qtyBreak4"></span> <br> -->
 </div> 
 </div>   
 
@@ -939,19 +989,31 @@ animation-delay="0">
 <div class="col-md-6" style="padding: 0px;">
 <div class="col-md-12" style="padding: 0px;">
 <div class="col-md-6" style="padding:0px;padding-right: 5px; ">
-<label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
+<span ng-if="altPriceArray.length==0">
+<label>Price 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>	
+<span ng-repeat="price in altPriceArray1">
+<label>{{price.code}}: </label> &nbsp;&nbsp;<span ng-bind="price.value"></span> <br>
+</span>       
+<!-- <label>Price 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price0exGST"></span> <br>
 <label>Price 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price1exGST"></span> <br>
 <label>Price 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price2exGST"></span> <br>
 <label>Price 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price3exGST"></span> <br>
-<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br>
+<label>Price 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.price4exGST"></span> <br> -->
 <label>Promo Price: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.promoPrice"></span> <br>
 </div>
 <div class="col-md-6" style="padding:0px;">
-<label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
+<span ng-if="altQuantityArray.length==0">
+<label>Qty 0 :</label> &nbsp;&nbsp;<span>0</span> <br>	
+</span>
+<span ng-repeat="qty in altQuantityArray1">
+<label>{{qty.code}}: </label> &nbsp;&nbsp;<span ng-bind="qty.value"></span> <br>	
+</span>    
+<!-- <label>Qty 0: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak0"></span> <br>
 <label>Qty 1: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak1"></span> <br>
 <label>Qty 2: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak2"></span> <br>
 <label>Qty 3: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak3"></span> <br>
-<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br>
+<label>Qty 4: </label> &nbsp;&nbsp;<span ng-bind="addProduct.altProd.qtyBreak4"></span> <br> -->
 </div> 
 </div>   
 

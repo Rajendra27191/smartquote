@@ -16,6 +16,7 @@ private int altForQuoteDetailId;
 private String gstExempt;
 private String lineComment;
 
+private String isSpecialCode;
 
 public String getLineComment() {
 	return lineComment;
@@ -109,6 +110,12 @@ public String toString() {
 			+ productCurrentPriceTotalExGST + ", productJaybelPriceExGST=" + productJaybelPriceExGST + ", productJaybelPriceTotalExGST="
 			+ productJaybelPriceTotalExGST + ", productSavings=" + productSavings + ", isAlternative=" + isAlternative + ", quoteDetailId="
 			+ quoteDetailId + ", altForQuoteDetailId=" + altForQuoteDetailId + ", gstExempt=" + gstExempt + "]";
+}
+public String getIsSpecialCode() {
+	return isSpecialCode;
+}
+public void setIsSpecialCode(String isSpecialCode) {
+	this.isSpecialCode = isSpecialCode;
 }
 
 
