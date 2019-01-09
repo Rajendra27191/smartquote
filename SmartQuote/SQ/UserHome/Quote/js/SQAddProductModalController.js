@@ -69,6 +69,10 @@
 	$('#quotePrice').change();
 	}
 
+	$scope.altQuotePriceFocused=function(){
+	$('#altProductQuotePrice').change();
+	}
+
 	$scope.standardProductQuantityChanged=function(qty){
 	// $('#quotePrice').change();
 	if ($scope.addProduct.altProd!=undefined) {
@@ -83,7 +87,9 @@
 	if (prodObj.isLinkedExact&& prodObj.altProd){
 	if (prodObj.altProd.itemCode){
 	if (product.currentSupplierPrice!=''||product.currentSupplierPrice>0) {
-	prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice;
+	var altUnitDiviser = prodObj.altProd.unitDiviser;			
+	prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice * altUnitDiviser;
+	// var altAvgCost = prodObj.altProd.avgcost / altUnitDiviser;	
 	prodObj.altProd.currentSupplierGP=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.avgcost);
 	prodObj.altProd.currentSupplierTotal=prodObj.altProd.currentSupplierPrice*prodObj.altProd.itemQty;
 	}else{
@@ -96,6 +102,7 @@
 	// prodObj.altProd.altForQuoteDetailId=0;
 	// prodObj.altProd.altForQuoteDetailId=0;
 	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
+	// var price= 	prodObj.altProd.quotePrice / altUnitDiviser;
 	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
 	}else{
 	prodObj.altProd.savings=0;
@@ -416,28 +423,64 @@
 	$rootScope.hideSpinner();
 	});
 
+	function unique(a, param){
+        return a.filter(function(item, pos, array){
+            return array.map(function(mapItem){ return mapItem[param]; }).indexOf(item[param]) === pos;
+        })
+    }
+
 	$scope.createArrayOfQuantityAndPrice=function(product){
-	// console.log("createArrayOfQuantityAndPrice")
+	console.log("createArrayOfQuantityAndPrice")
 	// $log.debug(product);
-	var qty=[]
-	var price=[]
-	$scope.quantityArray=[];
-	$scope.priceArray=[];
+	var qty=[];var qty1=[];
+	var price=[];var price1=[]
+	$scope.quantityArray=[];$scope.quantityArray1=[]
+	$scope.priceArray=[];$scope.priceArray1=[];
 	if (product.price0exGST || product.price1exGST || product.price2exGST || product.price3exGST || product.price4exGST) {	
 	price.push(product.price0exGST.toString());
 	price.push(product.price1exGST.toString());
 	price.push(product.price2exGST.toString());
 	price.push(product.price3exGST.toString());
 	price.push(product.price4exGST.toString());
+	$scope.priceArray = price.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
 	// console.log(price);
-	angular.forEach(price, function(value, key){
-	if (value==price[key+1]) {
-	}else{
-	$scope.priceArray.push(value);
+	
+	price1.push({'code':'Price 0','value':product.price0exGST.toString()});
+	price1.push({'code':'Price 1','value':product.price1exGST.toString()});
+	price1.push({'code':'Price 2','value':product.price2exGST.toString()});
+	price1.push({'code':'Price 3','value':product.price3exGST.toString()});
+	price1.push({'code':'Price 4','value':product.price4exGST.toString()});
+	$scope.priceArray1 = unique(price1,'value');
+	// angular.forEach(price, function(value, key){
+	// if (value==price[key+1]) {
+	// }else{
+	// $scope.priceArray.push(value);
+	// }
+	// });
 	}
-	});
+	if (product.qtyBreak0 || product.qtyBreak1 || product.qtyBreak2 || product.qtyBreak3 || product.qtyBreak4) {	
+	qty.push(product.qtyBreak0.toString());
+	qty.push(product.qtyBreak1.toString());
+	qty.push(product.qtyBreak2.toString());
+	qty.push(product.qtyBreak3.toString());
+	qty.push(product.qtyBreak4.toString());
+	$scope.quantityArray=qty.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+	// console.log(price);
+	qty1.push({'code':'Qty 0','value':product.qtyBreak0.toString()});
+	qty1.push({'code':'Qty 1','value':product.qtyBreak1.toString()});
+	qty1.push({'code':'Qty 2','value':product.qtyBreak2.toString()});
+	qty1.push({'code':'Qty 3','value':product.qtyBreak3.toString()});
+	qty1.push({'code':'Qty 4','value':product.qtyBreak4.toString()});
+	$scope.quantityArray1 = unique(qty1,'value');
+	// angular.forEach(qty, function(value, key){
+	// if (value==qty[key+1]) {
+	// }else{
+	// $scope.quantityArray.push(value);
+	// }
+	// });
 	}
-
+	console.log($scope.priceArray);
+	console.log($scope.quantityArray);
 	}
 
 	$scope.productCodeNotFound=function(noProductFound){
@@ -500,10 +543,13 @@
 	};
 	//================Alternative Product================================
 	$scope.altProductSavings=function(){
-	var savings ;
-	var altSupplierPrice=$scope.addProduct.currentSupplierPrice;
-	var altQuotePrice=$scope.addProduct.altProd.quotePrice;
+	var savings,altQuotePrice,altDiviser,price;
+	altDiviser = $scope.addProduct.altProd.unitDiviser;
+	altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
+	altQuotePrice=$scope.addProduct.altProd.quotePrice;
 	if (altSupplierPrice>0&&altQuotePrice>0) {
+	// console.log(altSupplierPrice,altQuotePrice,altDiviser);
+	// price = altQuotePrice/altDiviser;
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
 	}else{
@@ -514,6 +560,7 @@
 	}
 	return savings;
 	};
+
 
 	$scope.isAltProductValid=function(prod){
 	var valid =false;
@@ -579,6 +626,8 @@
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	$scope.addProduct.altProd.quotePrice='';
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
+
 	if (product.promoPrice) {
 	$scope.addProduct.altProd.quotePrice=product.promoPrice;
 	$scope.altSellingPriceChanged($scope.addProduct.altProd.quotePrice,$scope.addProduct.altProd.avgcost);
@@ -661,10 +710,13 @@
 	console.log("iffff")
 	$scope.addProduct.altProd={};
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
 	console.log($scope.addProduct.itemQty)
 	}else{
 	console.log("elseeee")
 	$scope.addProduct.selectedAlternativeProduct={};
+	$scope.altPriceArray=[];$scope.altPriceArray1=[];
+	$scope.altQuantityArray=[];$scope.altQuantityArray1=[];
 	$scope.addProduct.altProd=undefined;
 	$scope.search.selectedAltProduct="";
 	}
@@ -711,21 +763,52 @@
 	};
 
 	$scope.alternativeProductPriceArray=function(altProd){
-	var price=[]
-	$scope.altPriceArray=[];
+	var price=[];var price1=[];
+	var qty=[];var qty1=[];
+	$scope.altPriceArray=[];$scope.altPriceArray1=[];
+	$scope.altQuantityArray=[];$scope.altQuantityArray1=[];
 	if (altProd.price0exGST || altProd.price1exGST || altProd.price2exGST || altProd.price3exGST || altProd.price4exGST) {	
 	price.push(altProd.price0exGST.toString());
 	price.push(altProd.price1exGST.toString());
 	price.push(altProd.price2exGST.toString());
 	price.push(altProd.price3exGST.toString());
 	price.push(altProd.price4exGST.toString());
-	angular.forEach(price, function(value, key){
-	if (value==price[key+1]) {
-	}else{
-	$scope.altPriceArray.push(value);
+	$scope.altPriceArray=price.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+
+	price1.push({'code':'Price 0','value':altProd.price0exGST.toString()});
+	price1.push({'code':'Price 1','value':altProd.price1exGST.toString()});
+	price1.push({'code':'Price 2','value':altProd.price2exGST.toString()});
+	price1.push({'code':'Price 3','value':altProd.price3exGST.toString()});
+	price1.push({'code':'Price 4','value':altProd.price4exGST.toString()});
+	$scope.altPriceArray1 = unique(price1,'value');
+
+	// angular.forEach(price, function(value, key){
+	// if (value==price[key+1]) {
+	// }else{
+	// $scope.altPriceArray.push(value);
+	// }
+	// });
 	}
-	});
-	}
+	if (altProd.qtyBreak0 || altProd.qtyBreak1 || altProd.qtyBreak2 || altProd.qtyBreak3 || altProd.qtyBreak4) {	
+		qty.push(altProd.qtyBreak0.toString());
+		qty.push(altProd.qtyBreak1.toString());
+		qty.push(altProd.qtyBreak2.toString());
+		qty.push(altProd.qtyBreak3.toString());
+		qty.push(altProd.qtyBreak4.toString());
+		$scope.altQuantityArray=qty.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+		qty1.push({'code':'Qty 0','value':altProd.qtyBreak0.toString()});
+		qty1.push({'code':'Qty 1','value':altProd.qtyBreak1.toString()});
+		qty1.push({'code':'Qty 2','value':altProd.qtyBreak2.toString()});
+		qty1.push({'code':'Qty 3','value':altProd.qtyBreak3.toString()});
+		qty1.push({'code':'Qty 4','value':altProd.qtyBreak4.toString()});
+		$scope.altQuantityArray1 = unique(qty1,'value');
+		// angular.forEach(qty, function(value, key){
+		// if (value==qty[key+1]) {
+		// }else{
+		// $scope.altQuantityArray.push(value);
+		// }
+		// });
+		}
 	}
 	$scope.alternativeProductSelected=function(altProd){
 	console.log("alternativeProductSelected");
@@ -745,6 +828,7 @@
 	$scope.addProduct.altProd.quotePrice=null;	
 	}
 	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	$scope.addProduct.altProd.unitDiviser=1;
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	}	
@@ -790,6 +874,14 @@
 	// }
 	// };
 //==========EDIT===========================
+$scope.isAltUnitDiviserClicked=function(){
+	console.log($scope.addProduct.altProd.isAltUnitDiviser);
+	if ($scope.addProduct.altProd.isAltUnitDiviser) {
+		// $scope.addProduct.altProd.unitDiviser=1;
+	} else{
+		$scope.addProduct.altProd.unitDiviser=1;
+	};
+}
 $scope.checkEditAlt=function(){
 console.log("checkEditAlt...")
 if ($scope.addProduct.alternativeProductList) {
@@ -804,12 +896,20 @@ if (value.itemCode.toUpperCase()==$scope.addProduct.altProd.itemCode.toUpperCase
 $scope.addProduct.selectedAlternativeProduct=value;
 }
 });
+$scope.alternativeProductPriceArray($scope.addProduct.altProd);
+if($scope.addProduct.altProd.unitDiviser > 1){
+$scope.addProduct.altProd.isAltUnitDiviser = true;
+}else{
+$scope.addProduct.altProd.isAltUnitDiviser = false;
+};
 }
 if ($scope.addProduct.altProd&&$scope.addProduct.alternativeProductList==null) {
 $scope.select.type='search';
 };
-
+console.log($scope.addProduct.altProd)
 };
+
+
 $scope.initEdit=function(){
 	console.log("initEdit...")
 	console.log("dataToModal")

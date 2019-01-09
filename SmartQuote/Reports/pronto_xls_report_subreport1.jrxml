@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pronto_xls_report_subreport1" language="groovy" pageWidth="950" pageHeight="752" columnWidth="950" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cdec12be-b6e8-4b9c-a1a4-406627f8e291">
-	<property name="ireport.zoom" value="0.7513148009015868"/>
-	<property name="ireport.x" value="0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pronto_xls_report_subreport1" language="groovy" pageWidth="1000" pageHeight="752" columnWidth="1000" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cdec12be-b6e8-4b9c-a1a4-406627f8e291">
+	<property name="ireport.zoom" value="1.4641000000000237"/>
+	<property name="ireport.x" value="962"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
 		<![CDATA[]]>
@@ -36,134 +36,151 @@
 	<field name="productUOM" class="java.lang.String">
 		<fieldDescription><![CDATA[productUOM]]></fieldDescription>
 	</field>
+	<field name="isSpecialCode" class="java.lang.String">
+		<fieldDescription><![CDATA[isSpecialCode]]></fieldDescription>
+	</field>
 	<title>
-		<band height="40">
+		<band height="41">
 			<staticText>
 				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="0" y="0" width="178" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Item Code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="07441c5e-1ec9-4ecf-ab23-eccf5c58e3ef" mode="Opaque" x="178" y="0" width="80" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty 1]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="258" y="20" width="90" height="20" forecolor="#000000" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Price 1]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="258" y="0" width="90" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Price 1]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="07441c5e-1ec9-4ecf-ab23-eccf5c58e3ef" mode="Opaque" x="178" y="20" width="80" height="20" forecolor="#000000" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[1]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="0" y="20" width="178" height="20" forecolor="#000000" backcolor="#FFFF00"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Product Code]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="01cb0cc1-a419-4887-9dcc-20b1d856b857" mode="Opaque" x="348" y="20" width="80" height="20" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[999999]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="71005a40-ce48-45ca-8555-a0812e31b71e" mode="Opaque" x="348" y="0" width="80" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty 2]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="1ea4a217-5b62-499e-95a5-b87be2ba9fbd" mode="Opaque" x="428" y="0" width="90" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
-					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<text><![CDATA[Price 2]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="1ca06b1b-017f-428b-bd09-bc56f68d19ef" mode="Opaque" x="428" y="20" width="90" height="20" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Price 2]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="24a9fa77-2f9e-4651-9d85-62c9f907c16b" mode="Opaque" x="518" y="0" width="80" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty 3]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="de742f30-7c35-4404-90c7-95d13f8c1fc1" mode="Opaque" x="518" y="20" width="80" height="20" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[999999]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="da998432-f4b3-4bef-9a67-77eacbac2e45" mode="Opaque" x="598" y="0" width="90" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Price 3]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="fb1b087e-b240-49e5-b285-e610d2f632a6" mode="Opaque" x="598" y="20" width="90" height="20" backcolor="#FFFF00"/>
-				<textElement textAlignment="Right">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Price 3]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="798" y="0" width="110" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="768" y="0" width="80" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[End Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="798" y="20" width="110" height="20" forecolor="#000000" backcolor="#FFFF00"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="768" y="20" width="80" height="20" forecolor="#000000" backcolor="#FFFF00"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="688" y="0" width="110" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="688" y="0" width="80" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Start Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="688" y="20" width="110" height="20" forecolor="#000000" backcolor="#FFFF00"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="688" y="20" width="80" height="20" forecolor="#000000" backcolor="#FFFF00"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ebc42c05-9e66-41c5-a4ba-da37886c327d" mode="Opaque" x="848" y="20" width="125" height="20" forecolor="#000000" backcolor="#FFFF00"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5d449a70-c8ae-41eb-b189-e991c17b286e" mode="Opaque" x="848" y="0" width="125" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Special Code Yes/No]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -171,52 +188,59 @@
 		<band height="22" splitType="Stretch">
 			<textField>
 				<reportElement uuid="5dbd5de9-fdcf-45e6-b1e2-1f94ef015fc3" x="0" y="0" width="178" height="20"/>
-				<textElement>
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="8be150d1-ad8e-4a52-bfd1-605d115e787d" x="178" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[1]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="f218ce26-ad58-48f3-8656-88600e145514" x="258" y="0" width="90" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productJaybelPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="564ecf22-4939-49cd-a3c6-cc73ff458804" x="348" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[999999]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="a9ac62c3-17f6-4f8d-a336-1ff2ebcfe993" x="428" y="0" width="90" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productJaybelPriceExGST}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="a8f58ab4-6d25-4864-9f1d-e5d29df07d6d" x="518" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[999999]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="a9ac62c3-17f6-4f8d-a336-1ff2ebcfe993" x="598" y="0" width="90" height="20"/>
-				<textElement textAlignment="Right">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{productJaybelPriceExGST}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="98bdbe7b-abe6-486c-8b76-92f9321e5662" x="848" y="0" width="125" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{isSpecialCode}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

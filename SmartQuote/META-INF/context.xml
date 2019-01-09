@@ -13,6 +13,4 @@
 username="janta" password="eclipse12" validationQuery="select 1" testOnBorrow="true" timeBetweenEvictionRunsMillis="86400000" 
 removeAbandoned="true" removeAbandonedTimeout="86400" driverClassName="com.mysql.jdbc.Driver"
 url="jdbc:mysql://sqprod.ckrwhh4boaor.us-east-1.rds.amazonaws.com:3306/smartquoteprod?autoReconnect=true"/>
-</Context> 
-
-
+</Context>

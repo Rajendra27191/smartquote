@@ -28,12 +28,18 @@ $rootScope.addedProductCount=0;
 
 if ($rootScope.userData) {
   if ($rootScope.userData.userType.toLowerCase()=="admin") {
-    $scope.disableSalesPersonSelect=false;
+	$scope.disableSalesPersonSelect=false;
+	$scope.isAdmin=true;
   }else{
-    $scope.disableSalesPersonSelect=true;
+	$scope.disableSalesPersonSelect=true;
+	$scope.isAdmin=false;
   }
 };
 //======= Date Control >>>>>
+$scope.popup1={};
+$scope.popup2={};
+$scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
+$scope.format = "dd-MM-yyyy";//$scope.formats[1];
 $scope.today = function() {
 	// console.log($scope.dt)
 	$scope.dt = new Date();
@@ -42,19 +48,64 @@ $scope.today = function() {
 $scope.open1 = function() {
 $scope.popup1.opened = true;
 };
+$scope.open2 = function () {
+$scope.popup2.opened = true;
+};
 
 $scope.initDate=function(){
-$scope.popup1={};
-$scope.formats = ['dd-MMMM-yyyy', 'yyyy-MM-dd', 'dd.MM.yyyy', 'shortDate'];
-$scope.format = "dd-MM-yyyy";//$scope.formats[1];
 $scope.dateOptions = {
 formatYear: 'yy',
 startingDay: 1,
 showWeeks: false
 };
-$scope.customerQuote.modefiedDate=$scope.today();
+if ($scope.customerQuote.modifiedDate===null||$scope.customerQuote.modifiedDate==="null" || $scope.customerQuote.modifiedDate ==="") {
+    $scope.customerQuote.modefiedDate = $scope.today();
+} else{
+	$scope.customerQuote.modefiedDate = new Date($scope.customerQuote.modifiedDate);
 };
-$scope.quoteDateChanged=function(quoteDate){};
+// console.log($scope.customerQuote)
+};
+
+$scope.initCloseDate=function(){
+$scope.closeDateOptions = {
+                formatYear: 'yy',
+                startingDay: 1,
+                showWeeks: false,
+                minDate:$scope.customerQuote.modefiedDate,
+};
+if ($scope.customerQuote.closeDate===null|| $scope.customerQuote.closeDate ==="null" || $scope.customerQuote.closeDate ==="") {
+	// var currentDate = $scope.today();
+	// $scope.customerQuote.closeDate =  new Date(currentDate.getFullYear(),currentDate.getMonth()+1,currentDate.getDate());;
+} else{
+	$scope.customerQuote.closeDate=new Date($scope.customerQuote.closeDate);
+};
+
+};
+
+$scope.validateDate=function(dateFrom,dateTo){
+console.log("validateDate", dateTo>dateFrom)
+// console.log(dateFrom)
+// console.log(dateTo)
+if(dateFrom&&dateTo){
+if (dateTo>dateFrom) {
+$scope.dateInvalid=false;
+}else{
+$scope.dateInvalid=true;
+}
+}
+};
+$scope.setMinCloseDate = function() {
+    $scope.closeDateOptions.minDate = $scope.customerQuote.modefiedDate;
+};
+$scope.quoteDateChanged = function (dateFrom,dateTo) {
+$scope.setMinCloseDate();
+$scope.validateDate(dateFrom,dateTo);
+};
+
+$scope.closeDateChanged = function (dateFrom,dateTo) {
+$scope.validateDate(dateFrom,dateTo);
+};
+
 // $rootScope.getFormattedDate=function(date){
 // var dt = new Date(date);
 // var fDate= moment(dt).format("DD-MM-YYYY");
@@ -169,18 +220,12 @@ $scope.openMyModal = function (product) {
 //===== ADD PRODUCT UIB MODAL <<<<<
 //===== INIT DATA TABLE >>>>>
 $scope.arrangeDataTable=function(){
-$scope.dtOptions= DTOptionsBuilder.newOptions()
-    .withOption('order', [0, 'desc']);
-    $scope.dtColumnDefs = [
-        DTColumnDefBuilder.newColumnDef(0),
-        DTColumnDefBuilder.newColumnDef(1),
-        DTColumnDefBuilder.newColumnDef(2),
-        DTColumnDefBuilder.newColumnDef(3),
-        DTColumnDefBuilder.newColumnDef(4),
-        DTColumnDefBuilder.newColumnDef(5),
-        DTColumnDefBuilder.newColumnDef(6),
-        DTColumnDefBuilder.newColumnDef(7),
-        DTColumnDefBuilder.newColumnDef(8),
+$scope.dtOptions= DTOptionsBuilder.newOptions();
+    // .withOption('order', [0, 'desc']);
+    $scope.dtColumnDefs = [	
+    	DTColumnDefBuilder.newColumnDef([2]).withOption('type', 'date-euro'),	
+    	DTColumnDefBuilder.newColumnDef([7]).withOption('type', 'date-euro'),	
+    	DTColumnDefBuilder.newColumnDef([8]).withOption('type', 'date-euro'),	
     ];
 };
 //===== initViewEditQuote() >>>>>
@@ -498,13 +543,55 @@ $scope.viewDetailInformation=function(quote){
 	$scope.customerQuote=currentQuote;
 	$scope.customerQuote.productList=$scope.getProductsListArray(currentQuote.productList);
     $scope.customerQuote.fax=currentQuote.faxNo;
-
+    $scope.initCloseDate();
 	$scope.initEditQuote(quote);
 	$scope.filepreview=currentQuote.custLogo;
 	// $rootScope.hideSpinner();
-	
-
 };
+//====================== Get Quote Product LIst =================
+var quoteView;
+$scope.getQuoteProductList = function(quote){
+	quoteView={};
+	quoteView=angular.copy(quote);
+	$rootScope.showSpinner();
+	SQQuoteServices.GetQuoteProductList(quote.quoteId);
+	
+};
+
+$scope.getQuoteInformation = function(quote){
+console.log("getQuoteInformation");
+console.log(quote);
+$scope.getQuoteProductList(quote);
+};
+
+
+$scope.handleGetQuoteProductListDoneResponse=function(data){
+if(data){
+if (data.code) {
+  if(data.code.toUpperCase()=='SUCCESS'){
+	  console.log(data);
+	  if(data.quoteInfo){
+		  if(data.quoteInfo.productList){
+			  console.log(quoteView);
+			  quoteView.productList= angular.copy(data.quoteInfo.productList);
+			  $scope.viewDetailInformation(quoteView);
+		  }
+	  };
+}
+}
+// $rootScope.hideSpinner();
+}
+};
+
+var cleanupEventGetQuoteProductListDone = $scope.$on("GetQuoteProductListDone", function(event, message){
+$scope.handleGetQuoteProductListDoneResponse(message);      
+});
+
+var cleanupEventGetQuoteProductListNotDone = $scope.$on("GetQuoteProductListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
 // ===============****************************=================================
 $scope.getProductsListArray=function(productList){
 	// console.log("getProductsListArray");
@@ -619,9 +706,9 @@ $scope.resetUpdateQuote=function(){
 	$scope.showEditQuoteView=false;
 	$scope.showAddProductError=false;
 	$rootScope.isQuoteActivated=false;
-
 	$scope.initDate();
-		$('#currentSupplierName').focus();
+	$scope.isSaveAndPrintInitiated=false;
+	$('#currentSupplierName').focus();
 }
 $scope.cancelCreateQuote=function(){
 var previousWindowKeyDown = window.onkeydown;
@@ -959,7 +1046,7 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 	$scope.addProduct=dataFromModal.addProduct;
 	$scope.productButtonStatus=dataFromModal.productButtonStatus;
 	$scope.isNewProduct=dataFromModal.isNewProduct;
-	// console.log($scope.addProduct)
+	console.log($scope.addProduct)
 	var product;
 	product=angular.copy($scope.addProduct);
 	// console.log(product);
@@ -1004,15 +1091,18 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 			};	
 			if (product.isLinkedExact) {	
 			if(product.altProd!=null){
+			var altUnitDiviser = product.altProd.unitDiviser
 			// newProduct.isLinkedExact=product.isLinkedExact
 			if (product.altProd.currentSupplierPrice>0 && product.altProd.quotePrice>0) {//product.altProd.currentSupplierPrice>product.altProd.quotePrice
 			if (product.altProd.currentSupplierPrice==product.altProd.quotePrice) {
 			product.altProd.savings=0;		
 			}else{
+			// var price = product.altProd.quotePrice / product.altProd.unitDiviser;	
 			product.altProd.savings=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.quotePrice);	
 			}
 			};
 			if (product.altProd.currentSupplierPrice>0) {
+			// var altAvgCost = product.altProd.avgcost / product.altProd.unitDiviser;	
 			product.altProd.currentSupplierGP=$scope.getPriceInPercentage(product.altProd.currentSupplierPrice,product.altProd.avgcost);	
 			}else{
 			product.altProd.currentSupplierGP=0;	
@@ -1080,7 +1170,9 @@ $rootScope.addProductToEditQuote=function(dataFromModal){
 
 $scope.deleteProductFromQuote=function(index){
 	if ($scope.customerQuote.productList.length>0) {
-	$scope.customerQuote.productList.splice(index,1);
+	var productList=angular.copy($scope.customerQuote.productList);	
+	productList.splice(index,1);
+	$scope.customerQuote.productList = productList;
 	$scope.calculateAllInformation();
 	$scope.checkAlternativeAdded();
 	}else{
@@ -1130,6 +1222,49 @@ if ($scope.form.commentForm.$valid) {
 }
 };
 
+//====================== Get Quote Comment List =================
+var quoteViewComment;
+$scope.getQuoteCommentList = function(quote){
+	quoteViewComment={};
+	quoteViewComment=angular.copy(quote);
+	$rootScope.showSpinner();
+	SQQuoteServices.GetQuoteCommentList(quote.quoteId);
+	
+};
+
+$scope.getQuoteComments = function(quote){
+// console.log("getQuoteInformation");
+// console.log(quote);
+$scope.getQuoteCommentList(quote);
+};
+
+
+$scope.handleGetQuoteCommentListDoneResponse=function(data){
+if(data){
+if (data.code) {
+  if(data.code.toUpperCase()=='SUCCESS'){
+	  console.log(data);
+	  if(data.quoteInfo){
+		  if(data.quoteInfo.commentList){
+			quoteViewComment.commentList=angular.copy(data.quoteInfo.commentList);
+			$scope.showCommentModal(quoteViewComment);
+		  }
+	  };
+}
+}
+$rootScope.hideSpinner();
+}
+};
+
+var cleanupEventGetQuoteCommentListDone = $scope.$on("GetQuoteCommentListDone", function(event, message){
+$scope.handleGetQuoteCommentListDoneResponse(message);      
+});
+
+var cleanupEventGetQuoteCommentListNotDone = $scope.$on("GetQuoteCommentListNotDone", function(event, message){
+$rootScope.alertServerError("Server error");
+$rootScope.hideSpinner();
+});
+
 /*=============GET PRODUCT GROUP LIST==================*/
 /*============= Comment On Quote==================*/
 $scope.pushComment=function(array,quote){
@@ -1173,11 +1308,11 @@ $rootScope.hideSpinner();
 });
 
 //============================ Save As PDF =================================
-$scope.saveAsPDF=function(quote){
-console.log(quote);
- var url =$rootScope.projectName+"/custComparison?quoteId="+quote.quoteId;
- window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
-};
+// $scope.saveAsPDF=function(quote){
+// console.log(quote);
+//  var url =$rootScope.projectName+"/custComparison?quoteId="+quote.quoteId;
+//  window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+// };
 $scope.exportToPronto=function(quote){
 	console.log(quote);
 	 var url =$rootScope.projectName+"/exportToPronto?quoteId="+quote.quoteId;
@@ -1256,6 +1391,7 @@ objQuoteBean={
 'currentSupplierId':supplierId,
 
 'modifiedDate':moment($scope.customerQuote.modefiedDate).format('YYYY-MM-DD HH:mm:ss'),
+'closeDate':moment($scope.customerQuote.closeDate).format('YYYY-MM-DD HH:mm:ss'),
 'competeQuote':$scope.customerQuote.competeQuote,
 'salesPerson':salesPerson,
 'salesPersonId':salesPersonId,
@@ -1284,11 +1420,14 @@ $log.debug("updateQuote call");
 console.log($scope.form.addCustomerQuote);
 console.log($scope.customerQuote);
 if ($scope.form.addCustomerQuote.$valid) {
-	if ($scope.customerQuote.salesPerson.value == null) {
+
+	if ($scope.customerQuote.salesPerson.value == null || $scope.dateInvalid) {
 		$rootScope.moveToTop();
+		if ($scope.customerQuote.salesPerson.value == null) {
 		$scope.form.addCustomerQuote.salesPerson.$invalid = true;
 		$scope.form.addCustomerQuote.submitted=true;
 		$scope.form.addCustomerQuote.salesPerson.$error.required=true;
+		} 
 	} else{
 		if ($scope.customerQuote.productList.length>0) {
 		isSalesPersonExist=false;
@@ -1360,8 +1499,11 @@ if (data.code) {
   if(data.code.toUpperCase()=='SUCCESS'){
   	// console.log(data)
   	 // $rootScope.alertSuccess("Successfully updated quote");
-  	updateQuoteResponse=data;
-	checkQuoteResponse(updateQuoteResponse)
+	updateQuoteResponse=data;
+	if($scope.isSaveAndPrintInitiated){
+		$scope.saveAsPDF($scope.quoteId);
+	};    
+	
   	 swal({
 	  title: "Success",
 	  text: "Successfully updated proposal...!",
@@ -1369,7 +1511,8 @@ if (data.code) {
 	  // animation: "slide-from-top",
 	},
 	function(){
-  	 // $scope.cancelCreateQuote();
+	   // $scope.cancelCreateQuote();
+	 checkQuoteResponse(updateQuoteResponse);	
   	 $scope.resetUpdateQuote();
   	 $scope.initViewEditQuote();
   	 // $scope.init();	
@@ -1407,6 +1550,130 @@ $scope.shouldShow = function (user) {
 return user.code !== 1 && user.value !== 'admin';
 }
 
+
+//=================== Update & Print Generated Proposal ====================
+$scope.isSaveAndPrintInitiated=false;
+$scope.saveAsPDF=function(quoteId){
+console.log("saveAsPDF >>");
+var url =$rootScope.projectName+"/custComparison?quoteId="+quoteId;
+console.log(url)
+$window.open(url, '_blank');
+// $window.open(url,'location=1,status=1,scrollbars=1,width=1050,fullscreen=yes,height=1400');
+};
+
+$scope.updateAndPrintProposal=function(){
+	$scope.quoteId=$scope.customerQuote.quoteId;
+	$scope.isSaveAndPrintInitiated = true;
+	$scope.updateQuote();
+};
+//=================== Delete Proposal ====================
+	$scope.deleteQuote=function(quote){
+		$rootScope.showSpinner();
+		SQQuoteServices.DeleteQuote(quote.quoteId);
+	};
+	$scope.confirmedDeleteQuote=function(quote){
+		var previousWindowKeyDown = window.onkeydown;
+			swal({
+			title: 'Are you sure ?',
+			text: "You will not be able to recover this proposal \n"+quote.quoteId,
+			showCancelButton: true,
+			closeOnConfirm: true,
+			cancelButtonText:"Cancel",
+			confirmButtonText:"Confirm"
+			}, function (isConfirm) {
+			if (isConfirm) {
+				$scope.deleteQuote(quote);
+			}
+			});
+	};
+	$scope.deleteQuoteClicked=function(quote){
+		$scope.confirmedDeleteQuote(quote);
+	};
+
+	$scope.handleDeleteQuoteDoneResponse=function(data){
+	if(data){
+	if (data.code){
+	  if(data.code.toUpperCase()=='SUCCESS'){
+	   console.log(data);
+	   swal({
+		title: "Success",
+		text: "Successfully Deleted Proposal...!",
+		type: "success",
+		// animation: "slide-from-top",
+	  },
+	  function(){
+		//  $scope.resetUpdateQuote();
+		$scope.initViewEditQuote();
+	  });
+	  }else{
+	   $rootScope.alertError(data.message);
+	   $rootScope.hideSpinner();
+	  }
+	}
+	}
+	};
+	
+	var cleanupEventDeleteQuoteDone = $scope.$on("DeleteQuoteDone", function(event, message){
+	// console.log("AddCommentDone");
+	$scope.handleDeleteQuoteDoneResponse(message);      
+	});
+	
+	var cleanupEventDeleteQuoteNotDone = $scope.$on("DeleteQuoteNotDone", function(event, message){
+	$rootScope.alertServerError("Server error");
+	$rootScope.hideSpinner();
+	});
+//=============== Change Product Order ========================
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
+
+
+var currentProductList=[];
+var newProductList=[];
+$scope.moveProduct = function(product){
+	newProductList.push(product);
+};
+
+$scope.changeProductOrder = function(newOrderNo,oldOrderNo,quoteDetailId){
+var newIndex,oldIndex;
+oldIndex = oldOrderNo-1;newIndex= newOrderNo-1; 
+if (newIndex<$scope.customerQuote.productList.length && newIndex >=0) {
+array_move($scope.customerQuote.productList,oldIndex,newIndex); 
+for (var i = 0; i < $scope.customerQuote.productList.length; i++) {
+$scope.customerQuote.productList[i].orderNo = i+1;
+$scope.customerQuote.productList[i].newOrderNo = $scope.customerQuote.productList[i].orderNo;
+};
+}else{
+console.log("invalid index");
+console.log(newOrderNo,oldOrderNo);
+$scope.customerQuote.productList[oldIndex].newOrderNo=oldOrderNo;
+};
+}
+$scope.changeProductOrderConfirmed = function(newOrderNo,oldOrderNo,quoteDetailId){
+var previousWindowKeyDown = window.onkeydown;
+swal({
+title: 'Are you sure ?',
+text: "Are you sure you want to change line "+oldOrderNo+" to line "+newOrderNo,
+showCancelButton: true,
+closeOnConfirm: true,
+cancelButtonText:"No",
+confirmButtonText:"Yes"
+}, function (isConfirm) {
+if (isConfirm) {
+	$scope.changeProductOrder(newOrderNo,oldOrderNo,quoteDetailId);
+}else{
+	var oldIndex = oldOrderNo-1;
+	$scope.customerQuote.productList[oldIndex].newOrderNo=oldOrderNo;
+}
+});
+};
 
 //=================================================================================================
 
@@ -1470,8 +1737,6 @@ hotkeys.bindTo($scope)
   }
 });
 
-
-
 $scope.$on('$destroy', function(event, message) {
 	cleanupEventAddCommentDone();
 	cleanupEventAddCommentNotDone();
@@ -1481,7 +1746,69 @@ $scope.$on('$destroy', function(event, message) {
 	cleanupEventGetQuoteViewNotDone();
 	cleanupEventGetProductGroupListDone();
 	cleanupEventGetProductGroupListNotDone();
+	cleanupEventDeleteQuoteDone();
+	cleanupEventDeleteQuoteNotDone();
+	cleanupEventGetQuoteProductListDone();
+	cleanupEventGetQuoteProductListNotDone();
+	cleanupEventGetQuoteCommentListDone();
+	cleanupEventGetQuoteCommentListNotDone();
+	cleanupEventGetTermsAndServiceListDone();
+	cleanupEventGetTermsAndServiceListNotDone();
 	$rootScope.isQuoteActivated=false;
 });
 
 });
+
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//   "date-close-pre": function ( date ) {
+//     // console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+//     return moment(date, 'dddd, MMMM Do, YYYY');
+//   },
+//  } );
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//     "date-au-pre": function ( a ) {
+//         if (a == null || a == "") {
+//             return 0;
+//         }
+//         var ukDatea = a.split('/');
+//         return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+//     },
+ 
+//     "date-au-asc": function ( a, b ) {
+//         return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+//     },
+ 
+//     "date-au-desc": function ( a, b ) {
+//         return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+//     }
+// } );
+
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+//   "date-au-pre": function ( date ) {
+//     console.log(moment(date, 'dddd, MMMM Do, YYYY').format('DD-MM-YYYY'));
+//     return moment(date, 'dddd, MMMM Do, YYYY');
+//   },
+
+//   "date-au-asc": function ( a, b ) {
+//     return (a.isBefore(b) ? -1 : (a.isAfter(b) ? 1 : 0));
+//   },
+
+//   "date-au-desc": function ( a, b ) {
+//     return (a.isBefore(b) ? 1 : (a.isAfter(b) ? -1 : 0));
+//   }
+// } );
+
+// jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+// "date-uk-pre": function ( a ) {
+//     var ukDatea = a.split('/');
+//     return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+// },
+
+// "date-uk-asc": function ( a, b ) {
+//     return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+// },
+
+// "date-uk-desc": function ( a, b ) {
+//     return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+// }
+// } );

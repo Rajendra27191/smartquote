@@ -5,6 +5,7 @@ console.log('initialise SQPaymentReminder Controller');
 var latestExcelFile;
 $scope.errorMessage=[];
 $scope.upload={};
+$scope.flaggedUser={};
 
 
 $scope.lastCall="";
@@ -241,6 +242,33 @@ $scope.rows = { isAllSelected : false,};
 
 }
 
+$scope.getPRFlagUser=function(){
+  $rootScope.showSpinner();
+  SQPaymentReminderFactory.GetPaymentReminderFlagUser();
+};
+$scope.handleGetPaymentReminderFlagUserDoneResponse=function(data){
+  $scope.productDetails={};
+  if(data){
+    if (data.code) {
+      if(data.code.toUpperCase()=='SUCCESS'){
+        console.log(data);
+        $scope.flaggedUser=data.objUserBean;
+      }else{
+        $rootScope.alertError(data.message);
+      }
+    }
+    $rootScope.hideSpinner();
+  }
+};
+var cleanupEventGetFileDetailListDone = $scope.$on("GetPaymentReminderFlagUserDone", function(event, message){
+  $scope.handleGetPaymentReminderFlagUserDoneResponse(message);      
+});
+
+var cleanupEventGetFileDetailListNotDone = $scope.$on("GetPaymentReminderFlagUserNotDone", function(event, message){
+  // $rootScope.alertServerError("Server error");
+  $rootScope.hideSpinner();
+});
+
 $scope.initSendReminder=function(){
   $scope.fileDetailList=[];
   $rootScope.showSpinner();
@@ -252,7 +280,8 @@ $scope.handleGetFileDetailListDoneResponse=function(data){
     if (data.code) {
       if(data.code.toUpperCase()=='SUCCESS'){
         $scope.fileDetailList=data.fileLogList;;
-        $scope.initSendReminderLastCall="getFileDetailList";
+        $scope.initSendReminderLastCall="getFileDetailList";     
+        $scope.getPRFlagUser();
       }else{
         $rootScope.alertError(data.message);
       }

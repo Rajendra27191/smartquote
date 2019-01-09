@@ -53,6 +53,12 @@ public class ProductBean {
 	private String supplier;
 	
 	private String lineComment;
+	
+	private boolean isSpecial;
+	
+	private int orderNo;
+	
+	private int unitDiviser;
 
 	public int getPriority() {
 		return priority;
@@ -430,6 +436,32 @@ public class ProductBean {
 		this.convFactor = convFactor;
 	}
 
+	
+
+	public boolean isSpecial() {
+		return isSpecial;
+	}
+
+	public void setSpecial(boolean isSpecial) {
+		this.isSpecial = isSpecial;
+	}
+
+	public int getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
+
+	public int getUnitDiviser() {
+		return unitDiviser;
+	}
+
+	public void setUnitDiviser(int unitDiviser) {
+		this.unitDiviser = unitDiviser;
+	}
+
 	@Override
 	public String toString() {
 		return "ProductBean [itemCode=" + itemCode + ", itemDescription=" + itemDescription + ", description2=" + description2
@@ -447,6 +479,4 @@ public class ProductBean {
 				+ lastBuyDate + ", status=" + status + ", condition=" + condition + ", supplier=" + supplier + ", lineComment="
 				+ lineComment + "]";
 	}
-
-	
 }
