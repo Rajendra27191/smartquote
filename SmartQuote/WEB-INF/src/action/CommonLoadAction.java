@@ -102,7 +102,7 @@ public class CommonLoadAction extends ActionSupport {
 				ProductDao objDao1 = new ProductDao();
 				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
 				System.out.println("new product added ::::::::" + isProductCreated);
-				objDao1.commit();
+//				objDao1.commit();
 				objDao1.closeAll();
 			}
 		}
@@ -172,7 +172,7 @@ public class CommonLoadAction extends ActionSupport {
 				ProductDao objDao1 = new ProductDao();
 				isProductCreated = objDao1.saveProduct((objQuoteBean.getProductList().get(i)));
 				System.out.println("new product added ::::::::" + isProductCreated);
-				objDao1.commit();
+//				objDao1.commit();
 				objDao1.closeAll();
 			}
 		}
@@ -208,7 +208,8 @@ public class CommonLoadAction extends ActionSupport {
 	}
 
 	public static void createProductFile(String projectPath) {
-//		System.out.println("CommonLoadAction createProductFile init :::");
+		System.out.println("CommonLoadAction createProductFile init ::: ");
+		System.out.println(projectPath);
 		File file = new File(projectPath + "/products.json");
 		if (!file.exists()) {
 			try {

@@ -498,6 +498,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		objEmptyResponse.setMessage(getText("common_error"));
 		ProductDao objProductDao = new ProductDao();
 		String projectPath = request.getSession().getServletContext().getRealPath("/");
+		System.out.println("Project path ::"+projectPath);
 		boolean isAddedToStaging = false, isAddedToStagingFinal = false, isFileUploaded = false, isFileValid = false;
 //		File fileToCreate = new File(projectPath + "CSVFile/" + "ProductFile.csv");
 		File fileToCreate = new File(getText("product_csv_file_path")+ "ProductFile.csv");
@@ -507,10 +508,13 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			System.out.println("Product File: " + productFile);
 			FileUtils.copyFile(productFile, fileToCreate);
 			String loadedFileSrc = fileToCreate.getAbsolutePath();
+			System.out.println("Loaded File Src :: "+loadedFileSrc);
+			String escapedFilePath = loadedFileSrc.replace("\\","\\\\");
+			System.out.println("Escaped File Path :: "+loadedFileSrc);
 			isFileValid = checkFileValidation(loadedFileSrc);
 			if (isFileValid) {
 				objProductDao.truncateProductStaging("product_master_staging");
-				isAddedToStaging = objProductDao.loadFileToStaging(loadedFileSrc);
+				isAddedToStaging = objProductDao.loadFileToStaging(escapedFilePath);
 				int dateCount = objProductDao.validateStaging();
 
 				if (isAddedToStaging && dateCount > 0) {
@@ -723,15 +727,15 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 			// FileUtils.copyFile(productFile, fileToCreate);
 
 			JSONArray fileString = objFileReader.readFile(productFile + "");
-			System.out.println("File Content: " + fileString);
+//			System.out.println("File Content: " + fileString);
 			ArrayList<ProductCodeUpdateBean> productCodeList = null;
 
 			JSONObject jsonObject = fileString.getJSONObject(0);
 			if (jsonObject.has("newItemCode") && jsonObject.has("oldItemCode")) {
 				productCodeList = new Gson().fromJson(fileString.toString(), new TypeToken<List<ProductCodeUpdateBean>>() {
 				}.getType());
-
 				boolean isFileUploaded = false;
+				objProductDao.truncateProductCodeVersion();
 				isFileUploaded = objProductDao.updateProductCode(productCodeList);
 				if (isFileUploaded) {
 					objEmptyResponse.setCode("success");

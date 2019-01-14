@@ -25,13 +25,13 @@ public class ProductDao {
 		conn = new ConnectionFactory().getConnection();
 	}
 
-	public void commit() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void commit() {
+//		try {
+//			conn.commit();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public void closeAll() {
 		try {
@@ -468,7 +468,7 @@ public class ProductDao {
 				+ "IGNORE 1 LINES "
 				+ "(item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,"
 				+ "price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,"
-				+ "supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code);";
+				+ "supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code)";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);	
@@ -631,10 +631,13 @@ public class ProductDao {
 			pstmt.addBatch();
 			if (++count % batchSize == 0) {
 				System.out.println("Batch Executed...!");
+				System.out.println(pstmt);
 				pstmt.executeBatch();
 			}
 		}
+		System.out.println(pstmt);
 		pstmt.executeBatch();
+		
 		isInserted = true;
 		return isInserted;
 	}
@@ -642,58 +645,60 @@ public class ProductDao {
 	public boolean updateCodeInProductMaster() throws Exception {
 		System.out.println("updateCodeInProductMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update product_master a, product_code_version b "
 				+ "set a.item_code = b.new_item_code where a.item_code = b.old_item_code ";
 		pstmt = conn.prepareStatement(updateProductCode);
-		// System.out.println(pstmt.);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
+		
 		return isUpdated;
 	}
 
 	public boolean updateCodeInCreateQuoteDetails() throws Exception {
 		System.out.println("updateCodeInCreateQuoteDetails");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update create_quote_details a, product_code_version b "
 				+ "set a.product_id = b.new_item_code where a.product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
 		return isUpdated;
 	}
 
 	public boolean updateMainIdInAlternativeMaster() throws Exception {
 		System.out.println("updateMainIdInAlternativeMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update alternative_product_master a, product_code_version b "
 				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
 		return isUpdated;
 	}
 
 	public boolean updateAltIdAlternativeMaster() throws Exception {
 		System.out.println("updateAltIdAlternativeMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update alternative_product_master a, product_code_version b "
-				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
+				+ "set a.alternative_product_id = b.new_item_code where a.alternative_product_id = b.old_item_code;";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
+		return isUpdated;
+	}
+	
+	public boolean truncateProductCodeVersion() throws Exception {
+		System.out.println("truncateProductCodeVersion");
+		boolean isUpdated = false;
+		String query = "TRUNCATE TABLE product_code_version";
+		pstmt = conn.prepareStatement(query);
+		System.out.println(pstmt);
+		pstmt.executeUpdate();
+		isUpdated = true;
 		return isUpdated;
 	}
 
@@ -701,7 +706,7 @@ public class ProductDao {
 		System.out.println("updateProductCode");
 		boolean isFileUploaded = false, isInserted = false;
 		try {
-			System.out.println("Product Code List " + productCodeList);
+//			System.out.println("Product Code List " + productCodeList);
 			isInserted = addCodeInProductCodeVersion(productCodeList);
 			if (isInserted) {
 				updateCodeInProductMaster();
@@ -710,16 +715,9 @@ public class ProductDao {
 				updateAltIdAlternativeMaster();
 				isFileUploaded = true;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		} 
 		return isFileUploaded;
 	}
 
