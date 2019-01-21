@@ -818,11 +818,11 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		}
 		return SUCCESS;
 	}
-	
 	public String refreshProductFile() {
 		objEmptyResponse.setCode("error");
 		objEmptyResponse.setMessage(getText("common_error"));
 		String projectPath = request.getSession().getServletContext().getRealPath("/");
+		System.out.println("Project Path ::"+projectPath);
 		CommonLoadAction.createProductFile(projectPath);
 		objEmptyResponse.setCode("success");
 		objEmptyResponse.setMessage(getText("product_file_created"));

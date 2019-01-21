@@ -269,8 +269,8 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 		try {
 			exportParameters = new HashMap<String, Object>();
 			String dirPath = request.getSession().getServletContext().getRealPath("/Reports/Proposal");
-			// System.out.println(dirPath);
-			System.out.println("QUOTE ID :"+quoteId);
+			System.out.println("Dir Path :: "+dirPath);
+			System.out.println("QUOTE ID :: "+quoteId);
 			CustComparisonDao objCustComparisonDao = new CustComparisonDao();
 			PDFMasterReportBean objPdfMasterReportBean = objCustComparisonDao.getQuoteInfo(quoteId);
 			ArrayList<PDFSubReportBean> productList = objPdfMasterReportBean.getArrayPdfSubReportBean();
@@ -293,7 +293,7 @@ public class CustComparisonAction extends ActionSupport implements ServletReques
 
 			exportParameters.put("subreportPath", dirPath + "/");
 			String imgDirPath = request.getSession().getServletContext().getRealPath("/Images");
-
+			System.out.println("Img Dir Path ::"+imgDirPath);
 			exportParameters.put("frontCoverPath", imgDirPath + "/front_cover.jpg");
 			exportParameters.put("backCoverPath", imgDirPath + "/back_cover.jpg");
 			exportParameters.put("officeChoiceLogo", imgDirPath + "/officeChoice.png");
