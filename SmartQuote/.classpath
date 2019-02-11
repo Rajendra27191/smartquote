@@ -45,5 +45,7 @@
 	<classpathentry kind="lib" path="WEB-INF/lib/pdfbox-2.0.8.jar"/>
 	<classpathentry kind="lib" path="WEB-INF/lib/jasperreports-5.1.2.jar"/>
 	<classpathentry kind="lib" path="/home/radhika/Documents/JAVA/apache-tomcat-7.0.42/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j-api-2.10.0.jar"/>
+	<classpathentry kind="lib" path="WEB-INF/lib/log4j-core-2.10.0.jar"/>
 	<classpathentry kind="output" path="WEB-INF/classes"/>
 </classpath>
