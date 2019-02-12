@@ -480,7 +480,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		BufferedReader br = null;
 		String cvsSplitBy = ",";
 		br = new BufferedReader(new FileReader(fileSrc));
-		System.out.println("fileSrc :: "+fileSrc );
+		System.out.println("fileSrc :: " + fileSrc);
 		String fileHeaderLine = br.readLine();
 		String[] headerArray = { "Item Code", "Brand", "Item GTIN", "Group", "Item Description", "Description (2)", "Description (3)",
 				"Unit", "Status", "Condition", "ABC Class", "FLC Page No.", "Internet Flag", "Internet Tree", "New Internet Tree",
@@ -548,15 +548,42 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 				if ((isAddedToStaging) && (dateCount > 0)) {
 					objProductDao.truncateProductStaging("product_master_staging");
-					String query = "INSERT INTO product_master_staging (item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code)SELECT item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code FROM product_master_staging0;";
+					String query_0 = "INSERT INTO product_master_staging (item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code) "
+							+ "SELECT TRIM(REPLACE(REPLACE(REPLACE(item_code, '\n', ' '), '\r', ' '), '\t', ' ')) item_code,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(product_group_code, '\n', ' '), '\r', ' '), '\t', ' ')) product_group_code,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(item_description, '\n', ' '), '\r', ' '), '\t', ' ')) item_description,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(description2, '\n', ' '), '\r', ' '), '\t', ' ')) description2,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(description3, '\n', ' '), '\r', ' '), '\t', ' ')) description3,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(unit, '\n', ' '), '\r', ' '), '\t', ' ')) unit,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(item_status, '\n', ' '), '\r', ' '), '\t', ' ')) item_status,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(item_condition, '\n', ' '), '\r', ' '), '\t', ' ')) item_condition,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(price0exGST, '\n', ' '), '\r', ' '), '\t', ' ')) price0exGST,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(qty_break1, '\n', ' '), '\r', ' '), '\t', ' '),',','')) qty_break1,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(price1exGST, '\n', ' '), '\r', ' '), '\t', ' ')) price1exGST,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(qty_break2, '\n', ' '), '\r', ' '), '\t', ' '),',','')) qty_break2,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(price2exGST, '\n', ' '), '\r', ' '), '\t', ' ')) price2exGST,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(qty_break3, '\n', ' '), '\r', ' '), '\t', ' '),',','')) qty_break3,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(price3exGST, '\n', ' '), '\r', ' '), '\t', ' ')) price3exGST,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(qty_break4, '\n', ' '), '\r', ' '), '\t', ' '),',','')) qty_break4,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(price4exGST, '\n', ' '), '\r', ' '), '\t', ' ')) price4exGST,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(supplier, '\n', ' '), '\r', ' '), '\t', ' ')) supplier,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(priority, '\n', ' '), '\r', ' '), '\t', ' ')) priority,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(conv_factor, '\n', ' '), '\r', ' '), '\t', ' ')) conv_factor,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(last_buy_date, '\n', ' '), '\r', ' '), '\t', ' ')) last_buy_date,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(last_buy_price, '\n', ' '), '\r', ' '), '\t', ' ')) last_buy_price,"
+							+ "TRIM(REPLACE(REPLACE(REPLACE(tax_code, '\n', ' '), '\r', ' '), '\t', ' ')) tax_code "
+							+ "FROM product_master_staging0;";
 
-					objProductDao.executeQuery(query);
+					// String query = "INSERT INTO product_master_staging (item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code)SELECT item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code FROM product_master_staging0;";
+
+					objProductDao.executeQuery(query_0);
 
 					objProductDao.truncateProductStaging("product_master_staging2");
 					objProductDao.truncateProductStaging("product_master_staging3");
 					objProductDao.truncateProductStaging("product_master_staging_final");
 
-					String query0 = "UPDATE product_master_staging SET tax_code = TRIM(REPLACE(REPLACE(REPLACE(tax_code, '\n', ' '), '\r', ' '), '\t', ' '));";
+					// String query0 =
+					// "UPDATE product_master_staging SET tax_code = TRIM(REPLACE(REPLACE(REPLACE(tax_code, '\n', ' '), '\r', ' '), '\t', ' '));";
 					String query1 = "UPDATE product_master_staging set avg_cost = if(conv_factor!=0,last_buy_price/conv_factor,last_buy_price);";
 					String query2 = "UPDATE product_master_staging set gst_flag='YES' where tax_code = 'E' ;";
 
@@ -577,26 +604,31 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 
 					String query11 = "insert ignore into product_master_staging_final select a.* from product_master_staging3 a, (select item_code, min(avg_cost) avg_cost, max(last_buy_date) last_buy_date, count(*) from product_master_staging3 group by item_code having count(*) > 1) b where a.item_code = b.item_code and a.avg_cost = b.avg_cost and a.last_buy_date = b.last_buy_date and a.item_code not in (select c.item_code from product_master_staging3 c where c.item_code = a.item_code and c.item_code regexp c.supplier and c.last_buy_date = b.last_buy_date and b.avg_cost = c.avg_cost) group by item_code;";
 
-					isAddedToStagingFinal = objProductDao.executeQuery(query0);
-					isAddedToStagingFinal = objProductDao.executeQuery(query1);
-					isAddedToStagingFinal = objProductDao.executeQuery(query2);
-					isAddedToStagingFinal = objProductDao.executeQuery(query3);
-					isAddedToStagingFinal = objProductDao.executeQuery(query4);
-					isAddedToStagingFinal = objProductDao.executeQuery(query5);
-					isAddedToStagingFinal = objProductDao.executeQuery(query6);
-					isAddedToStagingFinal = objProductDao.executeQuery(query7);
-					isAddedToStagingFinal = objProductDao.executeQuery(query8);
-					isAddedToStagingFinal = objProductDao.executeQuery(query9);
-					isAddedToStagingFinal = objProductDao.executeQuery(query10);
-					isAddedToStagingFinal = objProductDao.executeQuery(query11);
+					// objProductDao.executeQuery(query0);
+					objProductDao.executeQuery(query1);
+					objProductDao.executeQuery(query2);
+					objProductDao.executeQuery(query3);
+					objProductDao.executeQuery(query4);
+					objProductDao.executeQuery(query5);
+					objProductDao.executeQuery(query6);
+					objProductDao.executeQuery(query7);
+					objProductDao.executeQuery(query8);
+					objProductDao.executeQuery(query9);
+					objProductDao.executeQuery(query10);
+					objProductDao.executeQuery(query11);
+
+					isAddedToStagingFinal = objProductDao.checkFinalStaging();
+					if (isAddedToStagingFinal) {
+						isFileUploaded = objProductDao.addToProductMaster();
+					} else {
+						objEmptyResponse.setCode("error");
+						objEmptyResponse.setMessage(getText("product_file_internal_error"));
+						logger.warn(getText("product_file_invalid_date"));
+					}
 				} else {
 					objEmptyResponse.setCode("error");
 					objEmptyResponse.setMessage(getText("product_file_invalid_date"));
 					logger.warn(getText("product_file_invalid_date"));
-				}
-
-				if (isAddedToStagingFinal) {
-					isFileUploaded = objProductDao.addToProductMaster();
 				}
 
 				if (isFileUploaded) {
@@ -606,7 +638,7 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				if (objEmptyResponse.getCode() == "success") {
 					logger.info("Product Master Prepared...!");
 					CommonLoadAction.createProductFile(projectPath);
-					ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList();
+					ArrayList<ProductGroupBean> distinctProductGroupList = new ArrayList<ProductGroupBean>();
 					distinctProductGroupList = objProductDao.getDistinctProductGroupList();
 					logger.info("Distinct Product Group List Size :" + distinctProductGroupList.size());
 

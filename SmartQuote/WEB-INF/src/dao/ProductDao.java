@@ -432,16 +432,37 @@ public class ProductDao {
 		String productQuery = query;
 		try {
 			pstmt = conn.prepareStatement(productQuery);
-
 			int i = pstmt.executeUpdate();
 			logger.debug(pstmt);
 			isFileUploaded = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.warn(e);
 		}
 		return isFileUploaded;
 	}
-
+	
+	public boolean checkFinalStaging() {
+		logger.trace("checkFinalStaging initiated ...");
+		boolean isFileUploaded = false;
+		int i=0;
+		String productQuery = "select count(*) 'count' from product_master_staging_final;";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			rs = pstmt.executeQuery();
+			logger.debug(pstmt);
+			if (rs.next()) {
+				if (rs.getInt("count")>0) {
+					isFileUploaded = true;
+				};
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(e);
+		}
+		return isFileUploaded;
+	}
+	
 	public boolean addToProductStagingFinal(String query) {
 		boolean isFileUploaded = false;
 		String productQuery = query;
@@ -458,6 +479,7 @@ public class ProductDao {
 	}
 
 	public boolean addToProductMaster() {
+		logger.trace("addToProductMaster initiated ...");
 		boolean isFileUploaded = false;
 		String productQuery = "INSERT INTO product_master "
 				+ "SELECT item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
@@ -465,13 +487,13 @@ public class ProductDao {
 				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000','NO' " + "FROM product_master_staging_final;";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
-			System.out.println(pstmt);
 			@SuppressWarnings("unused")
 			int i = pstmt.executeUpdate();
-
+			logger.debug(pstmt);
 			isFileUploaded = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.warn(e);
 		}
 		return isFileUploaded;
 	}
