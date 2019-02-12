@@ -479,10 +479,9 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 		boolean isFileValid = false;
 		BufferedReader br = null;
 		String cvsSplitBy = ",";
-		br = new BufferedReader(new java.io.FileReader(fileSrc));
-
+		br = new BufferedReader(new FileReader(fileSrc));
+		System.out.println("fileSrc :: "+fileSrc );
 		String fileHeaderLine = br.readLine();
-
 		String[] headerArray = { "Item Code", "Brand", "Item GTIN", "Group", "Item Description", "Description (2)", "Description (3)",
 				"Unit", "Status", "Condition", "ABC Class", "FLC Page No.", "Internet Flag", "Internet Tree", "New Internet Tree",
 				"Reorder Policy", "Standard Cost", "Replacement Cost", "Sales Cost", "Region", "Price 0 (ex GST)", "Qty Break 1",
@@ -491,12 +490,11 @@ public class ProductAction extends ActionSupport implements ServletRequestAware 
 				"Maximum stock", "Avg Mth Demand", "Avg cost", "Supplier", "Supplier Item", "Priority", "Unit", "Conv Factor", "Pack Qty",
 				"E.O.Q.", "Last Buy Date", "Last Buy Price", "Tax Code" };
 		String[] fileHeaderArray = fileHeaderLine.split(cvsSplitBy);
-		System.out.println(headerArray.toString());
-		System.out.println(fileHeaderArray.toString());
-		if (Arrays.equals(headerArray, fileHeaderArray)) {
+
+		if (Arrays.equals(headerArray, fileHeaderArray))
 			isFileValid = true;
-		} 
-		
+		else
+			isFileValid = false;
 		br.close();
 		return isFileValid;
 	}

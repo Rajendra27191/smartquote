@@ -178,7 +178,7 @@ $scope.addExcelToServer = function(){
       }, 3000);
     }else {   
       console.log(latestExcelFile.size);
-      if ((latestExcelFile.size / 1024) < 30720) {//6144 //15360
+      if ((latestExcelFile.size / 1024) < 50720) {//6144 //15360
       console.log(latestExcelFile.size);
       console.log($scope.upload);
         if ($scope.upload!=''&&$scope.upload!=undefined&&$scope.upload!=null) {
@@ -201,7 +201,7 @@ $scope.addExcelToServer = function(){
           }
         }
       }else{
-          $rootScope.alertError("File size must ne less than 30MB"); 
+          $rootScope.alertError("File size must ne less than 50MB"); 
       }    
       
 
