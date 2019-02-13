@@ -114,7 +114,7 @@ border: 2px solid #0275d8;
 color: #f0ad4e;
 border: 2px solid #f0ad4e;
 }
-.closed{
+.expired{
 color: #777;
 border: 2px solid #777;
 }
@@ -203,7 +203,7 @@ border: 2px solid darkgray;
 					</td>
 					<td>
 						<div class="col-md-12">
-						<span ng-class="{'ini': quote.status.toLowerCase()=='ini','won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','closed' : quote.status.toLowerCase()=='closed'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
+						<span ng-class="{'ini': quote.status.toLowerCase()=='ini','won': quote.status.toLowerCase()=='won','lost': quote.status.toLowerCase()=='lost','saved': quote.status.toLowerCase()=='saved','updated': quote.status.toLowerCase()=='updated','expired' : quote.status.toLowerCase()=='expired'}"  tooltip-placement="top" uib-tooltip"{{quote.status}}" style="padding:2px 5px;font-size: 12px;text-align: center;display: block;width: 100%;">
 						{{::quote.status}}
 						</span>
 						</div>

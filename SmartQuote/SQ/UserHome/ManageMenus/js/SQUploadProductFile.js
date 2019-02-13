@@ -61,6 +61,7 @@ $scope.uploadProductsFile = function(){
     transformRequest: angular.identity
   })
   .success(function(data, status, header, config){
+    console.log(data);
     if(data.code.toUpperCase()=="SUCCESS"){
      
       $scope.progressCount=100;
@@ -75,9 +76,10 @@ $scope.uploadProductsFile = function(){
         $scope.currentProgressCount=0;
         $rootScope.initAuotoComplete(true);      
       },2000);
-     
+     $rootScope.hideSpinner();
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
+      $rootScope.hideSpinner();
     }else{
       console.log(data); 
        $rootScope.alertError(data.message);   
@@ -87,8 +89,9 @@ $scope.uploadProductsFile = function(){
       $scope.progressCount=0;
       $scope.currentProgressCount=0; 
       document.getElementById('fileTypeExcelHost').value = '';      
+      $rootScope.hideSpinner();
     }
-    $rootScope.hideSpinner();
+   
     
 
   })
@@ -178,7 +181,7 @@ $scope.addExcelToServer = function(){
       }, 3000);
     }else {   
       console.log(latestExcelFile.size);
-      if ((latestExcelFile.size / 1024) < 30720) {//6144 //15360
+      if ((latestExcelFile.size / 1024) < 50720) {//6144 //15360
       console.log(latestExcelFile.size);
       console.log($scope.upload);
         if ($scope.upload!=''&&$scope.upload!=undefined&&$scope.upload!=null) {
@@ -201,7 +204,7 @@ $scope.addExcelToServer = function(){
           }
         }
       }else{
-          $rootScope.alertError("File size must ne less than 30MB"); 
+          $rootScope.alertError("File size must ne less than 50MB"); 
       }    
       
 

@@ -7,31 +7,33 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import pojo.KeyValuePairBean;
 import pojo.ProductBean;
 import pojo.ProductCodeUpdateBean;
 import pojo.ProductGroupBean;
 import connection.ConnectionFactory;
 
-
 public class ProductDao {
+	static Logger logger = LogManager.getLogger();
 	Connection conn = null;
 	ResultSet rs = null;
 	PreparedStatement pstmt = null;
 	DecimalFormat df = new DecimalFormat("###.###");
-	
 
 	public ProductDao() {
 		conn = new ConnectionFactory().getConnection();
 	}
 
-	public void commit() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	// public void commit() {
+	// try {
+	// conn.commit();
+	// } catch (SQLException e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	public void closeAll() {
 		try {
@@ -369,12 +371,12 @@ public class ProductDao {
 				pstmt.setDouble(14, productList.get(i).getPrice4exGST());
 				double avgCost;
 				try {
-					avgCost= Double.parseDouble(df.format(productList.get(i).getLastBuyPrice() / productList.get(i).getConvFactor()));
+					avgCost = Double.parseDouble(df.format(productList.get(i).getLastBuyPrice() / productList.get(i).getConvFactor()));
 				} catch (Exception e) {
-					avgCost= productList.get(i).getLastBuyPrice();
+					avgCost = productList.get(i).getLastBuyPrice();
 				}
-				pstmt.setDouble(15,avgCost);		
-				
+				pstmt.setDouble(15, avgCost);
+
 				pstmt.setString(16, productList.get(i).getTaxCode());
 				pstmt.setString(17, productList.get(i).getGroup());
 				String gstExempt = productList.get(i).getTaxCode();
@@ -387,11 +389,11 @@ public class ProductDao {
 				// System.out.println("getLastBuyDate() : " +
 				// productList.get(i).getLastBuyDate());
 				pstmt.setString(20, productList.get(i).getLastBuyDate());
-				
+
 				pstmt.setString(21, productList.get(i).getStatus());
-				pstmt.setString(22,productList.get(i).getCondition());
+				pstmt.setString(22, productList.get(i).getCondition());
 				pstmt.setString(23, productList.get(i).getSupplier());
-							
+
 				pstmt.addBatch();
 				if (++count % batchSize == 0) {
 					System.out.println("Staging Batch Executed...!");
@@ -424,6 +426,43 @@ public class ProductDao {
 		return isFileUploaded;
 	}
 
+	public boolean executeQuery(String query) {
+		logger.trace("executeQuery initiated ...");
+		boolean isFileUploaded = false;
+		String productQuery = query;
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			int i = pstmt.executeUpdate();
+			logger.debug(pstmt);
+			isFileUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(e);
+		}
+		return isFileUploaded;
+	}
+	
+	public boolean checkFinalStaging() {
+		logger.trace("checkFinalStaging initiated ...");
+		boolean isFileUploaded = false;
+		int i=0;
+		String productQuery = "select count(*) 'count' from product_master_staging_final;";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
+			rs = pstmt.executeQuery();
+			logger.debug(pstmt);
+			if (rs.next()) {
+				if (rs.getInt("count")>0) {
+					isFileUploaded = true;
+				};
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(e);
+		}
+		return isFileUploaded;
+	}
+	
 	public boolean addToProductStagingFinal(String query) {
 		boolean isFileUploaded = false;
 		String productQuery = query;
@@ -440,6 +479,7 @@ public class ProductDao {
 	}
 
 	public boolean addToProductMaster() {
+		logger.trace("addToProductMaster initiated ...");
 		boolean isFileUploaded = false;
 		String productQuery = "INSERT INTO product_master "
 				+ "SELECT item_code, item_description, description2, description3, unit, qty_break0, price0exGST, "
@@ -447,40 +487,76 @@ public class ProductDao {
 				+ "avg_cost, tax_code,  created_by, product_group_code, gst_flag, '0.000','NO' " + "FROM product_master_staging_final;";
 		try {
 			pstmt = conn.prepareStatement(productQuery);
+			@SuppressWarnings("unused")
+			int i = pstmt.executeUpdate();
+			logger.debug(pstmt);
+			isFileUploaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(e);
+		}
+		return isFileUploaded;
+	}
+
+	public boolean loadFileToStaging(String loadedFileSrc) {
+		boolean isFileUploaded = false;
+		String productQuery = "LOAD DATA LOCAL INFILE '" + loadedFileSrc + "' " + "INTO TABLE `product_master_staging` "
+				+ "FIELDS TERMINATED BY ',' " + "ENCLOSED BY '\"' " + "LINES TERMINATED BY '\n' " + "IGNORE 1 LINES "
+				+ "(item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,"
+				+ "price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,"
+				+ "supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code)";
+		try {
+			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);
 			@SuppressWarnings("unused")
 			int i = pstmt.executeUpdate();
-
 			isFileUploaded = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return isFileUploaded;
 	}
+
+	  public boolean loadFileToStaging_0(String loadedFileSrc) {
+		    boolean isFileUploaded = false;
+		    String productQuery = "LOAD DATA LOCAL INFILE '" + loadedFileSrc + "' INTO TABLE product_master_staging0 " + 
+		      "FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\n' IGNORE 1 LINES " + 
+		      "(`item_code`,`brand`,`item_GTIN`,`product_group_code`,`item_description`,`description2`,`description3`," + 
+		      "`unit`,`item_status`,`item_condition`,`abc_class`,`FLC_page_no`,`internet_flag`,`internet_tree`," + 
+		      "`new_internet_tree`,`reorder_policy`,`standard_cost`,`replacement_cost`,`sales_cost`," + 
+		      "`region`,`price0exGST`,`qty_break1`,`price1exGST`,`qty_break2`,`price2exGST`," + 
+		      "`qty_break3`,`price3exGST`,`qty_break4`,`price4exGST`,`whse`,`bin_loc`,`on_hand`," + 
+		      "`current_orders`,`back_orders`,`on_order`,`minimum_stock`,`maximum_stock`,`avg_mth_demand`," + 
+		      "`avg_cost`,`supplier`,`supplier_item`,`priority`,`unit1`,`conv_factor`,`pack_qty`,`EOQ`," + 
+		      "`last_buy_date`,`last_buy_price`,`tax_code`);";
+		    try {
+		      pstmt = conn.prepareStatement(productQuery);
+		      logger.debug(pstmt);
+		      
+		      int i = pstmt.executeUpdate();
+		      isFileUploaded = true;
+		    } catch (Exception e) {
+		      e.printStackTrace();
+		    }
+		    return isFileUploaded;
+		  }
+		  
+		  public int validateStaging_0() { int count = 0;
+		    String productQuery = "select count(*) 'date_count' from product_master_staging0 where last_buy_date = STR_TO_DATE(last_buy_date, '%Y-%m-%d');";
+		    try
+		    {
+		      pstmt = conn.prepareStatement(productQuery);
+		      logger.debug(pstmt);
+		      rs = pstmt.executeQuery();
+		      if (rs.next()) {
+		        count = rs.getInt("date_count");
+		      }
+		    } catch (Exception e) {
+		      e.printStackTrace();
+		    }
+		    return count;
+		  }
 	
-	public boolean loadFileToStaging(String loadedFileSrc) {
-		boolean isFileUploaded = false;
-		String productQuery = "LOAD DATA LOCAL INFILE '"+loadedFileSrc+"' "
-				+ "INTO TABLE `product_master_staging` "
-				+ "FIELDS TERMINATED BY ',' "
-				+ "ENCLOSED BY '\"' "
-				+ "LINES TERMINATED BY '\n' "
-				+ "IGNORE 1 LINES "
-				+ "(item_code,product_group_code,item_description,description2,description3,unit,item_status,item_condition,"
-				+ "price0exGST,qty_break1,price1exGST,qty_break2,price2exGST,qty_break3,price3exGST,qty_break4,price4exGST,"
-				+ "supplier,priority,conv_factor,last_buy_date,last_buy_price,tax_code);";
-		try {
-			pstmt = conn.prepareStatement(productQuery);
-			System.out.println(pstmt);	
-			@SuppressWarnings("unused")
-			int i = pstmt.executeUpdate();
-			isFileUploaded = true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return isFileUploaded;
-	}
-
 	public int validateStaging() {
 		int count = 0;
 		String productQuery = "SELECT count(*)'date_count' FROM product_master_staging where last_buy_date !='0000-00-00';";
@@ -488,14 +564,15 @@ public class ProductDao {
 			pstmt = conn.prepareStatement(productQuery);
 			System.out.println(pstmt);
 			rs = pstmt.executeQuery();
-			if(rs.next())
+			if (rs.next())
 				count = rs.getInt("date_count");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return count;
 	}
+
 	public ArrayList<ProductBean> getFilterdProductFromStaging() {
 		ArrayList<ProductBean> arrayProductBeans = new ArrayList<ProductBean>();
 		try {
@@ -631,10 +708,13 @@ public class ProductDao {
 			pstmt.addBatch();
 			if (++count % batchSize == 0) {
 				System.out.println("Batch Executed...!");
+				System.out.println(pstmt);
 				pstmt.executeBatch();
 			}
 		}
+		System.out.println(pstmt);
 		pstmt.executeBatch();
+
 		isInserted = true;
 		return isInserted;
 	}
@@ -642,58 +722,60 @@ public class ProductDao {
 	public boolean updateCodeInProductMaster() throws Exception {
 		System.out.println("updateCodeInProductMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update product_master a, product_code_version b "
 				+ "set a.item_code = b.new_item_code where a.item_code = b.old_item_code ";
 		pstmt = conn.prepareStatement(updateProductCode);
-		// System.out.println(pstmt.);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
+		isUpdated = true;
 
-		if (result > 0) {
-			isUpdated = true;
-		}
 		return isUpdated;
 	}
 
 	public boolean updateCodeInCreateQuoteDetails() throws Exception {
 		System.out.println("updateCodeInCreateQuoteDetails");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update create_quote_details a, product_code_version b "
 				+ "set a.product_id = b.new_item_code where a.product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
 		return isUpdated;
 	}
 
 	public boolean updateMainIdInAlternativeMaster() throws Exception {
 		System.out.println("updateMainIdInAlternativeMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update alternative_product_master a, product_code_version b "
 				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
 		return isUpdated;
 	}
 
 	public boolean updateAltIdAlternativeMaster() throws Exception {
 		System.out.println("updateAltIdAlternativeMaster");
 		boolean isUpdated = false;
-		int result = 0;
 		String updateProductCode = "update alternative_product_master a, product_code_version b "
-				+ "set a.main_product_id = b.new_item_code where a.main_product_id = b.old_item_code";
+				+ "set a.alternative_product_id = b.new_item_code where a.alternative_product_id = b.old_item_code;";
 		pstmt = conn.prepareStatement(updateProductCode);
+		System.out.println(pstmt);
 		pstmt.executeUpdate();
-		if (result > 0) {
-			isUpdated = true;
-		}
+		isUpdated = true;
+		return isUpdated;
+	}
+
+	public boolean truncateProductCodeVersion() throws Exception {
+		System.out.println("truncateProductCodeVersion");
+		boolean isUpdated = false;
+		String query = "TRUNCATE TABLE product_code_version";
+		pstmt = conn.prepareStatement(query);
+		System.out.println(pstmt);
+		pstmt.executeUpdate();
+		isUpdated = true;
 		return isUpdated;
 	}
 
@@ -701,7 +783,7 @@ public class ProductDao {
 		System.out.println("updateProductCode");
 		boolean isFileUploaded = false, isInserted = false;
 		try {
-			System.out.println("Product Code List " + productCodeList);
+			// System.out.println("Product Code List " + productCodeList);
 			isInserted = addCodeInProductCodeVersion(productCodeList);
 			if (isInserted) {
 				updateCodeInProductMaster();
@@ -710,15 +792,8 @@ public class ProductDao {
 				updateAltIdAlternativeMaster();
 				isFileUploaded = true;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				conn.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return isFileUploaded;
 	}
@@ -779,9 +854,9 @@ public class ProductDao {
 				objBean.setProductGroupName(rs.getString("product_group_name"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
 				objBean.setPromoPrice(rs.getDouble("promoPrice"));
-				boolean isSpecial=false;
+				boolean isSpecial = false;
 				if (rs.getString("special_flag").equalsIgnoreCase("yes")) {
-					isSpecial=true;
+					isSpecial = true;
 				}
 				objBean.setSpecial(isSpecial);
 				objProductBeans.add(objBean);
@@ -836,9 +911,9 @@ public class ProductDao {
 				objBean.setProductGroupName(rs.getString("product_group_name"));
 				objBean.setGstFlag(rs.getString("gst_flag"));
 				objBean.setPromoPrice(rs.getDouble("promo_price"));
-				boolean isSpecial=false;
+				boolean isSpecial = false;
 				if (rs.getString("special_flag").equalsIgnoreCase("yes")) {
-					isSpecial=true;
+					isSpecial = true;
 				}
 				objBean.setSpecial(isSpecial);
 				objProductBeans.add(objBean);
@@ -884,14 +959,15 @@ public class ProductDao {
 		}
 		return insertCount;
 	}
-	
+
 	public boolean saveSpecialProduct(ProductBean objBean) {
 		boolean isProductCreated = false;
 		try {
 			String createUserQuery = "INSERT IGNORE INTO product_master (item_code, item_description, description2, "
 					+ " description3, unit, price0exGST, qty_break1, price1exGST, qty_break2, price2exGST, qty_break3, "
 					+ " price3exGST, qty_break4, price4exGST, avg_cost, tax_code, created_by,product_group_code,"
-					+ " qty_break0,gst_flag, promo_price,special_flag) " + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?, ?,?)";
+					+ " qty_break0,gst_flag, promo_price,special_flag) "
+					+ " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?,?,?, ?,?)";
 			pstmt = conn.prepareStatement(createUserQuery);
 			pstmt.setString(1, objBean.getItemCode());
 			pstmt.setString(2, objBean.getItemDescription());
