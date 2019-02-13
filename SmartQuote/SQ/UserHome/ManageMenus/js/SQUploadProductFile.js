@@ -61,6 +61,7 @@ $scope.uploadProductsFile = function(){
     transformRequest: angular.identity
   })
   .success(function(data, status, header, config){
+    console.log(data);
     if(data.code.toUpperCase()=="SUCCESS"){
      
       $scope.progressCount=100;
@@ -75,9 +76,10 @@ $scope.uploadProductsFile = function(){
         $scope.currentProgressCount=0;
         $rootScope.initAuotoComplete(true);      
       },2000);
-     
+     $rootScope.hideSpinner();
     }else if(data.code=="sessionTimeOut"){
       $rootScope.$broadcast('SessionTimeOut', data); 
+      $rootScope.hideSpinner();
     }else{
       console.log(data); 
        $rootScope.alertError(data.message);   
@@ -87,8 +89,9 @@ $scope.uploadProductsFile = function(){
       $scope.progressCount=0;
       $scope.currentProgressCount=0; 
       document.getElementById('fileTypeExcelHost').value = '';      
+      $rootScope.hideSpinner();
     }
-    $rootScope.hideSpinner();
+   
     
 
   })
