@@ -352,7 +352,7 @@ $rootScope.$broadcast('CreateProductGroupNotDone', data);
 manageMenu.UpdateProductGroupDetails = function (productDetails){
 $http({
 method: "POST",
-url: $rootScope.projectName+"/updateProductGroupDetails?productDetails="+productDetails,
+url: $rootScope.projectName+"/updateProductGroupDetails?productDetails="+encodeURIComponent(productDetails),
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
