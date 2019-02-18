@@ -220,8 +220,11 @@ $scope.openMyModal = function (product) {
 //===== ADD PRODUCT UIB MODAL <<<<<
 //===== INIT DATA TABLE >>>>>
 $scope.arrangeDataTable=function(){
-$scope.dtOptions= DTOptionsBuilder.newOptions();
+$scope.dtOptions= DTOptionsBuilder.newOptions().withOption('stateSave', true);;
     // .withOption('order', [0, 'desc']);
+    // .withOption('stateSave', true);
+				  // .withOption('lengthMenu', [50, 100, 150, 200])
+				  // .withDisplayLength(2);
     $scope.dtColumnDefs = [	
     	DTColumnDefBuilder.newColumnDef([2]).withOption('type', 'date-euro'),	
     	DTColumnDefBuilder.newColumnDef([7]).withOption('type', 'date-euro'),	

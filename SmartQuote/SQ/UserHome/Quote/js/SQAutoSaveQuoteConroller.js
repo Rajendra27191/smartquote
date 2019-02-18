@@ -9,7 +9,7 @@ angular.module('sq.SmartQuoteDesktop')
             var isSupplierExist = false;
             $scope.competeQuote = ["Yes", "No"];
             $scope.customerQuote = {
-                'competeQuote': "No",
+                'competeQuote': "Yes",
                 'salesPerson': "",
             };
             $scope.currentSupplierList = [];
