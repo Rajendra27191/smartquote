@@ -355,7 +355,7 @@ padding: 3px 12px;
  		 	</div>
 
  		 	<div class="col-md-12 row-control" style="padding: 0px;">
-			<div class="col-md-4"><label class="sub-label">Date</label></div>
+			<div class="col-md-4"><label class="sub-label"> Modified Date</label></div>
 			<div class="col-md-8">
 			<p class="input-group" id="createdDate" ng-if="!showEditQuoteView">
 	          <input type="text" name="createdDate" class="form-control" popup-placement="bottom" show-button-bar="false" uib-datepicker-popup="{{format}}" ng-model="customerQuote.createdDate" ng-change="quoteDateChanged(customerQuote.createdDate)" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats" readonly="true"/>
@@ -391,7 +391,7 @@ padding: 3px 12px;
                                             <small ng-show="form.addCustomerQuote.closeDate.$error.required">*invalid expected close date.</small>
                                         </span>
 			    <span ng-show="dateInvalid" class="invalid-control">
-			        <small>Invalid Date : close date should be greater than date and current date</small>
+			        <small>Invalid Date : close date should be greater than modified date and current date</small>
 			    </span>
 			</div>
 			</div>
