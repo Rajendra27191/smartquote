@@ -397,7 +397,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.altGpInformation = { 'avgGpRequired': 0, 'avgCurrentSupplierGp': 0 };
                 isSupplierExist = false;
                 $scope.isNewCustomer = false;
-                $scope.customerQuote.competeQuote = "No";
+                $scope.customerQuote.competeQuote = "Yes";
                 $scope.isAlternateAdded = false;
                 $scope.customerQuote.saveWithAlternative = false;
                 $scope.showAddProductError = false;
@@ -1091,7 +1091,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.altGpInformation = { 'avgGpRequired': 0, 'avgCurrentSupplierGp': 0 };
                 isSupplierExist = false;
                 $scope.isNewCustomer = false;
-                $scope.customerQuote.competeQuote = "No";
+                $scope.customerQuote.competeQuote = "Yes";
                 $scope.isAlternateAdded = false;
                 $scope.customerQuote.saveWithAlternative = false;
                 $scope.showAddProductError = false;

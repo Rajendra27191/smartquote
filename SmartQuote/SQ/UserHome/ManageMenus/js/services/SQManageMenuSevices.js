@@ -54,7 +54,7 @@ $rootScope.$broadcast('SetUserGroupNotDone', error);
 manageMenu.saveUserGroup = function (userGroupName,checkedMenuList){
 $http({
 method: "POST",
-url: $rootScope.projectName+"/createUserGroup?userGroupName="+userGroupName+"&checkedMenuList="+checkedMenuList,
+url: $rootScope.projectName+"/createUserGroup?userGroupName="+encodeURIComponent(userGroupName)+"&checkedMenuList="+encodeURIComponent(checkedMenuList),
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
@@ -71,7 +71,7 @@ $rootScope.$broadcast('AddUserGroupNotDone', data);
 manageMenu.editUserGroup = function (userGroupId,checkedMenuList){
 $http({
 method: "POST",
-url: $rootScope.projectName+"/updateUserGroup?userGroupId="+userGroupId+"&checkedMenuList="+checkedMenuList,
+url: $rootScope.projectName+"/updateUserGroup?userGroupId="+encodeURIComponent(userGroupId)+"&checkedMenuList="+encodeURIComponent(checkedMenuList),
 }).success(function(data, status, header, config){
 if (data.code=="sessionTimeOut") {
 $rootScope.$broadcast('SessionTimeOut', data);   
@@ -335,7 +335,7 @@ $rootScope.$broadcast('GetProductGroupDetailsNotDone', data);
 manageMenu.CreateProductGroup = function (productDetails){
 $http({
 method: "POST",
-url: $rootScope.projectName+"/createProductGroup?productDetails="+productDetails,
+url: $rootScope.projectName+"/createProductGroup?productDetails="+encodeURIComponent(productDetails),
 }).success(function(data, status, header, config){
 //console.log(data);
 if (data.code=="sessionTimeOut") {
