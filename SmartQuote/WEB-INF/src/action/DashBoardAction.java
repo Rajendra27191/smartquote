@@ -55,7 +55,9 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 					+ " else round(b.total, 2) end) else round(b.total, 2) end), 2) as totalAmount"
 					+ " from create_quote a, create_quote_details b, product_master c"
 					+ " where a.quote_id =  b.quote_id and b.product_id = c.item_code and b.alternate_for = 0 and"
-					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' group by 1)"
+					
+					+ " coalesce(date(a.modified_date),date(a.created_date)) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' group by 1)"
+//					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"' group by 1)"
 					+ " b on a.status = b.status;";
 		} else {
 			queryStr = "SELECT a.status, b.totalCount, b.totalAmount"
@@ -67,7 +69,9 @@ public class DashBoardAction extends ActionSupport implements ServletRequestAwar
 					+ " else round(b.total, 2) end) else round(b.total, 2) end), 2) as totalAmount"
 					+ " from create_quote a, create_quote_details b, product_master c"
 					+ " where a.quote_id =  b.quote_id and b.product_id = c.item_code and b.alternate_for = 0 and"
-					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"'"
+					
+					+ " coalesce(date(a.modified_date),date(a.created_date)) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"'"
+//					+ " date(a.created_date) between '"+objChartBean.getFromDate()+"' and '"+objChartBean.getToDate()+"'"
 					+ " and sales_person_id ="+objChartBean.getUserID()+" group by 1)"
 					+ " b on a.status = b.status;";
 		}
