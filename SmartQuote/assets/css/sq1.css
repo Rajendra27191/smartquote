@@ -437,7 +437,7 @@
   }
   /*SWEET ALERT CSS ENDS*/
   .invalid-control{
-  color:red;font-size:14px;word-break:break-all;
+  color:red;font-size:14px;word-break:break-word;
   }
 
   /*USERHOME CSS*/

@@ -83,11 +83,13 @@ if ($scope.customerQuote.closeDate===null|| $scope.customerQuote.closeDate ==="n
 };
 
 $scope.validateDate=function(dateFrom,dateTo){
-console.log("validateDate", dateTo>dateFrom)
+$scope.todayDate = new Date();	
+console.log("validateDate", dateTo>dateFrom&&dateTo>$scope.todayDate)
 // console.log(dateFrom)
 // console.log(dateTo)
 if(dateFrom&&dateTo){
-if (dateTo>dateFrom) {
+console.log($scope.todayDate)
+if (dateTo>dateFrom && dateTo>$scope.todayDate) {
 $scope.dateInvalid=false;
 }else{
 $scope.dateInvalid=true;
@@ -220,8 +222,11 @@ $scope.openMyModal = function (product) {
 //===== ADD PRODUCT UIB MODAL <<<<<
 //===== INIT DATA TABLE >>>>>
 $scope.arrangeDataTable=function(){
-$scope.dtOptions= DTOptionsBuilder.newOptions();
+$scope.dtOptions= DTOptionsBuilder.newOptions().withOption('stateSave', true);;
     // .withOption('order', [0, 'desc']);
+    // .withOption('stateSave', true);
+				  // .withOption('lengthMenu', [50, 100, 150, 200])
+				  // .withDisplayLength(2);
     $scope.dtColumnDefs = [	
     	DTColumnDefBuilder.newColumnDef([2]).withOption('type', 'date-euro'),	
     	DTColumnDefBuilder.newColumnDef([7]).withOption('type', 'date-euro'),	
@@ -1416,11 +1421,11 @@ if ($scope.customerQuote.saveWithAlternative) {
 }
 
 $scope.updateQuote=function(){
-$log.debug("updateQuote call");
+console.log("updateQuote call");
 console.log($scope.form.addCustomerQuote);
 console.log($scope.customerQuote);
+$scope.validateDate($scope.customerQuote.modefiedDate,$scope.customerQuote.closeDate);
 if ($scope.form.addCustomerQuote.$valid) {
-
 	if ($scope.customerQuote.salesPerson.value == null || $scope.dateInvalid) {
 		$rootScope.moveToTop();
 		if ($scope.customerQuote.salesPerson.value == null) {

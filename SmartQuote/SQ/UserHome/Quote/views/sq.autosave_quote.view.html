@@ -368,7 +368,7 @@
                                         <span class="asteric"></span>
                                     </div>
                                     <div class="col-md-8">
-                                        <select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required ng-disabled="isProposalGenerated">
+                                        <select type="text" name="competeQuote" class="form-control" ng-options="competeQuote for competeQuote in competeQuote" ng-model="customerQuote.competeQuote" ng-click="competeQuoteChanged()" required ng-disabled="isProposalGenerated" ng-init="competeQuoteChanged()">
                                             <option value="">Select compete</option>
                                         </select>
                                         <span ng-show="((form.addCustomerQuote.competeQuote.$dirty && form.addCustomerQuote.competeQuote.$invalid) || (form.addCustomerQuote.competeQuote.$invalid && form.addCustomerQuote.submitted))"
@@ -394,7 +394,7 @@
 
                                 <div class="col-md-12 row-control" style="padding: 0px;">
                                     <div class="col-md-4">
-                                        <label class="sub-label">Date</label>
+                                        <label class="sub-label">Created Date</label>
                                     </div>
                                     <div class="col-md-8">
                                         <p class="input-group" id="createdDate" >
@@ -431,7 +431,7 @@
                                             <small ng-show="form.addCustomerQuote.closeDate.$error.required">*invalid expected close date.</small>
                                         </span>
                                         <span  class="invalid-control">
-                                            <small ng-show="dateInvalid">Invalid Date : close date should be greater than date</small>
+                                            <small ng-show="dateInvalid">Invalid Date : close date should be greater than created date and current date</small>
                                         </span>
                                     </div>
                                 </div>

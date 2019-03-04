@@ -134,7 +134,7 @@ border: 2px solid darkgray;
 		</div>
 	</div>
 <!-- {{showEditQuoteView}} -->
-	<div id="quoteTable" style="font-size: 12px;" ng-if="!showEditQuoteView">
+	<div id="quoteTable" style="font-size: 12px;" ng-show="!showEditQuoteView">
 		<!-- && customerListView.length>0 -->
 		<table datatable="ng" dt-options="dtOptions" dt-column-defs="dtColumnDefs" class="table row-border hover table-responsive">
 			<thead class="table-header">
@@ -253,8 +253,7 @@ border: 2px solid darkgray;
 						<i class="fa fa-table" aria-hidden="true"></i>
 						</button>
 
-						<button  class="btn btn-default" ng-click="deleteQuoteClicked(quote)" tooltip-placement="top" uib-tooltip="click to delete proposal" 
-						style="padding:0px 5px;" ng-if="isAdmin">
+						<button  class="btn btn-default" ng-click="deleteQuoteClicked(quote)" tooltip-placement="top" uib-tooltip="click to delete proposal" style="padding:0px 5px;" ng-if="isAdmin">
 						<i class="fa fa-trash" aria-hidden="true"></i>
 						</button>
 						

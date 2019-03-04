@@ -9,7 +9,7 @@ angular.module('sq.SmartQuoteDesktop')
             var isSupplierExist = false;
             $scope.competeQuote = ["Yes", "No"];
             $scope.customerQuote = {
-                'competeQuote': "No",
+                'competeQuote': "Yes",
                 'salesPerson': "",
             };
             $scope.currentSupplierList = [];
@@ -91,14 +91,14 @@ angular.module('sq.SmartQuoteDesktop')
                 // $scope.setMinCloseDate();
             };
 
-          
-
             $scope.validateDate=function(dateFrom,dateTo){
-            // console.log("validateDate")
+            $scope.todayDate = new Date();  
             if(dateFrom&&dateTo){
             var date1=moment(dateFrom).format('YYYY-MM-DD');
             var date2=moment(dateTo).format('YYYY-MM-DD');
-            if (date2>date1) {
+            var todayDate=moment($scope.todayDate).format('YYYY-MM-DD');
+            console.log("validateDate",date2>date1 && date2>todayDate);
+            if (date2>date1 && date2>todayDate) {
             $scope.dateInvalid=false;
             }else{
             $scope.dateInvalid=true;
@@ -397,7 +397,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.altGpInformation = { 'avgGpRequired': 0, 'avgCurrentSupplierGp': 0 };
                 isSupplierExist = false;
                 $scope.isNewCustomer = false;
-                $scope.customerQuote.competeQuote = "No";
+                $scope.customerQuote.competeQuote = "Yes";
                 $scope.isAlternateAdded = false;
                 $scope.customerQuote.saveWithAlternative = false;
                 $scope.showAddProductError = false;
@@ -716,6 +716,7 @@ angular.module('sq.SmartQuoteDesktop')
                     $scope.productButtonStatus = status;
                     $scope.isAddProductModalShow = true;
                     // console.log($scope.productButtonStatus + " product >>>>")
+                    $scope.validateDate($scope.customerQuote.createdDate,$scope.customerQuote.closeDate);
                     if ($scope.productButtonStatus == 'add') {
                         if ($scope.isProposalGenerated) {
                             $scope.openMyModal();
@@ -1091,7 +1092,7 @@ angular.module('sq.SmartQuoteDesktop')
                 $scope.altGpInformation = { 'avgGpRequired': 0, 'avgCurrentSupplierGp': 0 };
                 isSupplierExist = false;
                 $scope.isNewCustomer = false;
-                $scope.customerQuote.competeQuote = "No";
+                $scope.customerQuote.competeQuote = "Yes";
                 $scope.isAlternateAdded = false;
                 $scope.customerQuote.saveWithAlternative = false;
                 $scope.showAddProductError = false;
