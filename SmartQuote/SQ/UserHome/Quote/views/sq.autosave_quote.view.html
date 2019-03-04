@@ -487,7 +487,7 @@ ng-init="product.newOrderNo = $index+1" ng-enter="changeProductOrder(product.new
 <td><span data-ng-bind="product.itemCode"></span></td>
 <td><span data-ng-bind="product.itemDescription"></span></td>
 <td><span data-ng-bind="product.unit"></span></td>
-<td> <center>-</center></td>
+<td><span ng-if="product.unitDiviser">{{product.unitDiviser}}</span></td>
 <td><span data-ng-bind="product.avgcost"></span></td>
 <td><span data-ng-bind="product.itemQty"></td>
 <td style="text-align: right;"><span data-ng-bind="getPrice(product.currentSupplierPrice)"></span></td>

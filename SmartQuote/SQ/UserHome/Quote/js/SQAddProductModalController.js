@@ -9,7 +9,7 @@
 	$scope.customerQuote={};
 	$scope.isNewProduct=false;
 
-	console.log(dataToModal);
+	// console.log(dataToModal);
 
 	$scope.customerQuote=dataToModal.customerQuote;
 	$scope.productButtonStatus=dataToModal.productButtonStatus;
@@ -55,6 +55,8 @@
 	//        };
 	//initialising Search=========================
 
+	//=============== Main Product ===============
+
 	$scope.ok = function () {
 	console.log("ok clicked")
 	$uibModalInstance.close($scope.addProduct);
@@ -87,9 +89,17 @@
 	if (prodObj.isLinkedExact&& prodObj.altProd){
 	if (prodObj.altProd.itemCode){
 	if (product.currentSupplierPrice!=''||product.currentSupplierPrice>0) {
-	var altUnitDiviser = prodObj.altProd.unitDiviser;			
-	prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice * altUnitDiviser;
-	// var altAvgCost = prodObj.altProd.avgcost / altUnitDiviser;	
+	var altUnitDiviser = prodObj.altProd.unitDiviser;
+	var unitDiviser = prodObj.unitDiviser;
+
+	if (prodObj.isUnitDiviser) { 
+		prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice / unitDiviser;
+	};
+	if (prodObj.altProd.isAltUnitDiviser) { 
+		prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice * altUnitDiviser;
+	};
+
+	
 	prodObj.altProd.currentSupplierGP=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.avgcost);
 	prodObj.altProd.currentSupplierTotal=prodObj.altProd.currentSupplierPrice*prodObj.altProd.itemQty;
 	}else{
@@ -377,6 +387,7 @@
 
 	$scope.addProduct.quotePrice='';
 	$scope.addProduct.itemQty=1;
+	$scope.addProduct.unitDiviser=1;
 	$scope.addProduct.currentSupplierPrice='';
 	$scope.addProduct.currentSupplierGP='';
 	$scope.addProduct.gpRequired='';
@@ -541,15 +552,39 @@
 	}
 	}
 	};
+	
+	$scope.isUnitDiviserClicked=function(){
+	console.log("isUnitDiviserClicked >>",$scope.addProduct.isUnitDiviser);
+	if ($scope.addProduct.isUnitDiviser) {
+		// $scope.addProduct.altProd.unitDiviser=1;
+	} else{
+		$scope.addProduct.unitDiviser=1;
+	};
+	}
+	$scope.unitDiviserChanged=function(){
+	if($scope.addProduct.altProd){
+	$scope.addProduct.altProd.itemQty = $scope.addProduct.unitDiviser;	
+	}
+	};
+
+
+	//================Main Product Ends================================
+	
 	//================Alternative Product================================
 	$scope.altProductSavings=function(){
-	var savings,altQuotePrice,altDiviser,price;
+	var savings,altQuotePrice,altDiviser,price,unitDiviser,altSupplierPrice;
 	altDiviser = $scope.addProduct.altProd.unitDiviser;
-	altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
+	unitDiviser = $scope.addProduct.unitDiviser;
 	altQuotePrice=$scope.addProduct.altProd.quotePrice;
+	// console.log(unitDiviser,altDiviser);
+	if ($scope.addProduct.isUnitDiviser) { 
+		altSupplierPrice=$scope.addProduct.currentSupplierPrice/unitDiviser;
+	};
+	if ($scope.addProduct.altProd.isAltUnitDiviser) { 
+		altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
+	};
+	
 	if (altSupplierPrice>0&&altQuotePrice>0) {
-	// console.log(altSupplierPrice,altQuotePrice,altDiviser);
-	// price = altQuotePrice/altDiviser;
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
 	}else{
@@ -625,13 +660,18 @@
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
 	$scope.addProduct.altProd.quotePrice='';
-	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
 	$scope.addProduct.altProd.unitDiviser=1;
 
+	if ($scope.addProduct.isUnitDiviser) {
+		$scope.addProduct.altProd.itemQty=$scope.addProduct.unitDiviser;
+	}else{
+		$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	}
 	if (product.promoPrice) {
 	$scope.addProduct.altProd.quotePrice=product.promoPrice;
 	$scope.altSellingPriceChanged($scope.addProduct.altProd.quotePrice,$scope.addProduct.altProd.avgcost);
 	};
+
 	// $scope.addProduct.altProd.isAlternative=true;
 	}
 	}
@@ -827,10 +867,15 @@
 	}else{
 	$scope.addProduct.altProd.quotePrice=null;	
 	}
-	$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	
 	$scope.addProduct.altProd.unitDiviser=1;
 	$scope.addProduct.altProd.isAlternative='yes';
 	$scope.altProductInfo=angular.copy($scope.addProduct.altProd);
+	if ($scope.addProduct.isUnitDiviser) {
+		$scope.addProduct.altProd.itemQty=$scope.addProduct.unitDiviser;
+	} else{
+		$scope.addProduct.altProd.itemQty=$scope.addProduct.itemQty;
+	};
 	}	
 	};
 	$scope.radius=125;
@@ -914,11 +959,18 @@ $scope.initEdit=function(){
 	console.log("initEdit...")
 	console.log("dataToModal")
 	console.log(dataToModal);
-	$scope.addProduct=dataToModal.product;
+	$scope.addProduct=angular.copy(dataToModal.product);
+	console.log($scope.addProduct);
+	
 	if ($scope.addProduct.lineComment) {
 		$scope.addProduct.addComment=true;
 	}else{
 		$scope.addProduct.addComment=false;
+	}
+	if ($scope.addProduct.unitDiviser > 1) {
+		$scope.addProduct.isUnitDiviser = true;
+	}else{
+
 	}
 	$scope.productInfo=dataToModal.product;
 	$scope.createArrayOfQuantityAndPrice(dataToModal.product);
