@@ -85,21 +85,41 @@
 
 
 	$scope.getProductObject=function(product){
+	console.log($scope.addProduct);		
 	var prodObj=angular.copy(product);
-	if (prodObj.isLinkedExact&& prodObj.altProd){
-	if (prodObj.altProd.itemCode){
+	console.log(prodObj);
+
+	if (product.currentSupplierPrice>0 && product.quotePrice>0) {
+	if (product.currentSupplierPrice==product.quotePrice) {
+	prodObj.savings=0;	
+	}else{
+	prodObj.savings=$scope.getPriceInPercentage(product.currentSupplierPrice,product.quotePrice);	
+	}
+	};
+	if (product.currentSupplierPrice>0) {
+	prodObj.currentSupplierGP=$scope.getPriceInPercentage(product.currentSupplierPrice,product.avgcost);	
+	}else{
+	prodObj.currentSupplierGP=0;	
+	prodObj.currentSupplierPrice=0;	
+	}
+	prodObj.total=product.itemQty*product.quotePrice;
+	prodObj.currentSupplierTotal=product.itemQty*product.currentSupplierPrice;
+	prodObj.gpRequired=$scope.getPriceInPercentage(product.quotePrice,product.avgcost);
+
+	if (product.isLinkedExact&& product.altProd){
+	if (product.altProd.itemCode){
 	if (product.currentSupplierPrice!=''||product.currentSupplierPrice>0) {
-	var altUnitDiviser = prodObj.altProd.unitDiviser;
-	var unitDiviser = prodObj.unitDiviser;
+	var altUnitDiviser = product.altProd.unitDiviser;
+	var unitDiviser = product.unitDiviser;
+	prodObj.altProd.currentSupplierPrice = angular.copy(product.currentSupplierPrice);
 
 	if (prodObj.isUnitDiviser) { 
-		prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice / unitDiviser;
+		prodObj.altProd.currentSupplierPrice=prodObj.currentSupplierPrice / unitDiviser;
 	};
 	if (prodObj.altProd.isAltUnitDiviser) { 
-		prodObj.altProd.currentSupplierPrice=product.currentSupplierPrice * altUnitDiviser;
-	};
+		prodObj.altProd.currentSupplierPrice=prodObj.currentSupplierPrice * altUnitDiviser;
+	};	
 
-	
 	prodObj.altProd.currentSupplierGP=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.avgcost);
 	prodObj.altProd.currentSupplierTotal=prodObj.altProd.currentSupplierPrice*prodObj.altProd.itemQty;
 	}else{
@@ -111,14 +131,19 @@
 	prodObj.altProd.gpRequired=$scope.getPriceInPercentage(prodObj.altProd.quotePrice,prodObj.altProd.avgcost);
 	// prodObj.altProd.altForQuoteDetailId=0;
 	// prodObj.altProd.altForQuoteDetailId=0;
+	console.log(prodObj);
 	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
+	console.log("1...")
 	// var price= 	prodObj.altProd.quotePrice / altUnitDiviser;
 	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
 	}else{
+	console.log("2...")
 	prodObj.altProd.savings=0;
 	}
 	}
-	}
+	};
+
+	console.log(prodObj)
 	return prodObj;
 	};
 
@@ -136,7 +161,7 @@
 	console.log("addProductFromModal")
 	console.log(addNextProduct)
 	console.log($scope.form.addProductIntoQuote)	
-	console.log($scope.addProduct);	
+	
 	if ($scope.form.addProductIntoQuote.$valid) {
 	// if (parseFloat($scope.addProduct.quotePrice)>=parseFloat($scope.addProduct.avgcost)) {
 	var dataFromModal=$scope.getDataFromModal(addNextProduct);
@@ -575,6 +600,7 @@
 	var savings,altQuotePrice,altDiviser,price,unitDiviser,altSupplierPrice;
 	altDiviser = $scope.addProduct.altProd.unitDiviser;
 	unitDiviser = $scope.addProduct.unitDiviser;
+	altSupplierPrice = $scope.addProduct.currentSupplierPrice;
 	altQuotePrice=$scope.addProduct.altProd.quotePrice;
 	// console.log(unitDiviser,altDiviser);
 	if ($scope.addProduct.isUnitDiviser) { 
@@ -583,14 +609,14 @@
 	if ($scope.addProduct.altProd.isAltUnitDiviser) { 
 		altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
 	};
-	
-	if (altSupplierPrice>0&&altQuotePrice>0) {
+	// console.log(altSupplierPrice,altQuotePrice);
+	if (altSupplierPrice>0&&altQuotePrice>0) {	
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
 	}else{
 	savings=$scope.getPriceInPercentage(altSupplierPrice,altQuotePrice);		
 	};	
-	}else{
+	}else{	
 	savings=0;
 	}
 	return savings;
