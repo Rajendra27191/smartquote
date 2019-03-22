@@ -114,10 +114,10 @@
 	prodObj.altProd.currentSupplierPrice = angular.copy(product.currentSupplierPrice);
 
 	if (prodObj.isUnitDiviser) { 
-		prodObj.altProd.currentSupplierPrice=prodObj.currentSupplierPrice / unitDiviser;
+		prodObj.altProd.currentSupplierPrice = prodObj.currentSupplierPrice / unitDiviser;
 	};
 	if (prodObj.altProd.isAltUnitDiviser) { 
-		prodObj.altProd.currentSupplierPrice=prodObj.currentSupplierPrice * altUnitDiviser;
+		prodObj.altProd.currentSupplierPrice = prodObj.currentSupplierPrice * altUnitDiviser;
 	};	
 
 	prodObj.altProd.currentSupplierGP=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.avgcost);
@@ -134,8 +134,14 @@
 	console.log(prodObj);
 	if (prodObj.altProd.currentSupplierPrice>0) {//prodObj.altProd.currentSupplierPrice>prodObj.altProd.quotePrice && 
 	console.log("1...")
+	if (prodObj.isUnitDiviser && prodObj.altProd.isAltUnitDiviser) {
+		var altSPrice = angular.copy(prodObj.currentSupplierPrice/altUnitDiviser);
+		var altQPrice = angular.copy(prodObj.altProd.quotePrice/altUnitDiviser);
+		prodObj.altProd.savings=$scope.getPriceInPercentage(altSPrice,altQPrice);
+	}else{
+		prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
+	};
 	// var price= 	prodObj.altProd.quotePrice / altUnitDiviser;
-	prodObj.altProd.savings=$scope.getPriceInPercentage(prodObj.altProd.currentSupplierPrice,prodObj.altProd.quotePrice);
 	}else{
 	console.log("2...")
 	prodObj.altProd.savings=0;
@@ -598,18 +604,26 @@
 	//================Alternative Product================================
 	$scope.altProductSavings=function(){
 	var savings,altQuotePrice,altDiviser,price,unitDiviser,altSupplierPrice;
-	altDiviser = $scope.addProduct.altProd.unitDiviser;
-	unitDiviser = $scope.addProduct.unitDiviser;
-	altSupplierPrice = $scope.addProduct.currentSupplierPrice;
-	altQuotePrice=$scope.addProduct.altProd.quotePrice;
+	altDiviser = angular.copy($scope.addProduct.altProd.unitDiviser);
+	unitDiviser = angular.copy($scope.addProduct.unitDiviser);
+	altSupplierPrice = angular.copy($scope.addProduct.currentSupplierPrice);
+	altQuotePrice= angular.copy($scope.addProduct.altProd.quotePrice);
+
 	// console.log(unitDiviser,altDiviser);
 	if ($scope.addProduct.isUnitDiviser) { 
-		altSupplierPrice=$scope.addProduct.currentSupplierPrice/unitDiviser;
+		altSupplierPrice=angular.copy($scope.addProduct.currentSupplierPrice/unitDiviser);
 	};
 	if ($scope.addProduct.altProd.isAltUnitDiviser) { 
-		altSupplierPrice=$scope.addProduct.currentSupplierPrice * altDiviser;
+		altSupplierPrice=angular.copy($scope.addProduct.currentSupplierPrice * altDiviser);
 	};
 	// console.log(altSupplierPrice,altQuotePrice);
+	if ($scope.addProduct.isUnitDiviser && $scope.addProduct.altProd.isAltUnitDiviser) {
+		var altSPrice = angular.copy($scope.addProduct.currentSupplierPrice/altDiviser);
+		var altQPrice = angular.copy($scope.addProduct.altProd.quotePrice/altDiviser);
+		altSupplierPrice =  altSPrice;
+		altQuotePrice = altQPrice;
+	};
+
 	if (altSupplierPrice>0&&altQuotePrice>0) {	
 	if (altSupplierPrice==altQuotePrice) {
 	savings=0;
